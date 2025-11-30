@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VANW</title>
+    <link rel="icon" href="logo.png" type="image/png">
     <style>
         /* Import Normalize CSS */
         @import url('https://unpkg.com/normalize.css') layer(normalize);
@@ -49,6 +50,11 @@
                 height: auto;
                 margin-bottom: 0.3rem;
                 margin-top: 60px;
+                filter: invert(0);
+            }
+            
+            [data-theme='dark'] .app-header img {
+                filter: invert(1);
             }
             
             .app-header p {
@@ -317,7 +323,7 @@
                 --border-color: #eeeeee;
                 --button-bg: rgba(0, 0, 0, 0.08);
                 --grid-color: #cccccc;
-                --gradient: linear-gradient(135deg, #ff0ea0, #ff285d, #ff5400, #cc7d00);
+                --gradient: linear-gradient(135deg, #0077ff, #00aaff, #00ddff, #00ffaa);
             }
 
             [data-theme='dark'] {
@@ -330,7 +336,7 @@
                 --border-color: #333333;
                 --button-bg: rgba(255, 255, 255, 0.1);
                 --grid-color: #444444;
-                --gradient: linear-gradient(135deg, #ff0ea0, #ff285d, #ff5400, #cc7d00);
+                --gradient: linear-gradient(135deg, #0077ff, #00aaff, #00ddff, #00ffaa);
             }
 
             html {
@@ -416,11 +422,11 @@
                 place-items: center;
                 opacity: 0.8;
                 transition: opacity 0.2s;
-                filter: invert(0);
+                filter: invert(38%) sepia(95%) saturate(2476%) hue-rotate(166deg) brightness(104%) contrast(101%);
             }
 
             [data-theme='dark'] .web-icon {
-                filter: invert(1);
+                filter: invert(38%) sepia(95%) saturate(2476%) hue-rotate(166deg) brightness(104%) contrast(101%);
             }
 
             .web-icon img {
@@ -498,10 +504,10 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
                     </button>
                     <div class="img-container">
-                        <img src="logo.png" alt="Khám phá văn học" class="light-mode-img" />
-                        <img src="logo.png" alt="Khám phá văn học" class="dark-mode-img" />
+                        <img src="https://assets.codepen.io/605876/photos.png" alt="Khám phá văn học" class="light-mode-img" />
+                        <img src="https://assets.codepen.io/605876/beeper.png" alt="Khám phá văn học" class="dark-mode-img" />
                     </div>
-                    <img src="logo.png" alt="Khám phá văn học" />
+                    <img src="https://assets.codepen.io/605876/photos.png" alt="Khám phá văn học" />
                     <h2>Khám phá văn học</h2>
                 </div>
             </article>
@@ -511,10 +517,10 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
                     </button>
                     <div class="img-container">
-                        <img src="logo.png" alt="Hỗ trợ giảng dạy" class="light-mode-img" />
-                        <img src="logo.png" alt="Hỗ trợ giảng dạy" class="dark-mode-img" />
+                        <img src="https://assets.codepen.io/605876/photos.png" alt="Hỗ trợ giảng dạy" class="light-mode-img" />
+                        <img src="https://assets.codepen.io/605876/beeper.png" alt="Hỗ trợ giảng dạy" class="dark-mode-img" />
                     </div>
-                    <img src="logo.png" alt="Hỗ trợ giảng dạy" />
+                    <img src="https://assets.codepen.io/605876/photos.png" alt="Hỗ trợ giảng dạy" />
                     <h2>Hỗ trợ giảng dạy</h2>
                 </div>
             </article>
