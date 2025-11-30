@@ -422,11 +422,11 @@
                 place-items: center;
                 opacity: 0.8;
                 transition: opacity 0.2s;
-                filter: invert(38%) sepia(95%) saturate(2476%) hue-rotate(166deg) brightness(104%) contrast(101%);
+                /* Không áp dụng filter cho logo trong chế độ sáng */
             }
 
             [data-theme='dark'] .web-icon {
-                filter: invert(38%) sepia(95%) saturate(2476%) hue-rotate(166deg) brightness(104%) contrast(101%);
+                filter: invert(1); /* Chỉ áp dụng filter trong chế độ tối */
             }
 
             .web-icon img {
@@ -504,10 +504,9 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
                     </button>
                     <div class="img-container">
-                        <img src="https://assets.codepen.io/605876/photos.png" alt="Khám phá văn học" class="light-mode-img" />
-                        <img src="https://assets.codepen.io/605876/beeper.png" alt="Khám phá văn học" class="dark-mode-img" />
+                        <img src="necon.png" alt="Khám phá văn học" />
                     </div>
-                    <img src="https://assets.codepen.io/605876/photos.png" alt="Khám phá văn học" />
+                    <img src="necon.png" alt="Khám phá văn học" />
                     <h2>Khám phá văn học</h2>
                 </div>
             </article>
@@ -517,10 +516,9 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>dots-horizontal</title><path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" /></svg>
                     </button>
                     <div class="img-container">
-                        <img src="https://assets.codepen.io/605876/photos.png" alt="Hỗ trợ giảng dạy" class="light-mode-img" />
-                        <img src="https://assets.codepen.io/605876/beeper.png" alt="Hỗ trợ giảng dạy" class="dark-mode-img" />
+                        <img src="necon.png" alt="Hỗ trợ giảng dạy" />
                     </div>
-                    <img src="https://assets.codepen.io/605876/photos.png" alt="Hỗ trợ giảng dạy" />
+                    <img src="necon.png" alt="Hỗ trợ giảng dạy" />
                     <h2>Hỗ trợ giảng dạy</h2>
                 </div>
             </article>
@@ -586,34 +584,17 @@
         const themeToggle = document.querySelector('.theme-toggle');
         const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
         
-        // Function to update image visibility based on theme
-        function updateImagesForTheme(theme) {
-            const lightModeImgs = document.querySelectorAll('.light-mode-img');
-            const darkModeImgs = document.querySelectorAll('.dark-mode-img');
-            
-            if (theme === 'light') {
-                lightModeImgs.forEach(img => img.style.display = 'none');
-                darkModeImgs.forEach(img => img.style.display = 'block');
-            } else {
-                lightModeImgs.forEach(img => img.style.display = 'block');
-                darkModeImgs.forEach(img => img.style.display = 'none');
-            }
-        }
-        
         // Set initial theme based on system preference
         if (prefersDarkScheme.matches) {
             document.documentElement.setAttribute('data-theme', 'dark');
-            updateImagesForTheme('dark');
         } else {
             document.documentElement.setAttribute('data-theme', 'light');
-            updateImagesForTheme('light');
         }
         
         themeToggle.addEventListener('click', () => {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', newTheme);
-            updateImagesForTheme(newTheme);
         });
         
         // Add click handlers for the cards
