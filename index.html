@@ -22,6 +22,7 @@
                 min-height: 100vh;
                 display: grid;
                 place-items: center;
+                transition: background-color 0.5s ease, color 0.5s ease;
             }
 
             [data-exclude='true'] .img-container {
@@ -51,6 +52,7 @@
                 margin-bottom: 0.3rem;
                 margin-top: 60px;
                 filter: invert(0);
+                transition: filter 0.5s ease;
             }
             
             [data-theme='dark'] .app-header img {
@@ -62,6 +64,7 @@
                 font-size: 1.1rem;
                 max-width: 600px;
                 margin: 0 auto;
+                transition: color 0.5s ease;
             }
             
             main {
@@ -84,8 +87,8 @@
                 border-radius: 12px;
                 container-type: size;
                 cursor: pointer;
-                transition-property: translate, scale;
-                transition-duration: 0.12s;
+                transition-property: translate, scale, background-color, outline-color;
+                transition-duration: 0.12s, 0.12s, 0.5s, 0.5s;
                 transition-timing-function: cubic-bezier(.645, .045, .355, 1);
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             }
@@ -126,6 +129,7 @@
             article img {
                 width: 100px;
                 user-select: none;
+                transition: filter 0.5s ease;
             }
             
             article img:nth-of-type(1) {
@@ -154,6 +158,7 @@
                 user-select: none;
                 font-weight: 600;
                 color: var(--text-primary);
+                transition: color 0.5s ease;
             }
             
             .app-footer {
@@ -162,12 +167,14 @@
                 padding-top: 2rem;
                 border-top: 1px solid var(--border-color);
                 color: var(--text-secondary);
+                transition: color 0.5s ease, border-color 0.5s ease;
             }
             
             .app-footer a {
                 color: var(--text-primary);
                 text-decoration: none;
                 font-weight: 600;
+                transition: color 0.5s ease;
             }
             
             .app-footer a:hover {
@@ -363,6 +370,7 @@
                 pointer-events: none;
                 z-index: -1;
                 opacity: 0.8; /* Tăng độ rõ của lưới */
+                transition: background 0.5s ease;
             }
 
             .web-icon {
@@ -421,12 +429,14 @@
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
                 z-index: 1000;
                 color: var(--text-primary);
+                transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
             }
             
             .theme-toggle svg {
                 width: 24px;
                 height: 24px;
                 fill: currentColor;
+                transition: fill 0.5s ease;
             }
             
             .theme-toggle .sun {
@@ -440,11 +450,100 @@
             [data-theme='dark'] .theme-toggle .sun {
                 display: block;
             }
+            
+            /* Loading Screen */
+            .loading-screen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: grid;
+                place-items: center;
+                z-index: 9999;
+                transition: opacity 0.5s ease, visibility 0.5s ease;
+            }
+            
+            .loading-screen[data-theme='light'] {
+                background-color: white;
+            }
+            
+            .loading-screen[data-theme='dark'] {
+                background-color: black;
+            }
+            
+            .loading-container {
+                text-align: center;
+                color: inherit;
+            }
+            
+            .loading-container h1 {
+                margin-bottom: 30px;
+                font-weight: 300;
+                letter-spacing: 2px;
+                transition: color 0.5s ease;
+            }
+            
+            .loading-screen[data-theme='light'] .loading-container h1 {
+                color: #ff6600; /* Màu cam cho chế độ sáng */
+            }
+            
+            .loading-screen[data-theme='dark'] .loading-container h1 {
+                color: #0077ff; /* Màu xanh dương cho chế độ tối */
+            }
+            
+            .loading-screen svg {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .loading-screen .dot {
+                transition: cx 0.5s cubic-bezier(0.3, 1.4, 0.4, 1),
+                            cy 0.5s cubic-bezier(0.3, 1.4, 0.4, 1),
+                            r 0.5s cubic-bezier(0.3, 1.4, 0.4, 1);
+            }
+            
+            /* Màu chấm loading cho chế độ sáng */
+            .loading-screen[data-theme='light'] .dot {
+                fill: #ff8441;
+            }
+            
+            /* Màu chấm loading cho chế độ tối */
+            .loading-screen[data-theme='dark'] .dot {
+                fill: #67bed9;
+            }
+            
+            .loading-screen #gooey {
+                transform-origin: 100px 100px;
+                transition: transform 0.5s linear;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-container">
+            <svg viewBox="0 0 200 200">
+                <defs>
+                    <filter id="goo">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+                        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0
+                                    0 1 0 0 0
+                                    0 0 1 0 0
+                                    0 0 0 20 -10" result="goo" />
+                        <feBlend in="SourceGraphic" in2="goo" />
+                    </filter>
+                </defs>
+                <g id="gooey" filter="url(#goo)">
+                    <circle class="dot" cx="100" cy="100" r="6" />
+                </g>
+            </svg>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="app-container" id="mainContent" style="display: none;">
         <header class="app-header">
             <img src="text.png" alt="VANW" />
             <p>Khám phá thế giới văn học một cách dễ dàng và tiện lợi.</p>
@@ -499,6 +598,156 @@
     </a>
 
     <script>
+        // Theme management with localStorage
+        const THEME_KEY = 'vanw-theme';
+        
+        // Function to get saved theme from localStorage
+        function getSavedTheme() {
+            return localStorage.getItem(THEME_KEY);
+        }
+        
+        // Function to save theme to localStorage
+        function saveTheme(theme) {
+            localStorage.setItem(THEME_KEY, theme);
+        }
+        
+        // Function to apply theme
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            updateThemeIcons();
+        }
+        
+        // Function to initialize theme
+        function initializeTheme() {
+            const savedTheme = getSavedTheme();
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            let theme;
+            
+            if (savedTheme) {
+                // Use saved theme if available
+                theme = savedTheme;
+            } else {
+                // Otherwise use system preference
+                theme = prefersDarkScheme.matches ? 'dark' : 'light';
+            }
+            
+            applyTheme(theme);
+            return theme;
+        }
+        
+        // Loading screen functionality
+        const loadingScreen = document.getElementById('loadingScreen');
+        const mainContent = document.getElementById('mainContent');
+        
+        // Initialize theme and set loading screen theme
+        const initialTheme = initializeTheme();
+        loadingScreen.setAttribute('data-theme', initialTheme);
+        
+        // Loading animation
+        function animateSpinner() {
+            const svgGroup = document.querySelector("#gooey");
+            let centerDot = svgGroup.querySelector(".dot");
+
+            const spacing = 25;
+
+            function createDot(cx, cy, r) {
+                const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                dot.setAttribute("cx", cx);
+                dot.setAttribute("cy", cy);
+                dot.setAttribute("r", 1);
+                dot.classList.add("dot");
+                svgGroup.appendChild(dot);
+                return dot;
+            }
+
+            svgGroup.querySelectorAll(".dot").forEach((dot) => dot.remove());
+            centerDot = createDot(100, 100, 6);
+
+            // Cardinal directions
+            const first4 = [
+                { cx: 100, cy: 100 - spacing },
+                { cx: 100, cy: 100 + spacing },
+                { cx: 100 - spacing, cy: 100 },
+                { cx: 100 + spacing, cy: 100 }
+            ];
+
+            const allDots = [];
+
+            first4.forEach((pos) => {
+                const dot = createDot(100, 100, 6);
+                allDots.push(dot);
+                const midX = (100 + pos.cx) / 2;
+                const midY = (100 + pos.cy) / 2;
+                setTimeout(() => {
+                    dot.setAttribute("r", 8);
+                    dot.setAttribute("cx", midX);
+                    dot.setAttribute("cy", midY);
+                }, 50);
+                setTimeout(() => {
+                    dot.setAttribute("r", 6);
+                    dot.setAttribute("cx", pos.cx);
+                    dot.setAttribute("cy", pos.cy);
+                }, 500);
+            });
+
+            // Diagonals
+            setTimeout(() => {
+                const diagSpacing = spacing / Math.sqrt(2);
+                const diagonal = [
+                    { cx: 100 - diagSpacing, cy: 100 - diagSpacing },
+                    { cx: 100 + diagSpacing, cy: 100 - diagSpacing },
+                    { cx: 100 - diagSpacing, cy: 100 + diagSpacing },
+                    { cx: 100 + diagSpacing, cy: 100 + diagSpacing }
+                ];
+                diagonal.forEach((pos) => {
+                    const dot = createDot(100, 100, 6);
+                    allDots.push(dot);
+                    const midX = (100 + pos.cx) / 2;
+                    const midY = (100 + pos.cy) / 2;
+                    setTimeout(() => {
+                        dot.setAttribute("r", 8);
+                        dot.setAttribute("cx", midX);
+                        dot.setAttribute("cy", midY);
+                    }, 50);
+                    setTimeout(() => {
+                        dot.setAttribute("r", 6);
+                        dot.setAttribute("cx", pos.cx);
+                        dot.setAttribute("cy", pos.cy);
+                    }, 500);
+                });
+            }, 1000);
+
+            // Rotate the whole group
+            setTimeout(() => {
+                svgGroup.style.transform = "rotate(360deg)";
+            }, 2500);
+
+            // Back to single dot
+            setTimeout(() => {
+                svgGroup.style.transition = "transform 0.5s linear";
+                svgGroup.style.transform = "rotate(0deg)";
+                allDots.forEach((dot) => {
+                    dot.setAttribute("cx", 100);
+                    dot.setAttribute("cy", 100);
+                    dot.setAttribute("r", 6);
+                });
+            }, 3000);
+
+            // Hide loading screen and show main content after 4 seconds
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.visibility = 'hidden';
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 4000);
+        }
+
+        // Start the animation when the page loads
+        window.addEventListener('load', animateSpinner);
+        
         // Card pointer tracking logic
         const articles = document.querySelectorAll('article');
         
@@ -529,22 +778,14 @@
         
         // Theme toggle functionality
         const themeToggle = document.querySelector('.theme-toggle');
-        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-        
-        // Set initial theme based on system preference
-        if (prefersDarkScheme.matches) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-        }
         
         themeToggle.addEventListener('click', () => {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', newTheme);
             
-            // Update theme icons
-            updateThemeIcons();
+            // Apply new theme and save it
+            applyTheme(newTheme);
+            saveTheme(newTheme);
         });
         
         // Function to update theme icons
@@ -560,9 +801,6 @@
                 }
             });
         }
-        
-        // Initialize theme icons on page load
-        updateThemeIcons();
         
         // Add click handlers for the cards
         articles.forEach(article => {
