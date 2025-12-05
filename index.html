@@ -22,6 +22,8 @@
                 min-height: 100vh;
                 display: grid;
                 place-items: center;
+                background-color: #f5f5f5;
+                color: #000000;
                 transition: background-color 0.5s ease, color 0.5s ease;
             }
 
@@ -52,19 +54,13 @@
                 margin-bottom: 0.3rem;
                 margin-top: 60px;
                 filter: invert(0);
-                transition: filter 0.5s ease;
-            }
-            
-            [data-theme='dark'] .app-header img {
-                filter: invert(1);
             }
             
             .app-header p {
-                color: var(--text-secondary);
+                color: #666666;
                 font-size: 1.1rem;
                 max-width: 600px;
                 margin: 0 auto;
-                transition: color 0.5s ease;
             }
             
             main {
@@ -81,8 +77,8 @@
                 -webkit-tap-highlight-color: #0000;
                 width: 300px;
                 aspect-ratio: 4 / 3;
-                outline: 2px solid var(--card-outline);
-                background: var(--card-bg);
+                outline: 2px solid #e0e0e0;
+                background: #ffffff;
                 position: relative;
                 border-radius: 12px;
                 container-type: size;
@@ -129,7 +125,6 @@
             article img {
                 width: 100px;
                 user-select: none;
-                transition: filter 0.5s ease;
             }
             
             article img:nth-of-type(1) {
@@ -157,24 +152,21 @@
                 margin: 0;
                 user-select: none;
                 font-weight: 600;
-                color: var(--text-primary);
-                transition: color 0.5s ease;
+                color: #000000;
             }
             
             .app-footer {
                 text-align: center;
                 margin-top: 3rem;
                 padding-top: 2rem;
-                border-top: 1px solid var(--border-color);
-                color: var(--text-secondary);
-                transition: color 0.5s ease, border-color 0.5s ease;
+                border-top: 1px solid #eeeeee;
+                color: #666666;
             }
             
             .app-footer a {
-                color: var(--text-primary);
+                color: #000000;
                 text-decoration: none;
                 font-weight: 600;
-                transition: color 0.5s ease;
             }
             
             .app-footer a:hover {
@@ -273,42 +265,6 @@
                 --border-saturate: 4.2;
                 --border-brightness: 2.5;
                 --border-contrast: 2.5;
-                
-                /* Light theme variables */
-                --bg-color: #f5f5f5;
-                --card-bg: #ffffff;
-                --card-outline: #e0e0e0;
-                --text-primary: #000000;
-                --text-secondary: #666666;
-                --border-color: #eeeeee;
-                --button-bg: rgba(0, 0, 0, 0.08);
-                --grid-color: #cccccc;
-                --gradient: linear-gradient(135deg, #0077ff, #00aaff, #00ddff, #00ffaa);
-            }
-
-            [data-theme='dark'] {
-                /* Dark theme variables */
-                --bg-color: #000000;
-                --card-bg: #1a1a1a;
-                --card-outline: #333333;
-                --text-primary: #ffffff;
-                --text-secondary: #cccccc;
-                --border-color: #333333;
-                --button-bg: rgba(255, 255, 255, 0.1);
-                --grid-color: #444444;
-                --gradient: linear-gradient(135deg, #0077ff, #00aaff, #00ddff, #00ffaa);
-            }
-
-            html {
-                color-scheme: light dark;
-            }
-
-            [data-theme='light'] {
-                color-scheme: light only;
-            }
-
-            [data-theme='dark'] {
-                color-scheme: dark only;
             }
 
             :where(.fluid) {
@@ -339,19 +295,17 @@
             }
 
             body {
-                background: var(--bg-color);
                 display: grid;
                 place-items: center;
                 min-height: 100vh;
                 font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
                     Helvetica, Arial, sans-serif, system-ui;
                 line-height: 1.5;
-                color: var(--text-primary);
             }
 
             body::before {
                 --size: 45px;
-                --line: var(--grid-color);
+                --line: #cccccc;
                 content: '';
                 height: 100vh;
                 width: 100vw;
@@ -369,8 +323,7 @@
                 transform-style: flat;
                 pointer-events: none;
                 z-index: -1;
-                opacity: 0.8; /* Tăng độ rõ của lưới */
-                transition: background 0.5s ease;
+                opacity: 0.8;
             }
 
             .web-icon {
@@ -383,11 +336,6 @@
                 place-items: center;
                 opacity: 0.8;
                 transition: opacity 0.2s;
-                /* Không áp dụng filter cho logo trong chế độ sáng */
-            }
-
-            [data-theme='dark'] .web-icon {
-                filter: invert(1); /* Chỉ áp dụng filter trong chế độ tối */
             }
 
             .web-icon img {
@@ -413,44 +361,6 @@
                 border-width: 0;
             }
             
-            /* Theme Toggle */
-            .theme-toggle {
-                position: fixed;
-                top: 1rem;
-                right: 1rem;
-                background: var(--card-bg);
-                border: 1px solid var(--card-outline);
-                border-radius: 50%;
-                width: 48px;
-                height: 48px;
-                display: grid;
-                place-items: center;
-                cursor: pointer;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                z-index: 1000;
-                color: var(--text-primary);
-                transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
-            }
-            
-            .theme-toggle svg {
-                width: 24px;
-                height: 24px;
-                fill: currentColor;
-                transition: fill 0.5s ease;
-            }
-            
-            .theme-toggle .sun {
-                display: none;
-            }
-            
-            [data-theme='dark'] .theme-toggle .moon {
-                display: none;
-            }
-            
-            [data-theme='dark'] .theme-toggle .sun {
-                display: block;
-            }
-            
             /* Loading Screen */
             .loading-screen {
                 position: fixed;
@@ -461,35 +371,19 @@
                 display: grid;
                 place-items: center;
                 z-index: 9999;
-                transition: opacity 0.5s ease, visibility 0.5s ease;
-            }
-            
-            .loading-screen[data-theme='light'] {
                 background-color: white;
-            }
-            
-            .loading-screen[data-theme='dark'] {
-                background-color: black;
+                transition: opacity 0.5s ease, visibility 0.5s ease;
             }
             
             .loading-container {
                 text-align: center;
-                color: inherit;
             }
             
             .loading-container h1 {
                 margin-bottom: 30px;
                 font-weight: 300;
                 letter-spacing: 2px;
-                transition: color 0.5s ease;
-            }
-            
-            .loading-screen[data-theme='light'] .loading-container h1 {
-                color: #ff6600; /* Màu cam cho chế độ sáng */
-            }
-            
-            .loading-screen[data-theme='dark'] .loading-container h1 {
-                color: #0077ff; /* Màu xanh dương cho chế độ tối */
+                color: #ff6600;
             }
             
             .loading-screen svg {
@@ -503,14 +397,8 @@
                             r 0.5s cubic-bezier(0.3, 1.4, 0.4, 1);
             }
             
-            /* Màu chấm loading cho chế độ sáng */
-            .loading-screen[data-theme='light'] .dot {
+            .loading-screen .dot {
                 fill: #ff8441;
-            }
-            
-            /* Màu chấm loading cho chế độ tối */
-            .loading-screen[data-theme='dark'] .dot {
-                fill: #67bed9;
             }
             
             .loading-screen #gooey {
@@ -555,7 +443,7 @@
                     <div class="img-container">
                         <img src="necon.png" alt="Khám phá văn học" />
                     </div>
-                    <img src="necon1.png" alt="Khám phá văn học" class="theme-icon" />
+                    <img src="necon1.png" alt="Khám phá văn học" />
                     <h2>Khám phá văn học</h2>
                 </div>
             </article>
@@ -564,7 +452,7 @@
                     <div class="img-container">
                         <img src="necon.png" alt="Hỗ trợ giảng dạy" />
                     </div>
-                    <img src="necon2.png" alt="Hỗ trợ giảng dạy" class="theme-icon" />
+                    <img src="necon2.png" alt="Hỗ trợ giảng dạy" />
                     <h2>Hỗ trợ giảng dạy</h2>
                 </div>
             </article>
@@ -574,16 +462,6 @@
             <p>Được tạo bởi <a href="https://www.facebook.com/hoangminhtuan.hmtuan" target="_blank">Hoàng Minh Tuấn</a> và <a href="https://www.facebook.com/chuong.truong.130409" target="_blank">Trương Viết Duy Chương</a></p>
         </footer>
     </div>
-    
-    <!-- Theme Toggle Button -->
-    <button class="theme-toggle" aria-label="Toggle theme">
-        <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M12,18C8.686,18,6,15.314,6,12S8.686,6,12,6s6,2.686,6,6S15.314,18,12,18z M12,4c-4.418,0-8,3.582-8,8s3.582,8,8,8s8-3.582,8-8S16.418,4,12,4z"/>
-        </svg>
-        <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5S14.76,7,12,7z M2,13h2c0.55,0,1-0.45,1-1s-0.45-1-1-1H2c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13h2c0.55,0,1-0.45,1-1s-0.45-1-1-1h-2c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M6.34,7.75L7.75,6.34c0.39-0.39,0.39-1.02,0-1.41s-1.02-0.39-1.41,0L4.93,4.93c-0.39,0.39-0.39,1.02,0,1.41C5.32,6.73,5.95,6.73,6.34,7.75z M17.66,16.25L16.25,17.66c-0.39,0.39-0.39,1.02,0,1.41s1.02,0.39,1.41,0l1.41-1.41c0.39-0.39,0.39-1.02,0-1.41C18.68,15.27,18.05,15.27,17.66,16.25z M4.93,19.07l1.41,1.41c0.39,0.39,1.02,0.39,1.41,0s0.39-1.02,0-1.41l-1.41-1.41c-0.39-0.39-1.02-0.39-1.41,0S4.54,18.68,4.93,19.07z M19.07,4.93l-1.41-1.41c-0.39-0.39-1.02-0.39-1.41,0s-0.39,1.02,0,1.41l1.41,1.41c0.39,0.39,1.02,0.39,1.41,0S19.46,5.32,19.07,4.93z"/>
-        </svg>
-    </button>
     
     <!-- SVG Filter -->
     <svg class="sr-only" style="overflow: visible !important;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -598,51 +476,9 @@
     </a>
 
     <script>
-        // Theme management with localStorage
-        const THEME_KEY = 'vanw-theme';
-        
-        // Function to get saved theme from localStorage
-        function getSavedTheme() {
-            return localStorage.getItem(THEME_KEY);
-        }
-        
-        // Function to save theme to localStorage
-        function saveTheme(theme) {
-            localStorage.setItem(THEME_KEY, theme);
-        }
-        
-        // Function to apply theme
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            updateThemeIcons();
-        }
-        
-        // Function to initialize theme
-        function initializeTheme() {
-            const savedTheme = getSavedTheme();
-            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-            
-            let theme;
-            
-            if (savedTheme) {
-                // Use saved theme if available
-                theme = savedTheme;
-            } else {
-                // Otherwise use system preference
-                theme = prefersDarkScheme.matches ? 'dark' : 'light';
-            }
-            
-            applyTheme(theme);
-            return theme;
-        }
-        
         // Loading screen functionality
         const loadingScreen = document.getElementById('loadingScreen');
         const mainContent = document.getElementById('mainContent');
-        
-        // Initialize theme and set loading screen theme
-        const initialTheme = initializeTheme();
-        loadingScreen.setAttribute('data-theme', initialTheme);
         
         // Loading animation
         function animateSpinner() {
@@ -775,32 +611,6 @@
                 article.style.setProperty('--pointer-y', y.toFixed(3));
             });
         });
-        
-        // Theme toggle functionality
-        const themeToggle = document.querySelector('.theme-toggle');
-        
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            // Apply new theme and save it
-            applyTheme(newTheme);
-            saveTheme(newTheme);
-        });
-        
-        // Function to update theme icons
-        function updateThemeIcons() {
-            const themeIcons = document.querySelectorAll('.theme-icon');
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            
-            themeIcons.forEach(icon => {
-                if (currentTheme === 'dark') {
-                    icon.style.filter = 'invert(1)';
-                } else {
-                    icon.style.filter = 'invert(0)';
-                }
-            });
-        }
         
         // Add click handlers for the cards
         articles.forEach(article => {
