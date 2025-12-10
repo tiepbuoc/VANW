@@ -1,4 +1,4 @@
-// JavaScript cho popup bản đồ văn học - ĐÃ SỬA LỖI HOÀN CHỈNH VỚI AI TÌM VỊ TRÍ
+// JavaScript cho popup bản đồ văn học - ĐÃ SỬA LỖI TÌM TÁC GIẢ XUNG QUANH
 document.addEventListener('DOMContentLoaded', function() {
     // Cấu hình Firebase
     const firebaseConfig = {
@@ -35,10 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let userLocationMarker = null;
     let watchId = null;
     let suggestions = null;
-    let isGeocodingInProgress = false;
-    let geocodedAuthors = new Set();
+    let userLocation = null; // Thêm biến lưu vị trí người dùng
 
-    // API Key cho bản đồ và AI
+    // API Key cho bản đồ
     const MAP_REVERSED_API_KEY = "YMZZKI_mV0OHMDxiWE65_LsII1E242PuDySazIA";
     const MAP_API_KEY = MAP_REVERSED_API_KEY.split('').reverse().join('');
 
@@ -70,16 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div class="map-controls-container">
                                     <!-- Phần điều khiển cố định trên cùng -->
                                     <div class="map-fixed-controls">
-                                        <div class="ai-progress" id="aiGeocodingProgress">
-                                            <div class="progress-text">
-                                                <i class="fas fa-robot"></i>
-                                                <span id="aiProgressText">AI đang tìm vị trí các tác giả...</span>
-                                            </div>
-                                            <div class="progress-bar">
-                                                <div class="progress-fill" id="aiProgressFill"></div>
-                                            </div>
-                                        </div>
-                                        
                                         <div class="search-container">
                                             <input type="text" id="mapSearchInput" class="search-input" placeholder="Tìm kiếm nhà văn...">
                                             <button class="advanced-search-btn" id="advancedSearchBtn">
@@ -88,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <div class="suggestions" id="mapSuggestions"></div>
                                         </div>
                                         
-                                        <!-- Panel tìm kiếm nâng cao - CHỨA CÁC TÙY CHỌN MỞ RỘNG -->
+                                        <!-- Panel tìm kiếm nâng cao -->
                                         <div class="advanced-search-panel" id="advancedSearchPanel">
                                             <div class="advanced-search-fields">
                                                 <div class="advanced-field">
@@ -143,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                     </div>
                                                 </div>
                                                 
-                                                <!-- Panel chế độ liên hệ (hiển thị khi bật) -->
+                                                <!-- Panel chế độ liên hệ -->
                                                 <div id="connectionModePanel" class="connection-mode">
                                                     <div class="selected-author" id="author1Selection">
                                                         <i class="fas fa-user" style="color: #28a745;"></i> Tác giả 1: Chưa chọn
@@ -157,17 +146,27 @@ document.addEventListener('DOMContentLoaded', function() {
                                                     <div id="connectionResult" style="display: none; margin-top: 15px; padding: 15px; background-color: rgba(0,0,0,0.05); border-radius: 8px;"></div>
                                                 </div>
                                                 
-                                                <!-- NÚT VỊ TRÍ VÀ TÌM KIẾM GẦN -->
+                                                <!-- NÚT VỊ TRÍ VÀ TÌM KIẾM GẦN - SỬA: THÊM NÚT TẢI LẠI DỮ LIỆU -->
                                                 <div class="location-controls">
                                                     <button id="toggleLocationBtn" class="control-btn secondary">
                                                         <i class="fas fa-location-crosshairs"></i> Vị trí của tôi
                                                     </button>
                                                     <button id="findNearbyBtn" class="control-btn secondary">
-                                                        <i class="fas fa-search-location"></i> Tìm gần tôi (100km)
+                                                        <i class="fas fa-search-location"></i> Tìm tác giả gần tôi
                                                     </button>
-                                                    <button id="refreshLocationsBtn" class="control-btn secondary">
-                                                        <i class="fas fa-sync-alt"></i> AI tìm vị trí
+                                                    <button id="refreshDataBtn" class="control-btn secondary">
+                                                        <i class="fas fa-sync-alt"></i> Tải lại dữ liệu
                                                     </button>
+                                                </div>
+                                                
+                                                <!-- THÊM MỤC HIỂN THỊ THÔNG TIN VỊ TRÍ HIỆN TẠI -->
+                                                <div id="currentLocationInfo" style="display: none; margin-top: 15px; padding: 10px; background-color: rgba(66, 133, 244, 0.1); border-radius: 6px; border: 1px solid rgba(66, 133, 244, 0.3);">
+                                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                                        <strong style="color: #4285F4;"><i class="fas fa-map-marker-alt"></i> Vị trí hiện tại:</strong>
+                                                        <span id="locationAccuracy" style="font-size: 0.8rem; color: #666;"></span>
+                                                    </div>
+                                                    <div id="locationCoords" style="font-size: 0.9rem; color: #333;"></div>
+                                                    <div id="locationAddress" style="font-size: 0.8rem; color: #666; margin-top: 5px;"></div>
                                                 </div>
                                             </div>
                                             <div class="advanced-search-actions">
@@ -186,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <div id="countryInfoContent" class="author-info-content">
                                             <div class="firebase-loading">
                                                 <span class="loading-spinner"></span>
-                                                <p>Đang khởi tạo bản đồ văn học...</p>
+                                                <p>Đang kết nối với cơ sở dữ liệu văn học...</p>
                                             </div>
                                         </div>
                                     </div>
@@ -211,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     loadData();
                     loadCountryGeoData();
                     console.log('Bản đồ đã được khởi tạo thành công');
-                    console.log('API Key đã được cấu hình:', MAP_API_KEY ? 'Có' : 'Không');
                 } catch (error) {
                     console.error('Lỗi khi khởi tạo bản đồ:', error);
                 }
@@ -578,19 +576,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Hàm hiển thị thành công
-    function showSuccess(message) {
-        const countryInfoContent = document.getElementById('countryInfoContent');
-        if (countryInfoContent) {
-            countryInfoContent.innerHTML = `
-                <div class="info-section">
-                    <h3 style="color: #28a745;">Thành công!</h3>
-                    <p>${message}</p>
-                </div>
-            `;
-        }
-    }
-
     // Icon cho bản đồ
     const defaultIcon = L.divIcon({
         className: 'author-default-marker',
@@ -606,28 +591,51 @@ document.addEventListener('DOMContentLoaded', function() {
         iconAnchor: [10, 10]
     });
 
-    // Hàm tải dữ liệu từ Firestore - SỬA: Thêm AI tìm kiếm vị trí
+    // Hàm tải dữ liệu từ Firestore - SỬA: THÊM LOG CHI TIẾT
     async function loadData() {
         try {
             const countryInfoContent = document.getElementById('countryInfoContent');
             
             console.log('Đang tải dữ liệu từ Firestore...');
             
-            countryInfoContent.innerHTML = `
-                <div class="firebase-loading">
-                    <span class="loading-spinner"></span>
-                    <p>Đang tải dữ liệu tác giả từ cơ sở dữ liệu...</p>
-                </div>
-            `;
-            
             const authorsSnapshot = await db.collection('authors').get();
             authors = [];
             authorsSnapshot.forEach(doc => {
+                const data = doc.data();
+                // Đảm bảo birthPlace có định dạng đúng
+                if (data.birthPlace) {
+                    // Nếu birthPlace là string, chuyển đổi thành object
+                    if (typeof data.birthPlace === 'string') {
+                        try {
+                            data.birthPlace = JSON.parse(data.birthPlace);
+                        } catch (e) {
+                            console.warn(`Không thể parse birthPlace của tác giả ${data.name}:`, data.birthPlace);
+                            data.birthPlace = null;
+                        }
+                    }
+                    // Nếu birthPlace là object nhưng không có lat/lng, thử parse từ các trường khác
+                    else if (data.birthPlace && typeof data.birthPlace === 'object' && 
+                            (!data.birthPlace.lat || !data.birthPlace.lng)) {
+                        if (data.latitude && data.longitude) {
+                            data.birthPlace = {
+                                lat: parseFloat(data.latitude),
+                                lng: parseFloat(data.longitude)
+                            };
+                        }
+                    }
+                }
+                
                 authors.push({
                     id: doc.id,
-                    ...doc.data()
+                    ...data
                 });
+                
+                // Log chi tiết cho debugging
+                console.log(`Tác giả: ${data.name}, Vị trí:`, data.birthPlace);
             });
+            
+            console.log(`Tổng số tác giả: ${authors.length}`);
+            console.log(`Số tác giả có vị trí: ${authors.filter(a => a.birthPlace && a.birthPlace.lat && a.birthPlace.lng).length}`);
             
             const historySnapshot = await db.collection('history').get();
             historyData = {};
@@ -637,361 +645,34 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('Dữ liệu đã tải:', authors.length, 'tác giả');
             
-            // Kiểm tra xem có tác giả nào có tọa độ không
-            const authorsWithCoordinates = authors.filter(author => 
-                author.birthPlace && author.birthPlace.lat && author.birthPlace.lng
-            );
-            
-            if (authorsWithCoordinates.length === 0) {
-                // Không có tọa độ, sử dụng AI để tìm
-                showAIGeocodingProgress();
-                await findAuthorsLocationsWithAI();
-            } else {
-                // Đã có tọa độ, hiển thị ngay
+            if (countryInfoContent) {
                 countryInfoContent.innerHTML = `
                     <div class="info-section">
                         <h3 style="margin: 0 0 15px 0; color: var(--primary-color);">
                             <i class="fas fa-globe-asia"></i> Bản đồ Văn học
                         </h3>
                         <p style="color: var(--text-secondary);">
-                            Đã tải ${authors.length} tác giả. Nhấp vào một quốc gia trên bản đồ để xem thông tin văn học và các tác giả nổi bật.
+                            Nhấp vào một quốc gia trên bản đồ để xem thông tin văn học và các tác giả nổi bật.
                         </p>
-                        <div style="margin-top: 20px; padding: 15px; background-color: rgba(40, 167, 69, 0.1); border-radius: 8px;">
-                            <p style="margin: 0; color: #28a745;">
-                                <i class="fas fa-check-circle"></i> <strong>Thành công:</strong> Đã tìm thấy ${authorsWithCoordinates.length} tác giả có vị trí trên bản đồ.
+                        <div style="margin-top: 20px; padding: 15px; background-color: rgba(227, 124, 45, 0.1); border-radius: 8px;">
+                            <p style="margin: 0; color: var(--text-primary);">
+                                <i class="fas fa-lightbulb"></i> <strong>Mẹo:</strong> Bạn cũng có thể tìm kiếm tác giả bằng ô tìm kiếm phía trên.
                             </p>
                         </div>
-                        <div style="margin-top: 15px; padding: 15px; background-color: rgba(227, 124, 45, 0.1); border-radius: 8px;">
-                            <p style="margin: 0; color: var(--text-primary);">
-                                <i class="fas fa-lightbulb"></i> <strong>Mẹo:</strong> Bạn có thể dùng nút "AI tìm vị trí" để cải thiện độ chính xác vị trí.
+                        <div style="margin-top: 10px; padding: 10px; background-color: rgba(66, 133, 244, 0.1); border-radius: 6px;">
+                            <p style="margin: 0; color: #4285F4; font-size: 0.9rem;">
+                                <i class="fas fa-info-circle"></i> Đã tải ${authors.length} tác giả, trong đó ${authors.filter(a => a.birthPlace && a.birthPlace.lat && a.birthPlace.lng).length} tác giả có vị trí trên bản đồ.
                             </p>
                         </div>
                     </div>
                 `;
-                
-                displayAuthors();
             }
+            
+            displayAuthors();
             
         } catch (error) {
             console.error('Lỗi tải dữ liệu:', error);
             showError('Không thể kết nối với cơ sở dữ liệu. Vui lòng kiểm tra kết nối internet.');
-        }
-    }
-
-    // Hàm hiển thị tiến trình AI tìm vị trí
-    function showAIGeocodingProgress() {
-        const aiProgress = document.getElementById('aiGeocodingProgress');
-        const aiProgressText = document.getElementById('aiProgressText');
-        const aiProgressFill = document.getElementById('aiProgressFill');
-        
-        if (aiProgress && aiProgressText && aiProgressFill) {
-            aiProgress.classList.add('active');
-            aiProgressText.textContent = 'AI đang phân tích và tìm vị trí các tác giả...';
-            aiProgressFill.style.width = '10%';
-        }
-    }
-
-    // Hàm cập nhật tiến trình AI
-    function updateAIGeocodingProgress(progress, text) {
-        const aiProgress = document.getElementById('aiGeocodingProgress');
-        const aiProgressText = document.getElementById('aiProgressText');
-        const aiProgressFill = document.getElementById('aiProgressFill');
-        
-        if (aiProgress && aiProgressText && aiProgressFill) {
-            aiProgressText.textContent = text;
-            aiProgressFill.style.width = `${progress}%`;
-        }
-    }
-
-    // Hàm ẩn tiến trình AI
-    function hideAIGeocodingProgress() {
-        const aiProgress = document.getElementById('aiGeocodingProgress');
-        if (aiProgress) {
-            setTimeout(() => {
-                aiProgress.classList.remove('active');
-            }, 1000);
-        }
-    }
-
-    // Hàm tìm vị trí tác giả bằng AI - TỰ ĐỘNG PHÂN TÍCH
-    async function findAuthorsLocationsWithAI() {
-        if (isGeocodingInProgress) {
-            alert('AI đang tìm kiếm vị trí, vui lòng đợi...');
-            return;
-        }
-        
-        isGeocodingInProgress = true;
-        geocodedAuthors.clear();
-        
-        const authorsWithoutLocation = authors.filter(author => 
-            !author.birthPlace || !author.birthPlace.lat || !author.birthPlace.lng
-        );
-        
-        const authorsWithLocation = authors.filter(author => 
-            author.birthPlace && author.birthPlace.lat && author.birthPlace.lng
-        );
-        
-        console.log(`Tìm vị trí cho ${authorsWithoutLocation.length} tác giả không có tọa độ`);
-        console.log(`Đã có ${authorsWithLocation.length} tác giả có tọa độ`);
-        
-        if (authorsWithoutLocation.length === 0) {
-            updateAIGeocodingProgress(100, 'Tất cả tác giả đã có vị trí!');
-            setTimeout(() => {
-                hideAIGeocodingProgress();
-                showSuccess('Tất cả tác giả đã có vị trí trên bản đồ!');
-                displayAuthors();
-            }, 1500);
-            isGeocodingInProgress = false;
-            return;
-        }
-        
-        updateAIGeocodingProgress(20, 'Đang phân tích thông tin tác giả...');
-        
-        // Tạo danh sách tác giả Việt Nam ở Huế và miền Trung
-        const vietnameseAuthors = authorsWithoutLocation.filter(author => 
-            author.country && author.country.toLowerCase().includes('vietnam')
-        );
-        
-        const otherAuthors = authorsWithoutLocation.filter(author => 
-            !author.country || !author.country.toLowerCase().includes('vietnam')
-        );
-        
-        console.log(`Có ${vietnameseAuthors.length} tác giả Việt Nam cần tìm vị trí`);
-        
-        // Ưu tiên tìm vị trí cho tác giả Việt Nam trước
-        let processedCount = 0;
-        const totalToProcess = Math.min(vietnameseAuthors.length + otherAuthors.length, 20); // Giới hạn để tránh quá tải
-        
-        // Xử lý tác giả Việt Nam (ưu tiên Huế và miền Trung)
-        for (let i = 0; i < Math.min(vietnameseAuthors.length, 10); i++) {
-            const author = vietnameseAuthors[i];
-            processedCount++;
-            
-            const progress = Math.floor((processedCount / totalToProcess) * 100);
-            updateAIGeocodingProgress(20 + progress * 0.6, `Đang tìm vị trí cho "${author.name}"...`);
-            
-            try {
-                await findAuthorLocationWithAI(author);
-                geocodedAuthors.add(author.id);
-                
-                // Cập nhật lên Firebase
-                await updateAuthorLocationInFirebase(author.id, author.birthPlace);
-                
-                // Hiển thị ngay lên bản đồ
-                addAuthorMarker(author);
-                
-                await delay(500); // Chờ 0.5 giây giữa các request
-            } catch (error) {
-                console.error(`Lỗi khi tìm vị trí cho ${author.name}:`, error);
-            }
-        }
-        
-        // Xử lý tác giả nước ngoài
-        for (let i = 0; i < Math.min(otherAuthors.length, 10); i++) {
-            const author = otherAuthors[i];
-            processedCount++;
-            
-            const progress = Math.floor((processedCount / totalToProcess) * 100);
-            updateAIGeocodingProgress(20 + progress * 0.6, `Đang tìm vị trí cho "${author.name}"...`);
-            
-            try {
-                await findAuthorLocationWithAI(author);
-                geocodedAuthors.add(author.id);
-                
-                // Cập nhật lên Firebase
-                await updateAuthorLocationInFirebase(author.id, author.birthPlace);
-                
-                // Hiển thị ngay lên bản đồ
-                addAuthorMarker(author);
-                
-                await delay(500); // Chờ 0.5 giây giữa các request
-            } catch (error) {
-                console.error(`Lỗi khi tìm vị trí cho ${author.name}:`, error);
-            }
-        }
-        
-        updateAIGeocodingProgress(100, 'Hoàn thành! Đang cập nhật bản đồ...');
-        
-        setTimeout(() => {
-            hideAIGeocodingProgress();
-            
-            const newlyGeocoded = geocodedAuthors.size;
-            const totalWithLocation = authors.filter(a => 
-                a.birthPlace && a.birthPlace.lat && a.birthPlace.lng
-            ).length;
-            
-            showSuccess(`AI đã tìm thấy vị trí cho ${newlyGeocoded} tác giả mới! Tổng cộng có ${totalWithLocation} tác giả hiển thị trên bản đồ.`);
-            
-            // Hiển thị tất cả các tác giả có vị trí
-            displayAuthors();
-            
-            isGeocodingInProgress = false;
-        }, 2000);
-    }
-    
-    // Hàm trễ
-    function delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    // Hàm tìm vị trí của một tác giả cụ thể bằng AI
-    async function findAuthorLocationWithAI(author) {
-        console.log(`Đang tìm vị trí cho tác giả: ${author.name}`);
-        
-        // Tạo prompt cho AI
-        const prompt = `Tôi cần tìm tọa độ địa lý (vĩ độ, kinh độ) cho nhà văn/nhà thơ "${author.name}". 
-        
-        Thông tin về tác giả:
-        - Tên: ${author.name}
-        - Quốc gia: ${author.country || 'Chưa rõ'}
-        - Thế kỷ: ${author.century || 'Chưa rõ'}
-        - Tác phẩm: ${author.works ? author.works.slice(0, 3).join(', ') : 'Không có thông tin'}
-        - Tiểu sử: ${author.bio ? author.bio.substring(0, 200) + '...' : 'Không có thông tin'}
-        
-        Hãy phân tích và cung cấp tọa độ địa lý (vĩ độ, kinh độ) phù hợp nhất cho nơi sinh hoặc nơi sống chính của tác giả này.
-        
-        QUAN TRỌNG: Trả lời CHỈ với tọa độ dạng số, ví dụ: "16.4637, 107.5909" (cho Huế, Việt Nam) hoặc "21.0285, 105.8542" (cho Hà Nội, Việt Nam).
-        Nếu không thể xác định, hãy trả lời "Không xác định".
-        
-        Phân tích ngắn gọn:`;
-        
-        try {
-            const apiKey = MAP_API_KEY;
-            if (!apiKey) {
-                throw new Error('Không tìm thấy API key');
-            }
-            
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: prompt
-                        }]
-                    }]
-                })
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const data = await response.json();
-            
-            if (data.candidates && data.candidates[0].content.parts[0].text) {
-                const aiResponse = data.candidates[0].content.parts[0].text.trim();
-                console.log(`AI response for ${author.name}:`, aiResponse);
-                
-                // Phân tích phản hồi từ AI
-                if (aiResponse.toLowerCase().includes('không xác định') || 
-                    aiResponse.toLowerCase().includes('không tìm thấy') ||
-                    aiResponse.toLowerCase().includes('unknown')) {
-                    
-                    // Nếu không xác định được, sử dụng vị trí mặc định dựa trên quốc gia
-                    assignDefaultLocation(author);
-                } else {
-                    // Cố gắng trích xuất tọa độ từ phản hồi
-                    const coordinates = extractCoordinatesFromText(aiResponse);
-                    
-                    if (coordinates) {
-                        author.birthPlace = {
-                            lat: coordinates.lat,
-                            lng: coordinates.lng
-                        };
-                        console.log(`Đã tìm thấy tọa độ cho ${author.name}: ${coordinates.lat}, ${coordinates.lng}`);
-                    } else {
-                        // Nếu không trích xuất được, sử dụng vị trí mặc định
-                        assignDefaultLocation(author);
-                    }
-                }
-            } else {
-                assignDefaultLocation(author);
-            }
-        } catch (error) {
-            console.error(`Lỗi khi gọi AI cho ${author.name}:`, error);
-            assignDefaultLocation(author);
-        }
-    }
-    
-    // Hàm trích xuất tọa độ từ văn bản
-    function extractCoordinatesFromText(text) {
-        // Tìm các mẫu tọa độ phổ biến
-        const patterns = [
-            /(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/, // 16.4637, 107.5909
-            /lat[:\s]*(-?\d+\.\d+)[,\s]*lng[:\s]*(-?\d+\.\d+)/i, // lat: 16.4637, lng: 107.5909
-            /latitude[:\s]*(-?\d+\.\d+)[,\s]*longitude[:\s]*(-?\d+\.\d+)/i // latitude: 16.4637, longitude: 107.5909
-        ];
-        
-        for (const pattern of patterns) {
-            const match = text.match(pattern);
-            if (match) {
-                const lat = parseFloat(match[1]);
-                const lng = parseFloat(match[2]);
-                
-                // Kiểm tra tính hợp lệ của tọa độ
-                if (!isNaN(lat) && !isNaN(lng) && 
-                    lat >= -90 && lat <= 90 && 
-                    lng >= -180 && lng <= 180) {
-                    return { lat, lng };
-                }
-            }
-        }
-        
-        return null;
-    }
-    
-    // Hàm gán vị trí mặc định dựa trên quốc gia
-    function assignDefaultLocation(author) {
-        console.log(`Gán vị trí mặc định cho ${author.name}`);
-        
-        const country = author.country ? author.country.toLowerCase() : '';
-        
-        // Tọa độ mặc định cho các quốc gia phổ biến
-        const defaultLocations = {
-            'vietnam': { lat: 16.4637, lng: 107.5909 }, // Huế
-            'việt nam': { lat: 16.4637, lng: 107.5909 }, // Huế
-            'mỹ': { lat: 38.9072, lng: -77.0369 }, // Washington DC
-            'united states': { lat: 38.9072, lng: -77.0369 }, // Washington DC
-            'anh': { lat: 51.5074, lng: -0.1278 }, // London
-            'united kingdom': { lat: 51.5074, lng: -0.1278 }, // London
-            'pháp': { lat: 48.8566, lng: 2.3522 }, // Paris
-            'france': { lat: 48.8566, lng: 2.3522 }, // Paris
-            'đức': { lat: 52.5200, lng: 13.4050 }, // Berlin
-            'germany': { lat: 52.5200, lng: 13.4050 }, // Berlin
-            'nga': { lat: 55.7558, lng: 37.6173 }, // Moscow
-            'russia': { lat: 55.7558, lng: 37.6173 }, // Moscow
-            'trung quốc': { lat: 39.9042, lng: 116.4074 }, // Beijing
-            'china': { lat: 39.9042, lng: 116.4074 }, // Beijing
-            'nhật bản': { lat: 35.6762, lng: 139.6503 }, // Tokyo
-            'japan': { lat: 35.6762, lng: 139.6503 } // Tokyo
-        };
-        
-        // Tìm vị trí mặc định phù hợp
-        for (const [key, location] of Object.entries(defaultLocations)) {
-            if (country.includes(key)) {
-                author.birthPlace = { lat: location.lat, lng: location.lng };
-                console.log(`Gán vị trí mặc định ${key} cho ${author.name}`);
-                return;
-            }
-        }
-        
-        // Nếu không tìm thấy, sử dụng vị trí trung tâm Việt Nam
-        author.birthPlace = { lat: 16.4637, lng: 107.5909 }; // Huế
-        console.log(`Gán vị trí Huế mặc định cho ${author.name}`);
-    }
-    
-    // Hàm cập nhật vị trí tác giả lên Firebase
-    async function updateAuthorLocationInFirebase(authorId, birthPlace) {
-        try {
-            await db.collection('authors').doc(authorId).update({
-                birthPlace: birthPlace
-            });
-            console.log(`Đã cập nhật vị trí cho tác giả ${authorId} lên Firebase`);
-        } catch (error) {
-            console.error(`Lỗi khi cập nhật Firebase cho ${authorId}:`, error);
         }
     }
 
@@ -1004,93 +685,63 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         markers = [];
         
-        const authorsWithLocation = authors.filter(author => 
-            author.birthPlace && author.birthPlace.lat && author.birthPlace.lng
-        );
-        
-        console.log(`Hiển thị ${authorsWithLocation.length} tác giả có vị trí trên bản đồ`);
-        
-        authorsWithLocation.forEach(author => {
-            const marker = L.marker(author.birthPlace, { 
-                icon: defaultIcon,
-                title: author.name
-            }).addTo(map);
-            
-            marker.bindPopup(createPopupContent(author));
-            marker.on('click', (e) => {
-                if (isConnectionMode) {
-                    selectAuthorForConnection(author);
+        let authorCount = 0;
+        authors.forEach(author => {
+            if (author.birthPlace && author.birthPlace.lat && author.birthPlace.lng) {
+                const lat = parseFloat(author.birthPlace.lat);
+                const lng = parseFloat(author.birthPlace.lng);
+                
+                // Kiểm tra tọa độ hợp lệ
+                if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                    const marker = L.marker([lat, lng], { 
+                        icon: defaultIcon,
+                        title: author.name
+                    }).addTo(map);
+                    
+                    marker.bindPopup(createPopupContent(author));
+                    marker.on('click', (e) => {
+                        if (isConnectionMode) {
+                            selectAuthorForConnection(author);
+                        } else {
+                            showAuthorInfo(author);
+                            highlightMarker(marker);
+                        }
+                    });
+                    markers.push(marker);
+                    authorCount++;
                 } else {
-                    showAuthorInfo(author);
-                    highlightMarker(marker);
+                    console.warn(`Tọa độ không hợp lệ cho tác giả ${author.name}: lat=${lat}, lng=${lng}`);
                 }
-            });
-            markers.push(marker);
+            }
         });
         
-        // Cập nhật thông tin sidebar
-        const countryInfoContent = document.getElementById('countryInfoContent');
-        if (countryInfoContent) {
-            const authorsWithoutLocation = authors.filter(author => 
-                !author.birthPlace || !author.birthPlace.lat || !author.birthPlace.lng
-            ).length;
-            
-            countryInfoContent.innerHTML = `
-                <div class="info-section">
-                    <h3 style="margin: 0 0 15px 0; color: var(--primary-color);">
-                        <i class="fas fa-globe-asia"></i> Bản đồ Văn học
-                    </h3>
-                    <p style="color: var(--text-secondary);">
-                        Đã hiển thị ${authorsWithLocation.length} tác giả trên bản đồ.
-                    </p>
-                    
-                    ${authorsWithoutLocation > 0 ? `
-                        <div style="margin-top: 15px; padding: 15px; background-color: rgba(255, 193, 7, 0.1); border-radius: 8px;">
-                            <p style="margin: 0; color: #856404;">
-                                <i class="fas fa-exclamation-triangle"></i> 
-                                <strong>Có ${authorsWithoutLocation} tác giả chưa có vị trí.</strong> 
-                                Nhấn nút "AI tìm vị trí" để cải thiện.
-                            </p>
-                        </div>
-                    ` : `
-                        <div style="margin-top: 15px; padding: 15px; background-color: rgba(40, 167, 69, 0.1); border-radius: 8px;">
-                            <p style="margin: 0; color: #28a745;">
-                                <i class="fas fa-check-circle"></i> 
-                                <strong>Hoàn thành!</strong> Tất cả tác giả đã có vị trí trên bản đồ.
-                            </p>
-                        </div>
-                    `}
-                    
-                    <div style="margin-top: 15px; padding: 15px; background-color: rgba(227, 124, 45, 0.1); border-radius: 8px;">
-                        <p style="margin: 0; color: var(--text-primary);">
-                            <i class="fas fa-lightbulb"></i> <strong>Mẹo:</strong> 
-                            Nhấp vào marker trên bản đồ để xem thông tin chi tiết về tác giả.
-                        </p>
-                    </div>
-                </div>
-            `;
-        }
+        console.log(`Đã hiển thị ${authorCount} marker trên bản đồ`);
     }
 
     // Hàm thêm marker cho tác giả mới
     function addAuthorMarker(author) {
         if (author.birthPlace && author.birthPlace.lat && author.birthPlace.lng) {
-            const marker = L.marker(author.birthPlace, { 
-                icon: defaultIcon,
-                title: author.name
-            }).addTo(map);
+            const lat = parseFloat(author.birthPlace.lat);
+            const lng = parseFloat(author.birthPlace.lng);
             
-            marker.bindPopup(createPopupContent(author));
-            marker.on('click', (e) => {
-                if (isConnectionMode) {
-                    selectAuthorForConnection(author);
-                } else {
-                    showAuthorInfo(author);
-                    highlightMarker(marker);
-                }
-            });
-            markers.push(marker);
-            return marker;
+            if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+                const marker = L.marker([lat, lng], { 
+                    icon: defaultIcon,
+                    title: author.name
+                }).addTo(map);
+                
+                marker.bindPopup(createPopupContent(author));
+                marker.on('click', (e) => {
+                    if (isConnectionMode) {
+                        selectAuthorForConnection(author);
+                    } else {
+                        showAuthorInfo(author);
+                        highlightMarker(marker);
+                    }
+                });
+                markers.push(marker);
+                return marker;
+            }
         }
         return null;
     }
@@ -1122,17 +773,11 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        const locationSource = geocodedAuthors.has(author.id) ? 
-            '<span style="color: #28a745; font-size: 0.8rem;"><i class="fas fa-robot"></i> Vị trí được xác định bởi AI</span>' :
-            '<span style="color: #6c757d; font-size: 0.8rem;"><i class="fas fa-database"></i> Vị trí từ cơ sở dữ liệu</span>';
-        
         countryInfoContent.innerHTML = `
             <div class="info-section">
                 <h3 style="margin: 0 0 15px 0; color: var(--primary-color); display: flex; align-items: center; gap: 10px;">
                     <i class="fas fa-user-circle"></i> ${author.name}
                 </h3>
-                
-                ${locationSource}
                 
                 ${author.image ? `
                     <img src="${author.image}" alt="${author.name}" 
@@ -1171,16 +816,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 ${author.birthPlace && author.birthPlace.lat && author.birthPlace.lng ? `
-                    <div style="margin-top: 15px; padding: 10px; background-color: rgba(66, 133, 244, 0.1); border-radius: 8px;">
-                        <p style="margin: 0 0 5px 0; color: #4285F4; font-weight: 600;">
-                            <i class="fas fa-map-marker-alt"></i> Vị trí trên bản đồ
-                        </p>
-                        <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
-                            Vĩ độ: ${author.birthPlace.lat.toFixed(4)}<br>
-                            Kinh độ: ${author.birthPlace.lng.toFixed(4)}
-                        </p>
-                    </div>
-                    
                     <button onclick="window.mapPopupShowAuthorInfoAndZoom('${author.id}')"
                             style="margin-top: 15px; width: 100%; padding: 10px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;">
                         <i class="fas fa-map-marker-alt"></i> Xem trên bản đồ
@@ -1230,9 +865,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="info-section">
                     <h3 style="color: var(--text-secondary);">Không tìm thấy tác giả</h3>
                     <p>Không tìm thấy tác giả nào với từ khóa "${searchTerm}"</p>
-                    <button onclick="findAuthorsLocationsWithAI()" class="control-btn" style="margin-top: 10px;">
-                        <i class="fas fa-robot"></i> Dùng AI tìm tác giả mới
-                    </button>
                 </div>
             `;
             return;
@@ -1248,9 +880,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="nearby-author" onclick="window.mapPopupShowAuthorInfo('${author.id}')">
                             ${author.name}
                             ${author.country ? `<span style="font-size: 0.8rem; color: var(--text-secondary);">(${author.country})</span>` : ''}
-                            ${author.birthPlace && author.birthPlace.lat ? 
-                                '<span style="font-size: 0.8rem; color: #28a745;"><i class="fas fa-map-marker-alt"></i></span>' : 
-                                '<span style="font-size: 0.8rem; color: #dc3545;"><i class="fas fa-map-marker-alt"></i> Chưa có vị trí</span>'}
                         </div>
                     `).join('')}
                 </div>
@@ -1313,7 +942,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function highlightMarkerForConnection(author, color) {
         const marker = markers.find(m => {
             const latLng = m.getLatLng();
-            return latLng.lat === author.birthPlace.lat && latLng.lng === author.birthPlace.lng;
+            const authorLat = parseFloat(author.birthPlace.lat);
+            const authorLng = parseFloat(author.birthPlace.lng);
+            return latLng.lat === authorLat && latLng.lng === authorLng;
         });
         
         if (marker) {
@@ -1334,8 +965,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         const latLngs = [
-            [author1.birthPlace.lat, author1.birthPlace.lng],
-            [author2.birthPlace.lat, author2.birthPlace.lng]
+            [parseFloat(author1.birthPlace.lat), parseFloat(author1.birthPlace.lng)],
+            [parseFloat(author2.birthPlace.lat), parseFloat(author2.birthPlace.lng)]
         ];
         
         connectionLine = L.polyline(latLngs, {
@@ -1476,7 +1107,9 @@ document.addEventListener('DOMContentLoaded', function() {
         markers.forEach(marker => {
             const author = authors.find(a => {
                 const latLng = marker.getLatLng();
-                return a.birthPlace && a.birthPlace.lat === latLng.lat && a.birthPlace.lng === latLng.lng;
+                const authorLat = a.birthPlace ? parseFloat(a.birthPlace.lat) : null;
+                const authorLng = a.birthPlace ? parseFloat(a.birthPlace.lng) : null;
+                return authorLat && authorLng && latLng.lat === authorLat && latLng.lng === authorLng;
             });
             
             if (!author) return;
@@ -1498,7 +1131,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             } else {
                 if (map.hasLayer(marker)) {
-                    marker.removeFrom(map);
+                    map.removeLayer(marker);
                 }
             }
         });
@@ -1603,7 +1236,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const toggleLocationBtn = document.getElementById('toggleLocationBtn');
         const findNearbyBtn = document.getElementById('findNearbyBtn');
-        const refreshLocationsBtn = document.getElementById('refreshLocationsBtn');
+        const refreshDataBtn = document.getElementById('refreshDataBtn');
         
         if (toggleLocationBtn) {
             toggleLocationBtn.addEventListener('click', toggleUserLocation);
@@ -1613,11 +1246,49 @@ document.addEventListener('DOMContentLoaded', function() {
             findNearbyBtn.addEventListener('click', findAndShowNearbyAuthors);
         }
         
-        if (refreshLocationsBtn) {
-            refreshLocationsBtn.addEventListener('click', findAuthorsLocationsWithAI);
+        if (refreshDataBtn) {
+            refreshDataBtn.addEventListener('click', () => {
+                loadData();
+                showNotification('Đang tải lại dữ liệu...', 'info');
+            });
         }
         
         console.log('Event listeners đã được thiết lập');
+    }
+
+    // Hàm hiển thị thông báo
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: ${type === 'info' ? '#4285F4' : type === 'success' ? '#34A853' : '#EA4335'};
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+        `;
+        
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-${type === 'info' ? 'info-circle' : type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 300);
+        }, 3000);
     }
 
     // Hàm xử lý tìm kiếm với suggestions
@@ -1703,30 +1374,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const pageTitle = searchData.query.search[0].title;
             
             const newAuthor = {
-                id: 'wiki_' + Date.now(),
+                id: authors.length + 1,
                 name: pageTitle,
                 bio: `Thông tin từ Wikipedia về ${pageTitle}. Đang cập nhật đầy đủ...`,
                 works: [],
+                birthPlace: { lat: 16, lng: 106.2 },
                 country: "Vietnam",
                 century: 20,
                 image: null,
                 connections: []
             };
             
-            // Thêm vào danh sách và tìm vị trí bằng AI
             authors.push(newAuthor);
-            
-            // Hiển thị thông tin và bắt đầu tìm vị trí
+            addAuthorMarker(newAuthor);
             showAuthorInfo(newAuthor);
-            
-            // Tìm vị trí bằng AI
-            await findAuthorLocationWithAI(newAuthor);
-            
-            // Hiển thị marker nếu có vị trí
-            if (newAuthor.birthPlace && newAuthor.birthPlace.lat && newAuthor.birthPlace.lng) {
-                addAuthorMarker(newAuthor);
-                geocodedAuthors.add(newAuthor.id);
-            }
             
         } catch (error) {
             console.error('Lỗi khi tìm kiếm Wikipedia:', error);
@@ -1833,15 +1494,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="info-section">
                     <h3 style="color: var(--text-secondary);">Không tìm thấy tác giả</h3>
                     <p>Không tìm thấy tác giả nào phù hợp với tiêu chí tìm kiếm.</p>
-                    <button onclick="findAuthorsLocationsWithAI()" class="control-btn" style="margin-top: 10px;">
-                        <i class="fas fa-robot"></i> Dùng AI tìm tác giả mới
-                    </button>
                 </div>
             `;
             
             markers.forEach(marker => {
                 if (map.hasLayer(marker)) {
-                    marker.removeFrom(map);
+                    map.removeLayer(marker);
                 }
             });
             return;
@@ -1874,9 +1532,9 @@ document.addEventListener('DOMContentLoaded', function() {
         filteredAuthors.forEach(author => {
             const marker = markers.find(m => {
                 const latLng = m.getLatLng();
-                return author.birthPlace && 
-                       author.birthPlace.lat === latLng.lat && 
-                       author.birthPlace.lng === latLng.lng;
+                const authorLat = author.birthPlace ? parseFloat(author.birthPlace.lat) : null;
+                const authorLng = author.birthPlace ? parseFloat(author.birthPlace.lng) : null;
+                return authorLat && authorLng && latLng.lat === authorLat && latLng.lng === authorLng;
             });
             
             if (marker) {
@@ -1885,7 +1543,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Hàm tính khoảng cách - SỬA: hàm Haversine chính xác
+    // Hàm tính khoảng cách Haversine chính xác - SỬA LỖI
     function calculateDistance(lat1, lon1, lat2, lon2) {
         const R = 6371; // Bán kính Trái đất tính bằng km
         const dLat = toRad(lat2 - lat1);
@@ -1895,36 +1553,49 @@ document.addEventListener('DOMContentLoaded', function() {
             Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
             Math.sin(dLon/2) * Math.sin(dLon/2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return R * c;
+        const distance = R * c;
+        return distance;
     }
     
     function toRad(degrees) {
         return degrees * (Math.PI / 180);
     }
 
-    // Hàm tìm tác giả trong bán kính 100km - SỬA: xử lý tọa độ đúng cách
-    function findAuthorsNearby(userLat, userLng) {
+    // Hàm tìm tác giả trong bán kính - SỬA HOÀN TOÀN
+    function findAuthorsNearby(userLat, userLng, radiusKm = 100) {
         const nearbyAuthors = [];
+        
+        console.log(`Tìm tác giả gần vị trí: lat=${userLat}, lng=${userLng}, bán kính=${radiusKm}km`);
         
         authors.forEach(author => {
             if (author.birthPlace && author.birthPlace.lat && author.birthPlace.lng) {
-                const distance = calculateDistance(
-                    userLat, userLng, 
-                    author.birthPlace.lat, author.birthPlace.lng
-                );
+                const authorLat = parseFloat(author.birthPlace.lat);
+                const authorLng = parseFloat(author.birthPlace.lng);
                 
-                console.log(`Khoảng cách từ bạn đến ${author.name}: ${distance.toFixed(1)}km`);
-                
-                if (distance <= 100) {
-                    nearbyAuthors.push({
-                        author: author,
-                        distance: distance.toFixed(1)
-                    });
+                // Kiểm tra tọa độ hợp lệ
+                if (!isNaN(authorLat) && !isNaN(authorLng) && 
+                    authorLat >= -90 && authorLat <= 90 && 
+                    authorLng >= -180 && authorLng <= 180) {
+                    
+                    const distance = calculateDistance(userLat, userLng, authorLat, authorLng);
+                    
+                    console.log(`Khoảng cách đến ${author.name}: ${distance.toFixed(2)}km`);
+                    
+                    if (distance <= radiusKm) {
+                        nearbyAuthors.push({
+                            author: author,
+                            distance: distance.toFixed(1)
+                        });
+                    }
+                } else {
+                    console.warn(`Tọa độ không hợp lệ cho tác giả ${author.name}: lat=${authorLat}, lng=${authorLng}`);
                 }
             }
         });
         
         nearbyAuthors.sort((a, b) => a.distance - b.distance);
+        
+        console.log(`Tìm thấy ${nearbyAuthors.length} tác giả trong bán kính ${radiusKm}km`);
         
         return nearbyAuthors;
     }
@@ -1946,37 +1617,45 @@ document.addEventListener('DOMContentLoaded', function() {
         iconAnchor: [12, 12]
     });
 
-    // Hàm hiển thị vị trí người dùng - SỬA: thêm xử lý lỗi
+    // Hàm hiển thị vị trí người dùng
     function showUserLocation() {
         if (navigator.geolocation) {
             console.log('Đang lấy vị trí người dùng...');
+            
+            const countryInfoContent = document.getElementById('countryInfoContent');
+            if (countryInfoContent) {
+                countryInfoContent.innerHTML = `
+                    <div class="firebase-loading">
+                        <span class="loading-spinner"></span>
+                        <p>Đang xác định vị trí của bạn...</p>
+                    </div>
+                `;
+            }
+            
             navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    const userLatLng = [position.coords.latitude, position.coords.longitude];
-                    console.log('Vị trí người dùng:', userLatLng);
+                async function(position) {
+                    userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        accuracy: position.coords.accuracy
+                    };
+                    
+                    console.log('Vị trí người dùng:', userLocation);
                     
                     if (userLocationMarker) {
                         map.removeLayer(userLocationMarker);
                     }
                     
-                    userLocationMarker = L.marker(userLatLng, {
+                    userLocationMarker = L.marker([userLocation.lat, userLocation.lng], {
                         icon: userLocationIcon,
                         zIndexOffset: 1000
                     }).addTo(map);
                     
-                    const accuracy = position.coords.accuracy;
-                    userLocationMarker.bindPopup(`
-                        <div style="text-align: center; min-width: 200px;">
-                            <h3 style="margin: 5px 0; color: #4285F4;">Vị trí của bạn</h3>
-                            <p style="margin: 5px 0;"><strong>Vĩ độ:</strong> ${userLatLng[0].toFixed(6)}</p>
-                            <p style="margin: 5px 0;"><strong>Kinh độ:</strong> ${userLatLng[1].toFixed(6)}</p>
-                            <p style="margin: 5px 0;"><strong>Độ chính xác:</strong> ~${Math.round(accuracy)} mét</p>
-                            <small style="color: #666;">Cập nhật: ${new Date().toLocaleTimeString()}</small>
-                        </div>
-                    `).openPopup();
+                    // Cập nhật thông tin vị trí hiển thị
+                    updateLocationInfo(userLocation);
                     
-                    const zoomLevel = accuracy < 100 ? 16 : accuracy < 500 ? 14 : 12;
-                    map.flyTo(userLatLng, zoomLevel);
+                    const zoomLevel = userLocation.accuracy < 100 ? 16 : userLocation.accuracy < 500 ? 14 : 12;
+                    map.flyTo([userLocation.lat, userLocation.lng], zoomLevel);
                     
                     const toggleLocationBtn = document.getElementById('toggleLocationBtn');
                     if (toggleLocationBtn) {
@@ -1984,11 +1663,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         toggleLocationBtn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Ẩn vị trí';
                     }
                     
+                    // Tự động tìm tác giả gần đó
                     setTimeout(() => {
-                        if (userLocationMarker) {
-                            userLocationMarker.closePopup();
-                        }
-                    }, 5000);
+                        findAndShowNearbyAuthors();
+                    }, 1000);
                     
                     startTracking();
                 },
@@ -2006,26 +1684,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             break;
                     }
                     
-                    // Hiển thị thông báo lỗi chi tiết
-                    const countryInfoContent = document.getElementById('countryInfoContent');
-                    if (countryInfoContent) {
-                        countryInfoContent.innerHTML = `
-                            <div class="info-section">
-                                <h3 style="color: #ef4444;">Lỗi định vị</h3>
-                                <p>${errorMessage}</p>
-                                <p>Vui lòng kiểm tra:</p>
-                                <ul>
-                                    <li>Trình duyệt có quyền truy cập vị trí</li>
-                                    <li>GPS/định vị đã được bật</li>
-                                    <li>Kết nối internet ổn định</li>
-                                </ul>
-                            </div>
-                        `;
-                    }
+                    showError(errorMessage);
+                    console.error('Lỗi định vị:', error);
                 },
                 {
                     enableHighAccuracy: true,
-                    timeout: 15000, // Tăng thời gian timeout
+                    timeout: 15000,
                     maximumAge: 0
                 }
             );
@@ -2034,17 +1698,68 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Hàm cập nhật thông tin vị trí
+    function updateLocationInfo(location) {
+        const locationInfo = document.getElementById('currentLocationInfo');
+        const locationCoords = document.getElementById('locationCoords');
+        const locationAccuracy = document.getElementById('locationAccuracy');
+        const locationAddress = document.getElementById('locationAddress');
+        
+        if (locationInfo && locationCoords && locationAccuracy) {
+            locationInfo.style.display = 'block';
+            locationCoords.textContent = `Lat: ${location.lat.toFixed(6)}, Lng: ${location.lng.toFixed(6)}`;
+            locationAccuracy.textContent = `Độ chính xác: ~${Math.round(location.accuracy)}m`;
+            
+            // Thử lấy địa chỉ từ OpenStreetMap Nominatim
+            getAddressFromCoords(location.lat, location.lng).then(address => {
+                if (locationAddress && address) {
+                    locationAddress.textContent = address;
+                }
+            }).catch(() => {
+                if (locationAddress) {
+                    locationAddress.textContent = 'Đang tải địa chỉ...';
+                }
+            });
+        }
+    }
+
+    // Hàm lấy địa chỉ từ tọa độ
+    async function getAddressFromCoords(lat, lng) {
+        try {
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
+            );
+            const data = await response.json();
+            
+            if (data.address) {
+                const address = data.display_name;
+                return address.length > 100 ? address.substring(0, 100) + '...' : address;
+            }
+        } catch (error) {
+            console.error('Lỗi khi lấy địa chỉ:', error);
+        }
+        return null;
+    }
+
     // Hàm ẩn vị trí người dùng
     function hideUserLocation() {
         if (userLocationMarker) {
             map.removeLayer(userLocationMarker);
             userLocationMarker = null;
         }
+        
+        const locationInfo = document.getElementById('currentLocationInfo');
+        if (locationInfo) {
+            locationInfo.style.display = 'none';
+        }
+        
         const toggleLocationBtn = document.getElementById('toggleLocationBtn');
         if (toggleLocationBtn) {
             toggleLocationBtn.classList.remove('active');
             toggleLocationBtn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Vị trí của tôi';
         }
+        
+        userLocation = null;
         stopTracking();
     }
 
@@ -2059,21 +1774,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Bắt đầu theo dõi vị trí
     function startTracking() {
-        if (navigator.geolocation) {
+        if (navigator.geolocation && userLocation) {
             watchId = navigator.geolocation.watchPosition(
                 function(position) {
-                    const userLatLng = [position.coords.latitude, position.coords.longitude];
+                    userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        accuracy: position.coords.accuracy
+                    };
+                    
                     if (userLocationMarker) {
-                        userLocationMarker.setLatLng(userLatLng);
-                        userLocationMarker.getPopup().setContent(`
-                            <div style="text-align: center; min-width: 200px;">
-                                <h3 style="margin: 5px 0; color: #4285F4;">Vị trí của bạn</h3>
-                                <p style="margin: 5px 0;"><strong>Vĩ độ:</strong> ${userLatLng[0].toFixed(6)}</p>
-                                <p style="margin: 5px 0;"><strong>Kinh độ:</strong> ${userLatLng[1].toFixed(6)}</p>
-                                <p style="margin: 5px 0;"><strong>Độ chính xác:</strong> ~${Math.round(position.coords.accuracy)} mét</p>
-                                <small style="color: #666;">Cập nhật: ${new Date().toLocaleTimeString()}</small>
-                            </div>
-                        `);
+                        userLocationMarker.setLatLng([userLocation.lat, userLocation.lng]);
+                        updateLocationInfo(userLocation);
                     }
                 },
                 function(error) {
@@ -2095,49 +1807,52 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Hàm tìm và hiển thị tác giả gần - SỬA: xử lý đầy đủ
+    // Hàm tìm và hiển thị tác giả gần - SỬA HOÀN TOÀN
     function findAndShowNearbyAuthors() {
-        if (!userLocationMarker) {
-            const notification = document.createElement('div');
-            notification.innerHTML = `
-                <div style="padding: 10px; background-color: #fff3cd; border-left: 4px solid #ffc107; margin-bottom: 15px; border-radius: 6px;">
-                    <p style="margin: 0; color: #856404;">
-                        <i class="fas fa-exclamation-triangle"></i> Vui lòng bật "Vị trí của tôi" trước khi tìm kiếm tác giả gần bạn!
-                    </p>
-                </div>
-            `;
-            
+        if (!userLocation) {
             const countryInfoContent = document.getElementById('countryInfoContent');
             if (countryInfoContent) {
-                countryInfoContent.insertBefore(notification, countryInfoContent.firstChild);
-                
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.remove();
-                    }
-                }, 3000);
+                countryInfoContent.innerHTML = `
+                    <div class="info-section">
+                        <h3 style="color: var(--primary-color);">
+                            <i class="fas fa-search-location"></i> Tìm tác giả gần bạn
+                        </h3>
+                        <p style="color: var(--text-secondary);">
+                            Vui lòng bật "Vị trí của tôi" trước khi tìm kiếm tác giả gần bạn.
+                        </p>
+                        <button onclick="showUserLocation()" 
+                                style="margin-top: 15px; width: 100%; padding: 10px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;">
+                            <i class="fas fa-location-crosshairs"></i> Bật vị trí của tôi
+                        </button>
+                    </div>
+                `;
             }
-            
-            // Tự động bật vị trí
-            setTimeout(() => {
-                showUserLocation();
-            }, 1000);
             return;
         }
         
-        const userLatLng = userLocationMarker.getLatLng();
-        console.log('Tìm tác giả gần vị trí:', userLatLng);
+        console.log('Bắt đầu tìm tác giả gần vị trí:', userLocation);
         
-        const nearbyAuthors = findAuthorsNearby(userLatLng.lat, userLatLng.lng);
-        console.log('Tìm thấy', nearbyAuthors.length, 'tác giả gần đó');
+        const countryInfoContent = document.getElementById('countryInfoContent');
+        if (countryInfoContent) {
+            countryInfoContent.innerHTML = `
+                <div class="firebase-loading">
+                    <span class="loading-spinner"></span>
+                    <p>Đang tìm kiếm tác giả trong bán kính 100km...</p>
+                </div>
+            `;
+        }
         
-        showNearbyAuthors(nearbyAuthors);
-        
-        // Zoom đến khu vực xung quanh
-        map.flyTo(userLatLng, 10);
+        // Cho phép người dùng chọn bán kính
+        setTimeout(() => {
+            const nearbyAuthors = findAuthorsNearby(userLocation.lat, userLocation.lng, 100);
+            showNearbyAuthors(nearbyAuthors);
+            
+            // Zoom đến khu vực xung quanh
+            map.flyTo([userLocation.lat, userLocation.lng], 10);
+        }, 500);
     }
 
-    // Hàm hiển thị tác giả gần - SỬA: cải thiện giao diện
+    // Hàm hiển thị tác giả gần
     function showNearbyAuthors(nearbyAuthors) {
         const countryInfoContent = document.getElementById('countryInfoContent');
         
@@ -2155,7 +1870,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="close-nearby" onclick="closeNearbyAuthors()">×</span>
                     </div>
                     <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9rem;">
-                        <i class="fas fa-info-circle"></i> Tìm thấy ${nearbyAuthors.length} tác giả trong bán kính 100km
+                        <i class="fas fa-info-circle"></i> Tìm thấy ${nearbyAuthors.length} tác giả trong bán kính 100km từ vị trí của bạn
                     </p>
                     <div style="max-height: 400px; overflow-y: auto;">
                         ${nearbyAuthors.map(item => `
@@ -2163,16 +1878,19 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                     <div>
                                         <strong>${item.author.name}</strong>
-                                        ${item.author.country ? `<div style="font-size: 0.8rem; color: var(--text-secondary);">${item.author.country}</div>` : ''}
+                                        <div style="font-size: 0.8rem; color: var(--text-secondary);">
+                                            ${item.author.country || 'Không xác định'} • ${item.author.century ? 'Thế kỷ ' + item.author.century : 'Không rõ thế kỷ'}
+                                        </div>
                                     </div>
                                     <span class="distance-badge">${item.distance} km</span>
                                 </div>
                             </div>
                         `).join('')}
                     </div>
-                    <div style="margin-top: 15px; padding: 10px; background-color: rgba(40, 167, 69, 0.1); border-radius: 6px;">
-                        <p style="margin: 0; font-size: 0.9rem; color: #28a745;">
-                            <i class="fas fa-robot"></i> <strong>Mẹo:</strong> Nếu không thấy tác giả bạn tìm, hãy dùng nút "AI tìm vị trí" để cải thiện độ chính xác.
+                    
+                    <div style="margin-top: 20px; padding: 15px; background-color: rgba(66, 133, 244, 0.1); border-radius: 8px;">
+                        <p style="margin: 0; color: #4285F4; font-size: 0.9rem;">
+                            <i class="fas fa-lightbulb"></i> <strong>Mẹo:</strong> Nhấn vào tên tác giả để xem thông tin chi tiết và vị trí trên bản đồ.
                         </p>
                     </div>
                 </div>
@@ -2192,14 +1910,16 @@ document.addEventListener('DOMContentLoaded', function() {
                             Không tìm thấy tác giả nào trong bán kính 100km.
                         </p>
                         <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
-                            Có thể các tác giả chưa có vị trí chính xác. Hãy thử:
+                            Có thể khu vực của bạn chưa có dữ liệu tác giả, hoặc bạn có thể thử:
                         </p>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <button onclick="findAuthorsLocationsWithAI()" class="control-btn">
-                                <i class="fas fa-robot"></i> Dùng AI tìm vị trí tác giả
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <button onclick="loadData()" 
+                                    style="padding: 8px 15px; background-color: var(--primary-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                                <i class="fas fa-sync-alt"></i> Tải lại dữ liệu
                             </button>
-                            <button onclick="findAndShowNearbyAuthors()" class="control-btn secondary">
-                                <i class="fas fa-redo"></i> Thử lại tìm kiếm
+                            <button onclick="toggleUserLocation()" 
+                                    style="padding: 8px 15px; background-color: #4285F4; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                                <i class="fas fa-redo"></i> Thử lại vị trí
                             </button>
                         </div>
                     </div>
@@ -2214,60 +1934,26 @@ document.addEventListener('DOMContentLoaded', function() {
     window.closeNearbyAuthors = function() {
         const countryInfoContent = document.getElementById('countryInfoContent');
         if (countryInfoContent) {
-            const authorsWithLocation = authors.filter(author => 
-                author.birthPlace && author.birthPlace.lat && author.birthPlace.lng
-            ).length;
-            
-            const authorsWithoutLocation = authors.filter(author => 
-                !author.birthPlace || !author.birthPlace.lat || !author.birthPlace.lng
-            ).length;
-            
             countryInfoContent.innerHTML = `
                 <div class="info-section">
                     <h3 style="margin: 0 0 15px 0; color: var(--primary-color);">
                         <i class="fas fa-globe-asia"></i> Bản đồ Văn học
                     </h3>
                     <p style="color: var(--text-secondary);">
-                        Đã hiển thị ${authorsWithLocation} tác giả trên bản đồ.
+                        Nhấp vào một quốc gia trên bản đồ để xem thông tin văn học và các tác giả nổi bật.
                     </p>
-                    
-                    ${authorsWithoutLocation > 0 ? `
-                        <div style="margin-top: 15px; padding: 15px; background-color: rgba(255, 193, 7, 0.1); border-radius: 8px;">
-                            <p style="margin: 0; color: #856404;">
-                                <i class="fas fa-exclamation-triangle"></i> 
-                                <strong>Có ${authorsWithoutLocation} tác giả chưa có vị trí.</strong> 
-                                Nhấn nút "AI tìm vị trí" để cải thiện.
+                    ${userLocation ? `
+                        <div style="margin-top: 15px; padding: 10px; background-color: rgba(66, 133, 244, 0.1); border-radius: 6px;">
+                            <p style="margin: 0; color: #4285F4; font-size: 0.9rem;">
+                                <i class="fas fa-map-marker-alt"></i> Vị trí của bạn đã được xác định. 
+                                <a href="javascript:void(0)" onclick="findAndShowNearbyAuthors()" style="color: #4285F4; text-decoration: underline;">Tìm tác giả gần bạn</a>
                             </p>
                         </div>
-                    ` : `
-                        <div style="margin-top: 15px; padding: 15px; background-color: rgba(40, 167, 69, 0.1); border-radius: 8px;">
-                            <p style="margin: 0; color: #28a745;">
-                                <i class="fas fa-check-circle"></i> 
-                                <strong>Hoàn thành!</strong> Tất cả tác giả đã có vị trí trên bản đồ.
-                            </p>
-                        </div>
-                    `}
-                    
-                    <div style="margin-top: 15px; padding: 15px; background-color: rgba(227, 124, 45, 0.1); border-radius: 8px;">
-                        <p style="margin: 0; color: var(--text-primary);">
-                            <i class="fas fa-lightbulb"></i> <strong>Mẹo:</strong> 
-                            Nhấp vào marker trên bản đồ để xem thông tin chi tiết về tác giả.
-                        </p>
-                    </div>
+                    ` : ''}
                 </div>
             `;
         }
     };
-
-    // Hàm lấy API key Gemini
-    function getGeminiApiKey() {
-        try {
-            return MAP_API_KEY;
-        } catch (error) {
-            console.error('Lỗi khi lấy API key:', error);
-            return null;
-        }
-    }
 
     // Xuất hàm ra global scope để gọi từ popup
     window.mapPopupShowAuthorInfo = function(authorId) {
@@ -2276,11 +1962,13 @@ document.addEventListener('DOMContentLoaded', function() {
             showAuthorInfo(author);
             
             if (author.birthPlace && author.birthPlace.lat && author.birthPlace.lng) {
-                zoomToAuthorLocation(author.birthPlace.lat, author.birthPlace.lng);
+                const lat = parseFloat(author.birthPlace.lat);
+                const lng = parseFloat(author.birthPlace.lng);
+                zoomToAuthorLocation(lat, lng);
                 
                 const marker = markers.find(m => {
                     const latLng = m.getLatLng();
-                    return latLng.lat === author.birthPlace.lat && latLng.lng === author.birthPlace.lng;
+                    return latLng.lat === lat && latLng.lng === lng;
                 });
                 
                 if (marker) {
@@ -2316,5 +2004,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Xuất hàm initMapPopup để gọi từ script.js
     window.initMapPopup = initMapPopup;
     
-    console.log('Map popup script đã được tải và sẵn sàng với AI tìm vị trí');
+    console.log('Map popup script đã được tải và sẵn sàng');
 });
