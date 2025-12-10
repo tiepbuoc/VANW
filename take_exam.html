@@ -169,14 +169,15 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        /* Tab Navigation */
+        /* Tab Navigation - CĂN GIỮA */
         .tab-navigation {
             display: flex;
+            justify-content: center; /* Căn giữa */
             gap: 1rem;
             margin-bottom: 2rem;
-            border-bottom: 2px solid var(--card-outline);
             padding-bottom: 1rem;
             overflow-x: auto;
+            flex-wrap: wrap; /* Cho phép xuống dòng trên mobile */
         }
 
         .tab-btn {
@@ -255,10 +256,11 @@
             display: flex;
             gap: 1rem;
             margin: 1.5rem 0;
+            justify-content: center; /* Căn giữa */
+            flex-wrap: wrap; /* Cho phép xuống dòng trên mobile */
         }
 
         .code-input input {
-            flex: 1;
             padding: 1rem;
             border-radius: 10px;
             border: 2px solid var(--card-outline);
@@ -269,6 +271,8 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 600;
+            min-width: 200px;
+            max-width: 300px;
         }
 
         .code-input input:focus {
@@ -424,7 +428,7 @@
             background: rgba(76, 175, 80, 0.2);
         }
 
-        /* Exam Taking Interface */
+        /* Exam Taking Interface - HIỂN THỊ DỌC TOÀN BỘ ĐỀ THI */
         .exam-container {
             max-width: 900px;
             margin: 0 auto;
@@ -538,51 +542,64 @@
             box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
         }
 
-        .exam-controls {
-            display: flex;
-            justify-content: space-between;
+        /* NÚT NỘP BÀI CĂN GIỮA VÀ NỔI BẬT */
+        .submit-section {
+            text-align: center; /* Căn giữa */
             margin-top: 3rem;
             padding-top: 2rem;
             border-top: 2px solid var(--card-outline);
         }
 
-        .control-btn {
-            padding: 12px 24px;
-            border-radius: 8px;
+        .submit-btn {
+            padding: 16px 40px; /* Làm to hơn */
+            background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Màu xanh nổi bật */
+            color: white;
             border: none;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 50px; /* Bo tròn hơn */
+            font-size: 1.3rem; /* Chữ to hơn */
+            font-weight: 700; /* Chữ đậm hơn */
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4); /* Đổ bóng nổi bật */
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .prev-btn {
-            background: var(--card-bg);
-            color: var(--text-primary);
-            border: 2px solid var(--card-outline);
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+            z-index: 1;
+            transition: all 0.3s ease;
         }
 
-        .next-btn {
-            background: var(--primary-color);
-            color: white;
+        .submit-btn:hover {
+            transform: translateY(-5px) scale(1.05); /* Hiệu ứng phóng to và nổi */
+            box-shadow: 0 12px 30px rgba(76, 175, 80, 0.6); /* Đổ bóng mạnh hơn */
         }
 
-        .submit-btn {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
+        .submit-btn:active {
+            transform: translateY(-2px) scale(1.02);
         }
 
-        .control-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .control-btn:disabled {
-            opacity: 0.5;
+        .submit-btn:disabled {
+            background: #ccc;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .submit-btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
         }
 
         /* Result View */
@@ -747,6 +764,65 @@
             margin-bottom: 1rem;
         }
 
+        /* XỬ LÝ MARKDOWN FORMATTING */
+        .markdown-content {
+            font-family: inherit;
+            line-height: 1.6;
+        }
+
+        .markdown-content h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .markdown-content h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin: 1.2rem 0 0.8rem;
+            padding-left: 0.5rem;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .markdown-content h3 {
+            color: var(--accent-color);
+            font-size: 1.3rem;
+            margin: 1rem 0 0.6rem;
+        }
+
+        .markdown-content p {
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .markdown-content em {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .markdown-content ul, .markdown-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid var(--accent-color);
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            background: rgba(250, 216, 89, 0.1);
+            font-style: italic;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             body {
@@ -765,6 +841,13 @@
             
             .tab-navigation {
                 flex-direction: column;
+                align-items: center; /* Căn giữa các nút tab trên mobile */
+            }
+            
+            .tab-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
             }
             
             .exam-list {
@@ -773,16 +856,12 @@
             
             .code-input {
                 flex-direction: column;
+                align-items: center;
             }
             
-            .exam-controls {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .control-btn {
+            .code-input input {
                 width: 100%;
-                justify-content: center;
+                max-width: 100%;
             }
             
             .result-actions {
@@ -794,6 +873,13 @@
                 right: 20px;
                 left: 20px;
                 max-width: none;
+            }
+            
+            .submit-btn {
+                padding: 14px 32px;
+                font-size: 1.2rem;
+                width: 100%;
+                max-width: 300px;
             }
         }
 
@@ -817,6 +903,11 @@
             .exam-content {
                 padding: 1.5rem;
             }
+            
+            .submit-btn {
+                padding: 12px 28px;
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
@@ -837,7 +928,7 @@
     <div class="app-container">
         <h1 class="page-title">THAM GIA THI</h1>
         
-        <!-- Tab Navigation -->
+        <!-- Tab Navigation - ĐÃ CĂN GIỮA -->
         <div class="tab-navigation">
             <button class="tab-btn active" data-tab="join-exam">
                 <i class="fas fa-key mr-2"></i> Tham gia bằng mã
@@ -903,21 +994,10 @@
                     <!-- Exam content will be loaded here -->
                 </div>
                 
-                <div class="exam-controls">
-                    <button class="control-btn prev-btn" id="prevQuestionBtn" disabled>
-                        <i class="fas fa-chevron-left"></i> Câu trước
-                    </button>
-                    <div>
-                        <span id="currentQuestion">Câu 1</span> / <span id="totalQuestions">10</span>
-                    </div>
-                    <button class="control-btn next-btn" id="nextQuestionBtn">
-                        Câu tiếp theo <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-                
-                <div class="exam-controls" id="submitControls" style="display: none;">
-                    <button class="control-btn submit-btn" id="submitExamBtn">
-                        <i class="fas fa-paper-plane"></i> Nộp bài
+                <!-- NÚT NỘP BÀI CĂN GIỮA VÀ NỔI BẬT -->
+                <div class="submit-section">
+                    <button class="submit-btn" id="submitExamBtn">
+                        <i class="fas fa-paper-plane"></i> NỘP BÀI THI
                     </button>
                 </div>
             </div>
@@ -987,7 +1067,76 @@
         let userAnswers = [];
         let timerInterval = null;
         let timeRemaining = 0;
-        let currentQuestionIndex = 0;
+
+        // HÀM XỬ LÝ MARKDOWN
+        function markdownToHtml(text) {
+            if (!text) return '';
+            
+            let html = text;
+            
+            // Tiêu đề
+            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            
+            // In đậm
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // In nghiêng
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // Gạch chân (sử dụng __text__)
+            html = html.replace(/__(.*?)__/g, '<u>$1</u>');
+            
+            // Danh sách không thứ tự
+            html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>\n?)+/g, function(match) {
+                return '<ul>' + match + '</ul>';
+            });
+            
+            // Danh sách có thứ tự
+            html = html.replace(/^\d+\. (.*$)/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>\n?)+/g, function(match) {
+                return '<ol>' + match + '</ol>';
+            });
+            
+            // Đoạn văn
+            const lines = html.split('\n');
+            html = '';
+            let inParagraph = false;
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                if (line === '') {
+                    if (inParagraph) {
+                        html += '</p>\n';
+                        inParagraph = false;
+                    }
+                } else if (line.startsWith('<')) {
+                    if (inParagraph) {
+                        html += '</p>\n';
+                        inParagraph = false;
+                    }
+                    html += line + '\n';
+                } else {
+                    if (!inParagraph) {
+                        html += '<p>';
+                        inParagraph = true;
+                    }
+                    html += line + ' ';
+                }
+            }
+            
+            if (inParagraph) {
+                html += '</p>';
+            }
+            
+            // Xuống dòng
+            html = html.replace(/\\n/g, '<br>');
+            
+            return html;
+        }
 
         // Hiển thị thông báo
         function showNotification(message, type = 'info') {
@@ -1083,6 +1232,13 @@
             // Tự động chuyển thành chữ hoa
             examCodeInput.addEventListener('input', function() {
                 this.value = this.value.toUpperCase();
+            });
+            
+            // Cho phép nhấn Enter để tham gia
+            examCodeInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    joinExamBtn.click();
+                }
             });
             
             joinExamBtn.addEventListener('click', async () => {
@@ -1249,38 +1405,38 @@
             document.querySelector('.tab-navigation').style.display = 'none';
             document.getElementById('join-exam-tab').style.display = 'none';
             document.getElementById('my-exams-tab').style.display = 'none';
+            document.getElementById('examInfoCard').style.display = 'none';
             document.getElementById('examTakingInterface').style.display = 'block';
+            
+            // Cập nhật tiêu đề
+            document.getElementById('examTitle').textContent = currentExamData.title || 'ĐỀ THI NGỮ VĂN';
             
             // Tải nội dung đề thi
             loadExamContent();
-            
-            // Hiển thị câu hỏi đầu tiên
-            showQuestion(0);
         }
 
-        // Tải nội dung đề thi
+        // Tải nội dung đề thi (HIỂN THỊ DỌC TOÀN BỘ)
         function loadExamContent() {
             const examContent = document.getElementById('examContent');
-            const totalQuestions = userAnswers.length;
-            document.getElementById('totalQuestions').textContent = totalQuestions;
             
             let contentHTML = '';
             let questionCounter = 0;
             
             currentExamData.blocks.forEach((block, index) => {
                 if (block.type === 'text') {
+                    // Sử dụng markdownToHtml để xử lý định dạng
                     contentHTML += `
                         <div class="exam-section">
                             <h3 class="section-title">${block.title || 'Phần văn bản'}</h3>
-                            <div class="markdown-content" style="white-space: pre-line;">${block.content}</div>
+                            <div class="markdown-content">${markdownToHtml(block.content)}</div>
                         </div>
                     `;
                 } else if (block.type === 'question') {
                     questionCounter++;
                     contentHTML += `
-                        <div class="question-item" id="question-${questionCounter-1}" style="display: none;">
-                            <div class="question-text">
-                                <strong>Câu ${questionCounter}:</strong> ${block.content}
+                        <div class="question-item">
+                            <div class="question-text markdown-content">
+                                <strong>Câu ${questionCounter}:</strong> ${markdownToHtml(block.content)}
                             </div>
                             <div class="answer-area">
                                 <textarea class="answer-textarea" 
@@ -1297,46 +1453,19 @@
             
             // Thiết lập sự kiện cho textarea
             document.querySelectorAll('.answer-textarea').forEach(textarea => {
+                const questionIndex = parseInt(textarea.dataset.question);
+                
+                // Lưu câu trả lời khi người dùng nhập
                 textarea.addEventListener('input', function() {
-                    const questionIndex = parseInt(this.dataset.question);
                     userAnswers[questionIndex].answer = this.value;
                 });
-            });
-        }
-
-        // Hiển thị câu hỏi
-        function showQuestion(index) {
-            // Ẩn tất cả câu hỏi
-            document.querySelectorAll('.question-item').forEach(item => {
-                item.style.display = 'none';
-            });
-            
-            // Hiển thị câu hỏi hiện tại
-            const currentQuestion = document.getElementById(`question-${index}`);
-            if (currentQuestion) {
-                currentQuestion.style.display = 'block';
                 
-                // Điền câu trả lời đã nhập
-                const textarea = currentQuestion.querySelector('.answer-textarea');
-                if (textarea) {
-                    textarea.value = userAnswers[index]?.answer || '';
-                }
-            }
-            
-            // Cập nhật chỉ số câu hỏi
-            currentQuestionIndex = index;
-            document.getElementById('currentQuestion').textContent = `Câu ${index + 1}`;
-            
-            // Cập nhật nút điều hướng
-            document.getElementById('prevQuestionBtn').disabled = index === 0;
-            document.getElementById('nextQuestionBtn').disabled = index === userAnswers.length - 1;
-            
-            // Hiển thị nút nộp bài nếu là câu cuối
-            if (index === userAnswers.length - 1) {
-                document.getElementById('submitControls').style.display = 'flex';
-            } else {
-                document.getElementById('submitControls').style.display = 'none';
-            }
+                // Tự động mở rộng textarea khi nhập
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+            });
         }
 
         // Bắt đầu đếm ngược
@@ -1385,14 +1514,14 @@
                     clearInterval(timerInterval);
                 }
                 
-                // Cập nhật trạng thái
+                // Cập nhật trạng thái nút nộp bài
                 const submitBtn = document.getElementById('submitExamBtn');
                 if (submitBtn) {
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = '<div class="loading-spinner"></div> Đang nộp bài...';
                 }
                 
-                // Tính điểm (ở đây chỉ lưu câu trả lời, giáo viên sẽ chấm sau)
+                // Tính tổng điểm
                 const totalPoints = userAnswers.reduce((sum, answer) => sum + answer.points, 0);
                 
                 // Cập nhật attempt trong database
@@ -1417,7 +1546,7 @@
                 
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Nộp bài';
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> NỘP BÀI THI';
                 }
             }
         }
@@ -1433,7 +1562,10 @@
                 score: 0,
                 totalPoints: userAnswers.reduce((sum, answer) => sum + answer.points, 0),
                 startedAt: new Date().toISOString(),
-                completedAt: new Date().toISOString()
+                completedAt: new Date().toISOString(),
+                examId: currentExam,
+                examTitle: currentExamData.title || 'Đề thi Ngữ Văn',
+                examTime: currentExamData.examTime || 90
             });
         }
 
@@ -1477,6 +1609,10 @@
                         <span class="detail-value">${attemptData.examId}</span>
                     </div>
                     <div class="detail-item">
+                        <span class="detail-label">Tên đề thi:</span>
+                        <span class="detail-value">${attemptData.examTitle || 'Đề thi Ngữ Văn'}</span>
+                    </div>
+                    <div class="detail-item">
                         <span class="detail-label">Điểm số:</span>
                         <span class="detail-value">${score.toFixed(1)}/${totalPoints.toFixed(1)} (${percentage.toFixed(1)}%)</span>
                     </div>
@@ -1491,7 +1627,7 @@
                     ${attemptData.feedback ? `
                     <div class="feedback-section">
                         <h4 class="feedback-title">Nhận xét của giáo viên</h4>
-                        <div class="feedback-content">${attemptData.feedback}</div>
+                        <div class="feedback-content markdown-content">${markdownToHtml(attemptData.feedback)}</div>
                     </div>
                     ` : ''}
                 `;
@@ -1511,6 +1647,10 @@
                         <span class="detail-value">${attemptData.examId}</span>
                     </div>
                     <div class="detail-item">
+                        <span class="detail-label">Tên đề thi:</span>
+                        <span class="detail-value">${attemptData.examTitle || 'Đề thi Ngữ Văn'}</span>
+                    </div>
+                    <div class="detail-item">
                         <span class="detail-label">Thời gian làm bài:</span>
                         <span class="detail-value">${attemptData.examTime || 90} phút</span>
                     </div>
@@ -1528,7 +1668,6 @@
             
             // Thiết lập sự kiện cho nút xem lại bài làm
             document.getElementById('reviewExamBtn').addEventListener('click', () => {
-                // Có thể triển khai tính năng xem lại bài làm chi tiết
                 showNotification('Tính năng đang được phát triển', 'info');
             });
         }
@@ -1676,19 +1815,6 @@
             // Thiết lập tham gia bài thi
             setupJoinExam();
             
-            // Thiết lập sự kiện cho nút điều hướng câu hỏi
-            document.getElementById('prevQuestionBtn').addEventListener('click', () => {
-                if (currentQuestionIndex > 0) {
-                    showQuestion(currentQuestionIndex - 1);
-                }
-            });
-            
-            document.getElementById('nextQuestionBtn').addEventListener('click', () => {
-                if (currentQuestionIndex < userAnswers.length - 1) {
-                    showQuestion(currentQuestionIndex + 1);
-                }
-            });
-            
             // Thiết lập sự kiện cho nút nộp bài
             document.getElementById('submitExamBtn').addEventListener('click', () => {
                 if (confirm('Bạn có chắc chắn muốn nộp bài? Sau khi nộp bạn không thể chỉnh sửa câu trả lời.')) {
@@ -1700,7 +1826,9 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && e.ctrlKey && document.getElementById('submitExamBtn')) {
                     e.preventDefault();
-                    document.getElementById('submitExamBtn').click();
+                    if (confirm('Bạn có chắc chắn muốn nộp bài?')) {
+                        submitExam();
+                    }
                 }
             });
             
