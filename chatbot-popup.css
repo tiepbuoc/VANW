@@ -556,6 +556,7 @@ pre {
     border-radius: 50%;
     border-top-color: white;
     animation: spin 1s ease-in-out infinite;
+    margin: 0 auto;
 }
 
 @keyframes spin {
@@ -670,4 +671,5 @@ pre {
 .chat-messages::-webkit-scrollbar-thumb:hover,
 .popup-content::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover);
+
 }
