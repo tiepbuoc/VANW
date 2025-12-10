@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hỗ trợ giảng dạy văn học - VANW</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="vangv.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
+</head>
+<body>
+    <!-- Web Icon ở góc trái -->
+    <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
+        <img src="logo.png" alt="Website Icon" />
+    </a>
+    
+    <div class="app-container">
+        <main>
+            <div class="teaching-tool">
+                <div class="teaching-card">
+                    <h2>HỖ TRỢ GIẢNG DẠY VĂN HỌC</h2>
+                    
+                    <!-- Input Area -->
+                    <div class="input-area">
+                        <textarea id="inputText" placeholder="Nhập nội dung văn bản văn học cần giảng dạy... (Tối thiểu 50 từ)"></textarea>
+                        <div class="word-count" id="wordCount">0 từ</div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button id="generateAllBtn" class="generate-btn">
+                            <i class="fas fa-chalkboard-teacher mr-2"></i> Tạo Nội Dung Giảng Dạy
+                        </button>
+                        <button id="settingsBtn" class="settings-btn">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Settings Panel -->
+                    <div class="settings-panel" id="settingsPanel">
+                        <!-- Tab Navigation for Settings -->
+                        <div class="tab-navigation">
+                            <button class="tab-btn active" data-tab="teaching-settings">
+                                <i class="fas fa-chalkboard-teacher mr-2"></i> Cài đặt bài giảng
+                            </button>
+                            <button class="tab-btn" data-tab="exam-settings">
+                                <i class="fas fa-file-alt mr-2"></i> Cài đặt đề thi
+                            </button>
+                            <button class="tab-btn" data-tab="notes-settings">
+                                <i class="fas fa-sticky-note mr-2"></i> Ghi chú
+                            </button>
+                        </div>
+                        
+                        <!-- Teaching Settings Tab -->
+                        <div class="tab-content active" id="teaching-settings-tab">
+                            <div class="options-grid">
+                                <div class="option-card">
+                                    <h3><i class="fas fa-clock"></i> Thời lượng bài giảng</h3>
+                                    <p>Chọn thời lượng phù hợp với tiết học</p>
+                                    <div class="duration-control">
+                                        <div class="duration-header">
+                                            <label for="durationSlider">Thời gian: <span id="durationValue">45 phút</span></label>
+                                            <div class="duration-buttons">
+                                                <button type="button" class="duration-btn" data-value="45">45p</button>
+                                                <button type="button" class="duration-btn" data-value="90">90p</button>
+                                                <button type="button" class="duration-btn" data-value="120">120p</button>
+                                            </div>
+                                        </div>
+                                        <input type="range" id="durationSlider" min="5" max="180" step="5" value="45">
+                                    </div>
+                                </div>
+                                
+                                <div class="option-card">
+                                    <h3><i class="fas fa-chalkboard"></i> Phong cách giảng dạy</h3>
+                                    <p>Chọn phương pháp giảng dạy phù hợp</p>
+                                    <div class="select-container">
+                                        <select id="teachingStyle">
+                                            <option value="Truyền thống" selected>Truyền thống (Giáo viên giảng - học sinh nghe)</option>
+                                            <option value="Tương tác">Tương tác (Thảo luận, đối thoại)</option>
+                                            <option value="Lấy học sinh làm trung tâm">Lấy học sinh làm trung tâm (Học sinh tự khám phá)</option>
+                                            <option value="Sáng tạo">Sáng tạo (Dự án, hoạt động nhóm)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="option-card">
+                                    <h3><i class="fas fa-plus-circle"></i> Tùy chọn bổ sung</h3>
+                                    <p>Các tùy chọn hỗ trợ giảng dạy</p>
+                                    <div class="toggle-container">
+                                        <span class="toggle-label">Thêm hoạt động thảo luận</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="discussionToggle" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="toggle-container">
+                                        <span class="toggle-label">Thêm bài tập về nhà</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="homeworkToggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="toggle-container">
+                                        <span class="toggle-label">Thêm ví dụ minh họa</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="exampleToggle" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Exam Settings Tab -->
+                        <div class="tab-content" id="exam-settings-tab">
+                            <div class="options-grid">
+                                <div class="option-card">
+                                    <h3><i class="fas fa-clock"></i> Thời gian làm bài</h3>
+                                    <p>Chọn thời lượng cho đề thi</p>
+                                    <div class="duration-control">
+                                        <div class="duration-header">
+                                            <label for="examTimeSlider">Thời gian: <span id="examTimeValue">90 phút</span></label>
+                                            <div class="duration-buttons">
+                                                <button type="button" class="duration-btn" data-value="45">45p</button>
+                                                <button type="button" class="duration-btn" data-value="90">90p</button>
+                                                <button type="button" class="duration-btn" data-value="120">120p</button>
+                                            </div>
+                                        </div>
+                                        <input type="range" id="examTimeSlider" min="30" max="180" step="15" value="90">
+                                    </div>
+                                </div>
+                                
+                                <div class="option-card">
+                                    <h3><i class="fas fa-sliders-h"></i> Cài đặt đề thi</h3>
+                                    <p>Cấu hình các thông số đề thi</p>
+                                    <div class="select-container">
+                                        <label class="block-label">Độ khó</label>
+                                        <select id="difficulty">
+                                            <option value="easy">Dễ</option>
+                                            <option value="medium" selected>Trung bình</option>
+                                            <option value="hard">Khó</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-container mt-3">
+                                        <label class="block-label">Khối lớp</label>
+                                        <select id="grade">
+                                            <option value="10">Lớp 10</option>
+                                            <option value="11">Lớp 11</option>
+                                            <option value="12" selected>Lớp 12</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="option-card">
+                                    <h3><i class="fas fa-plus-circle"></i> Tùy chọn đề thi</h3>
+                                    <p>Các phần có trong đề thi</p>
+                                    <div class="toggle-container">
+                                        <span class="toggle-label">Phần đọc hiểu</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="readingToggle" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="toggle-container">
+                                        <span class="toggle-label">Phần nghị luận văn học</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="essayToggle" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="toggle-container">
+                                        <span class="toggle-label">Phần liên hệ thực tế</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="practiceToggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <div class="mt-3">
+                                        <label class="block-label">Số câu hỏi</label>
+                                        <input type="number" id="questionCount" min="3" max="10" value="5" class="w-full border border-gray-300 rounded-lg p-2 mt-1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Notes Settings Tab -->
+                        <div class="tab-content" id="notes-settings-tab">
+                            <div class="options-grid">
+                                <div class="option-card">
+                                    <h3><i class="fas fa-sticky-note"></i> Ghi chú cho bài giảng</h3>
+                                    <p>Thêm ghi chú, lưu ý cho bài giảng</p>
+                                    <textarea id="teachingNotes" placeholder="Nhập ghi chú cho bài giảng... (Ví dụ: Chuẩn bị hình ảnh minh họa, video liên quan, tài liệu tham khảo...)" rows="5"></textarea>
+                                </div>
+                                
+                                <div class="option-card">
+                                    <h3><i class="fas fa-sticky-note"></i> Ghi chú cho đề thi</h3>
+                                    <p>Thêm ghi chú, lưu ý cho đề thi</p>
+                                    <textarea id="examNotes" placeholder="Nhập ghi chú cho đề thi... (Ví dụ: Phân bổ thời gian, trọng tâm kiến thức, tiêu chí chấm điểm...)" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Area -->
+                    <div class="progress-container" id="progressContainer" style="display: none;">
+                        <div class="progress-header">
+                            <div class="progress-title">Đang tạo nội dung giảng dạy</div>
+                            <div class="progress-status" id="progressStatus">Đang xử lý...</div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-items" id="progressItems">
+                            <!-- Progress items will be added here dynamically -->
+                        </div>
+                    </div>
+                    
+                    <!-- Result Tabs -->
+                    <div class="result-tabs-container" id="resultTabs" style="display: none;">
+                        <div class="tab-navigation">
+                            <button class="tab-btn active" data-tab="teaching-result">
+                                <i class="fas fa-chalkboard-teacher mr-2"></i> Bài giảng
+                            </button>
+                            <button class="tab-btn" data-tab="exam-result">
+                                <i class="fas fa-file-alt mr-2"></i> Đề thi
+                            </button>
+                        </div>
+                        
+                        <!-- Teaching Result Tab -->
+                        <div class="tab-content active" id="teaching-result-tab">
+                            <div class="result-area" id="teachingResult"></div>
+                        </div>
+                        
+                        <!-- Exam Result Tab -->
+                        <div class="tab-content" id="exam-result-tab">
+                            <div class="result-area" id="examResult"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <p>Được tạo bởi <a href="https://www.facebook.com/hoangminhtuan.hmtuan" target="_blank">Hoàng Minh Tuấn</a> và <a href="https://www.facebook.com/chuong.truong.130409" target="_blank">Trương Viết Duy Chương</a></p>
+        </footer>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-alt mr-2"></i> XEM TRƯỚC ĐỀ THI</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="previewContent">
+                <!-- Preview content will be inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" id="printPreviewBtn">
+                    <i class="fas fa-print mr-2"></i> In đề thi
+                </button>
+                <button class="modal-btn secondary-btn" id="closePreviewBtn">
+                    <i class="fas fa-times mr-2"></i> Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Exam Modal -->
+    <div id="editExamModal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit mr-2"></i> CHỈNH SỬA ĐỀ THI</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="exam-editor-container" id="examEditorContainer">
+                    <!-- Exam editor will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" id="saveEditedExamBtn">
+                    <i class="fas fa-save mr-2"></i> Lưu thay đổi
+                </button>
+                <button class="modal-btn secondary-btn" id="cancelEditBtn">
+                    <i class="fas fa-times mr-2"></i> Hủy
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firestore Database Integration -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+    <script src="vangv.js"></script>
+</body>
+</html>
