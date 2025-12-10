@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Cấu hình Firebase
     const firebaseConfig = {
-        apiKey: "AIzaSyApxKwszVsipD17lSOCcsFcpDl5z8MDtmc",
+        apiKey: "AIzaSyBHnbro8qUvRyos-BRNdtTRtF0gftKeBEw",
         authDomain: "bando-239fb.firebaseapp.com",
         projectId: "bando-239fb",
         storageBucket: "bando-239fb.firebasestorage.app",
@@ -1821,3 +1821,4 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Map popup script đã được tải và sẵn sàng');
 });
+
