@@ -556,7 +556,7 @@ pre {
     border-radius: 50%;
     border-top-color: white;
     animation: spin 1s ease-in-out infinite;
-    margin: 0 auto;
+    transform: translate(-50%, -50%);
 }
 
 @keyframes spin {
@@ -673,3 +673,4 @@ pre {
     background: var(--scrollbar-thumb-hover);
 
 }
+
