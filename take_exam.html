@@ -1007,7 +1007,7 @@
         <div id="resultView" style="display: none;">
             <div class="result-container">
                 <div class="result-header">
-                    <h2>KẾT QUẢ BÀI THI</h2>
+                    <h2>TRẠNG THÁI BÀI THI</h2>
                     <div class="score-display" id="scoreDisplay">0.0</div>
                     <p id="resultMessage"></p>
                 </div>
@@ -1634,7 +1634,7 @@
                 
             } else {
                 // Chưa chấm điểm
-                scoreDisplay.textContent = 'Đang chấm...';
+                scoreDisplay.textContent = 'ĐÃ GỬI BÀI THI';
                 resultMessage.textContent = 'Bài thi của bạn đã được nộp và đang chờ giáo viên chấm điểm.';
                 
                 resultDetails.innerHTML = `
@@ -1838,4 +1838,5 @@
     </script>
 </body>
 </html>
+
 
