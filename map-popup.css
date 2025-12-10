@@ -671,35 +671,27 @@
     }
 
 }
-/* THÊM THANH CUỘN CHO PHẦN HIỂN THỊ THÔNG TIN TÁC GIẢ VÀ QUỐC GIA */
-#countryInfoContent {
-    max-height: 500px; /* Giới hạn chiều cao */
-    overflow-y: auto; /* Thêm thanh cuộn dọc */
-    padding: 10px;
+/* THÊM THANH CUỘN CHO PHẦN HIỂN THỊ THÔNG TIN */
+.map-scrollable-content {
+    max-height: 400px !important;
+    overflow-y: auto !important;
 }
 
-/* Thêm thanh cuộn custom */
-#countryInfoContent::-webkit-scrollbar {
+/* THÊM THANH CUỘN CUSTOM */
+.map-scrollable-content::-webkit-scrollbar {
     width: 8px;
 }
 
-#countryInfoContent::-webkit-scrollbar-track {
+.map-scrollable-content::-webkit-scrollbar-track {
     background: rgba(227, 124, 45, 0.1);
     border-radius: 4px;
 }
 
-#countryInfoContent::-webkit-scrollbar-thumb {
+.map-scrollable-content::-webkit-scrollbar-thumb {
     background: var(--primary-color);
     border-radius: 4px;
 }
 
-#countryInfoContent::-webkit-scrollbar-thumb:hover {
+.map-scrollable-content::-webkit-scrollbar-thumb:hover {
     background: var(--accent-color);
-}
-
-/* Đảm bảo phần info trong sidebar cũng có thể cuộn */
-.author-info-content {
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 5px;
 }
