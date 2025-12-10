@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             </div>
                                             <div class="advanced-search-actions">
                                                 <button id="applyAdvancedSearch" class="control-btn secondary" style="flex: 2;">
-                                                    <i class="fas fa-search"></i> Áp dụng
+                                                    <i class="fas fa-search"></i> Liên hệ
                                                 </button>
                                                 <button id="clearAdvancedSearch" class="control-btn" style="flex: 1;">
                                                     <i class="fas fa-times"></i> Xóa
@@ -1821,4 +1821,5 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Map popup script đã được tải và sẵn sàng');
 });
+
 
