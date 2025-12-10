@@ -669,4 +669,37 @@
     .advanced-search-panel {
         max-height: 400px;
     }
+
+}
+/* THÊM THANH CUỘN CHO PHẦN HIỂN THỊ THÔNG TIN TÁC GIẢ VÀ QUỐC GIA */
+#countryInfoContent {
+    max-height: 500px; /* Giới hạn chiều cao */
+    overflow-y: auto; /* Thêm thanh cuộn dọc */
+    padding: 10px;
+}
+
+/* Thêm thanh cuộn custom */
+#countryInfoContent::-webkit-scrollbar {
+    width: 8px;
+}
+
+#countryInfoContent::-webkit-scrollbar-track {
+    background: rgba(227, 124, 45, 0.1);
+    border-radius: 4px;
+}
+
+#countryInfoContent::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+#countryInfoContent::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
+/* Đảm bảo phần info trong sidebar cũng có thể cuộn */
+.author-info-content {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
 }
