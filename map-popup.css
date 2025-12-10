@@ -1,34 +1,34 @@
-/* CSS cho popup bản đồ văn học - Giao diện giống chatbot */
+/* CSS cho popup bản đồ văn học - ĐÃ SỬA LỖI VÀ THÊM CHỨC NĂNG BÁN KÍNH */
 .map-popup {
     padding: 0;
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Chiếm toàn bộ chiều cao viewport */
+    height: 100vh;
     overflow: hidden;
     position: relative;
     width: 100%;
     box-sizing: border-box;
-    z-index: 100; /* Z-index cao để nằm trên */
+    z-index: 100;
 }
 
-/* Sidebar Toggle Button - ĐÃ SỬA: Đổi sang bên trái */
+/* Sidebar Toggle Button */
 .sidebar-toggle-btn {
     position: absolute;
     top: 50%;
-    left: 0; /* SỬA: từ right: 0 thành left: 0 */
+    left: 0;
     transform: translateY(-50%);
-    z-index: 1001; /* Z-index rất cao */
+    z-index: 1001;
     background-color: var(--primary-color);
     color: white;
     width: 30px;
     height: 50px;
-    border-radius: 0 8px 8px 0; /* SỬA: đổi góc bo từ "8px 0 0 8px" thành "0 8px 8px 0" */
+    border-radius: 0 8px 8px 0;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     cursor: pointer;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* SỬA: đổi hướng đổ bóng */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 }
 
@@ -46,26 +46,24 @@
     z-index: 1;
 }
 
-/* SỬA: Thanh bên ở bên trái */
 .map-sidebar {
     width: 350px;
     background-color: var(--card-bg);
     display: flex;
     flex-direction: column;
-    border-right: 2px solid var(--border-color); /* SỬA: từ border-left thành border-right */
+    border-right: 2px solid var(--border-color);
     position: absolute;
-    left: 0; /* SỬA: từ right: 0 thành left: 0 */
+    left: 0;
     top: 0;
     bottom: 0;
     z-index: 1000;
     transition: transform 0.3s ease;
-    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15); /* SỬA: đổi hướng đổ bóng */
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
     overflow: hidden;
 }
 
-/* SỬA: Ẩn sang trái */
 .map-sidebar.hidden {
-    transform: translateX(-100%); /* SỬA: từ translateX(100%) thành translateX(-100%) */
+    transform: translateX(-100%);
 }
 
 .map-main {
@@ -97,7 +95,6 @@
     z-index: 1;
 }
 
-/* SỬA: Map controls cố định trên cùng */
 .map-controls-container {
     display: flex;
     flex-direction: column;
@@ -110,7 +107,7 @@
     background-color: var(--card-bg);
     border-bottom: 2px solid var(--border-color);
     flex-shrink: 0;
-    overflow: hidden; /* Đảm bảo không tràn */
+    overflow: hidden;
 }
 
 .map-scrollable-content {
@@ -155,7 +152,6 @@
     padding: 5px;
 }
 
-/* Advanced Search Panel */
 .advanced-search-panel {
     display: none;
     max-height: 500px;
@@ -213,13 +209,91 @@
     box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
 }
 
+/* THÊM: Container cho bán kính tìm kiếm */
+.radius-container {
+    background-color: rgba(227, 124, 45, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+    border: 2px solid var(--primary-color);
+}
+
+.radius-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.radius-value {
+    font-weight: 600;
+    color: var(--primary-color);
+    min-width: 70px;
+    text-align: center;
+}
+
+.radius-slider {
+    flex: 1;
+    height: 8px;
+    -webkit-appearance: none;
+    border-radius: 4px;
+    background: var(--card-outline);
+    outline: none;
+}
+
+.radius-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.radius-input-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.radius-input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 2px solid var(--card-outline);
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.radius-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.apply-radius-btn {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.apply-radius-btn:hover {
+    background-color: var(--accent-color);
+}
+
 .advanced-search-actions {
     display: flex;
     gap: 10px;
     margin-top: 15px;
 }
 
-/* Toggle button cho chế độ liên hệ */
 .toggle-btn {
     position: relative;
     display: inline-block;
@@ -266,7 +340,6 @@
     transform: translateX(26px);
 }
 
-/* Thanh trượt */
 .slider {
     width: 100%;
     margin: 10px 0;
@@ -295,7 +368,6 @@
     transform: scale(1.1);
 }
 
-/* Nút điều khiển vị trí */
 .location-controls {
     display: flex;
     gap: 10px;
@@ -426,13 +498,12 @@
     color: var(--primary-color);
 }
 
-/* Đảm bảo author-info-content có thể cuộn */
 .author-info-content {
     flex: 1;
     overflow-y: auto;
     padding: 15px;
     background-color: var(--card-bg);
-    min-height: 200px; /* Đảm bảo chiều cao tối thiểu */
+    min-height: 200px;
 }
 
 .info-section {
@@ -509,7 +580,6 @@
     margin-bottom: 15px;
 }
 
-/* Custom scrollbar */
 .map-sidebar::-webkit-scrollbar,
 .map-scrollable-content::-webkit-scrollbar,
 .author-info-content::-webkit-scrollbar,
@@ -550,7 +620,6 @@
     background: var(--scrollbar-thumb-hover);
 }
 
-/* Thêm style cho highlight quốc gia */
 .country-highlight {
     animation: highlight 2s ease-in-out;
 }
@@ -570,7 +639,6 @@
     }
 }
 
-/* Leaflet tooltip styles - QUAN TRỌNG: Sửa chữ Hoàng Sa/Trường Sa */
 .leaflet-tooltip {
     background: transparent !important;
     border: none !important;
@@ -587,7 +655,6 @@
     pointer-events: none !important;
 }
 
-/* Suggestion styles */
 .suggestions {
     position: absolute;
     top: 100%;
@@ -621,7 +688,6 @@
     border-top: 2px solid var(--primary-color);
 }
 
-/* User location marker animation */
 .user-location-marker {
     animation: pulse 1.5s infinite;
 }
@@ -641,7 +707,29 @@
     }
 }
 
-/* Responsive */
+.map-scrollable-content {
+    max-height: 400px !important;
+    overflow-y: auto !important;
+}
+
+.map-scrollable-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.map-scrollable-content::-webkit-scrollbar-track {
+    background: rgba(227, 124, 45, 0.1);
+    border-radius: 4px;
+}
+
+.map-scrollable-content::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+.map-scrollable-content::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
 @media (max-width: 768px) {
     .map-sidebar {
         width: 85%;
@@ -669,29 +757,8 @@
     .advanced-search-panel {
         max-height: 400px;
     }
-
-}
-/* THÊM THANH CUỘN CHO PHẦN HIỂN THỊ THÔNG TIN */
-.map-scrollable-content {
-    max-height: 400px !important;
-    overflow-y: auto !important;
-}
-
-/* THÊM THANH CUỘN CUSTOM */
-.map-scrollable-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.map-scrollable-content::-webkit-scrollbar-track {
-    background: rgba(227, 124, 45, 0.1);
-    border-radius: 4px;
-}
-
-.map-scrollable-content::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 4px;
-}
-
-.map-scrollable-content::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-color);
+    
+    .radius-input-container {
+        flex-direction: column;
+    }
 }
