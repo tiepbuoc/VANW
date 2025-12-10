@@ -1533,7 +1533,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return R * c; // Khoảng cách tính bằng km
     }
 
-    // Hàm tìm tác giả trong bán kính 50km
+    // Hàm tìm tác giả trong bán kính 100km
     function findAuthorsNearby(userLat, userLng) {
         const nearbyAuthors = [];
         
@@ -1544,7 +1544,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     author.birthPlace.lat, author.birthPlace.lng
                 );
                 
-                if (distance <= 50) { // Bán kính 50km
+                if (distance <= 100) { // Bán kính 100km
                     nearbyAuthors.push({
                         author: author,
                         distance: distance.toFixed(1)
@@ -1784,7 +1784,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="close-nearby" onclick="closeNearbyAuthors()">×</span>
                     </div>
                     <p style="text-align: center; color: var(--text-secondary); padding: 20px;">
-                        Không tìm thấy tác giả nào trong bán kính 50km.
+                        Không tìm thấy tác giả nào trong bán kính 100km.
                     </p>
                 </div>
             `;
@@ -1871,4 +1871,5 @@ document.addEventListener('DOMContentLoaded', function() {
     window.initMapPopup = initMapPopup;
     
     console.log('Map popup script đã được tải');
+
 });
