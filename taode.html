@@ -1731,8 +1731,8 @@
     </div>
 
     <!-- Firestore Database Integration -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
     <script>
@@ -1751,14 +1751,48 @@
             measurementId: "G-XF2ZBFBCR7"
         };
 
-        // Initialize Firebase
+        // Initialize Firebase - FIXED VERSION
         let firestoreDb = null;
         try {
-            firebase.initializeApp(firebaseConfig);
+            // Kiểm tra xem Firebase app đã được khởi tạo chưa
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+                console.log("Firebase initialized successfully");
+            } else {
+                firebase.app(); // Nếu đã có, sử dụng app hiện có
+                console.log("Using existing Firebase app");
+            }
+            
             firestoreDb = firebase.firestore();
+            
+            // Thiết lập cài đặt Firestore để tránh cảnh báo
+            firestoreDb.settings({
+                ignoreUndefinedProperties: true
+            });
+            
             console.log("Firebase Firestore initialized successfully");
+            
+            // Kiểm tra kết nối
+            firestoreDb.enableNetwork()
+                .then(() => console.log("Firestore network enabled"))
+                .catch(err => console.warn("Firestore network warning:", err));
+                
         } catch (error) {
-            console.warn("Firebase initialization error:", error);
+            console.warn("Firebase initialization warning:", error.message);
+            // Tạo firestoreDb giả để không bị lỗi
+            firestoreDb = {
+                collection: () => ({
+                    doc: () => ({
+                        set: () => Promise.resolve(),
+                        get: () => Promise.resolve({ 
+                            exists: false, 
+                            data: () => null 
+                        }),
+                        delete: () => Promise.resolve()
+                    })
+                }),
+                enableNetwork: () => Promise.resolve()
+            };
         }
 
         // Biến toàn cục
@@ -1783,6 +1817,17 @@
         let richTextEditors = [];
         let currentMode = 'from-text'; // 'from-text' or 'generate-text'
         let generatedText = '';
+
+        // Error handling for extension conflicts
+        window.addEventListener('error', function(e) {
+            if (e.error && e.error.message && e.error.message.includes('asynchronous response')) {
+                console.warn('Browser extension conflict detected. You may disable extensions if issues persist.');
+            }
+        });
+
+        window.addEventListener('unhandledrejection', function(e) {
+            console.warn('Unhandled promise rejection:', e.reason);
+        });
 
         // Hàm đếm từ
         function countWords(text) {
@@ -2564,6 +2609,9 @@
                     <button id="saveExamToDatabase" class="exam-action-btn" style="background: linear-gradient(135deg, #FF9800, #F57C00);">
                         <i class="fas fa-database mr-2"></i> Lưu vào Database
                     </button>
+                    <button id="testDbBtn" class="exam-action-btn" style="background: linear-gradient(135deg, #9E9E9E, #757575);">
+                        <i class="fas fa-plug mr-2"></i> Kiểm tra DB
+                    </button>
                 </div>
             `;
             
@@ -2575,6 +2623,7 @@
             document.getElementById('saveExamBtn')?.addEventListener('click', saveExam);
             document.getElementById('printExamBtn')?.addEventListener('click', printExam);
             document.getElementById('saveExamToDatabase')?.addEventListener('click', saveExamToDatabase);
+            document.getElementById('testDbBtn')?.addEventListener('click', testDatabaseConnection);
         }
 
         // Hàm tạo mã đề thi
@@ -2587,10 +2636,53 @@
             return result;
         }
 
-        // Hàm lưu đề thi vào Firestore Database
+        // Hàm kiểm tra kết nối database
+        async function testDatabaseConnection() {
+            if (!firestoreDb) {
+                showNotification('Firestore chưa được khởi tạo', 'error');
+                return;
+            }
+            
+            showNotification('Đang kiểm tra kết nối database...', 'info');
+            
+            try {
+                // Thử ghi và đọc một test document
+                const testRef = firestoreDb.collection('_connection_tests').doc('test_' + Date.now());
+                
+                const testData = {
+                    test: true,
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent.substring(0, 100)
+                };
+                
+                // Ghi dữ liệu test
+                await testRef.set(testData);
+                
+                // Đọc lại để kiểm tra
+                const snapshot = await testRef.get();
+                
+                if (snapshot.exists) {
+                    const data = snapshot.data();
+                    showNotification('✅ Kết nối database thành công!', 'success');
+                    
+                    // Xóa test document sau 5 giây
+                    setTimeout(() => {
+                        testRef.delete().catch(() => {});
+                    }, 5000);
+                } else {
+                    showNotification('⚠️ Không thể xác nhận dữ liệu đã ghi', 'warning');
+                }
+                
+            } catch (error) {
+                console.error('Database test error:', error);
+                showNotification(`❌ Lỗi kết nối: ${error.message}`, 'error');
+            }
+        }
+
+        // Hàm lưu đề thi vào Firestore Database - FIXED VERSION
         async function saveExamToDatabase() {
             if (!firestoreDb) {
-                showNotification('Firestore Database chưa được khởi tạo!', 'error');
+                showNotification('Database chưa được khởi tạo! Vui lòng tải lại trang.', 'error');
                 return;
             }
             
@@ -2607,41 +2699,94 @@
                 const examData = {
                     examId: currentExamCode,
                     title: "Đề thi Ngữ Văn",
-                    literaryText: currentMode === 'from-text' ? document.getElementById('inputText').value.substring(0, 500) : generatedText.substring(0, 500),
+                    literaryText: currentMode === 'from-text' ? 
+                        document.getElementById('inputText').value.substring(0, 500) : 
+                        generatedText.substring(0, 500),
                     examTime: examSettings.time,
                     difficulty: examSettings.difficulty,
                     grade: examSettings.grade,
                     notes: examNotes,
-                    blocks: currentExamBlocks,
+                    blocks: JSON.parse(JSON.stringify(currentExamBlocks)), // Deep copy để tránh tham chiếu
                     createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
                     totalPoints: totalPoints,
                     source: "VANW Exam Tool",
-                    mode: currentMode
+                    mode: currentMode,
+                    status: "active"
                 };
                 
                 showNotification('Đang lưu đề thi vào database...', 'info');
                 
+                // Thử kiểm tra kết nối trước
+                try {
+                    await firestoreDb.collection('_test_connection').doc('test').set({
+                        test: true,
+                        timestamp: new Date().toISOString()
+                    }, { merge: true });
+                } catch (testError) {
+                    console.warn('Test connection warning:', testError.message);
+                    // Continue anyway
+                }
+                
                 // Lưu vào Firestore
-                await firestoreDb.collection('exams').doc(currentExamCode).set(examData);
+                const docRef = firestoreDb.collection('exams').doc(currentExamCode);
+                await docRef.set(examData, { merge: true });
                 
-                showNotification(`Đã lưu đề thi vào database thành công! Mã đề: ${currentExamCode}`, 'success');
+                // Kiểm tra xem đã lưu thành công chưa
+                const savedDoc = await docRef.get();
                 
-                // Tạo link để chia sẻ
-                const link = `${window.location.origin}/take_exam.html?code=${currentExamCode}`;
-                
-                // Hiển thị thông báo với link
-                setTimeout(() => {
-                    showNotification(`Link đề thi: ${link} (Đã sao chép vào clipboard)`, 'info');
+                if (savedDoc.exists) {
+                    showNotification(`✅ Đã lưu đề thi thành công! Mã đề: ${currentExamCode}`, 'success');
                     
-                    // Sao chép link vào clipboard
-                    navigator.clipboard.writeText(link).then(() => {
-                        console.log('Link đã được sao chép:', link);
-                    });
-                }, 1000);
+                    // Tạo link để chia sẻ
+                    const link = `${window.location.origin}/take_exam.html?code=${currentExamCode}`;
+                    
+                    // Hiển thị thông báo với link
+                    setTimeout(() => {
+                        // Sao chép link vào clipboard
+                        navigator.clipboard.writeText(link).then(() => {
+                            showNotification(`📋 Link đề thi đã được sao chép vào clipboard!`, 'info');
+                            console.log('Link đã được sao chép:', link);
+                        }).catch(() => {
+                            showNotification(`📝 Link đề thi: ${link}`, 'info');
+                        });
+                    }, 1000);
+                    
+                    // Lưu vào localStorage làm backup
+                    const backupExams = JSON.parse(localStorage.getItem('vanw_exams_backup') || '{}');
+                    backupExams[currentExamCode] = {
+                        ...examData,
+                        localBackup: true,
+                        backupDate: new Date().toISOString()
+                    };
+                    localStorage.setItem('vanw_exams_backup', JSON.stringify(backupExams));
+                    
+                } else {
+                    throw new Error('Không thể xác nhận dữ liệu đã được lưu');
+                }
                 
             } catch (error) {
                 console.error('Lỗi khi lưu đề thi vào database:', error);
-                showNotification(`Lỗi khi lưu vào database: ${error.message}`, 'error');
+                
+                // Fallback: Lưu vào localStorage
+                try {
+                    const localExams = JSON.parse(localStorage.getItem('vanw_exams_local') || '{}');
+                    localExams[currentExamCode] = {
+                        examId: currentExamCode,
+                        title: "Đề thi Ngữ Văn",
+                        blocks: currentExamBlocks,
+                        examTime: examSettings.time,
+                        difficulty: examSettings.difficulty,
+                        grade: examSettings.grade,
+                        savedAt: new Date().toISOString(),
+                        reason: "Firestore failed, saved locally"
+                    };
+                    localStorage.setItem('vanw_exams_local', JSON.stringify(localExams));
+                    
+                    showNotification(`⚠️ Lưu vào database thất bại. Đã lưu vào localStorage (Mã: ${currentExamCode})`, 'warning');
+                } catch (localError) {
+                    showNotification(`❌ Lỗi: ${error.message} - Không thể lưu cả vào localStorage`, 'error');
+                }
             }
         }
 
@@ -2672,7 +2817,7 @@
                         <button id="addQuestionBlockBtn" class="editor-action-btn">
                             <i class="fas fa-question-circle mr-2"></i> Thêm câu hỏi
                         </button>
-                        <button id="reorderBlocksBtn" class="editor-action-btn" onclick="reorderBlocks()">
+                        <button id="reorderBlocksBtn" class="editor-action-btn">
                             <i class="fas fa-sort mr-2"></i> Sắp xếp lại
                         </button>
                     </div>
@@ -2704,33 +2849,33 @@
         // Hàm tạo HTML cho một block chỉnh sửa
         function createBlockEditorHTML(block, index) {
             return `
-                <div class="exam-block-editor" data-index="${index}">
-                    <div class="block-header">
-                        <select class="block-type-select" data-index="${index}">
+                <div class="exam-block-editor" data-index="${index}" style="margin-bottom: 1.5rem; border: 2px solid var(--card-outline); border-radius: 8px; padding: 1rem;">
+                    <div class="block-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <select class="block-type-select" data-index="${index}" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--card-outline);">
                             <option value="text" ${block.type === 'text' ? 'selected' : ''}>Phần văn bản</option>
                             <option value="question" ${block.type === 'question' ? 'selected' : ''}>Câu hỏi</option>
                         </select>
                         
                         <div class="block-actions">
-                            <button class="block-btn move-up" data-index="${index}" ${index === 0 ? 'disabled' : ''}>
+                            <button class="block-btn move-up" data-index="${index}" ${index === 0 ? 'disabled' : ''} style="padding: 0.25rem 0.5rem; margin-left: 0.25rem; border: 1px solid var(--card-outline); border-radius: 4px; background: var(--card-bg); cursor: pointer;">
                                 <i class="fas fa-arrow-up"></i>
                             </button>
-                            <button class="block-btn move-down" data-index="${index}" ${index === currentExamBlocks.length - 1 ? 'disabled' : ''}>
+                            <button class="block-btn move-down" data-index="${index}" ${index === currentExamBlocks.length - 1 ? 'disabled' : ''} style="padding: 0.25rem 0.5rem; margin-left: 0.25rem; border: 1px solid var(--card-outline); border-radius: 4px; background: var(--card-bg); cursor: pointer;">
                                 <i class="fas fa-arrow-down"></i>
                             </button>
-                            <button class="block-btn delete" data-index="${index}">
+                            <button class="block-btn delete" data-index="${index}" style="padding: 0.25rem 0.5rem; margin-left: 0.25rem; border: 1px solid #ef4444; border-radius: 4px; background: #fef2f2; color: #ef4444; cursor: pointer;">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </div>
                     
                     <div class="block-content">
-                        <div class="form-group">
+                        <div class="form-group" style="margin-bottom: 1rem;">
                             <label class="block-label">Tiêu đề:</label>
-                            <input type="text" class="block-title" data-index="${index}" value="${block.title || ''}" placeholder="Nhập tiêu đề...">
+                            <input type="text" class="block-title" data-index="${index}" value="${block.title || ''}" placeholder="Nhập tiêu đề..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--card-outline); border-radius: 4px;">
                         </div>
                         
-                        <div class="form-group">
+                        <div class="form-group" style="margin-bottom: 1rem;">
                             <label class="block-label">Nội dung:</label>
                             <div class="rich-text-editor" id="editor-${index}"></div>
                             <textarea style="display: none;" id="editor-text-${index}">${block.content || ''}</textarea>
@@ -2740,7 +2885,7 @@
                         <div class="block-controls">
                             <div class="form-group">
                                 <label class="block-label">Điểm số:</label>
-                                <input type="number" class="block-points-input" data-index="${index}" value="${block.points || 1.0}" min="0" max="10" step="0.5">
+                                <input type="number" class="block-points-input" data-index="${index}" value="${block.points || 1.0}" min="0" max="10" step="0.5" style="width: 100px; padding: 0.5rem; border: 1px solid var(--card-outline); border-radius: 4px;">
                             </div>
                         </div>
                         ` : ''}
@@ -3510,6 +3655,12 @@
                 if (e.target && e.target.id === 'addQuestionBlockBtn') {
                     e.preventDefault();
                     addBlock('question');
+                }
+                
+                // Sắp xếp lại blocks
+                if (e.target && e.target.id === 'reorderBlocksBtn') {
+                    e.preventDefault();
+                    reorderBlocks();
                 }
                 
                 // Xem trước đề thi đã chỉnh sửa
