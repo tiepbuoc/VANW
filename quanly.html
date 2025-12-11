@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -1348,7 +1349,7 @@
                     const userData = userDoc.data();
                     
                     // Kiểm tra quyền giáo viên
-                    if (userData?.role !== 'teacher' && userData?.role !== 'admin') {
+                    if (userData?.role !== 'student' && userData?.role !== 'student') {
                         showNotification('Bạn không có quyền truy cập trang này', 'error');
                         setTimeout(() => {
                             window.location.href = 'index.html';
