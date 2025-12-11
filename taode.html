@@ -1477,7 +1477,7 @@
                     
                     <!-- Input Area for Existing Text -->
                     <div class="input-area" id="existingTextArea">
-                        <textarea id="inputText" placeholder="Nhập hoặc dán nội dung văn bản văn học cần tạo đề thi... (Tối thiểu 100 từ)"></textarea>
+                        <textarea id="inputText" placeholder="Nhập hoặc dán nội dung văn bản văn học cần tạo đề thi... (Tối thiểu 20 từ)"></textarea>
                         <div class="word-count" id="wordCount">0 từ</div>
                     </div>
                     
@@ -2412,8 +2412,8 @@
                 }
                 
                 const wordCount = countWords(text);
-                if (wordCount < 100) {
-                    showNotification(`Văn bản quá ngắn (${wordCount} từ)! Vui lòng nhập ít nhất 100 từ.`, 'error');
+                if (wordCount < 20) {
+                    showNotification(`Văn bản quá ngắn (${wordCount} từ)! Vui lòng nhập ít nhất 220 từ.`, 'error');
                     return;
                 }
             } else if (currentMode === 'generate-text') {
@@ -2501,7 +2501,7 @@
                         <ul>
                             <li>Kiểm tra kết nối internet</li>
                             <li>Thử lại với văn bản ngắn hơn</li>
-                            <li>Đảm bảo văn bản có ít nhất 100 từ</li>
+                            <li>Đảm bảo văn bản có ít nhất 20 từ</li>
                             <li>Thử lại sau vài phút</li>
                         </ul>
                     </div>
