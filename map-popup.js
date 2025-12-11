@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let userLocation = null; // Thêm biến lưu vị trí người dùng
 
     // API Key cho bản đồ
-    const MAP_REVERSED_API_KEY = "YMZZKI_mV0OHMDxiWE65_LsII1E242PuDySazIA";
+    const MAP_REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
     const MAP_API_KEY = MAP_REVERSED_API_KEY.split('').reverse().join('');
 
     // Hàm tính khoảng cách giữa 2 điểm (Haversine formula) - LẤY TỪ CODE CŨ
@@ -2018,3 +2018,4 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Map popup script đã được tải và sẵn sàng');
 });
+
