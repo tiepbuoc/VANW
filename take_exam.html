@@ -1068,9 +1068,14 @@
         let timerInterval = null;
         let timeRemaining = 0;
 
-        // HÀM XỬ LÝ MARKDOWN
+        // HÀM XỬ LÝ MARKDOWN - ĐÃ CẬP NHẬT ĐỂ HỖ TRỢ CẢ HTML
         function markdownToHtml(text) {
             if (!text) return '';
+            
+            // Nếu text đã là HTML (chứa thẻ), trả về luôn
+            if (text.includes('<') && text.includes('>')) {
+                return text;
+            }
             
             let html = text;
             
@@ -1254,7 +1259,7 @@
                 joinExamBtn.innerHTML = '<div class="loading-spinner"></div> Đang tải...';
                 
                 try {
-                    // Tìm đề thi trong database
+                    // Tìm đề thi trong database - SỬA ĐỂ HỖ TRỢ CẢ ĐỊNH DẠNG MỚI VÀ CŨ
                     const examDoc = await db.collection('exams').doc(examCode).get();
                     
                     if (!examDoc.exists) {
@@ -1265,6 +1270,8 @@
                     const examData = examDoc.data();
                     currentExam = examCode;
                     currentExamData = examData;
+                    
+                    console.log('Exam data loaded:', examData);
                     
                     // Kiểm tra xem người dùng đã làm bài thi này chưa
                     const attemptQuery = await db.collection('attempts')
@@ -1293,20 +1300,30 @@
             });
         }
 
-        // Hiển thị thông tin đề thi
+        // Hiển thị thông tin đề thi - ĐÃ CẬP NHẬT ĐỂ HỖ TRỢ CẢ ĐỊNH DẠNG MỚI
         function showExamInfo(examData) {
             const examInfoCard = document.getElementById('examInfoCard');
             const examInfoContent = document.getElementById('examInfoContent');
             
-            const examTime = examData.examTime || 90;
+            // Xác định cấu trúc đề thi (mới hay cũ)
+            const hasBlocks = Array.isArray(examData.blocks);
+            const examTime = examData.examTime || examData.time || 90;
             const difficulty = examData.difficulty === 'easy' ? 'Dễ' : 
                              examData.difficulty === 'medium' ? 'Trung bình' : 'Khó';
             const grade = examData.grade || '12';
+            const title = examData.title || 'Đề thi Ngữ Văn';
+            const description = examData.description || 'Đề thi được tạo tự động từ văn bản tác phẩm';
+            
+            // Đếm số câu hỏi
+            let questionCount = 0;
+            if (hasBlocks) {
+                questionCount = examData.blocks.filter(b => b.type === 'question').length;
+            }
             
             examInfoContent.innerHTML = `
                 <div style="margin-bottom: 1.5rem;">
-                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">${examData.title || 'Đề thi Ngữ Văn'}</h4>
-                    <p style="color: var(--text-secondary);">${examData.description || 'Đề thi được tạo tự động từ văn bản tác phẩm'}</p>
+                    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">${title}</h4>
+                    <p style="color: var(--text-secondary);">${description}</p>
                 </div>
                 
                 <div class="exam-meta">
@@ -1322,9 +1339,15 @@
                         <i class="fas fa-graduation-cap"></i>
                         <span>Khối lớp: ${grade}</span>
                     </div>
+                    ${questionCount > 0 ? `
                     <div class="meta-item">
                         <i class="fas fa-file-alt"></i>
-                        <span>Số câu: ${examData.blocks?.filter(b => b.type === 'question').length || 0}</span>
+                        <span>Số câu: ${questionCount}</span>
+                    </div>
+                    ` : ''}
+                    <div class="meta-item">
+                        <i class="fas fa-hashtag"></i>
+                        <span>Mã đề: ${currentExam}</span>
                     </div>
                 </div>
                 
@@ -1359,7 +1382,7 @@
                     userName: document.getElementById('userName').textContent,
                     userEmail: currentUser.email,
                     examTitle: currentExamData.title || 'Đề thi Ngữ Văn',
-                    examTime: currentExamData.examTime || 90,
+                    examTime: currentExamData.examTime || currentExamData.time || 90,
                     difficulty: currentExamData.difficulty,
                     grade: currentExamData.grade,
                     startedAt: new Date().toISOString(),
@@ -1373,19 +1396,32 @@
                 currentAttempt = attemptRef.id;
                 
                 // Khởi tạo mảng câu trả lời
-                userAnswers = currentExamData.blocks
-                    .filter(block => block.type === 'question')
-                    .map((block, index) => ({
-                        questionId: index,
-                        questionText: block.content,
-                        points: block.points || 1.0,
+                if (Array.isArray(currentExamData.blocks)) {
+                    // Định dạng mới: có mảng blocks
+                    userAnswers = currentExamData.blocks
+                        .filter(block => block.type === 'question')
+                        .map((block, index) => ({
+                            questionId: index,
+                            questionText: block.content,
+                            points: block.points || 1.0,
+                            answer: '',
+                            score: 0,
+                            feedback: ''
+                        }));
+                } else {
+                    // Định dạng cũ: không có blocks, tạo mặc định
+                    userAnswers = [{
+                        questionId: 0,
+                        questionText: 'Câu hỏi mặc định',
+                        points: 10.0,
                         answer: '',
                         score: 0,
                         feedback: ''
-                    }));
+                    }];
+                }
                 
                 // Thiết lập thời gian
-                timeRemaining = (currentExamData.examTime || 90) * 60; // chuyển sang giây
+                timeRemaining = (currentExamData.examTime || currentExamData.time || 90) * 60; // chuyển sang giây
                 
                 // Hiển thị giao diện làm bài
                 showExamInterface();
@@ -1415,39 +1451,67 @@
             loadExamContent();
         }
 
-        // Tải nội dung đề thi (HIỂN THỊ DỌC TOÀN BỘ)
+        // Tải nội dung đề thi (HIỂN THỊ DỌC TOÀN BỘ) - ĐÃ CẬP NHẬT ĐỂ HỖ TRỢ CẢ ĐỊNH DẠNG MỚI
         function loadExamContent() {
             const examContent = document.getElementById('examContent');
             
             let contentHTML = '';
             let questionCounter = 0;
             
-            currentExamData.blocks.forEach((block, index) => {
-                if (block.type === 'text') {
-                    // Sử dụng markdownToHtml để xử lý định dạng
-                    contentHTML += `
-                        <div class="exam-section">
-                            <h3 class="section-title">${block.title || 'Phần văn bản'}</h3>
-                            <div class="markdown-content">${markdownToHtml(block.content)}</div>
-                        </div>
-                    `;
-                } else if (block.type === 'question') {
-                    questionCounter++;
-                    contentHTML += `
-                        <div class="question-item">
-                            <div class="question-text markdown-content">
-                                <strong>Câu ${questionCounter}:</strong> ${markdownToHtml(block.content)}
+            // Kiểm tra cấu trúc đề thi
+            if (Array.isArray(currentExamData.blocks)) {
+                // Định dạng mới: có mảng blocks
+                currentExamData.blocks.forEach((block, index) => {
+                    if (block.type === 'text') {
+                        // Sử dụng markdownToHtml để xử lý định dạng
+                        contentHTML += `
+                            <div class="exam-section">
+                                <h3 class="section-title">${block.title || 'Phần văn bản'}</h3>
+                                <div class="markdown-content">${markdownToHtml(block.content)}</div>
                             </div>
-                            <div class="answer-area">
-                                <textarea class="answer-textarea" 
-                                          data-question="${questionCounter-1}"
-                                          placeholder="Nhập câu trả lời của bạn vào đây..."
-                                          rows="6"></textarea>
+                        `;
+                    } else if (block.type === 'question') {
+                        questionCounter++;
+                        contentHTML += `
+                            <div class="question-item">
+                                <div class="question-text markdown-content">
+                                    <strong>Câu ${questionCounter}:</strong> ${markdownToHtml(block.content)}
+                                    ${block.points ? `<div style="margin-top: 0.5rem; color: var(--primary-color); font-weight: 600;">(${block.points} điểm)</div>` : ''}
+                                </div>
+                                <div class="answer-area">
+                                    <textarea class="answer-textarea" 
+                                              data-question="${questionCounter-1}"
+                                              placeholder="Nhập câu trả lời của bạn vào đây..."
+                                              rows="6"></textarea>
+                                </div>
                             </div>
+                        `;
+                    }
+                });
+            } else {
+                // Định dạng cũ: hiển thị văn bản và câu hỏi mặc định
+                contentHTML += `
+                    <div class="exam-section">
+                        <h3 class="section-title">Văn bản</h3>
+                        <div class="markdown-content">
+                            <p>${currentExamData.literaryText || 'Văn bản mẫu cho đề thi'}</p>
                         </div>
-                    `;
-                }
-            });
+                    </div>
+                    
+                    <div class="question-item">
+                        <div class="question-text markdown-content">
+                            <strong>Câu 1:</strong> Phân tích nội dung và nghệ thuật của văn bản trên.
+                            <div style="margin-top: 0.5rem; color: var(--primary-color); font-weight: 600;">(10 điểm)</div>
+                        </div>
+                        <div class="answer-area">
+                            <textarea class="answer-textarea" 
+                                      data-question="0"
+                                      placeholder="Nhập câu trả lời của bạn vào đây..."
+                                      rows="6"></textarea>
+                        </div>
+                    </div>
+                `;
+            }
             
             examContent.innerHTML = contentHTML;
             
@@ -1457,7 +1521,9 @@
                 
                 // Lưu câu trả lời khi người dùng nhập
                 textarea.addEventListener('input', function() {
-                    userAnswers[questionIndex].answer = this.value;
+                    if (userAnswers[questionIndex]) {
+                        userAnswers[questionIndex].answer = this.value;
+                    }
                 });
                 
                 // Tự động mở rộng textarea khi nhập
@@ -1465,6 +1531,11 @@
                     this.style.height = 'auto';
                     this.style.height = (this.scrollHeight) + 'px';
                 });
+                
+                // Focus vào textarea đầu tiên
+                if (questionIndex === 0) {
+                    setTimeout(() => textarea.focus(), 100);
+                }
             });
         }
 
@@ -1522,7 +1593,7 @@
                 }
                 
                 // Tính tổng điểm
-                const totalPoints = userAnswers.reduce((sum, answer) => sum + answer.points, 0);
+                const totalPoints = userAnswers.reduce((sum, answer) => sum + (answer.points || 0), 0);
                 
                 // Cập nhật attempt trong database
                 await db.collection('attempts').doc(currentAttempt).update({
@@ -1560,12 +1631,12 @@
             showResultView({
                 status: 'submitted',
                 score: 0,
-                totalPoints: userAnswers.reduce((sum, answer) => sum + answer.points, 0),
+                totalPoints: userAnswers.reduce((sum, answer) => sum + (answer.points || 0), 0),
                 startedAt: new Date().toISOString(),
                 completedAt: new Date().toISOString(),
                 examId: currentExam,
                 examTitle: currentExamData.title || 'Đề thi Ngữ Văn',
-                examTime: currentExamData.examTime || 90
+                examTime: currentExamData.examTime || currentExamData.time || 90
             });
         }
 
@@ -1590,7 +1661,7 @@
                 // Đã chấm điểm
                 const score = attemptData.score || 0;
                 const totalPoints = attemptData.totalPoints || 10;
-                const percentage = (score / totalPoints) * 100;
+                const percentage = totalPoints > 0 ? (score / totalPoints) * 100 : 0;
                 
                 scoreDisplay.textContent = `${score.toFixed(1)}/${totalPoints.toFixed(1)}`;
                 
@@ -1672,7 +1743,7 @@
             });
         }
 
-        // Tải danh sách bài thi của người dùng
+        // Tải danh sách bài thi của người dùng - ĐÃ CẬP NHẬT
         async function loadUserExams() {
             try {
                 const examsList = document.getElementById('examsList');
@@ -1696,71 +1767,89 @@
                 
                 let examsHTML = '';
                 
-                attemptsQuery.forEach(doc => {
+                for (const doc of attemptsQuery.docs) {
                     const attempt = doc.data();
                     const attemptId = doc.id;
                     
-                    // Lấy thông tin đề thi
-                    const examTime = attempt.examTime || 90;
-                    const difficulty = attempt.difficulty === 'easy' ? 'Dễ' : 
-                                     attempt.difficulty === 'medium' ? 'Trung bình' : 'Khó';
-                    const grade = attempt.grade || '12';
-                    
-                    const completedDate = attempt.completedAt ? 
-                        new Date(attempt.completedAt).toLocaleDateString('vi-VN') : 
-                        'Chưa hoàn thành';
-                    
-                    const status = attempt.status === 'graded' ? 'Đã chấm' : 
-                                  attempt.status === 'submitted' ? 'Đã nộp' : 'Đang làm';
-                    
-                    const statusClass = attempt.status === 'graded' ? 'status-completed' : 'status-pending';
-                    
-                    const scoreDisplay = attempt.status === 'graded' ? 
-                        `${attempt.score?.toFixed(1) || 0}/${attempt.totalPoints?.toFixed(1) || 10}` : 
-                        'Chưa chấm';
-                    
-                    examsHTML += `
-                        <div class="exam-card">
-                            <h4 class="exam-title">${attempt.examTitle || 'Đề thi Ngữ Văn'}</h4>
-                            
-                            <div class="exam-meta">
-                                <div class="meta-item">
-                                    <i class="fas fa-hashtag"></i>
-                                    <span>Mã đề: ${attempt.examId}</span>
+                    try {
+                        // Lấy thông tin đề thi từ collection exams
+                        const examDoc = await db.collection('exams').doc(attempt.examId).get();
+                        const examData = examDoc.exists ? examDoc.data() : {};
+                        
+                        const examTime = attempt.examTime || examData.examTime || examData.time || 90;
+                        const difficulty = attempt.difficulty || examData.difficulty || 'medium';
+                        const difficultyText = difficulty === 'easy' ? 'Dễ' : 
+                                             difficulty === 'medium' ? 'Trung bình' : 'Khó';
+                        const grade = attempt.grade || examData.grade || '12';
+                        
+                        const completedDate = attempt.completedAt ? 
+                            new Date(attempt.completedAt).toLocaleDateString('vi-VN') : 
+                            'Chưa hoàn thành';
+                        
+                        const status = attempt.status === 'graded' ? 'Đã chấm' : 
+                                      attempt.status === 'submitted' ? 'Đã nộp' : 
+                                      attempt.status === 'in_progress' ? 'Đang làm' : 'Chưa hoàn thành';
+                        
+                        const statusClass = attempt.status === 'graded' ? 'status-completed' : 'status-pending';
+                        
+                        const scoreDisplay = attempt.status === 'graded' ? 
+                            `${attempt.score?.toFixed(1) || 0}/${attempt.totalPoints?.toFixed(1) || 10}` : 
+                            'Chưa chấm';
+                        
+                        examsHTML += `
+                            <div class="exam-card">
+                                <h4 class="exam-title">${attempt.examTitle || examData.title || 'Đề thi Ngữ Văn'}</h4>
+                                
+                                <div class="exam-meta">
+                                    <div class="meta-item">
+                                        <i class="fas fa-hashtag"></i>
+                                        <span>Mã đề: ${attempt.examId}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Thời gian: ${examTime} phút</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-sliders-h"></i>
+                                        <span>Độ khó: ${difficultyText}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>Ngày làm: ${completedDate}</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-star"></i>
+                                        <span>Điểm: ${scoreDisplay}</span>
+                                    </div>
                                 </div>
-                                <div class="meta-item">
-                                    <i class="fas fa-clock"></i>
-                                    <span>Thời gian: ${examTime} phút</span>
-                                </div>
-                                <div class="meta-item">
-                                    <i class="fas fa-sliders-h"></i>
-                                    <span>Độ khó: ${difficulty}</span>
-                                </div>
-                                <div class="meta-item">
-                                    <i class="fas fa-calendar"></i>
-                                    <span>Ngày làm: ${completedDate}</span>
-                                </div>
-                                <div class="meta-item">
-                                    <i class="fas fa-star"></i>
-                                    <span>Điểm: ${scoreDisplay}</span>
+                                
+                                <div class="exam-status ${statusClass}">${status}</div>
+                                
+                                <div class="exam-actions">
+                                    ${attempt.status === 'graded' ? `
+                                    <button class="exam-btn view-result-btn" data-attempt="${attemptId}">
+                                        <i class="fas fa-chart-bar"></i> Xem kết quả
+                                    </button>
+                                    ` : ''}
+                                    ${attempt.status === 'submitted' || attempt.status === 'graded' ? `
+                                    <button class="exam-btn take-exam-btn" data-exam="${attempt.examId}">
+                                        <i class="fas fa-redo"></i> Làm lại
+                                    </button>
+                                    ` : ''}
                                 </div>
                             </div>
-                            
-                            <div class="exam-status ${statusClass}">${status}</div>
-                            
-                            <div class="exam-actions">
-                                ${attempt.status === 'graded' ? `
-                                <button class="exam-btn view-result-btn" data-attempt="${attemptId}">
-                                    <i class="fas fa-chart-bar"></i> Xem kết quả
-                                </button>
-                                ` : ''}
-                                <button class="exam-btn take-exam-btn" data-exam="${attempt.examId}">
-                                    <i class="fas fa-redo"></i> Làm lại
-                                </button>
+                        `;
+                    } catch (error) {
+                        console.error('Error loading exam data:', error);
+                        // Vẫn hiển thị thông tin cơ bản nếu không lấy được exam data
+                        examsHTML += `
+                            <div class="exam-card">
+                                <h4 class="exam-title">${attempt.examTitle || 'Đề thi Ngữ Văn'}</h4>
+                                <div class="exam-status status-pending">Không thể tải thông tin chi tiết</div>
                             </div>
-                        </div>
-                    `;
-                });
+                        `;
+                    }
+                }
                 
                 examsList.innerHTML = examsHTML;
                 
@@ -1838,6 +1927,3 @@
     </script>
 </body>
 </html>
-
-
-
