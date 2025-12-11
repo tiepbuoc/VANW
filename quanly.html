@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -778,6 +777,35 @@
             gap: 1rem;
         }
 
+        /* Exam Type Badge */
+        .exam-type-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .exam-type-owned {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--info-color);
+            border: 1px solid rgba(33, 150, 243, 0.3);
+        }
+
+        .exam-type-public {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .exam-type-shared {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning-color);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -1053,13 +1081,31 @@
         <div class="tab-content" id="exams-tab">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="fas fa-list-alt mr-2"></i> Danh sách đề thi đã tạo</h3>
-                    <button class="action-btn view-btn" id="refreshExamsBtn">
-                        <i class="fas fa-sync-alt"></i> Làm mới
-                    </button>
+                    <h3><i class="fas fa-list-alt mr-2"></i> Danh sách đề thi</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn view-btn" id="showAllExamsBtn">
+                            <i class="fas fa-globe"></i> Tất cả đề thi
+                        </button>
+                        <button class="action-btn view-btn" id="showMyExamsBtn">
+                            <i class="fas fa-user"></i> Đề thi của tôi
+                        </button>
+                        <button class="action-btn view-btn" id="refreshExamsBtn">
+                            <i class="fas fa-sync-alt"></i> Làm mới
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="filter-controls">
+                    <div class="filter-group">
+                        <label class="filter-label">Loại đề thi:</label>
+                        <select class="filter-select" id="examTypeFilter">
+                            <option value="all">Tất cả</option>
+                            <option value="owned">Đề thi của tôi</option>
+                            <option value="public">Đề thi công khai</option>
+                            <option value="shared">Được chia sẻ với tôi</option>
+                        </select>
+                    </div>
+                    
                     <div class="filter-group">
                         <label class="filter-label">Trạng thái:</label>
                         <select class="filter-select" id="statusFilter">
@@ -1089,7 +1135,6 @@
                     <div class="empty-state">
                         <i class="fas fa-file-alt"></i>
                         <p>Chưa có đề thi nào</p>
-                        <p>Tạo đề thi mới từ trang tạo đề thi</p>
                     </div>
                 </div>
             </div>
@@ -1100,6 +1145,14 @@
             <div class="card">
                 <div class="card-header">
                     <h3><i class="fas fa-graduation-cap mr-2"></i> Danh sách bài thi cần chấm</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn view-btn" id="showAllAttemptsBtn">
+                            <i class="fas fa-globe"></i> Tất cả bài làm
+                        </button>
+                        <button class="action-btn view-btn" id="showMyExamsAttemptsBtn">
+                            <i class="fas fa-user"></i> Bài làm từ đề thi của tôi
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="filter-controls">
@@ -1194,7 +1247,7 @@
                 <button class="action-btn view-btn" id="viewAttemptsBtn">
                     <i class="fas fa-users"></i> Xem bài làm
                 </button>
-                <button class="action-btn delete-btn" id="deleteExamBtn">
+                <button class="action-btn delete-btn" id="deleteExamBtn" style="display: none;">
                     <i class="fas fa-trash"></i> Xóa đề thi
                 </button>
             </div>
@@ -1202,9 +1255,9 @@
     </div>
 
     <!-- Firebase Configuration -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <script>
         // Firebase Configuration
@@ -1238,6 +1291,9 @@
         let currentExamForGrading = null;
         let gradingScores = [];
         let allAttempts = [];
+        let allExams = [];
+        let examTypeFilter = 'all'; // 'all', 'owned', 'public', 'shared'
+        let attemptsFilter = 'all'; // 'all', 'my_exams'
 
         // Hàm xử lý markdown
         function markdownToHtml(text) {
@@ -1348,8 +1404,6 @@
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     const userData = userDoc.data();
                     
-
-                    
                     // Hiển thị thông tin người dùng
                     document.getElementById('userInfo').style.display = 'flex';
                     document.getElementById('userName').textContent = userData?.name || user.email;
@@ -1357,8 +1411,8 @@
                     
                     // Tải dữ liệu
                     loadDashboardStats();
-                    loadExams();
-                    loadGradingList();
+                    loadAllExams();
+                    loadAllAttempts();
                     
                 } else {
                     // Chưa đăng nhập, chuyển hướng đến trang đăng nhập
@@ -1401,15 +1455,63 @@
             });
         }
 
+        // Tải tất cả đề thi từ database
+        async function loadAllExams() {
+            try {
+                // Truy vấn tất cả đề thi (không phân biệt người tạo)
+                const examsSnapshot = await db.collection('exams').get();
+                
+                allExams = [];
+                examsSnapshot.forEach(doc => {
+                    allExams.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                console.log(`Đã tải ${allExams.length} đề thi từ database`);
+                
+                // Cập nhật giao diện
+                updateExamsTable();
+                
+            } catch (error) {
+                console.error('Lỗi tải tất cả đề thi:', error);
+                showNotification('Không thể tải danh sách đề thi', 'error');
+            }
+        }
+
+        // Tải tất cả attempts từ database
+        async function loadAllAttempts() {
+            try {
+                // Truy vấn tất cả attempts
+                const attemptsSnapshot = await db.collection('attempts').get();
+                
+                allAttempts = [];
+                attemptsSnapshot.forEach(doc => {
+                    allAttempts.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                console.log(`Đã tải ${allAttempts.length} bài làm từ database`);
+                
+                // Cập nhật giao diện
+                updateGradingTable();
+                
+            } catch (error) {
+                console.error('Lỗi tải tất cả attempts:', error);
+                showNotification('Không thể tải danh sách bài làm', 'error');
+            }
+        }
+
         // Tải thống kê dashboard
         async function loadDashboardStats() {
             try {
-                // Tải tất cả attempts
-                const attemptsSnapshot = await db.collection('attempts').get();
-                allAttempts = attemptsSnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
+                // Chờ tải xong attempts
+                if (allAttempts.length === 0) {
+                    await loadAllAttempts();
+                }
                 
                 // Tính toán thống kê
                 const pendingCount = allAttempts.filter(a => a.status === 'submitted').length;
@@ -1418,9 +1520,8 @@
                 // Đếm số học sinh duy nhất
                 const uniqueStudents = [...new Set(allAttempts.map(a => a.userId))].length;
                 
-                // Tải số lượng đề thi
-                const examsSnapshot = await db.collection('exams').get();
-                const totalExams = examsSnapshot.size;
+                // Đếm số đề thi
+                const totalExams = allExams.length;
                 
                 // Cập nhật UI
                 document.getElementById('pendingCount').textContent = pendingCount;
@@ -1467,6 +1568,10 @@
                         `<span class="status-badge status-graded">Đã chấm</span>` :
                         `<span class="status-badge status-submitted">Đã nộp</span>`;
                     
+                    // Tìm tên đề thi
+                    const exam = allExams.find(e => e.id === attempt.examId);
+                    const examTitle = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
+                    
                     activityHTML += `
                         <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 8px;">
                             <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(227, 124, 45, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
@@ -1478,7 +1583,7 @@
                                     <span class="exam-code">${attempt.examId}</span>
                                 </div>
                                 <div style="font-size: 0.9rem; color: var(--text-secondary);">
-                                    ${timeAgo}
+                                    ${examTitle} • ${timeAgo}
                                 </div>
                             </div>
                             ${statusBadge}
@@ -1511,124 +1616,166 @@
             return date.toLocaleDateString('vi-VN');
         }
 
-        // Tải danh sách đề thi
-        async function loadExams() {
-            try {
-                const examsTableContainer = document.getElementById('examsTableContainer');
+        // Cập nhật bảng đề thi
+        function updateExamsTable() {
+            const examsTableContainer = document.getElementById('examsTableContainer');
+            
+            if (allExams.length === 0) {
+                examsTableContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <p>Chưa có đề thi nào trong hệ thống</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Lọc đề thi theo loại
+            let filteredExams = allExams;
+            
+            if (examTypeFilter === 'owned') {
+                filteredExams = allExams.filter(exam => exam.createdBy === currentUser.uid);
+            } else if (examTypeFilter === 'public') {
+                filteredExams = allExams.filter(exam => exam.visibility === 'public' && exam.createdBy !== currentUser.uid);
+            } else if (examTypeFilter === 'shared') {
+                filteredExams = allExams.filter(exam => 
+                    exam.sharedWith && exam.sharedWith.includes(currentUser.uid) && exam.createdBy !== currentUser.uid
+                );
+            }
+            
+            if (filteredExams.length === 0) {
+                examsTableContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <p>Không tìm thấy đề thi nào phù hợp</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let tableHTML = `
+                <table class="exams-table">
+                    <thead>
+                        <tr>
+                            <th>Mã đề</th>
+                            <th>Tên đề thi</th>
+                            <th>Người tạo</th>
+                            <th>Thời gian</th>
+                            <th>Độ khó</th>
+                            <th>Khối lớp</th>
+                            <th>Ngày tạo</th>
+                            <th>Số bài làm</th>
+                            <th>Loại</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            filteredExams.forEach(async (exam) => {
+                const examId = exam.id;
                 
-                // Truy vấn tất cả đề thi
-                const examsSnapshot = await db.collection('exams').orderBy('createdAt', 'desc').get();
+                // Đếm số bài làm cho đề thi này
+                const attemptsCount = allAttempts.filter(a => a.examId === examId).length;
                 
-                if (examsSnapshot.empty) {
-                    examsTableContainer.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-file-alt"></i>
-                            <p>Chưa có đề thi nào</p>
-                            <p>Tạo đề thi mới từ trang tạo đề thi</p>
-                        </div>
-                    `;
-                    return;
+                const createdAt = exam.createdAt ? 
+                    new Date(exam.createdAt).toLocaleDateString('vi-VN') : 
+                    'Không rõ';
+                
+                const difficulty = exam.difficulty === 'easy' ? 'Dễ' : 
+                                 exam.difficulty === 'medium' ? 'Trung bình' : 'Khó';
+                
+                // Xác định loại đề thi
+                let examType = 'public';
+                let examTypeClass = 'exam-type-public';
+                let examTypeText = 'Công khai';
+                
+                if (exam.createdBy === currentUser.uid) {
+                    examType = 'owned';
+                    examTypeClass = 'exam-type-owned';
+                    examTypeText = 'Của tôi';
+                } else if (exam.visibility === 'private' && exam.sharedWith && exam.sharedWith.includes(currentUser.uid)) {
+                    examType = 'shared';
+                    examTypeClass = 'exam-type-shared';
+                    examTypeText = 'Chia sẻ';
                 }
                 
-                let tableHTML = `
-                    <table class="exams-table">
-                        <thead>
-                            <tr>
-                                <th>Mã đề</th>
-                                <th>Tên đề thi</th>
-                                <th>Thời gian</th>
-                                <th>Độ khó</th>
-                                <th>Khối lớp</th>
-                                <th>Ngày tạo</th>
-                                <th>Số bài làm</th>
-                                <th>Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-                
-                examsSnapshot.forEach(async (doc) => {
-                    const exam = doc.data();
-                    const examId = doc.id;
-                    
-                    // Đếm số bài làm cho đề thi này
-                    const attemptsSnapshot = await db.collection('attempts')
-                        .where('examId', '==', examId)
-                        .get();
-                    const attemptsCount = attemptsSnapshot.size;
-                    
-                    const createdAt = exam.createdAt ? 
-                        new Date(exam.createdAt).toLocaleDateString('vi-VN') : 
-                        'Không rõ';
-                    
-                    const difficulty = exam.difficulty === 'easy' ? 'Dễ' : 
-                                     exam.difficulty === 'medium' ? 'Trung bình' : 'Khó';
-                    
-                    tableHTML += `
-                        <tr>
-                            <td><span class="exam-code">${examId}</span></td>
-                            <td>${exam.title || 'Đề thi Ngữ Văn'}</td>
-                            <td>${exam.examTime || 90} phút</td>
-                            <td>${difficulty}</td>
-                            <td>${exam.grade || '12'}</td>
-                            <td>${createdAt}</td>
-                            <td>${attemptsCount}</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn view-btn view-exam-btn" data-exam="${examId}">
-                                        <i class="fas fa-eye"></i> Xem
-                                    </button>
-                                    <button class="action-btn grade-btn view-attempts-btn" data-exam="${examId}">
-                                        <i class="fas fa-graduation-cap"></i> Chấm
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                });
+                // Lấy tên người tạo
+                let creatorName = 'Không xác định';
+                if (exam.createdBy === currentUser.uid) {
+                    creatorName = 'Tôi';
+                } else if (exam.creatorName) {
+                    creatorName = exam.creatorName;
+                } else if (exam.createdBy) {
+                    // Có thể thêm logic để lấy tên từ collection users
+                    creatorName = 'Người dùng khác';
+                }
                 
                 tableHTML += `
-                        </tbody>
-                    </table>
+                    <tr>
+                        <td><span class="exam-code">${examId}</span></td>
+                        <td>${exam.title || 'Đề thi Ngữ Văn'}</td>
+                        <td>${creatorName}</td>
+                        <td>${exam.examTime || 90} phút</td>
+                        <td>${difficulty}</td>
+                        <td>${exam.grade || '12'}</td>
+                        <td>${createdAt}</td>
+                        <td>${attemptsCount}</td>
+                        <td><span class="exam-type-badge ${examTypeClass}">${examTypeText}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn view-btn view-exam-btn" data-exam="${examId}" data-type="${examType}">
+                                    <i class="fas fa-eye"></i> Xem
+                                </button>
+                                ${attemptsCount > 0 ? `
+                                <button class="action-btn grade-btn view-attempts-btn" data-exam="${examId}">
+                                    <i class="fas fa-graduation-cap"></i> Chấm
+                                </button>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
                 `;
-                
-                examsTableContainer.innerHTML = tableHTML;
-                
-                // Thiết lập sự kiện cho các nút
-                document.querySelectorAll('.view-exam-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const examId = btn.dataset.exam;
-                        showExamDetails(examId);
-                    });
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            examsTableContainer.innerHTML = tableHTML;
+            
+            // Thiết lập sự kiện cho các nút
+            document.querySelectorAll('.view-exam-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const examId = btn.dataset.exam;
+                    const examType = btn.dataset.type;
+                    showExamDetails(examId, examType);
                 });
-                
-                document.querySelectorAll('.view-attempts-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const examId = btn.dataset.exam;
-                        // Chuyển sang tab chấm điểm và lọc theo đề thi
-                        document.querySelector('[data-tab="grading"]').click();
-                        document.getElementById('gradingSearch').value = examId;
-                        filterGradingList();
-                    });
+            });
+            
+            document.querySelectorAll('.view-attempts-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const examId = btn.dataset.exam;
+                    // Chuyển sang tab chấm điểm và lọc theo đề thi
+                    document.querySelector('[data-tab="grading"]').click();
+                    document.getElementById('gradingSearch').value = examId;
+                    attemptsFilter = 'all';
+                    updateGradingTable();
                 });
-                
-            } catch (error) {
-                console.error('Lỗi tải danh sách đề thi:', error);
-                showNotification('Không thể tải danh sách đề thi', 'error');
-            }
+            });
         }
 
         // Hiển thị chi tiết đề thi
-        async function showExamDetails(examId) {
+        async function showExamDetails(examId, examType) {
             try {
-                const examDoc = await db.collection('exams').doc(examId).get();
+                const exam = allExams.find(e => e.id === examId);
                 
-                if (!examDoc.exists) {
+                if (!exam) {
                     showNotification('Không tìm thấy đề thi', 'error');
                     return;
                 }
                 
-                const exam = examDoc.data();
                 const modal = document.getElementById('examDetailsModal');
                 const content = document.getElementById('examDetailsContent');
                 
@@ -1640,14 +1787,26 @@
                 const totalPoints = exam.blocks?.reduce((sum, block) => sum + (block.points || 0), 0) || 0;
                 
                 // Đếm số bài làm
-                const attemptsSnapshot = await db.collection('attempts')
-                    .where('examId', '==', examId)
-                    .get();
-                const attemptsCount = attemptsSnapshot.size;
+                const attemptsCount = allAttempts.filter(a => a.examId === examId).length;
+                
+                // Xác định loại đề thi
+                let examTypeText = 'Công khai';
+                let examTypeClass = 'exam-type-public';
+                
+                if (examType === 'owned') {
+                    examTypeText = 'Đề thi của tôi';
+                    examTypeClass = 'exam-type-owned';
+                } else if (examType === 'shared') {
+                    examTypeText = 'Được chia sẻ với tôi';
+                    examTypeClass = 'exam-type-shared';
+                }
                 
                 content.innerHTML = `
                     <div style="margin-bottom: 1.5rem;">
-                        <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">${exam.title || 'Đề thi Ngữ Văn'}</h4>
+                        <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                            ${exam.title || 'Đề thi Ngữ Văn'}
+                            <span class="exam-type-badge ${examTypeClass}">${examTypeText}</span>
+                        </h4>
                         <p style="color: var(--text-secondary);">${exam.description || 'Không có mô tả'}</p>
                     </div>
                     
@@ -1674,6 +1833,10 @@
                         <h5 style="color: var(--text-primary); margin-bottom: 0.5rem;">Thông tin chi tiết</h5>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                             <div>
+                                <span style="color: var(--text-secondary);">Người tạo:</span>
+                                <span style="font-weight: 500; margin-left: 0.5rem;">${exam.creatorName || (exam.createdBy === currentUser.uid ? 'Tôi' : 'Người dùng khác')}</span>
+                            </div>
+                            <div>
                                 <span style="color: var(--text-secondary);">Thời gian:</span>
                                 <span style="font-weight: 500; margin-left: 0.5rem;">${exam.examTime || 90} phút</span>
                             </div>
@@ -1688,6 +1851,10 @@
                             <div>
                                 <span style="color: var(--text-secondary);">Ngày tạo:</span>
                                 <span style="font-weight: 500; margin-left: 0.5rem;">${exam.createdAt ? new Date(exam.createdAt).toLocaleDateString('vi-VN') : 'Không rõ'}</span>
+                            </div>
+                            <div>
+                                <span style="color: var(--text-secondary);">Trạng thái:</span>
+                                <span style="font-weight: 500; margin-left: 0.5rem;">${exam.status || 'active' === 'active' ? 'Đang hoạt động' : 'Đã lưu trữ'}</span>
                             </div>
                         </div>
                     </div>
@@ -1728,15 +1895,22 @@
                     modal.classList.remove('active');
                     document.querySelector('[data-tab="grading"]').click();
                     document.getElementById('gradingSearch').value = examId;
-                    filterGradingList();
+                    attemptsFilter = 'all';
+                    updateGradingTable();
                 };
                 
-                // Thiết lập sự kiện cho nút xóa
-                document.getElementById('deleteExamBtn').onclick = () => {
-                    if (confirm(`Bạn có chắc chắn muốn xóa đề thi "${examId}"? Hành động này không thể hoàn tả.`)) {
-                        deleteExam(examId);
-                    }
-                };
+                // Chỉ hiện nút xóa nếu là đề thi của người dùng
+                const deleteBtn = document.getElementById('deleteExamBtn');
+                if (examType === 'owned') {
+                    deleteBtn.style.display = 'block';
+                    deleteBtn.onclick = () => {
+                        if (confirm(`Bạn có chắc chắn muốn xóa đề thi "${examId}"? Hành động này không thể hoàn tả.`)) {
+                            deleteExam(examId);
+                        }
+                    };
+                } else {
+                    deleteBtn.style.display = 'none';
+                }
                 
                 modal.classList.add('active');
                 
@@ -1750,11 +1924,9 @@
         async function deleteExam(examId) {
             try {
                 // Kiểm tra xem có bài làm nào không
-                const attemptsSnapshot = await db.collection('attempts')
-                    .where('examId', '==', examId)
-                    .get();
+                const attemptsCount = allAttempts.filter(a => a.examId === examId).length;
                 
-                if (!attemptsSnapshot.empty) {
+                if (attemptsCount > 0) {
                     showNotification('Không thể xóa đề thi đã có bài làm', 'error');
                     return;
                 }
@@ -1764,7 +1936,10 @@
                 
                 showNotification('Đã xóa đề thi thành công', 'success');
                 document.getElementById('examDetailsModal').classList.remove('active');
-                loadExams();
+                
+                // Cập nhật dữ liệu
+                allExams = allExams.filter(exam => exam.id !== examId);
+                updateExamsTable();
                 loadDashboardStats();
                 
             } catch (error) {
@@ -1773,138 +1948,160 @@
             }
         }
 
-        // Tải danh sách bài thi cần chấm
-        async function loadGradingList() {
-            try {
-                const gradingTableContainer = document.getElementById('gradingTableContainer');
-                
-                // Truy vấn tất cả attempts
-                const attemptsSnapshot = await db.collection('attempts')
-                    .orderBy('completedAt', 'desc')
-                    .get();
-                
-                if (attemptsSnapshot.empty) {
-                    gradingTableContainer.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-clipboard-check"></i>
-                            <p>Không có bài thi nào cần chấm</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                let tableHTML = `
-                    <table class="exams-table">
-                        <thead>
-                            <tr>
-                                <th>Học sinh</th>
-                                <th>Mã đề</th>
-                                <th>Tên đề thi</th>
-                                <th>Ngày nộp</th>
-                                <th>Trạng thái</th>
-                                <th>Điểm</th>
-                                <th>Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+        // Cập nhật bảng chấm điểm
+        function updateGradingTable() {
+            const gradingTableContainer = document.getElementById('gradingTableContainer');
+            
+            if (allAttempts.length === 0) {
+                gradingTableContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-check"></i>
+                        <p>Không có bài thi nào trong hệ thống</p>
+                    </div>
                 `;
+                return;
+            }
+            
+            // Lọc attempts theo bộ lọc
+            let filteredAttempts = allAttempts;
+            
+            // Lọc theo loại đề thi (nếu cần)
+            if (attemptsFilter === 'my_exams') {
+                // Chỉ hiển thị attempts từ đề thi của người dùng
+                const myExamIds = allExams
+                    .filter(exam => exam.createdBy === currentUser.uid)
+                    .map(exam => exam.id);
                 
-                attemptsSnapshot.forEach((doc) => {
-                    const attempt = doc.data();
-                    const attemptId = doc.id;
-                    
-                    const submitDate = attempt.completedAt ? 
-                        new Date(attempt.completedAt).toLocaleDateString('vi-VN') : 
-                        'Chưa nộp';
-                    
-                    const status = attempt.status === 'graded' ? 'Đã chấm' : 
-                                  attempt.status === 'submitted' ? 'Chờ chấm' : 
-                                  'Đang làm';
-                    
-                    const statusClass = attempt.status === 'graded' ? 'status-graded' : 
-                                       attempt.status === 'submitted' ? 'status-pending' : 
-                                       'status-submitted';
-                    
-                    const scoreDisplay = attempt.status === 'graded' ? 
-                        `${attempt.score?.toFixed(1) || 0}/${attempt.totalPoints?.toFixed(1) || 10}` : 
-                        'Chưa chấm';
-                    
-                    tableHTML += `
+                filteredAttempts = allAttempts.filter(attempt => 
+                    myExamIds.includes(attempt.examId)
+                );
+            }
+            
+            if (filteredAttempts.length === 0) {
+                gradingTableContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-check"></i>
+                        <p>Không tìm thấy bài làm nào phù hợp</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let tableHTML = `
+                <table class="exams-table">
+                    <thead>
                         <tr>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(227, 124, 45, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <div>
-                                        <div style="font-weight: 500;">${attempt.userName || 'Học sinh'}</div>
-                                        <div style="font-size: 0.85rem; color: var(--text-secondary);">${attempt.userEmail || ''}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="exam-code">${attempt.examId}</span></td>
-                            <td>${attempt.examTitle || 'Đề thi Ngữ Văn'}</td>
-                            <td>${submitDate}</td>
-                            <td><span class="status-badge ${statusClass}">${status}</span></td>
-                            <td>${scoreDisplay}</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn view-btn grade-attempt-btn" data-attempt="${attemptId}">
-                                        <i class="fas fa-eye"></i> Xem
-                                    </button>
-                                    ${attempt.status !== 'graded' ? `
-                                    <button class="action-btn grade-btn start-grading-btn" data-attempt="${attemptId}">
-                                        <i class="fas fa-graduation-cap"></i> Chấm
-                                    </button>
-                                    ` : ''}
-                                </div>
-                            </td>
+                            <th>Học sinh</th>
+                            <th>Mã đề</th>
+                            <th>Tên đề thi</th>
+                            <th>Người tạo đề</th>
+                            <th>Ngày nộp</th>
+                            <th>Trạng thái</th>
+                            <th>Điểm</th>
+                            <th>Thao tác</th>
                         </tr>
-                    `;
-                });
+                    </thead>
+                    <tbody>
+            `;
+            
+            filteredAttempts.forEach((attempt) => {
+                const attemptId = attempt.id;
+                
+                const submitDate = attempt.completedAt ? 
+                    new Date(attempt.completedAt).toLocaleDateString('vi-VN') : 
+                    'Chưa nộp';
+                
+                const status = attempt.status === 'graded' ? 'Đã chấm' : 
+                              attempt.status === 'submitted' ? 'Chờ chấm' : 
+                              'Đang làm';
+                
+                const statusClass = attempt.status === 'graded' ? 'status-graded' : 
+                                   attempt.status === 'submitted' ? 'status-pending' : 
+                                   'status-submitted';
+                
+                const scoreDisplay = attempt.status === 'graded' ? 
+                    `${attempt.score?.toFixed(1) || 0}/${attempt.totalPoints?.toFixed(1) || 10}` : 
+                    'Chưa chấm';
+                
+                // Tìm thông tin đề thi
+                const exam = allExams.find(e => e.id === attempt.examId);
+                const examTitle = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
+                const examCreator = exam?.creatorName || (exam?.createdBy === currentUser.uid ? 'Tôi' : 'Người dùng khác');
                 
                 tableHTML += `
-                        </tbody>
-                    </table>
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(227, 124, 45, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 500;">${attempt.userName || 'Học sinh'}</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">${attempt.userEmail || ''}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="exam-code">${attempt.examId}</span></td>
+                        <td>${examTitle}</td>
+                        <td>${examCreator}</td>
+                        <td>${submitDate}</td>
+                        <td><span class="status-badge ${statusClass}">${status}</span></td>
+                        <td>${scoreDisplay}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn view-btn grade-attempt-btn" data-attempt="${attemptId}">
+                                    <i class="fas fa-eye"></i> Xem
+                                </button>
+                                ${attempt.status !== 'graded' ? `
+                                <button class="action-btn grade-btn start-grading-btn" data-attempt="${attemptId}">
+                                    <i class="fas fa-graduation-cap"></i> Chấm
+                                </button>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
                 `;
-                
-                gradingTableContainer.innerHTML = tableHTML;
-                
-                // Thiết lập sự kiện cho các nút
-                document.querySelectorAll('.grade-attempt-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const attemptId = btn.dataset.attempt;
-                        viewGradedAttempt(attemptId);
-                    });
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            gradingTableContainer.innerHTML = tableHTML;
+            
+            // Thiết lập sự kiện cho các nút
+            document.querySelectorAll('.grade-attempt-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const attemptId = btn.dataset.attempt;
+                    viewGradedAttempt(attemptId);
                 });
-                
-                document.querySelectorAll('.start-grading-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const attemptId = btn.dataset.attempt;
-                        startGrading(attemptId);
-                    });
+            });
+            
+            document.querySelectorAll('.start-grading-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const attemptId = btn.dataset.attempt;
+                    startGrading(attemptId);
                 });
-                
-            } catch (error) {
-                console.error('Lỗi tải danh sách chấm điểm:', error);
-                showNotification('Không thể tải danh sách chấm điểm', 'error');
-            }
+            });
         }
 
         // Xem bài thi đã chấm
         async function viewGradedAttempt(attemptId) {
             try {
-                const attemptDoc = await db.collection('attempts').doc(attemptId).get();
+                const attempt = allAttempts.find(a => a.id === attemptId);
                 
-                if (!attemptDoc.exists) {
+                if (!attempt) {
                     showNotification('Không tìm thấy bài làm', 'error');
                     return;
                 }
                 
-                const attempt = attemptDoc.data();
+                // Tìm thông tin đề thi
+                const exam = allExams.find(e => e.id === attempt.examId);
+                currentExamForGrading = exam;
                 
                 // Hiển thị thông tin
-                document.getElementById('gradingExamTitle').textContent = attempt.examTitle || 'Đề thi Ngữ Văn';
+                document.getElementById('gradingExamTitle').textContent = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
                 document.getElementById('gradingExamCode').textContent = `Mã đề: ${attempt.examId}`;
                 document.getElementById('gradingStudentName').textContent = attempt.userName || 'Học sinh';
                 document.getElementById('gradingStudentEmail').textContent = attempt.userEmail || '';
@@ -1941,24 +2138,27 @@
         // Bắt đầu chấm điểm
         async function startGrading(attemptId) {
             try {
-                const attemptDoc = await db.collection('attempts').doc(attemptId).get();
+                const attempt = allAttempts.find(a => a.id === attemptId);
                 
-                if (!attemptDoc.exists) {
+                if (!attempt) {
                     showNotification('Không tìm thấy bài làm', 'error');
                     return;
                 }
                 
-                const attempt = attemptDoc.data();
                 currentGradingAttempt = attemptId;
                 
-                // Lấy thông tin đề thi
-                const examDoc = await db.collection('exams').doc(attempt.examId).get();
-                if (examDoc.exists) {
-                    currentExamForGrading = examDoc.data();
+                // Tìm thông tin đề thi
+                const exam = allExams.find(e => e.id === attempt.examId);
+                currentExamForGrading = exam;
+                
+                // Kiểm tra quyền chấm điểm
+                if (exam && exam.createdBy !== currentUser.uid && exam.visibility === 'private') {
+                    showNotification('Bạn không có quyền chấm điểm đề thi này', 'error');
+                    return;
                 }
                 
                 // Hiển thị thông tin
-                document.getElementById('gradingExamTitle').textContent = attempt.examTitle || 'Đề thi Ngữ Văn';
+                document.getElementById('gradingExamTitle').textContent = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
                 document.getElementById('gradingExamCode').textContent = `Mã đề: ${attempt.examId}`;
                 document.getElementById('gradingStudentName').textContent = attempt.userName || 'Học sinh';
                 document.getElementById('gradingStudentEmail').textContent = attempt.userEmail || '';
@@ -2159,12 +2359,28 @@
                 
                 showNotification('Đã lưu điểm thành công', 'success');
                 
+                // Cập nhật dữ liệu cục bộ
+                const attemptIndex = allAttempts.findIndex(a => a.id === currentGradingAttempt);
+                if (attemptIndex !== -1) {
+                    allAttempts[attemptIndex] = {
+                        ...allAttempts[attemptIndex],
+                        status: 'graded',
+                        score: totalScore,
+                        totalPoints: totalMaxScore,
+                        answers: gradingScores,
+                        feedback: overallFeedback,
+                        gradedAt: new Date().toISOString(),
+                        gradedBy: currentUser.uid,
+                        gradedByName: document.getElementById('userName').textContent
+                    };
+                }
+                
                 // Quay lại tab chấm điểm
                 cancelGrading();
                 
                 // Làm mới dữ liệu
                 loadDashboardStats();
-                loadGradingList();
+                updateGradingTable();
                 
             } catch (error) {
                 console.error('Lỗi lưu điểm:', error);
@@ -2250,12 +2466,12 @@
             // Sắp xếp
             filteredRows.sort((a, b) => {
                 if (sortValue === 'newest') {
-                    const dateA = new Date(a.querySelector('td:nth-child(6)').textContent);
-                    const dateB = new Date(b.querySelector('td:nth-child(6)').textContent);
+                    const dateA = new Date(a.querySelector('td:nth-child(7)').textContent);
+                    const dateB = new Date(b.querySelector('td:nth-child(7)').textContent);
                     return dateB - dateA;
                 } else if (sortValue === 'oldest') {
-                    const dateA = new Date(a.querySelector('td:nth-child(6)').textContent);
-                    const dateB = new Date(b.querySelector('td:nth-child(6)').textContent);
+                    const dateA = new Date(a.querySelector('td:nth-child(7)').textContent);
+                    const dateB = new Date(b.querySelector('td:nth-child(7)').textContent);
                     return dateA - dateB;
                 } else if (sortValue === 'name') {
                     const nameA = a.querySelector('td:nth-child(2)').textContent.toLowerCase();
@@ -2284,16 +2500,48 @@
             setupTabs();
             
             // Thiết lập sự kiện cho các filter
+            document.getElementById('examTypeFilter').addEventListener('change', function() {
+                examTypeFilter = this.value;
+                updateExamsTable();
+            });
+            
             document.getElementById('statusFilter').addEventListener('change', filterExamsList);
             document.getElementById('sortFilter').addEventListener('change', filterExamsList);
             document.getElementById('examSearch').addEventListener('input', filterExamsList);
             document.getElementById('gradingFilter').addEventListener('change', filterGradingList);
             document.getElementById('gradingSearch').addEventListener('input', filterGradingList);
             
+            // Nút hiển thị tất cả đề thi
+            document.getElementById('showAllExamsBtn').addEventListener('click', () => {
+                examTypeFilter = 'all';
+                document.getElementById('examTypeFilter').value = 'all';
+                updateExamsTable();
+            });
+            
+            // Nút hiển thị đề thi của tôi
+            document.getElementById('showMyExamsBtn').addEventListener('click', () => {
+                examTypeFilter = 'owned';
+                document.getElementById('examTypeFilter').value = 'owned';
+                updateExamsTable();
+            });
+            
             // Nút làm mới danh sách đề thi
             document.getElementById('refreshExamsBtn').addEventListener('click', () => {
-                loadExams();
-                showNotification('Đã làm mới danh sách đề thi', 'success');
+                loadAllExams();
+                loadAllAttempts();
+                showNotification('Đã làm mới dữ liệu', 'success');
+            });
+            
+            // Nút hiển thị tất cả bài làm
+            document.getElementById('showAllAttemptsBtn').addEventListener('click', () => {
+                attemptsFilter = 'all';
+                updateGradingTable();
+            });
+            
+            // Nút hiển thị bài làm từ đề thi của tôi
+            document.getElementById('showMyExamsAttemptsBtn').addEventListener('click', () => {
+                attemptsFilter = 'my_exams';
+                updateGradingTable();
             });
             
             // Nút hủy chấm điểm
@@ -2315,6 +2563,10 @@
                     this.classList.remove('active');
                 }
             });
+            
+            // Gán hàm toàn cục để sử dụng trong event handlers
+            window.updateQuestionScore = updateQuestionScore;
+            window.updateQuestionFeedback = updateQuestionFeedback;
         });
     </script>
 </body>
