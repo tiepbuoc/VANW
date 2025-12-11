@@ -1348,14 +1348,7 @@
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     const userData = userDoc.data();
                     
-                    // Kiểm tra quyền giáo viên
-                    if (userData?.role !== 'student' && userData?.role !== 'student') {
-                        showNotification('Bạn không có quyền truy cập trang này', 'error');
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 2000);
-                        return;
-                    }
+
                     
                     // Hiển thị thông tin người dùng
                     document.getElementById('userInfo').style.display = 'flex';
