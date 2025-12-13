@@ -1,0 +1,1447 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VANW | Chatbot AI Văn Học</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        /* Reset và font chữ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        /* Chatbot Styles */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #f8f9fa;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .new-chat-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #ed7839, #ff5722);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .new-chat-btn:hover {
+            background: linear-gradient(135deg, #d46a2e, #e64a19);
+        }
+        
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+        
+        .chat-item {
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chat-item:hover {
+            background-color: #e9ecef;
+        }
+        
+        .chat-item.active {
+            background-color: #e9ecef;
+            border-left: 3px solid #ed7839;
+        }
+        
+        .chat-title {
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+        
+        .chat-date {
+            font-size: 0.75rem;
+            color: #666;
+            opacity: 0.7;
+        }
+        
+        .delete-chat-btn {
+            background: none;
+            border: none;
+            color: #666;
+            opacity: 0.7;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .delete-chat-btn:hover {
+            opacity: 1;
+            background-color: rgba(255, 0, 0, 0.1);
+            color: #ff4444;
+        }
+        
+        .sidebar-footer {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666;
+            opacity: 0.7;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .welcome-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 2rem;
+        }
+        
+        .welcome-logo {
+            max-width: 400px;
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #ed7839, #ff5722);
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+            padding: 12px 16px;
+            max-width: 70%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background-color: #ffffff;
+            color: #333;
+            border-radius: 18px 18px 18px 4px;
+            padding: 12px 16px;
+            max-width: 70%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .quick-reply-message {
+            align-self: flex-start;
+            background-color: #ffffff;
+            color: #333;
+            border-radius: 18px 18px 18px 4px;
+            padding: 12px 16px;
+            max-width: 70%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 2px solid #ff9800;
+            position: relative;
+            margin-bottom: 25px; /* Thêm margin ở dưới để chừa chỗ cho nhãn */
+        }
+        
+        .quick-reply-label {
+            position: absolute;
+            bottom: -18px; /* Đặt nhãn bên dưới tin nhắn */
+            left: 15px; /* Căn trái */
+            background-color: #ff9800;
+            color: white;
+            font-size: 0.85rem;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            z-index: 1;
+        }
+        
+        .quick-reply-label::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 15px;
+            width: 8px;
+            height: 8px;
+            background-color: #ff9800;
+            transform: rotate(45deg);
+        }
+        
+        .quick-reply-loading {
+            display: inline-block;
+            margin-left: 4px;
+            color: white;
+        }
+        
+        .typing-indicator {
+            align-self: flex-start;
+            background-color: #ffffff;
+            color: #333;
+            border-radius: 18px 18px 18px 4px;
+            padding: 12px 16px;
+            max-width: 70%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ed7839;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .loading-dots {
+            display: inline-block;
+        }
+        
+        .loading-dots span {
+            display: inline-block;
+            animation: blink 1.4s infinite both;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes blink {
+            0%, 100% {
+                opacity: 0.2;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        
+        .suggestions-bar {
+            padding: 0.5rem 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .suggestions-title {
+            font-size: 0.9rem;
+            color: #666;
+            opacity: 0.7;
+            margin-bottom: 0.5rem;
+        }
+        
+        .suggestions-container {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        
+        .suggestion-chip {
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        
+        .suggestion-chip:hover {
+            background-color: #ed7839;
+            color: white;
+            border-color: #ed7839;
+        }
+        
+        .input-area {
+            padding: 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .chat-form {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 24px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            color: #333;
+            resize: none;
+            min-height: 48px;
+            max-height: 120px;
+            transition: all 0.3s ease;
+        }
+        
+        .message-input:focus {
+            outline: none;
+            border-color: #ed7839;
+            box-shadow: 0 0 0 2px rgba(237, 120, 57, 0.2);
+        }
+        
+        .send-button {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ed7839, #ff5722);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .send-button:hover {
+            background: linear-gradient(135deg, #d46a2e, #e64a19);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Markdown Styles */
+        .markdown p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .markdown ul, .markdown ol {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+        }
+        
+        .markdown li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .markdown code:not(pre code) {
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        .markdown strong {
+            font-weight: 600;
+        }
+        
+        .markdown em {
+            font-style: italic;
+        }
+        
+        .markdown h1, .markdown h2, .markdown h3, .markdown h4 {
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .markdown h1 {
+            font-size: 1.5rem;
+        }
+        
+        .markdown h2 {
+            font-size: 1.25rem;
+        }
+        
+        .markdown h3 {
+            font-size: 1.125rem;
+        }
+        
+        .markdown h4 {
+            font-size: 1rem;
+        }
+        
+        .markdown blockquote {
+            border-left: 4px solid #ed7839;
+            padding-left: 1rem;
+            margin: 0.5rem 0;
+            color: #666;
+        }
+        
+        .code-block {
+            position: relative;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: rgba(0, 0, 0, 0.05);
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+        
+        .copy-code-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-code-btn:hover {
+            color: #ed7839;
+        }
+        
+        pre {
+            margin: 0 !important;
+            padding: 1rem !important;
+            overflow-x: auto;
+        }
+        
+        /* Sidebar Toggle Button */
+        .sidebar-toggle {
+            position: fixed;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            z-index: 20;
+            background-color: #ed7839;
+            color: white;
+            width: 30px;
+            height: 50px;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            display: none;
+            border: none;
+        }
+        
+        .sidebar-toggle:hover {
+            background-color: #d46a2e;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                left: -250px;
+                top: 0;
+                height: 100%;
+                z-index: 10;
+                transition: left 0.3s ease;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .user-message, .bot-message, .quick-reply-message {
+                max-width: 85%;
+            }
+            
+            .quick-reply-label {
+                font-size: 0.8rem;
+                padding: 2px 8px;
+                bottom: -16px;
+            }
+            
+            .sidebar-toggle {
+                display: flex;
+            }
+            
+            .welcome-logo {
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .user-message, .bot-message, .quick-reply-message {
+                max-width: 90%;
+            }
+            
+            .quick-reply-label {
+                font-size: 0.75rem;
+                padding: 2px 6px;
+                bottom: -14px;
+            }
+            
+            .suggestions-container {
+                flex-wrap: wrap;
+            }
+            
+            .welcome-logo {
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Chatbot App -->
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="logo-link">
+                    <img src="logo.png" alt="VANW" class="logo-icon">
+                </a>
+                <button id="new-chat-btn" class="new-chat-btn">
+                    <i class="fas fa-file-circle-plus"></i>
+                    <span>Đoạn nhắn mới</span>
+                </button>
+            </div>
+            
+            <div class="chat-history" id="chat-history">
+                <!-- Chat history will be populated here -->
+            </div>
+            
+            <div class="sidebar-footer">
+                <p>©2025 THPT Thừa Lưu</p>
+                <p>Hoàng Minh Tuấn & Trương Viết Duy Chương</p>
+            </div>
+        </div>
+        
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-messages" id="chat-messages">
+                <!-- Welcome logo -->
+                <div class="welcome-container">
+                    <img src="text.png" alt="VANW" class="welcome-logo">
+                </div>
+            </div>
+            
+            <div class="suggestions-bar" id="suggestions-bar">
+                <div class="suggestions-title">Gợi ý câu hỏi:</div>
+                <div class="suggestions-container" id="suggestions-container">
+                    <div class="suggestion-chip">Phân tích bài thơ "Đây thôn Vĩ Dạ"</div>
+                    <div class="suggestion-chip">Giới thiệu về nhà văn Nam Cao</div>
+                    <div class="suggestion-chip">Nội dung tác phẩm "Chí Phèo"</div>
+                    <div class="suggestion-chip">Đặc điểm thơ Hồ Xuân Hương</div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <form id="chat-form" class="chat-form">
+                    <textarea 
+                        id="message-input" 
+                        class="message-input"
+                        placeholder="Nhập câu hỏi về văn học..."
+                        rows="1"
+                    ></textarea>
+                    <button 
+                        id="send-button" 
+                        type="submit" 
+                        class="send-button"
+                    >
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar Toggle Button (Mobile only) -->
+    <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <!-- JavaScript -->
+    <script type="importmap">
+        {
+            "imports": {
+                "@google/generative-ai": "https://esm.run/@google/generative-ai"
+            }
+        }
+    </script>
+    <script type="module">
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCVD_Um0fWAK3ogQQUwCDINV_dN1hJZxL4",
+            authDomain: "tkc-vanw.firebaseapp.com",
+            projectId: "tkc-vanw",
+            storageBucket: "tkc-vanw.firebasestorage.app",
+            messagingSenderId: "862465503494",
+            appId: "1:862465503494:web:8aec558b363988deec6e87",
+            measurementId: "G-F23NN1KLW0"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        // Hàm đảo ngược chuỗi để lấy API key thực
+        function reverseApiKey(encodedKey) {
+            return encodedKey.split('').reverse().join('');
+        }
+        
+        // API key đã được đảo ngược để bảo mật
+        // Key thực: AIzaSyAQMglgiKEHY8XznNf9ZIdjYMnKgH9DhJg
+        const ENCODED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
+        
+        // Giải mã API key
+        const API_KEY = reverseApiKey(ENCODED_API_KEY);
+        
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+        
+        const genAI = new GoogleGenerativeAI(API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+        const chatMessages = document.getElementById('chat-messages');
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message-input');
+        const newChatBtn = document.getElementById('new-chat-btn');
+        const chatHistory = document.getElementById('chat-history');
+        const sendButton = document.getElementById('send-button');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const suggestionsBar = document.getElementById('suggestions-bar');
+        const suggestionsContainer = document.getElementById('suggestions-container');
+
+        let chats = [];
+        let currentChatId = null;
+        let isSending = false;
+        let isStopped = false;
+        let isSidebarVisible = true;
+        let quickReplyMessageId = null; // ID của phản hồi nhanh để xóa sau này
+        let isFirstMessage = false; // Kiểm tra xem có phải tin nhắn đầu tiên không
+
+        // Sidebar toggle for mobile
+        sidebarToggle.addEventListener('click', function() {
+            isSidebarVisible = !isSidebarVisible;
+            toggleSidebar();
+        });
+
+        function toggleSidebar() {
+            if (isSidebarVisible) {
+                sidebar.style.left = '0';
+                sidebarToggle.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            } else {
+                sidebar.style.left = '-250px';
+                sidebarToggle.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            }
+        }
+
+        // Literary Keywords for filtering
+        const literaryKeywords = [
+            "văn học", "tác phẩm", "nhà văn", "thơ", "truyện", "tác giả", "chào", "là ai", 
+            "tiểu thuyết", "chào", "bởi ai", "cảm hứng", "viết", "chữ", "từ", "câu", 
+            "tóm tắt", "trình bầy", "tạo", "hoàn thiện", "văn", "trích", "nguồn gốc", 
+            "từ", "văn","thơ","truyện","ca dao","tục ngữ","nhân vật","tác giả",
+            "tác phẩm","thời kỳ","văn học","thơ ca","truyện ngắn","tiểu thuyết",
+            "kịch","văn xuôi","lục bát","tự do","Đường luật","thơ mới","thơ cổ",
+            "hiện đại","trữ tình","trào phúng","chữ Hán","chữ Nôm","chữ Quốc ngữ",
+            "dân gian","cung đình","cách mạng","kháng chiến","hậu chiến","đương đại",
+            "nước ngoài","thi pháp","ngôn ngữ","hình tượng","bút pháp","chủ đề",
+            "tư tưởng","nghệ thuật","phong cách","vần đạo","thiền","tình yêu",
+            "quê hương","chiến tranh","hòa bình","lịch sử","văn hóa","xã hội",
+            "nhân đạo","hiện thực","lãng mạn","bi kịch","hài kịch","anh hùng",
+            "phản diện","tâm lý","triết lý","tượng trưng","siêu thực","cổ điển",
+            "hiện đại","hậu hiện đại","trung đại","cận đại","phục hưng","khai sáng",
+            "lãng mạn","tự sự","trữ tình","tả thực","ẩn dụ","hoán dụ","nhân hóa",
+            "so sánh","điệp ngữ","ẩn ý","tứ thơ","vần điệu","nhịp điệu","câu thơ",
+            "đoạn thơ","bài thơ","tập thơ","tuyển tập","văn bản","bản dịch",
+            "nguyên tác","tác phẩm kinh điển","tác phẩm tiêu biểu","tác phẩm nổi tiếng",
+            "tác phẩm văn học","tác phẩm nghệ thuật","tác phẩm văn hóa",
+            "tác phẩm lịch sử","tác phẩm triết học","tác phẩm tôn giáo",
+            "tác phẩm chính trị","tác phẩm xã hội","tác phẩm nhân văn",
+            "tác phẩm khoa học","tác phẩm giáo dục","tác phẩm văn minh"
+        ];
+
+        function isLiteraryQuestion(question) {
+            const lowerQuestion = question.toLowerCase();
+            return literaryKeywords.some(keyword => lowerQuestion.includes(keyword.toLowerCase()));
+        }
+
+        function generateSuggestions(messages) {
+            const userMessages = messages.filter(msg => msg.role === "user");
+            if (userMessages.length === 0) {
+                return [
+                    "Phân tích bài thơ 'Đây thôn Vĩ Dạ' của Hàn Mặc Tử",
+                    "Kể tên các tác phẩm tiêu biểu của Nam Cao",
+                    "Giới thiệu về phong trào Thơ mới 1932-1945",
+                    "Phân tích nhân vật Chí Phèo trong tác phẩm cùng tên"
+                ];
+            }
+            
+            // Simple logic to generate follow-up questions based on previous messages
+            const lastMessage = userMessages[userMessages.length - 1].content;
+            
+            if (lastMessage.includes("phân tích")) {
+                return [
+                    "Bạn có thể phân tích sâu hơn về nghệ thuật trong tác phẩm này không?",
+                    "Tác giả sử dụng những biện pháp tu từ nào?",
+                    "Ý nghĩa nhan đề của tác phẩm là gì?"
+                ];
+            } else if (lastMessage.includes("tác giả")) {
+                return [
+                    `Các tác phẩm khác của tác giả này là gì?`,
+                    "Phong cách sáng tác của tác giả này",
+                    "Ảnh hưởng của tác giả này đến văn học Việt Nam"
+                ];
+            } else if (lastMessage.includes("thơ")) {
+                return [
+                    "Phân tích hình ảnh trong bài thơ",
+                    "Bố cục của bài thơ này như thế nào?",
+                    "Hoàn cảnh sáng tác bài thơ này"
+                ];
+            }
+            
+            return [
+                "Bạn có thể giải thích rõ hơn về điều này không?",
+                "Có tác phẩm nào tương tự như vậy không?",
+                "Ý nghĩa sâu xa của vấn đề này là gì?"
+            ];
+        }
+
+        async function initApp() {
+            loadChats();
+            setupEventListeners();
+            setupTextareaAutoResize();
+
+            // Setup suggestion chips
+            setupSuggestionChips();
+            
+            if (chats.length === 0) {
+                createNewChat();
+            } else {
+                loadChat(chats[0].id);
+            }
+        }
+
+        function setupSuggestionChips() {
+            const chips = suggestionsContainer.querySelectorAll('.suggestion-chip');
+            chips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    messageInput.value = this.textContent;
+                    messageInput.focus();
+                    autoResizeTextarea();
+                });
+            });
+        }
+
+        function setupEventListeners() {
+            chatForm.addEventListener('submit', handleSubmit);
+            messageInput.addEventListener('input', autoResizeTextarea);
+            messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (messageInput.value.trim() !== '') {
+                        chatForm.dispatchEvent(new Event('submit'));
+                    }
+                }
+            });
+            newChatBtn.addEventListener('click', createNewChat);
+        }
+
+        function setupTextareaAutoResize() {
+            messageInput.style.height = 'auto';
+            const newHeight = Math.min(messageInput.scrollHeight, 120);
+            messageInput.style.height = `${newHeight}px`;
+        }
+
+        function autoResizeTextarea() {
+            messageInput.style.height = 'auto';
+            const newHeight = Math.min(messageInput.scrollHeight, 120);
+            messageInput.style.height = `${newHeight}px`;
+        }
+
+        // Hàm kiểm tra và lấy phản hồi nhanh từ Firestore
+        async function checkQuickReply(userMessage) {
+            try {
+                // Chuẩn hóa tin nhắn để so sánh
+                const normalizedMessage = userMessage.toLowerCase().trim();
+                
+                // Tìm trong Firestore xem có tin nhắn tương tự không
+                const snapshot = await db.collection('first_messages')
+                    .where('normalizedQuestion', '==', normalizedMessage)
+                    .limit(1)
+                    .get();
+                
+                if (!snapshot.empty) {
+                    const doc = snapshot.docs[0];
+                    const data = doc.data();
+                    
+                    // Cập nhật số lần sử dụng
+                    await doc.ref.update({
+                        usageCount: firebase.firestore.FieldValue.increment(1),
+                        lastUsed: new Date().toISOString()
+                    });
+                    
+                    return data.answer; // Trả về câu trả lời từ Firestore
+                }
+                
+                return null; // Không tìm thấy phản hồi nhanh
+            } catch (error) {
+                console.error("Lỗi khi kiểm tra phản hồi nhanh:", error);
+                return null;
+            }
+        }
+
+        // Hàm lưu tin nhắn đầu tiên và câu trả lời vào Firestore
+        async function saveFirstMessageToFirestore(userMessage, aiResponse) {
+            try {
+                const normalizedMessage = userMessage.toLowerCase().trim();
+                
+                await db.collection('first_messages').add({
+                    question: userMessage,
+                    normalizedQuestion: normalizedMessage,
+                    answer: aiResponse,
+                    createdAt: new Date().toISOString(),
+                    usageCount: 1,
+                    lastUsed: new Date().toISOString()
+                });
+                
+                console.log("Đã lưu tin nhắn đầu tiên vào Firestore");
+            } catch (error) {
+                console.error("Lỗi khi lưu vào Firestore:", error);
+            }
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+            const userMessage = messageInput.value.trim();
+            if (!userMessage || isSending) return;
+
+            // Kiểm tra nếu không phải câu hỏi văn học
+            if (!isLiteraryQuestion(userMessage)) {
+                addMessageToUI("assistant", "Xin lỗi, tôi chỉ trả lời chuyên về các câu hỏi liên quan đến văn học, bạn có câu hỏi nào liên quan đến văn học mà muốn hỏi tôi không?");
+                messageInput.value = "";
+                autoResizeTextarea();
+                return;
+            }
+
+            if (!currentChatId) {
+                createNewChat();
+                return;
+            }
+
+            const currentChat = chats.find(chat => chat.id === currentChatId);
+            if (!currentChat) {
+                console.error("Không tìm thấy cuộc trò chuyện hiện tại!");
+                return;
+            }
+
+            isSending = true;
+            addMessageToUI("user", userMessage);
+            
+            // Change send button to loading spinner
+            sendButton.innerHTML = '<div class="loading-spinner"></div>';
+            sendButton.disabled = true;
+
+            // Check if it's a greeting
+            const greetings = ["chào", "hello", "hi", "xin chào"];
+            if (greetings.some(greet => userMessage.toLowerCase().includes(greet))) {
+                const greetingResponse = "Xin chào, tôi là AI văn học VANW được tạo ra bởi Hoàng Minh Tuấn và Trương Viết Duy Chương đến từ trường THPT Thừa Lưu. Tôi có thể giúp gì cho bạn về văn học ngay bây giờ?";
+                displayTypingMessage(greetingResponse, () => {
+                    if (!isStopped) {
+                        currentChat.messages.push({ 
+                            role: "assistant", 
+                            content: greetingResponse,
+                            timestamp: new Date().toISOString()
+                        });
+                        saveChats();
+                        updateSuggestions(currentChat.messages);
+                    }
+                });
+                messageInput.value = "";
+                autoResizeTextarea();
+                isSending = false;
+                resetSendButton();
+                return;
+            }
+
+            // Kiểm tra xem có phải là tin nhắn đầu tiên của cuộc trò chuyện không
+            isFirstMessage = currentChat.messages.length === 0;
+            
+            // Lưu tin nhắn người dùng vào lịch sử chat
+            const userMessageObj = { 
+                role: "user", 
+                content: userMessage,
+                timestamp: new Date().toISOString()
+            };
+            
+            currentChat.messages.push(userMessageObj);
+            saveChats();
+            updateChatTitle(currentChat);
+
+            messageInput.value = "";
+            autoResizeTextarea();
+            isStopped = false;
+
+            try {
+                // Nếu là tin nhắn đầu tiên, kiểm tra phản hồi nhanh từ Firestore
+                let quickReplyContent = null;
+                let hasQuickReply = false;
+                
+                if (isFirstMessage) {
+                    quickReplyContent = await checkQuickReply(userMessage);
+                    
+                    if (quickReplyContent) {
+                        hasQuickReply = true;
+                        // Hiển thị phản hồi nhanh
+                        showQuickReply(quickReplyContent);
+                    }
+                }
+                
+                // Gửi yêu cầu đến Gemini API
+                const chatSession = model.startChat({
+                    history: currentChat.messages.map(msg => ({
+                        role: msg.role === "user" ? "user" : "model",
+                        parts: [{ text: msg.content }]
+                    })),
+                    generationConfig: {
+                        maxOutputTokens: 1500,
+                        temperature: 0.8,
+                        topP: 0.1,
+                        topK: 16,
+                    }
+                });
+
+                const result = await chatSession.sendMessage(userMessage);
+                const response = await result.response;
+                const botReply = response.text();
+
+                // Giới hạn câu trả lời tối đa 250 từ
+                const limitedReply = limitWords(botReply, 250);
+                
+                // Xử lý dựa trên việc có phản hồi nhanh hay không
+                if (hasQuickReply) {
+                    // Xóa phản hồi nhanh
+                    removeQuickReply();
+                    
+                    // Hiển thị câu trả lời thật từ Gemini
+                    addMessageToUI("assistant", limitedReply);
+                    
+                    // Lưu vào lịch sử chat
+                    currentChat.messages.push({ 
+                        role: "assistant", 
+                        content: limitedReply,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    // Không lưu vào Firestore vì đã có bản ghi cũ
+                } else {
+                    // Hiển thị bình thường với typing indicator
+                    displayTypingMessage(limitedReply, () => {
+                        if (!isStopped) {
+                            currentChat.messages.push({ 
+                                role: "assistant", 
+                                content: limitedReply,
+                                timestamp: new Date().toISOString()
+                            });
+                            saveChats();
+                            
+                            // Nếu là tin nhắn đầu tiên, lưu vào Firestore
+                            if (isFirstMessage) {
+                                saveFirstMessageToFirestore(userMessage, limitedReply);
+                            }
+                            
+                            updateSuggestions(currentChat.messages);
+                        }
+                    });
+                }
+                
+            } catch (error) {
+                console.error("Lỗi: ", error);
+                
+                // Nếu có lỗi và đang hiển thị phản hồi nhanh, giữ nguyên phản hồi nhanh
+                if (hasQuickReply) {
+                    // Không làm gì cả, giữ nguyên phản hồi nhanh
+                } else {
+                    addMessageToUI("assistant", "Xin lỗi, đã xảy ra lỗi khi kết nối với AI. Vui lòng thử lại sau!");
+                }
+            } finally {
+                isSending = false;
+                resetSendButton();
+                scrollToBottom();
+            }
+        }
+
+        // Hàm hiển thị phản hồi nhanh
+        function showQuickReply(content) {
+            // Xóa welcome logo nếu có
+            const welcomeContainer = document.querySelector('.welcome-container');
+            if (welcomeContainer) {
+                welcomeContainer.remove();
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'quick-reply-message';
+            messageDiv.id = 'quick-reply-' + Date.now();
+            quickReplyMessageId = messageDiv.id;
+            
+            const formattedContent = formatMessage(content);
+            messageDiv.innerHTML = `
+                <div class="markdown">${formattedContent}</div>
+                <div class="quick-reply-label">
+                    Phản hồi nhanh • Đang xử lý tự kiểm chứng các câu trả lời
+                    <span class="loading-dots">
+                        <span>.</span><span>.</span><span>.</span>
+                    </span>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Hàm xóa phản hồi nhanh
+        function removeQuickReply() {
+            if (quickReplyMessageId) {
+                const quickReplyElement = document.getElementById(quickReplyMessageId);
+                if (quickReplyElement) {
+                    quickReplyElement.remove();
+                }
+                quickReplyMessageId = null;
+            }
+        }
+
+        // Hàm giới hạn số từ trong câu trả lời
+        function limitWords(text, maxWords) {
+            const words = text.split(' ');
+            if (words.length <= maxWords) {
+                return text;
+            }
+            
+            const limitedWords = words.slice(0, maxWords);
+            return limitedWords.join(' ') + '...';
+        }
+
+        function resetSendButton() {
+            sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            sendButton.disabled = false;
+        }
+
+        function updateSuggestions(messages) {
+            const suggestions = generateSuggestions(messages);
+            suggestionsContainer.innerHTML = '';
+            
+            if (suggestions.length > 0) {
+                suggestions.forEach(suggestion => {
+                    const chip = document.createElement('div');
+                    chip.className = 'suggestion-chip';
+                    chip.textContent = suggestion;
+                    chip.addEventListener('click', () => {
+                        messageInput.value = suggestion;
+                        messageInput.focus();
+                        autoResizeTextarea();
+                    });
+                    suggestionsContainer.appendChild(chip);
+                });
+                suggestionsBar.style.display = 'block';
+            } else {
+                suggestionsBar.style.display = 'none';
+            }
+        }
+
+        function displayTypingMessage(content, callback) {
+            // Xóa welcome logo nếu có
+            const welcomeContainer = document.querySelector('.welcome-container');
+            if (welcomeContainer) {
+                welcomeContainer.remove();
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'typing-indicator';
+            messageDiv.innerHTML = `
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+                <span>AI đang suy nghĩ, vui lòng đợi giây lát</span>
+            `;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+
+            setTimeout(() => {
+                messageDiv.remove();
+                addMessageToUI("assistant", content);
+                if (callback) callback();
+            }, 1500);
+        }
+
+        function addMessageToUI(role, content) {
+            // Xóa welcome logo nếu có
+            const welcomeContainer = document.querySelector('.welcome-container');
+            if (welcomeContainer && role === "user") {
+                welcomeContainer.remove();
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = role === 'user' ? 'user-message' : 'bot-message';
+            
+            const formattedContent = formatMessage(content);
+            messageDiv.innerHTML = `<div class="markdown">${formattedContent}</div>`;
+            
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function formatMessage(content) {
+            if (!content) return '';
+
+            let formatted = content.replace(/```([\w]*)\n([\s\S]*?)```/g, (match, lang, code) => {
+                const langDisplay = lang ? lang : 'text';
+                return `<div class="code-block">
+                    <div class="code-header">
+                        <span>${langDisplay}</span>
+                        <button class="copy-code-btn" onclick="copyToClipboard(this)" data-code="${encodeURIComponent(code.trim())}">
+                            <i class="fas fa-copy"></i> Copy code
+                        </button>
+                    </div>
+                    <pre><code class="language-${lang || 'text'}">${escapeHtml(code.trim())}</code></pre>
+                </div>`;
+            });
+
+            formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            formatted = formatted.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+            formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+            formatted = formatted.split('\n\n').map(paragraph => {
+                if (paragraph.trim().startsWith('<') && paragraph.trim().endsWith('>')) {
+                    return paragraph;
+                }
+                return `<p>${paragraph}</p>`;
+            }).join('');
+
+            formatted = formatted.replace(/\n(?![<])/g, '<br>');
+
+            return formatted;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 100);
+        }
+
+        function createNewChat() {
+            const newChat = {
+                id: Date.now().toString(),
+                title: 'Đoạn nhắn mới',
+                messages: [],
+                createdAt: new Date().toISOString()
+            };
+
+            chats.unshift(newChat);
+            saveChats();
+            renderChatHistory();
+            loadChat(newChat.id);
+            
+            messageInput.focus();
+            suggestionsBar.style.display = 'block';
+            
+            // Reset welcome logo nếu chưa có tin nhắn
+            const welcomeContainer = document.querySelector('.welcome-container');
+            if (!welcomeContainer) {
+                chatMessages.innerHTML = '';
+                
+                const welcomeDiv = document.createElement('div');
+                welcomeDiv.className = 'welcome-container';
+                welcomeDiv.innerHTML = '<img src="text.png" alt="VANW" class="welcome-logo">';
+                chatMessages.appendChild(welcomeDiv);
+            }
+        }
+
+        function loadChat(chatId) {
+            currentChatId = chatId;
+
+            document.querySelectorAll('.chat-item').forEach(item => {
+                if (item.dataset.id === chatId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            chatMessages.innerHTML = '';
+
+            const currentChat = chats.find(chat => chat.id === chatId);
+            if (!currentChat) return;
+
+            if (currentChat.messages.length > 0) {
+                currentChat.messages.forEach(message => {
+                    addMessageToUI(message.role, message.content);
+                });
+                updateSuggestions(currentChat.messages);
+            } else {
+                // Hiển thị welcome logo nếu chưa có tin nhắn
+                const welcomeDiv = document.createElement('div');
+                welcomeDiv.className = 'welcome-container';
+                welcomeDiv.innerHTML = '<img src="text.png" alt="VANW" class="welcome-logo">';
+                chatMessages.appendChild(welcomeDiv);
+                suggestionsBar.style.display = 'block';
+            }
+            
+            scrollToBottom();
+        }
+
+        function deleteChat(chatId, event) {
+            event.stopPropagation();
+            chats = chats.filter(chat => chat.id !== chatId);
+            saveChats();
+            renderChatHistory();
+
+            if (chatId === currentChatId) {
+                if (chats.length > 0) {
+                    loadChat(chats[0].id);
+                } else {
+                    createNewChat();
+                }
+            }
+        }
+
+        function updateChatTitle(chat) {
+            if (!chat || !chat.messages || chat.messages.length === 0) {
+                chat.title = "Đoạn nhắn mới";
+                saveChats();
+                renderChatHistory();
+                return;
+            }
+
+            const firstUserMessage = chat.messages.find(msg => msg.role === "user");
+            if (firstUserMessage) {
+                let title = firstUserMessage.content.substring(0, 40);
+                if (firstUserMessage.content.length > 40) {
+                    title += "...";
+                }
+                chat.title = title || "Đoạn nhắn mới";
+            } else {
+                chat.title = "Đoạn nhắn mới";
+            }
+
+            saveChats();
+            renderChatHistory();
+        }
+
+        function renderChatHistory() {
+            chatHistory.innerHTML = '';
+
+            if (chats.length === 0) {
+                chatHistory.innerHTML = `
+                    <div class="text-center p-4" style="color: #666; opacity: 0.7;">
+                        Chưa có đoạn nhắn nào
+                    </div>
+                `;
+                return;
+            }
+
+            chats.forEach(chat => {
+                const chatItem = document.createElement('div');
+                chatItem.className = `chat-item ${chat.id === currentChatId ? 'active' : ''}`;
+                chatItem.dataset.id = chat.id;
+
+                const chatDate = new Date(chat.createdAt || chat.id);
+                const formattedDate = chatDate.toLocaleDateString('vi-VN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+
+                chatItem.innerHTML = `
+                    <div class="chat-title">${chat.title || 'Đoạn nhắn mới'}</div>
+                    <div class="chat-date">${formattedDate}</div>
+                    <button class="delete-chat-btn">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+
+                chatItem.addEventListener('click', (e) => {
+                    if (!e.target.closest('.delete-chat-btn')) {
+                        loadChat(chat.id);
+                    }
+                });
+
+                const deleteBtn = chatItem.querySelector('.delete-chat-btn');
+                deleteBtn.addEventListener('click', (e) => {
+                    deleteChat(chat.id, e);
+                });
+
+                chatHistory.appendChild(chatItem);
+            });
+        }
+
+        function loadChats() {
+            const storedChats = localStorage.getItem('vanw-chats');
+            if (storedChats) {
+                const now = Date.now();
+                const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+
+                chats = JSON.parse(storedChats)
+                    .filter(chat => now - new Date(chat.createdAt || chat.id).getTime() < THIRTY_DAYS)
+                    .sort((a, b) => new Date(b.createdAt || b.id) - new Date(a.createdAt || a.id));
+                
+                saveChats();
+                renderChatHistory();
+            }
+        }
+
+        function saveChats() {
+            const now = Date.now();
+            const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+
+            chats = chats.filter(chat => {
+                const chatTime = new Date(chat.createdAt || chat.id).getTime();
+                return now - chatTime < THIRTY_DAYS;
+            });
+
+            localStorage.setItem('vanw-chats', JSON.stringify(chats));
+        }
+
+        function copyToClipboard(button) {
+            const code = decodeURIComponent(button.getAttribute('data-code'));
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Đã sao chép!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        window.addEventListener("beforeunload", () => {
+            chats = chats.filter(chat => chat.messages.length > 0);
+            saveChats();
+        });
+
+        document.addEventListener('DOMContentLoaded', initApp);
+        
+        window.copyToClipboard = copyToClipboard;
+    </script>
+</body>
+</html>
