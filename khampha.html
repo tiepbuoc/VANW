@@ -99,6 +99,23 @@
             0%, 100% { border-color: #e37c2d; }
             50% { border-color: #f8c34d; }
         }
+        
+        /* Thêm CSS cho bản đồ */
+        #map {
+            width: 100%;
+            height: 600px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .leaflet-control-attribution {
+            font-size: 11px !important;
+        }
+        
+        /* Đảm bảo popup content có chiều cao đủ */
+        .popup-content {
+            min-height: 700px;
+        }
     </style>
 </head>
 <body>
@@ -276,5 +293,3 @@
     <script src="map-popup.js"></script>
 </body>
 </html>
-
-
