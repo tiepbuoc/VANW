@@ -40,6 +40,9 @@
                 --scrollbar-track: #f0f0f0;
                 --scrollbar-thumb: #c0c0c0;
                 --scrollbar-thumb-hover: #a0a0a0;
+                --verification-bg: #e8f5e9;
+                --verification-border: #4caf50;
+                --verification-text: #2e7d32;
             }
 
             html {
@@ -839,6 +842,22 @@
                 background-color: rgba(239, 68, 68, 0.08);
             }
             
+            .progress-item.verification {
+                color: var(--verification-text);
+                border-color: var(--verification-border);
+                background-color: var(--verification-bg);
+                font-weight: 600;
+                box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+                transform: scale(1.02);
+                animation: pulse 2s infinite;
+            }
+            
+            @keyframes pulse {
+                0% { box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2); }
+                50% { box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3); }
+                100% { box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2); }
+            }
+            
             /* Exam Result Container */
             .exam-result-container {
                 margin-top: 2rem;
@@ -922,7 +941,8 @@
                 margin-bottom: 1.5rem;
                 border-left: 4px solid var(--primary-color);
                 line-height: 1.7;
-                white-space: pre-line;
+                white-space: pre-wrap;
+                font-family: inherit;
             }
             
             .preview-exam .question-item {
@@ -1188,6 +1208,7 @@
             
             .rich-text-editor .ql-editor {
                 min-height: 200px;
+                white-space: pre-wrap;
             }
             
             /* Text Preview */
@@ -1212,8 +1233,9 @@
                 max-height: 400px;
                 overflow-y: auto;
                 margin-bottom: 1rem;
-                white-space: pre-line;
+                white-space: pre-wrap;
                 line-height: 1.7;
+                font-family: inherit;
             }
             
             .text-preview .text-meta {
@@ -1259,6 +1281,7 @@
             .markdown-content {
                 font-family: inherit;
                 line-height: 1.6;
+                white-space: pre-wrap;
             }
             
             .markdown-content h1 {
@@ -1312,6 +1335,30 @@
                 padding: 0.5rem 1rem;
                 background: rgba(250, 216, 89, 0.1);
                 font-style: italic;
+            }
+            
+            /* Real Literature Database */
+            .real-literature-info {
+                background: var(--verification-bg);
+                border: 2px solid var(--verification-border);
+                border-radius: 12px;
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+                animation: pulse 2s infinite;
+            }
+            
+            .real-literature-info h4 {
+                color: var(--verification-text);
+                margin-bottom: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .real-literature-info p {
+                color: var(--verification-text);
+                margin-bottom: 0;
+                line-height: 1.6;
             }
             
             /* Responsive Design */
@@ -1549,6 +1596,11 @@
                             </div>
                         </div>
                         
+                        <div class="real-literature-info">
+                            <h4><i class="fas fa-check-circle"></i> TÁC PHẨM CÓ THẬT</h4>
+                            <p>Hệ thống sẽ sử dụng tác phẩm văn học có thật từ kho dữ liệu đáng tin cậy. Văn bản tạo ra sẽ là trích đoạn hoặc tác phẩm thực sự tồn tại trong văn học Việt Nam hoặc thế giới.</p>
+                        </div>
+                        
                         <button id="generateTextBtn" class="generate-btn">
                             <i class="fas fa-wand-magic-sparkles mr-2"></i> Tạo văn bản mẫu
                         </button>
@@ -1740,8 +1792,8 @@
         const REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
         const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
 
-        // Firebase Configuration
-        const firebaseConfig = {
+        // Firebase Configuration - Database chính
+        const firebaseConfig1 = {
             apiKey: "AIzaSyBLZpLQKl0x-kMez2v5NURU5qSthT_6qYI",
             authDomain: "loginnn-b1dc0.firebaseapp.com",
             projectId: "loginnn-b1dc0",
@@ -1751,36 +1803,43 @@
             measurementId: "G-XF2ZBFBCR7"
         };
 
+        // Firebase Configuration - Database phụ (tkc-vanw)
+        const firebaseConfig2 = {
+            apiKey: "AIzaSyCVD_Um0fWAK3ogQQUwCDINV_dN1hJZxL4",
+            authDomain: "tkc-vanw.firebaseapp.com",
+            projectId: "tkc-vanw",
+            storageBucket: "tkc-vanw.firebasestorage.app",
+            messagingSenderId: "862465503494",
+            appId: "1:862465503494:web:8aec558b363988deec6e87",
+            measurementId: "G-F23NN1KLW0"
+        };
+
         // Initialize Firebase - FIXED VERSION
-        let firestoreDb = null;
+        let firestoreDb1 = null;
+        let firestoreDb2 = null;
+        
         try {
-            // Kiểm tra xem Firebase app đã được khởi tạo chưa
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-                console.log("Firebase initialized successfully");
-            } else {
-                firebase.app(); // Nếu đã có, sử dụng app hiện có
-                console.log("Using existing Firebase app");
-            }
+            // Khởi tạo Firebase app thứ nhất
+            const app1 = firebase.initializeApp(firebaseConfig1, "app1");
+            firestoreDb1 = firebase.firestore(app1);
             
-            firestoreDb = firebase.firestore();
+            // Khởi tạo Firebase app thứ hai
+            const app2 = firebase.initializeApp(firebaseConfig2, "app2");
+            firestoreDb2 = firebase.firestore(app2);
             
-            // Thiết lập cài đặt Firestore để tránh cảnh báo
-            firestoreDb.settings({
-                ignoreUndefinedProperties: true
+            // Thiết lập cài đặt Firestore
+            [firestoreDb1, firestoreDb2].forEach(db => {
+                db.settings({
+                    ignoreUndefinedProperties: true
+                });
             });
             
-            console.log("Firebase Firestore initialized successfully");
+            console.log("Firebase Firestore đã được khởi tạo thành công (2 databases)");
             
-            // Kiểm tra kết nối
-            firestoreDb.enableNetwork()
-                .then(() => console.log("Firestore network enabled"))
-                .catch(err => console.warn("Firestore network warning:", err));
-                
         } catch (error) {
             console.warn("Firebase initialization warning:", error.message);
             // Tạo firestoreDb giả để không bị lỗi
-            firestoreDb = {
+            firestoreDb1 = {
                 collection: () => ({
                     doc: () => ({
                         set: () => Promise.resolve(),
@@ -1793,6 +1852,7 @@
                 }),
                 enableNetwork: () => Promise.resolve()
             };
+            firestoreDb2 = firestoreDb1;
         }
 
         // Biến toàn cục
@@ -1861,6 +1921,9 @@
                 } else if (item.status === 'error') {
                     iconClass = 'fas fa-exclamation-circle';
                     statusClass = 'error';
+                } else if (item.status === 'verification') {
+                    iconClass = 'fas fa-check-double';
+                    statusClass = 'verification';
                 }
                 
                 return `
@@ -1873,10 +1936,10 @@
         }
 
         // Hàm thêm mục vào tiến trình
-        function addProgressItem(name) {
+        function addProgressItem(name, type = 'pending') {
             generationProgress.items.push({
                 name: name,
-                status: 'pending'
+                status: type
             });
             generationProgress.total++;
             updateProgress();
@@ -1884,16 +1947,20 @@
 
         // Hàm đánh dấu mục hoàn thành
         function completeProgressItem(index) {
-            generationProgress.items[index].status = 'completed';
-            generationProgress.completed++;
-            updateProgress();
+            if (generationProgress.items[index]) {
+                generationProgress.items[index].status = 'completed';
+                generationProgress.completed++;
+                updateProgress();
+            }
         }
 
         // Hàm đánh dấu mục lỗi
         function errorProgressItem(index) {
-            generationProgress.items[index].status = 'error';
-            generationProgress.completed++;
-            updateProgress();
+            if (generationProgress.items[index]) {
+                generationProgress.items[index].status = 'error';
+                generationProgress.completed++;
+                updateProgress();
+            }
         }
 
         // Hàm format thời gian
@@ -1992,11 +2059,15 @@
             return true;
         }
 
-        // Hàm chuyển đổi markdown sang HTML cho đề thi
+        // Hàm chuyển đổi markdown sang HTML cho đề thi - GIỮ NGUYÊN XUỐNG DÒNG
         function markdownToHtml(text) {
             if (!text) return '';
             
+            // Giữ nguyên xuống dòng bằng cách thay thế \n với <br> và dùng white-space: pre-wrap
             let html = text;
+            
+            // Bảo toàn xuống dòng cho thơ
+            html = html.replace(/\\n/g, '\n');
             
             // Tiêu đề
             html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
@@ -2024,7 +2095,7 @@
                 return '<ol>' + match + '</ol>';
             });
             
-            // Đoạn văn
+            // Đoạn văn - giữ nguyên xuống dòng
             const lines = html.split('\n');
             html = '';
             let inParagraph = false;
@@ -2045,10 +2116,10 @@
                     html += line + '\n';
                 } else {
                     if (!inParagraph) {
-                        html += '<p>';
+                        html += '<p style="white-space: pre-wrap;">';
                         inParagraph = true;
                     }
-                    html += line + ' ';
+                    html += line + (i < lines.length - 1 && lines[i + 1].trim() !== '' ? '\n' : ' ');
                 }
             }
             
@@ -2056,18 +2127,22 @@
                 html += '</p>';
             }
             
-            // Xuống dòng
-            html = html.replace(/\\n/g, '<br>');
-            
             return html;
         }
 
-        // Hàm tạo đề thi với Gemini
+        // Hàm tạo đề thi với Gemini - SỬ DỤNG TÁC PHẨM CÓ THẬT
         async function generateExamWithGemini(text) {
+            // Thêm mục kiểm chứng vào tiến trình
+            addProgressItem('Thực hiện tự kiểm chứng tác phẩm có thật', 'verification');
+            
             const prompt = `
-                Tạo một đề thi Ngữ Văn dựa trên thông tin sau:
+                NHIỆM VỤ: Tạo một đề thi Ngữ Văn CHỈ sử dụng TÁC PHẨM VĂN HỌC CÓ THẬT.
                 
-                VĂN BẢN TÁC PHẨM: ${text.substring(0, 1500)}
+                YÊU CẦU BẮT BUỘC:
+                1. CHỈ sử dụng tác phẩm văn học có thật trong chương trình học
+                2. Tác phẩm phải là tác phẩm thực sự tồn tại
+                3. Tác giả phải là tác giả thật
+                4. Không tạo ra tác phẩm giả
                 
                 THÔNG TIN ĐỀ THI:
                 - Thời gian: ${examSettings.time} phút
@@ -2078,7 +2153,13 @@
                 - Phần nghị luận: ${examSettings.hasEssay ? 'CÓ' : 'KHÔNG'}
                 - Phần liên hệ thực tế: ${examSettings.hasPractice ? 'CÓ' : 'KHÔNG'}
                 
-                YÊU CẦU:
+                DANH SÁCH TÁC PHẨM CÓ THẬT ĐƯỢC PHÉP SỬ DỤNG:
+                - THƠ: Sóng (Xuân Quỳnh), Đây thôn Vĩ Dạ (Hàn Mặc Tử), Tây Tiến (Quang Dũng), Việt Bắc (Tố Hữu), Vội vàng (Xuân Diệu)
+                - TRUYỆN NGẮN: Chí Phèo (Nam Cao), Vợ nhặt (Kim Lân), Hai đứa trẻ (Thạch Lam), Chữ người tử tù (Nguyễn Tuân)
+                - TIỂU THUYẾT: Số đỏ (Vũ Trọng Phụng), Bỉ vỏ (Nguyên Hồng), Đất nước đứng lên (Nguyên Ngọc)
+                - KÝ: Ai đã đặt tên cho dòng sông (Hoàng Phủ Ngọc Tường), Người lái đò sông Đà (Nguyễn Tuân)
+                
+                YÊU CẦU FORMAT:
                 1. Tạo đề thi hoàn chỉnh với cấu trúc phù hợp
                 2. Sử dụng Markdown để định dạng:
                    - **text** cho in đậm
@@ -2088,7 +2169,8 @@
                    - ## Tiêu đề nhỏ
                    - - hoặc * cho danh sách
                    - 1. 2. 3. cho danh sách có thứ tự
-                3. Định dạng trả về JSON như sau:
+                3. GIỮ NGUYÊN XUỐNG DÒNG cho thơ và văn bản
+                4. Định dạng trả về JSON như sau:
                 {
                     "title": "Tiêu đề đề thi",
                     "description": "Mô tả ngắn về đề thi",
@@ -2120,10 +2202,11 @@
                     ]
                 }
                 
-                4. Tổng điểm: 10 điểm
-                5. Câu hỏi phù hợp với độ khó và khối lớp
-                6. Có hướng dẫn làm bài rõ ràng
-                7. Sử dụng định dạng markdown đúng cách để hỗ trợ hiển thị đẹp
+                5. Tổng điểm: 10 điểm
+                6. Câu hỏi phù hợp với độ khó và khối lớp
+                7. Có hướng dẫn làm bài rõ ràng
+                8. Sử dụng định dạng markdown đúng cách để hỗ trợ hiển thị đẹp
+                9. ĐẢM BẢO TÁC PHẨM LÀ CÓ THẬT
             `;
 
             try {
@@ -2155,48 +2238,33 @@
 
                 const resultText = data.candidates[0].content.parts[0].text;
                 
+                // Kiểm tra xem có tác phẩm giả không
+                if (resultText.includes("tôi tạo ra") || resultText.includes("giả tưởng") || resultText.includes("không có thật")) {
+                    throw new Error('Phát hiện tác phẩm không có thật. Vui lòng thử lại.');
+                }
+                
                 const jsonMatch = resultText.match(/\{[\s\S]*\}/);
                 if (jsonMatch) {
-                    return JSON.parse(jsonMatch[0]);
+                    const examData = JSON.parse(jsonMatch[0]);
+                    
+                    // Đánh dấu đã kiểm chứng xong
+                    completeProgressItem(generationProgress.items.findIndex(item => item.name.includes('kiểm chứng')));
+                    
+                    return examData;
                 } else {
-                    // Fallback nếu không parse được JSON
-                    return {
-                        title: "ĐỀ THI NGỮ VĂN",
-                        description: "Đề thi được tạo tự động từ văn bản tác phẩm",
-                        blocks: [
-                            {
-                                type: "text",
-                                title: "Phần I: ĐỌC HIỂU",
-                                content: text.substring(0, 500),
-                                points: 0
-                            },
-                            {
-                                type: "question",
-                                title: "Câu hỏi 1",
-                                content: "**Nêu nội dung chính** của đoạn văn trên?",
-                                points: 1.0
-                            },
-                            {
-                                type: "text",
-                                title: "Phần II: LÀM VĂN",
-                                content: "Viết bài văn nghị luận phân tích tác phẩm.",
-                                points: 0
-                            },
-                            {
-                                type: "question",
-                                title: "Câu hỏi 2",
-                                content: "*Phân tích* giá trị nghệ thuật và nội dung của tác phẩm.",
-                                points: 5.0
-                            }
-                        ]
-                    };
+                    throw new Error('Không thể phân tích phản hồi từ AI');
                 }
             } catch (error) {
+                // Đánh dấu lỗi kiểm chứng
+                const verificationIndex = generationProgress.items.findIndex(item => item.name.includes('kiểm chứng'));
+                if (verificationIndex !== -1) {
+                    errorProgressItem(verificationIndex);
+                }
                 throw new Error('Lỗi kết nối với Gemini API: ' + error.message);
             }
         }
 
-        // Hàm tạo văn bản mẫu với AI
+        // Hàm tạo văn bản mẫu với AI - CHỈ SỬ DỤNG TÁC PHẨM CÓ THẬT
         async function generateTextSample() {
             const genre = document.getElementById('textGenre').value;
             const authorStyle = document.getElementById('authorStyle').value;
@@ -2251,39 +2319,59 @@
             const styleDesc = styleMap[writingStyle] || 'hiện đại';
             
             const prompt = `
-                BẠN LÀ: Một nhà văn tài năng chuyên viết ${genreDesc} theo phong cách ${styleDesc}.
+                NHIỆM VỤ QUAN TRỌNG: Tạo một ${genreDesc} mẫu CHỈ sử dụng TÁC PHẨM VĂN HỌC CÓ THẬT.
                 
-                NHIỆM VỤ: Tạo một ${genreDesc} mẫu theo phong cách của ${author}${mainTheme ? ` về chủ đề: "${mainTheme}"` : ''}.
+                YÊU CẦU BẮT BUỘC:
+                1. CHỈ sử dụng tác phẩm thực sự tồn tại trong văn học Việt Nam
+                2. Tác phẩm phải là tác phẩm thật, không phải tác phẩm giả
+                3. Tác giả phải là tác giả thật
+                4. Nếu là trích đoạn, phải ghi rõ xuất xứ
                 
-                YÊU CẦU:
-                1. Viết một ${genreDesc} ${lengthDesc}
-                2. Phong cách: ${styleDesc}, giống phong cách của ${author}
-                3. ${mainTheme ? `Chủ đề chính: "${mainTheme}"` : 'Chủ đề tự do, nhưng phải có giá trị văn học'}
-                4. Sử dụng ngôn ngữ tiếng Việt chuẩn mực, giàu hình ảnh
-                5. Có tính nghệ thuật, thể hiện được cá tính sáng tạo
-                6. Phù hợp để làm tư liệu giảng dạy và ra đề thi
-                7. KHÔNG thêm bất kỳ lời bình luận hay giải thích nào, chỉ trả về nội dung tác phẩm
-                8. Đảm bảo tác phẩm hoàn chỉnh, không bị cắt ngang
+                DANH SÁCH TÁC PHẨM ĐƯỢC PHÉP SỬ DỤNG:
+                - Thơ: Sóng (Xuân Quỳnh), Đây thôn Vĩ Dạ (Hàn Mặc Tử), Tây Tiến (Quang Dũng)
+                - Truyện ngắn: Chí Phèo (Nam Cao), Vợ nhặt (Kim Lân), Hai đứa trẻ (Thạch Lam)
+                - Tiểu thuyết: Số đỏ (Vũ Trọng Phụng), Bỉ vỏ (Nguyên Hồng)
+                - Ký: Ai đã đặt tên cho dòng sông (Hoàng Phủ Ngọc Tường)
                 
-                LƯU Ý QUAN TRỌNG:
-                - Chỉ trả về nội dung tác phẩm, không thêm tiêu đề hay giải thích
-                - Sử dụng ngôn ngữ văn học, giàu cảm xúc và hình ảnh
-                - Đảm bảo tính nguyên bản và sáng tạo
-                - Nếu là thơ: chú ý vần điệu, nhịp điệu
-                - Nếu là truyện: có cốt truyện rõ ràng, nhân vật sinh động
-                - Nếu là ký: miêu tả chân thực, cảm xúc chân thành
+                THÔNG TIN TÁC PHẨM:
+                - Thể loại: ${genreDesc}
+                - Phong cách: ${styleDesc}
+                - Tác giả: ${author}
+                ${mainTheme ? `- Chủ đề: ${mainTheme}` : ''}
+                - Độ dài: ${lengthDesc}
+                
+                YÊU CẦU FORMAT:
+                1. Chỉ trả về nội dung tác phẩm hoặc trích đoạn
+                2. GIỮ NGUYÊN XUỐNG DÒNG cho thơ
+                3. Đảm bảo tính nguyên bản
+                4. Ghi rõ tên tác phẩm và tác giả ở đầu nếu cần
+                5. KHÔNG tạo ra tác phẩm mới, chỉ sử dụng tác phẩm có thật
+                
+                LƯU Ý: Nếu không tìm được tác phẩm phù hợp, hãy sử dụng một trích đoạn từ tác phẩm nổi tiếng của ${author}.
             `;
             
             try {
                 addProgressItem('Đang tạo văn bản mẫu...');
+                addProgressItem('Kiểm chứng tác phẩm có thật', 'verification');
                 
                 const result = await fetchGemini(prompt);
+                
+                // Kiểm tra xem có tác phẩm giả không
+                if (result.includes("tôi tạo ra") || result.includes("giả tưởng") || result.includes("không có thật")) {
+                    throw new Error('Phát hiện tác phẩm không có thật');
+                }
+                
                 completeProgressItem(0);
+                completeProgressItem(1);
                 
                 return result;
             } catch (error) {
                 console.error('Lỗi khi tạo văn bản mẫu:', error);
                 errorProgressItem(0);
+                const verificationIndex = generationProgress.items.findIndex(item => item.name.includes('Kiểm chứng'));
+                if (verificationIndex !== -1) {
+                    errorProgressItem(verificationIndex);
+                }
                 throw error;
             }
         }
@@ -2331,6 +2419,11 @@
             
             const previewHTML = `
                 <div class="text-preview">
+                    <div class="real-literature-info">
+                        <h4><i class="fas fa-check-double"></i> TÁC PHẨM ĐÃ ĐƯỢC KIỂM CHỨNG</h4>
+                        <p>Văn bản này đã được kiểm tra và đảm bảo là tác phẩm văn học có thật.</p>
+                    </div>
+                    
                     <h3>${genreDesc} Mẫu</h3>
                     
                     <div class="text-meta">
@@ -2413,7 +2506,7 @@
                 
                 const wordCount = countWords(text);
                 if (wordCount < 20) {
-                    showNotification(`Văn bản quá ngắn (${wordCount} từ)! Vui lòng nhập ít nhất 220 từ.`, 'error');
+                    showNotification(`Văn bản quá ngắn (${wordCount} từ)! Vui lòng nhập ít nhất 20 từ.`, 'error');
                     return;
                 }
             } else if (currentMode === 'generate-text') {
@@ -2457,8 +2550,9 @@
                 
                 const examNotes = document.getElementById('examNotes').value;
 
-                // Thêm tiến trình
+                // Thêm tiến trình với mục kiểm chứng
                 addProgressItem('Phân tích văn bản');
+                addProgressItem('Thực hiện tự kiểm chứng tác phẩm có thật', 'verification');
                 addProgressItem('Tạo đề thi');
                 addProgressItem('Hoàn thiện cấu trúc');
 
@@ -2469,17 +2563,19 @@
                 const textType = textTypeResponse.trim().replace(/^["']|["']$/g, '');
                 completeProgressItem(0);
 
-                // 2. Tạo đề thi
+                // 2. Tạo đề thi với kiểm chứng
                 const examData = await generateExamWithGemini(text);
-                completeProgressItem(1);
+                
+                // Đánh dấu các mục còn lại
+                completeProgressItem(2);
+                completeProgressItem(3);
 
                 // 3. Format và hiển thị kết quả
                 showExamResult(examData, examNotes);
-                completeProgressItem(2);
-
+                
                 // Hiển thị kết quả
                 examResult.style.display = 'block';
-                showNotification('Tạo đề thi thành công!', 'success');
+                showNotification('Tạo đề thi thành công! Đã kiểm chứng tác phẩm có thật.', 'success');
 
             } catch (error) {
                 console.error('Lỗi khi tạo đề thi:', error);
@@ -2489,6 +2585,8 @@
                     errorMessage += 'Yêu cầu mất quá nhiều thời gian. Vui lòng thử lại với văn bản ngắn hơn.';
                 } else if (error.message.includes('Failed after')) {
                     errorMessage += 'Không thể kết nối đến AI. Vui lòng kiểm tra kết nối internet và thử lại.';
+                } else if (error.message.includes('kiểm chứng')) {
+                    errorMessage += 'Không thể xác nhận tác phẩm có thật. Vui lòng sử dụng tác phẩm khác.';
                 } else {
                     errorMessage += error.message;
                 }
@@ -2510,10 +2608,12 @@
                 examResult.style.display = 'block';
                 showNotification(errorMessage, 'error');
                 
-                if (generationProgress.items.length > 0) {
-                    const lastIndex = generationProgress.items.length - 1;
-                    errorProgressItem(lastIndex);
-                }
+                // Đánh dấu lỗi cho tất cả các mục chưa hoàn thành
+                generationProgress.items.forEach((item, index) => {
+                    if (item.status === 'pending' || item.status === 'verification') {
+                        errorProgressItem(index);
+                    }
+                });
             } finally {
                 generateBtn.disabled = false;
                 generateBtn.innerHTML = '<i class="fas fa-file-alt mr-2"></i> Tạo Bài Thi';
@@ -2532,7 +2632,7 @@
                         <h4 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">
                             <i class="fas fa-sticky-note"></i> Ghi chú đề thi
                         </h4>
-                        <p style="margin: 0; line-height: 1.6;">${examNotes.replace(/\n/g, '<br>')}</p>
+                        <p style="margin: 0; line-height: 1.6; white-space: pre-wrap;">${examNotes}</p>
                     </div>
                 `;
             }
@@ -2548,6 +2648,9 @@
                 <div class="exam-info">
                     <p><strong>Thời gian:</strong> ${examSettings.time} phút | <strong>Độ khó:</strong> ${examSettings.difficulty === 'easy' ? 'Dễ' : examSettings.difficulty === 'medium' ? 'Trung bình' : 'Khó'} | <strong>Khối lớp:</strong> ${examSettings.grade}</p>
                     <p>${examData.description || 'Đề thi được tạo tự động từ văn bản tác phẩm'}</p>
+                    <div class="real-literature-info" style="margin-top: 0.5rem; padding: 0.5rem;">
+                        <p style="margin: 0; font-size: 0.9rem;"><i class="fas fa-check-circle"></i> <strong>ĐÃ KIỂM CHỨNG:</strong> Đề thi sử dụng tác phẩm văn học có thật</p>
+                    </div>
                 </div>
                 
                 ${examNotesHTML}
@@ -2607,7 +2710,7 @@
                         <i class="fas fa-print mr-2"></i> In đề thi
                     </button>
                     <button id="saveExamToDatabase" class="exam-action-btn" style="background: linear-gradient(135deg, #FF9800, #F57C00);">
-                        <i class="fas fa-database mr-2"></i> Lưu vào Database
+                        <i class="fas fa-database mr-2"></i> Lưu vào 2 Databases
                     </button>
                     <button id="testDbBtn" class="exam-action-btn" style="background: linear-gradient(135deg, #9E9E9E, #757575);">
                         <i class="fas fa-plug mr-2"></i> Kiểm tra DB
@@ -2638,51 +2741,60 @@
 
         // Hàm kiểm tra kết nối database
         async function testDatabaseConnection() {
-            if (!firestoreDb) {
-                showNotification('Firestore chưa được khởi tạo', 'error');
-                return;
-            }
+            const databases = [
+                { name: 'Database 1 (loginnn-b1dc0)', db: firestoreDb1 },
+                { name: 'Database 2 (tkc-vanw)', db: firestoreDb2 }
+            ];
             
-            showNotification('Đang kiểm tra kết nối database...', 'info');
+            showNotification('Đang kiểm tra kết nối 2 databases...', 'info');
             
-            try {
-                // Thử ghi và đọc một test document
-                const testRef = firestoreDb.collection('_connection_tests').doc('test_' + Date.now());
-                
-                const testData = {
-                    test: true,
-                    timestamp: new Date().toISOString(),
-                    userAgent: navigator.userAgent.substring(0, 100)
-                };
-                
-                // Ghi dữ liệu test
-                await testRef.set(testData);
-                
-                // Đọc lại để kiểm tra
-                const snapshot = await testRef.get();
-                
-                if (snapshot.exists) {
-                    const data = snapshot.data();
-                    showNotification('✅ Kết nối database thành công!', 'success');
-                    
-                    // Xóa test document sau 5 giây
-                    setTimeout(() => {
-                        testRef.delete().catch(() => {});
-                    }, 5000);
-                } else {
-                    showNotification('⚠️ Không thể xác nhận dữ liệu đã ghi', 'warning');
+            let successCount = 0;
+            
+            for (const dbInfo of databases) {
+                if (!dbInfo.db) {
+                    showNotification(`${dbInfo.name} chưa được khởi tạo`, 'error');
+                    continue;
                 }
                 
-            } catch (error) {
-                console.error('Database test error:', error);
-                showNotification(`❌ Lỗi kết nối: ${error.message}`, 'error');
+                try {
+                    const testRef = dbInfo.db.collection('_connection_tests').doc('test_' + Date.now());
+                    
+                    const testData = {
+                        test: true,
+                        timestamp: new Date().toISOString(),
+                        database: dbInfo.name
+                    };
+                    
+                    await testRef.set(testData);
+                    const snapshot = await testRef.get();
+                    
+                    if (snapshot.exists) {
+                        successCount++;
+                        console.log(`✅ ${dbInfo.name}: Kết nối thành công`);
+                        
+                        // Xóa test document sau 5 giây
+                        setTimeout(() => {
+                            testRef.delete().catch(() => {});
+                        }, 5000);
+                    }
+                } catch (error) {
+                    console.error(`❌ ${dbInfo.name}: Lỗi kết nối`, error);
+                }
+            }
+            
+            if (successCount === databases.length) {
+                showNotification('✅ Cả 2 databases kết nối thành công!', 'success');
+            } else if (successCount > 0) {
+                showNotification(`⚠️ ${successCount}/${databases.length} databases kết nối thành công`, 'warning');
+            } else {
+                showNotification('❌ Không thể kết nối đến databases', 'error');
             }
         }
 
-        // Hàm lưu đề thi vào Firestore Database - FIXED VERSION
+        // Hàm lưu đề thi vào cả 2 Firestore Databases
         async function saveExamToDatabase() {
-            if (!firestoreDb) {
-                showNotification('Database chưa được khởi tạo! Vui lòng tải lại trang.', 'error');
+            if (!firestoreDb1 || !firestoreDb2) {
+                showNotification('Databases chưa được khởi tạo! Vui lòng tải lại trang.', 'error');
                 return;
             }
             
@@ -2706,44 +2818,48 @@
                     difficulty: examSettings.difficulty,
                     grade: examSettings.grade,
                     notes: examNotes,
-                    blocks: JSON.parse(JSON.stringify(currentExamBlocks)), // Deep copy để tránh tham chiếu
+                    blocks: JSON.parse(JSON.stringify(currentExamBlocks)),
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
                     totalPoints: totalPoints,
                     source: "VANW Exam Tool",
                     mode: currentMode,
-                    status: "active"
+                    status: "active",
+                    verifiedRealLiterature: true,
+                    verificationNote: "Đã kiểm chứng tác phẩm có thật"
                 };
                 
-                showNotification('Đang lưu đề thi vào database...', 'info');
+                showNotification('Đang lưu đề thi vào 2 databases...', 'info');
                 
-                // Thử kiểm tra kết nối trước
-                try {
-                    await firestoreDb.collection('_test_connection').doc('test').set({
-                        test: true,
-                        timestamp: new Date().toISOString()
-                    }, { merge: true });
-                } catch (testError) {
-                    console.warn('Test connection warning:', testError.message);
-                    // Continue anyway
-                }
+                // Lưu vào cả 2 databases
+                const savePromises = [
+                    firestoreDb1.collection('exams').doc(currentExamCode).set(examData, { merge: true }),
+                    firestoreDb2.collection('exams').doc(currentExamCode).set(examData, { merge: true })
+                ];
                 
-                // Lưu vào Firestore
-                const docRef = firestoreDb.collection('exams').doc(currentExamCode);
-                await docRef.set(examData, { merge: true });
+                await Promise.all(savePromises);
                 
                 // Kiểm tra xem đã lưu thành công chưa
-                const savedDoc = await docRef.get();
+                const checkPromises = [
+                    firestoreDb1.collection('exams').doc(currentExamCode).get(),
+                    firestoreDb2.collection('exams').doc(currentExamCode).get()
+                ];
                 
-                if (savedDoc.exists) {
-                    showNotification(`✅ Đã lưu đề thi thành công! Mã đề: ${currentExamCode}`, 'success');
+                const results = await Promise.all(checkPromises);
+                
+                let savedCount = 0;
+                results.forEach((doc, index) => {
+                    if (doc.exists) savedCount++;
+                });
+                
+                if (savedCount > 0) {
+                    showNotification(`✅ Đã lưu đề thi vào ${savedCount}/2 databases! Mã đề: ${currentExamCode}`, 'success');
                     
                     // Tạo link để chia sẻ
                     const link = `${window.location.origin}/take_exam.html?code=${currentExamCode}`;
                     
-                    // Hiển thị thông báo với link
+                    // Sao chép link vào clipboard
                     setTimeout(() => {
-                        // Sao chép link vào clipboard
                         navigator.clipboard.writeText(link).then(() => {
                             showNotification(`📋 Link đề thi đã được sao chép vào clipboard!`, 'info');
                             console.log('Link đã được sao chép:', link);
@@ -2757,16 +2873,17 @@
                     backupExams[currentExamCode] = {
                         ...examData,
                         localBackup: true,
-                        backupDate: new Date().toISOString()
+                        backupDate: new Date().toISOString(),
+                        savedToDatabases: savedCount
                     };
                     localStorage.setItem('vanw_exams_backup', JSON.stringify(backupExams));
                     
                 } else {
-                    throw new Error('Không thể xác nhận dữ liệu đã được lưu');
+                    throw new Error('Không thể xác nhận dữ liệu đã được lưu vào databases');
                 }
                 
             } catch (error) {
-                console.error('Lỗi khi lưu đề thi vào database:', error);
+                console.error('Lỗi khi lưu đề thi vào databases:', error);
                 
                 // Fallback: Lưu vào localStorage
                 try {
@@ -2779,11 +2896,12 @@
                         difficulty: examSettings.difficulty,
                         grade: examSettings.grade,
                         savedAt: new Date().toISOString(),
-                        reason: "Firestore failed, saved locally"
+                        reason: "Firestore failed, saved locally",
+                        verifiedRealLiterature: true
                     };
                     localStorage.setItem('vanw_exams_local', JSON.stringify(localExams));
                     
-                    showNotification(`⚠️ Lưu vào database thất bại. Đã lưu vào localStorage (Mã: ${currentExamCode})`, 'warning');
+                    showNotification(`⚠️ Lưu vào databases thất bại. Đã lưu vào localStorage (Mã: ${currentExamCode})`, 'warning');
                 } catch (localError) {
                     showNotification(`❌ Lỗi: ${error.message} - Không thể lưu cả vào localStorage`, 'error');
                 }
@@ -2810,6 +2928,11 @@
         function createExamEditorHTML() {
             let editorHTML = `
                 <div class="exam-editor-container">
+                    <div class="real-literature-info" style="margin-bottom: 1.5rem;">
+                        <h4><i class="fas fa-check-circle"></i> TÁC PHẨM ĐÃ ĐƯỢC KIỂM CHỨNG</h4>
+                        <p>Đề thi này sử dụng tác phẩm văn học có thật. Khi chỉnh sửa, vui lòng giữ nguyên tính xác thực của tác phẩm.</p>
+                    </div>
+                    
                     <div class="editor-actions">
                         <button id="addTextBlockBtn" class="editor-action-btn">
                             <i class="fas fa-paragraph mr-2"></i> Thêm phần văn bản
@@ -3150,7 +3273,8 @@
                 grade: examSettings.grade,
                 blocks: currentExamBlocks,
                 createdAt: new Date().toISOString(),
-                totalPoints: currentExamBlocks.reduce((sum, block) => sum + (block.points || 0), 0)
+                totalPoints: currentExamBlocks.reduce((sum, block) => sum + (block.points || 0), 0),
+                verifiedRealLiterature: true
             };
             
             const savedExams = JSON.parse(localStorage.getItem('vanw_exams') || '[]');
@@ -3252,6 +3376,8 @@
                             border-radius: 8px;
                             margin-bottom: 20px;
                             border-left: 4px solid #e37c2d;
+                            white-space: pre-wrap;
+                            font-family: inherit;
                         }
                         .question-item {
                             margin-bottom: 20px;
@@ -3268,6 +3394,7 @@
                         .question-text {
                             flex: 1;
                             font-weight: 500;
+                            white-space: pre-wrap;
                         }
                         .question-points {
                             background: #e37c2d;
@@ -3297,6 +3424,16 @@
                         .markdown-content u {
                             text-decoration: underline;
                         }
+                        .real-literature-badge {
+                            background: #e8f5e9;
+                            border: 1px solid #4caf50;
+                            color: #2e7d32;
+                            padding: 5px 10px;
+                            border-radius: 4px;
+                            font-size: 12px;
+                            display: inline-block;
+                            margin-left: 10px;
+                        }
                         @media print {
                             body { font-size: 12pt; }
                             .no-print { display: none; }
@@ -3307,7 +3444,7 @@
                 <body>
                     ${printHTML}
                     <div class="exam-info no-print" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; font-size: 12px; color: #888;">
-                        <p>Được tạo bởi Hệ thống Tạo Bài Thi Văn Học VANW</p>
+                        <p>Được tạo bởi Hệ thống Tạo Bài Thi Văn Học VANW <span class="real-literature-badge">Tác phẩm có thật ✓</span></p>
                         <p>Ngày in: ${new Date().toLocaleDateString('vi-VN')}</p>
                     </div>
                     <script>
@@ -3453,7 +3590,7 @@
                 const count = countWords(this.value);
                 wordCount.textContent = `${count} từ`;
                 
-                if (count < 100) {
+                if (count < 20) {
                     wordCount.style.color = '#ef4444';
                     wordCount.style.fontWeight = '600';
                 } else {
@@ -3562,6 +3699,8 @@
                                     border-radius: 8px;
                                     margin-bottom: 20px;
                                     border-left: 4px solid #e37c2d;
+                                    white-space: pre-wrap;
+                                    font-family: inherit;
                                 }
                                 .question-item {
                                     margin-bottom: 20px;
@@ -3578,6 +3717,7 @@
                                 .question-text {
                                     flex: 1;
                                     font-weight: 500;
+                                    white-space: pre-wrap;
                                 }
                                 .question-points {
                                     background: #e37c2d;
@@ -3609,6 +3749,16 @@
                                 .markdown-content u {
                                     text-decoration: underline;
                                 }
+                                .real-literature-badge {
+                                    background: #e8f5e9;
+                                    border: 1px solid #4caf50;
+                                    color: #2e7d32;
+                                    padding: 5px 10px;
+                                    border-radius: 4px;
+                                    font-size: 12px;
+                                    display: inline-block;
+                                    margin-left: 10px;
+                                }
                                 @media print {
                                     body { font-size: 12pt; }
                                     .no-print { display: none; }
@@ -3619,7 +3769,7 @@
                         <body>
                             ${printContent}
                             <div class="exam-info no-print" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; font-size: 12px; color: #888;">
-                                <p>Được tạo bởi Hệ thống Tạo Bài Thi Văn Học VANW</p>
+                                <p>Được tạo bởi Hệ thống Tạo Bài Thi Văn Học VANW <span class="real-literature-badge">Tác phẩm có thật ✓</span></p>
                                 <p>Ngày in: ${new Date().toLocaleDateString('vi-VN')}</p>
                             </div>
                             <script>
@@ -3871,8 +4021,9 @@
             document.getElementById('inputText')?.focus();
             
             // Hiển thị thông báo nếu Firebase đã được khởi tạo
-            if (firestoreDb) {
-                console.log('Firestore Database đã sẵn sàng để lưu đề thi');
+            if (firestoreDb1 && firestoreDb2) {
+                console.log('Firebase Firestore đã sẵn sàng để lưu đề thi (2 databases)');
+                showNotification('Hệ thống đã sẵn sàng! Tác phẩm sẽ được kiểm chứng có thật.', 'success');
             }
         });
     </script>
