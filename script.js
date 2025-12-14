@@ -233,7 +233,7 @@ function showSelfCheckNotification() {
     notification.style.display = 'flex';
     
     // Đếm ngược 5 giây
-    let countdown = 5;
+    let countdown = 8;
     const countdownElement = document.getElementById('countdown');
     
     const timer = setInterval(() => {
@@ -1645,4 +1645,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     };
 });
+
 
