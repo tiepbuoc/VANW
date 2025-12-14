@@ -1,5 +1,7 @@
 // JavaScript cho popup bản đồ văn học - ĐÃ SỬA LỖI TÌM TÁC GIẢ XUNG QUANH
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== MAP POPUP SCRIPT BẮT ĐẦU ===');
+    
     // Cấu hình Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyBHnbro8qUvRyos-BRNdtTRtF0gftKeBEw",
@@ -12,8 +14,33 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Khởi tạo Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    console.log('Đang khởi tạo Firebase...');
+    let db;
+    try {
+        // Kiểm tra xem Firebase đã được khởi tạo chưa
+        if (typeof firebase === 'undefined') {
+            console.error('Firebase không được tải!');
+            showError('Firebase không được tải. Vui lòng tải lại trang.');
+            return;
+        }
+        
+        // Thử khởi tạo Firebase
+        let app;
+        try {
+            app = firebase.app();
+            console.log('Firebase đã được khởi tạo trước đó');
+        } catch (e) {
+            console.log('Khởi tạo Firebase mới...');
+            app = firebase.initializeApp(firebaseConfig);
+        }
+        
+        db = firebase.firestore();
+        console.log('Firebase Firestore đã sẵn sàng');
+    } catch (error) {
+        console.error('Lỗi khởi tạo Firebase:', error);
+        showError('Không thể kết nối với cơ sở dữ liệu. Lỗi: ' + error.message);
+        return;
+    }
 
     // Biến toàn cục
     let authors = [];
@@ -482,6 +509,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Hàm khởi tạo bản đồ trong popup - GIỮ NGUYÊN TỪ CODE MỚI
     function initMapPopup() {
+        console.log('=== HÀM INITMAPPOPUP ĐƯỢC GỌI ===');
+        
         const popupContent = document.getElementById('popupContent');
         const popupTitle = document.getElementById('popupTitle');
         
@@ -641,18 +670,50 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
 
-            // Khởi tạo bản đồ Leaflet và tải dữ liệu
+            // KHỞI TẠO BẢN ĐỒ NGAY SAU KHI TẠO HTML
             setTimeout(() => {
+                console.log('Bắt đầu khởi tạo bản đồ...');
                 try {
+                    // Kiểm tra xem Leaflet đã được tải chưa
+                    if (typeof L === 'undefined') {
+                        console.error('Thư viện Leaflet chưa được tải!');
+                        const countryInfoContent = document.getElementById('countryInfoContent');
+                        if (countryInfoContent) {
+                            countryInfoContent.innerHTML = `
+                                <div class="info-section">
+                                    <h3 style="color: #ef4444;">Lỗi tải thư viện</h3>
+                                    <p>Thư viện bản đồ chưa được tải. Vui lòng tải lại trang.</p>
+                                    <button onclick="location.reload()" 
+                                            style="margin-top: 15px; padding: 10px 20px; background-color: #e37c2d; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                                        <i class="fas fa-redo"></i> Tải lại trang
+                                    </button>
+                                </div>
+                            `;
+                        }
+                        return;
+                    }
+                    
                     initLeafletMap();
                     setupMapEventListeners();
                     loadData();
-                    loadCountryGeoData();
                     console.log('Bản đồ đã được khởi tạo thành công');
                 } catch (error) {
                     console.error('Lỗi khi khởi tạo bản đồ:', error);
+                    const countryInfoContent = document.getElementById('countryInfoContent');
+                    if (countryInfoContent) {
+                        countryInfoContent.innerHTML = `
+                            <div class="info-section">
+                                <h3 style="color: #ef4444;">Lỗi khởi tạo bản đồ</h3>
+                                <p>Không thể khởi tạo bản đồ. Lỗi: ${error.message}</p>
+                                <button onclick="initMapPopup()" 
+                                        style="margin-top: 15px; padding: 10px 20px; background-color: #e37c2d; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                                    <i class="fas fa-redo"></i> Thử lại
+                                </button>
+                            </div>
+                        `;
+                    }
                 }
-            }, 200);
+            }, 100); // Giảm timeout xuống 100ms để khởi tạo nhanh hơn
         }
     }
 
@@ -663,44 +724,100 @@ document.addEventListener('DOMContentLoaded', function() {
         const mapElement = document.getElementById('map');
         if (!mapElement) {
             console.error('Không tìm thấy element #map');
-            return;
+            // Thử tìm lại với ID khác
+            const literaryMap = document.getElementById('literaryMap');
+            if (literaryMap) {
+                console.log('Tìm thấy element #literaryMap, sử dụng thay thế');
+                mapElement = literaryMap;
+            } else {
+                showError('Không tìm thấy container bản đồ');
+                return;
+            }
         }
         
-        map = L.map('map', {
-            zoomControl: true,
-            attributionControl: true,
-            preferCanvas: true
-        }).setView([16, 106.2], 6);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 18,
-            minZoom: 3
-        }).addTo(map);
-
-        initializeMapWithTerritories();
-        
-        const vietnamBounds = L.latLngBounds(
-            [8.0, 102.0],
-            [23.0, 115.0]
-        );
-        map.fitBounds(vietnamBounds);
-        
-        console.log('Bản đồ Leaflet đã được khởi tạo');
+        try {
+            // Xóa bản đồ cũ nếu tồn tại
+            if (map) {
+                map.remove();
+                map = null;
+            }
+            
+            // Tạo bản đồ mới
+            map = L.map('map', {
+                zoomControl: true,
+                attributionControl: true,
+                preferCanvas: true,
+                center: [16, 106.2],
+                zoom: 6,
+                minZoom: 3,
+                maxZoom: 18
+            });
+            
+            console.log('Bản đồ Leaflet đã được tạo');
+            
+            // Thêm tile layer với error handling
+            const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 18,
+                minZoom: 3
+            }).addTo(map);
+            
+            // Thêm layer backup trong trường hợp OSM không tải được
+            osmLayer.on('tileerror', function(error) {
+                console.warn('Lỗi tải tile OSM:', error);
+                // Có thể thêm layer backup ở đây nếu cần
+            });
+            
+            // Thêm Hoàng Sa và Trường Sa
+            initializeMapWithTerritories();
+            
+            // Tải dữ liệu địa lý quốc gia
+            loadCountryGeoData();
+            
+            // Fit bounds cho Việt Nam
+            const vietnamBounds = L.latLngBounds(
+                [8.0, 102.0],
+                [23.0, 115.0]
+            );
+            map.fitBounds(vietnamBounds);
+            
+            console.log('Bản đồ Leaflet đã được khởi tạo hoàn tất');
+            
+        } catch (error) {
+            console.error('Lỗi khi tạo bản đồ Leaflet:', error);
+            throw error; // Ném lỗi để xử lý ở ngoài
+        }
     }
 
     // Hàm tải dữ liệu địa lý quốc gia - GIỮ NGUYÊN TỪ CODE MỚI
     function loadCountryGeoData() {
         console.log('Đang tải dữ liệu địa lý quốc gia...');
         
-        fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
+        // Sử dụng URL đơn giản hơn
+        const geoJsonUrl = 'https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json';
+        
+        // Hiển thị loading
+        const countryInfoContent = document.getElementById('countryInfoContent');
+        if (countryInfoContent) {
+            countryInfoContent.innerHTML = `
+                <div class="firebase-loading">
+                    <span class="loading-spinner"></span>
+                    <p>Đang tải dữ liệu địa lý quốc gia...</p>
+                </div>
+            `;
+        }
+        
+        fetch(geoJsonUrl)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Không thể tải dữ liệu địa lý');
+                    throw new Error('Không thể tải dữ liệu địa lý: ' + response.status);
                 }
                 return response.json();
             })
             .then(data => {
+                console.log('Dữ liệu địa lý đã tải thành công');
+                
+                // Tạo GeoJSON layer
                 const countriesLayer = L.geoJSON(data, {
                     style: {
                         fillColor: 'transparent',
@@ -742,10 +859,45 @@ document.addEventListener('DOMContentLoaded', function() {
                 }).addTo(map);
                 
                 console.log('Dữ liệu địa lý quốc gia đã được tải:', Object.keys(countryLayers).length, 'quốc gia');
+                
+                // Cập nhật thông báo
+                if (countryInfoContent) {
+                    countryInfoContent.innerHTML = `
+                        <div class="info-section">
+                            <h3 style="margin: 0 0 15px 0; color: var(--primary-color);">
+                                <i class="fas fa-globe-asia"></i> Bản đồ Văn học
+                            </h3>
+                            <p style="color: var(--text-secondary);">
+                                Đã tải ${Object.keys(countryLayers).length} quốc gia. Nhấp vào một quốc gia trên bản đồ để xem thông tin.
+                            </p>
+                        </div>
+                    `;
+                }
+                
             })
             .catch(error => {
                 console.error('Lỗi tải dữ liệu địa lý quốc gia:', error);
-                showError('Không thể tải dữ liệu địa lý quốc gia. Vui lòng kiểm tra kết nối internet.');
+                // Không hiển thị lỗi, vẫn có thể sử dụng bản đồ bình thường
+                console.log('Vẫn có thể sử dụng bản đồ không có lớp quốc gia');
+                
+                // Cập nhật thông báo
+                if (countryInfoContent) {
+                    countryInfoContent.innerHTML = `
+                        <div class="info-section">
+                            <h3 style="margin: 0 0 15px 0; color: var(--primary-color);">
+                                <i class="fas fa-globe-asia"></i> Bản đồ Văn học
+                            </h3>
+                            <p style="color: var(--text-secondary);">
+                                Bản đồ đã sẵn sàng. Bạn có thể tìm kiếm tác giả hoặc sử dụng các tính năng khác.
+                            </p>
+                            <div style="margin-top: 10px; padding: 10px; background-color: rgba(255, 193, 7, 0.1); border-radius: 6px;">
+                                <p style="margin: 0; color: #856404; font-size: 0.9rem;">
+                                    <i class="fas fa-exclamation-triangle"></i> Không thể tải dữ liệu quốc gia, nhưng bạn vẫn có thể sử dụng các tính năng khác.
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                }
             });
     }
 
@@ -1010,6 +1162,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="info-section">
                     <h3 style="color: #ef4444;">Lỗi</h3>
                     <p>${message}</p>
+                    <button onclick="loadData()" 
+                            style="margin-top: 15px; padding: 10px 20px; background-color: #e37c2d; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                        <i class="fas fa-redo"></i> Thử lại
+                    </button>
                 </div>
             `;
         }
@@ -1021,6 +1177,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const countryInfoContent = document.getElementById('countryInfoContent');
             
             console.log('Đang tải dữ liệu từ Firestore...');
+            
+            // Hiển thị loading
+            if (countryInfoContent) {
+                countryInfoContent.innerHTML = `
+                    <div class="firebase-loading">
+                        <span class="loading-spinner"></span>
+                        <p>Đang kết nối với cơ sở dữ liệu văn học...</p>
+                    </div>
+                `;
+            }
+            
+            // Kiểm tra db đã được khởi tạo chưa
+            if (!db) {
+                console.error('Firebase chưa được khởi tạo');
+                throw new Error('Firebase chưa được khởi tạo');
+            }
             
             const authorsSnapshot = await db.collection('authors').get();
             authors = [];
@@ -1096,12 +1268,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
         } catch (error) {
             console.error('Lỗi tải dữ liệu:', error);
-            showError('Không thể kết nối với cơ sở dữ liệu. Vui lòng kiểm tra kết nối internet.');
+            showError('Không thể kết nối với cơ sở dữ liệu. Vui lòng kiểm tra kết nối internet. Lỗi: ' + error.message);
         }
     }
 
     // Hàm hiển thị tác giả trên bản đồ - GIỮ NGUYÊN TỪ CODE MỚI
     function displayAuthors() {
+        // Xóa markers cũ
         markers.forEach(marker => {
             if (map && map.hasLayer(marker)) {
                 map.removeLayer(marker);
@@ -2002,6 +2175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.openPopup = function(menuId) {
             originalOpenPopup(menuId);
             if (menuId === 'mapMenu') {
+                console.log('Mở popup bản đồ, sẽ khởi tạo sau 300ms...');
                 setTimeout(initMapPopup, 300);
             }
         };
@@ -2016,6 +2190,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Xuất hàm initMapPopup để gọi từ script.js
     window.initMapPopup = initMapPopup;
     
-    console.log('Map popup script đã được tải và sẵn sàng');
+    console.log('=== MAP POPUP SCRIPT ĐÃ TẢI XONG VÀ SẴN SÀNG ===');
 });
-
