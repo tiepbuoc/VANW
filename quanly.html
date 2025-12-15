@@ -281,19 +281,22 @@
             font-weight: 500;
         }
 
-        /* Filter Controls */
+        /* Filter Controls - SỬA LẠI HOÀN TOÀN */
         .filter-controls {
             display: flex;
             gap: 1rem;
             margin-bottom: 1.5rem;
             flex-wrap: wrap;
-            /* ĐÃ THÊM: Căn chỉnh các phần tử từ trên xuống */
-            align-items: flex-start;
+            /* Căn giữa các phần tử theo chiều dọc */
+            align-items: center;
         }
 
         .filter-group {
             flex: 1;
             min-width: 200px;
+            /* Đảm bảo tất cả filter-group có cùng chiều cao */
+            display: flex;
+            flex-direction: column;
         }
 
         .filter-label {
@@ -302,6 +305,9 @@
             color: var(--text-primary);
             font-weight: 500;
             font-size: 0.9rem;
+            /* Đảm bảo label có cùng chiều cao */
+            min-height: 1.5rem;
+            line-height: 1.5;
         }
 
         .filter-select {
@@ -314,6 +320,9 @@
             font-size: 1rem;
             font-family: inherit;
             cursor: pointer;
+            /* Đảm bảo select có cùng chiều cao */
+            height: 44px;
+            box-sizing: border-box;
         }
 
         .filter-select:focus {
@@ -326,8 +335,11 @@
             position: relative;
             flex: 2;
             min-width: 300px;
-            /* ĐÃ THÊM: Đảm bảo search-box không bị co giãn */
-            flex: 0 0 auto;
+            /* Đảm bảo search-box có cùng cấu trúc với filter-group */
+            display: flex;
+            flex-direction: column;
+            /* Đặt chiều cao tổng thể bằng với filter-group */
+            height: 72px; /* label (1.5rem) + margin-bottom (0.5rem) + select (44px) = khoảng 72px */
         }
 
         .search-input {
@@ -339,6 +351,11 @@
             color: var(--text-primary);
             font-size: 1rem;
             font-family: inherit;
+            /* Đảm bảo input có cùng chiều cao với select */
+            height: 44px;
+            box-sizing: border-box;
+            /* Căn giữa nội dung theo chiều dọc */
+            line-height: 1.5;
         }
 
         .search-input:focus {
@@ -353,6 +370,21 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-secondary);
+            z-index: 1;
+            /* Điều chỉnh vị trí để phù hợp với input có height cố định */
+            margin-top: 0px;
+        }
+
+        /* Thêm phần giữ chỗ cho label trong search-box để căn chỉnh */
+        .search-box::before {
+            content: '\00a0'; /* Ký tự khoảng trắng không ngắt */
+            display: block;
+            visibility: hidden;
+            font-size: 0.9rem;
+            font-weight: 500;
+            height: 1.5rem; /* Chiều cao bằng với filter-label */
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
         }
 
         /* Exams Table */
@@ -879,10 +911,20 @@
             
             .filter-controls {
                 flex-direction: column;
+                align-items: stretch;
             }
             
             .filter-group, .search-box {
                 min-width: 100%;
+                height: auto; /* Trên mobile, để chiều cao tự động */
+            }
+            
+            .search-box {
+                height: auto;
+            }
+            
+            .search-box::before {
+                display: none; /* Ẩn phần giữ chỗ trên mobile */
             }
             
             .stats-grid {
