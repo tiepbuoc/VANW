@@ -2,7 +2,7 @@
 
 // API Key được lấy trực tiếp từ mã nguồn (không cần đọc file)
 // Sử dụng tên biến khác để tránh trùng với script.js
-const CHATBOT_REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
+const CHATBOT_REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
 const CHATBOT_API_KEY = CHATBOT_REVERSED_API_KEY.split('').reverse().join('');
 
 // Biến toàn cục
