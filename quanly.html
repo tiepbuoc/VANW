@@ -7,7 +7,7 @@
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-      /* CSS Layers */
+    /* CSS Layers */
 :root {
     --font-size-min: 16;
     --font-size-max: 20;
@@ -281,20 +281,18 @@ body::before {
     font-weight: 500;
 }
 
-/* Filter Controls - SỬA LẠI HOÀN TOÀN */
+/* Filter Controls */
 .filter-controls {
     display: flex;
     gap: 1rem;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
-    /* Căn giữa các phần tử theo chiều dọc */
     align-items: center;
 }
 
 .filter-group {
     flex: 1;
     min-width: 200px;
-    /* Đảm bảo tất cả filter-group có cùng chiều cao */
     display: flex;
     flex-direction: column;
 }
@@ -305,7 +303,6 @@ body::before {
     color: var(--text-primary);
     font-weight: 500;
     font-size: 0.9rem;
-    /* Đảm bảo label có cùng chiều cao */
     min-height: 1.5rem;
     line-height: 1.5;
 }
@@ -320,7 +317,6 @@ body::before {
     font-size: 1rem;
     font-family: inherit;
     cursor: pointer;
-    /* Đảm bảo select có cùng chiều cao */
     height: 44px;
     box-sizing: border-box;
 }
@@ -335,11 +331,9 @@ body::before {
     position: relative;
     flex: 2;
     min-width: 300px;
-    /* Đảm bảo search-box có cùng cấu trúc với filter-group */
     display: flex;
     flex-direction: column;
-    /* Đặt chiều cao tổng thể bằng với filter-group */
-    height: 72px; /* label (1.5rem) + margin-bottom (0.5rem) + select (44px) = khoảng 72px */
+    height: 72px;
 }
 
 .search-input {
@@ -351,10 +345,8 @@ body::before {
     color: var(--text-primary);
     font-size: 1rem;
     font-family: inherit;
-    /* Đảm bảo input có cùng chiều cao với select */
     height: 44px;
     box-sizing: border-box;
-    /* Căn giữa nội dung theo chiều dọc */
     line-height: 1.5;
 }
 
@@ -364,35 +356,36 @@ body::before {
     box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
 }
 
-/* SỬA LỖI: ĐIỀU CHỈNH VỊ TRÍ KÍNH LÚP VỀ GIỮA HỘP TÌM KIẾM */
+/* SỬA LỖI KÍNH LÚP - QUAN TRỌNG */
 .search-icon {
     position: absolute;
     left: 1rem;
-    top: 50%;
+    top: calc(50% + 11px); /* Điều chỉnh xuống 11px để căn giữa thanh tìm kiếm */
     transform: translateY(-50%);
     color: var(--text-secondary);
     z-index: 1;
-    /* Điều chỉnh vị trí để căn giữa theo chiều dọc */
-    margin-top: 0;
-    line-height: 1;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
 }
 
-/* Điều chỉnh thêm để đảm bảo icon không bị lệch trên các trình duyệt */
+/* Đảm bảo icon không bị ảnh hưởng bởi line-height */
 .search-icon i {
     display: block;
-    width: 16px;
-    height: 16px;
     line-height: 1;
 }
 
 /* Thêm phần giữ chỗ cho label trong search-box để căn chỉnh */
 .search-box::before {
-    content: '\00a0'; /* Ký tự khoảng trắng không ngắt */
+    content: '\00a0';
     display: block;
     visibility: hidden;
     font-size: 0.9rem;
     font-weight: 500;
-    height: 1.5rem; /* Chiều cao bằng với filter-label */
+    height: 1.5rem;
     line-height: 1.5;
     margin-bottom: 0.5rem;
 }
@@ -926,15 +919,19 @@ body::before {
     
     .filter-group, .search-box {
         min-width: 100%;
-        height: auto; /* Trên mobile, để chiều cao tự động */
+        height: auto;
     }
     
     .search-box {
         height: auto;
     }
     
+    .search-icon {
+        top: calc(50% + 0.5rem); /* Điều chỉnh cho mobile */
+    }
+    
     .search-box::before {
-        display: none; /* Ẩn phần giữ chỗ trên mobile */
+        display: none;
     }
     
     .stats-grid {
