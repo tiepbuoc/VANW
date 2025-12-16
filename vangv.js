@@ -1,5 +1,5 @@
 // API Key - Đã thay bằng key mới
-const REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
+const REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
 const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
 
 // Firebase Configuration
@@ -2689,4 +2689,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+
 
