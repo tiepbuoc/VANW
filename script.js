@@ -100,37 +100,11 @@ closePopup.addEventListener('click', function() {
 });
 
 // ==============================================
-// FIREBASE CONFIGURATION
-// ==============================================
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCVD_Um0fWAK3ogQQUwCDINV_dN1hJZxL4",
-    authDomain: "tkc-vanw.firebaseapp.com",
-    projectId: "tkc-vanw",
-    storageBucket: "tkc-vanw.firebasestorage.app",
-    messagingSenderId: "862465503494",
-    appId: "1:862465503494:web:8aec558b363988deec6e87",
-    measurementId: "G-F23NN1KLW0"
-};
-
-// Khởi tạo Firebase
-try {
-    firebase.initializeApp(firebaseConfig);
-    console.log("Firebase đã được khởi tạo thành công");
-} catch (error) {
-    console.log("Lỗi khởi tạo Firebase:", error);
-}
-
-// Lấy Firestore instance
-const db = firebase.firestore();
-const ANALYSIS_COLLECTION = "text_analyses";
-
-// ==============================================
 // API CONFIGURATION
 // ==============================================
 
 // API Key được lấy trực tiếp từ mã nguồn (không cần đọc file)
-const REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
+const REVERSED_API_KEY = "YMZZKI_mV0OHMDxiWE65_LsII1E242PuDySazIA";
 const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
 
 const GEMINI_CONFIG = {
@@ -156,10 +130,6 @@ let analysisProgress = {
     completed: 0,
     items: []
 };
-
-// Biến để theo dõi kết quả phân tích đã lưu
-let cachedAnalysis = null;
-let isFromCache = false;
 
 // Hàm cập nhật tiến trình
 function updateProgress() {
@@ -225,89 +195,6 @@ function errorProgressItem(index) {
     analysisProgress.items[index].status = 'error';
     analysisProgress.completed++;
     updateProgress();
-}
-
-// Hàm hiển thị thông báo tự kiểm chứng
-function showSelfCheckNotification() {
-    const notification = document.getElementById('selfCheckNotification');
-    notification.style.display = 'flex';
-    
-    // Đếm ngược 5 giây
-    let countdown = 8;
-    const countdownElement = document.getElementById('countdown');
-    
-    const timer = setInterval(() => {
-        countdown--;
-        countdownElement.textContent = `${countdown}s`;
-        
-        if (countdown <= 0) {
-            clearInterval(timer);
-            notification.style.display = 'none';
-            
-            // Xóa hiệu ứng viền cam sau khi hết thời gian
-            document.querySelectorAll('.analysis-section.cached').forEach(section => {
-                section.classList.remove('cached');
-            });
-        }
-    }, 1000);
-}
-
-// Hàm tạo hash từ văn bản để dùng làm ID
-function createTextHash(text) {
-    // Tạo hash đơn giản từ nội dung văn bản
-    let hash = 0;
-    for (let i = 0; i < text.length; i++) {
-        const char = text.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return Math.abs(hash).toString(16);
-}
-
-// Hàm kiểm tra xem văn bản đã có trong database chưa
-async function checkTextInDatabase(text) {
-    try {
-        const textHash = createTextHash(text);
-        
-        const docRef = db.collection(ANALYSIS_COLLECTION).doc(textHash);
-        const doc = await docRef.get();
-        
-        if (doc.exists) {
-            console.log("Tìm thấy phân tích đã lưu trong database");
-            return doc.data();
-        }
-        return null;
-    } catch (error) {
-        console.error("Lỗi khi kiểm tra database:", error);
-        return null;
-    }
-}
-
-// Hàm lưu phân tích vào database
-async function saveAnalysisToDatabase(text, analysisData) {
-    try {
-        const saveToDb = document.getElementById('saveToDbToggle').checked;
-        if (!saveToDb) {
-            console.log("Tùy chọn lưu vào database đã tắt, bỏ qua việc lưu");
-            return false;
-        }
-        
-        const textHash = createTextHash(text);
-        const analysisToSave = {
-            text: text,
-            textHash: textHash,
-            analysis: analysisData,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            wordCount: countWords(text)
-        };
-        
-        await db.collection(ANALYSIS_COLLECTION).doc(textHash).set(analysisToSave);
-        console.log("Đã lưu phân tích vào database với hash:", textHash);
-        return true;
-    } catch (error) {
-        console.error("Lỗi khi lưu vào database:", error);
-        return false;
-    }
 }
 
 // Hàm đếm từ
@@ -941,130 +828,6 @@ async function analyzeText() {
         return;
     }
 
-    // Reset biến cache
-    cachedAnalysis = null;
-    isFromCache = false;
-
-    // Kiểm tra xem văn bản đã có trong database chưa
-    const existingAnalysis = await checkTextInDatabase(inputText);
-    
-    if (existingAnalysis) {
-        // Hiển thị kết quả từ cache
-        displayCachedAnalysis(existingAnalysis);
-        return;
-    }
-
-    // Nếu không có trong cache, tiến hành phân tích bình thường
-    await performNewAnalysis(inputText);
-}
-
-// Hàm hiển thị kết quả từ cache
-function displayCachedAnalysis(analysisData) {
-    const resultDiv = document.getElementById('result');
-    const analyzeBtn = document.getElementById('analyzeBtn');
-    
-    // Đánh dấu là đang hiển thị từ cache
-    isFromCache = true;
-    cachedAnalysis = analysisData;
-    
-    // Vô hiệu hóa nút phân tích
-    analyzeBtn.disabled = true;
-    analyzeBtn.innerHTML = '<i class="fas fa-database mr-2"></i> Đang tải từ bộ nhớ...';
-    
-    // Xóa kết quả cũ
-    resultDiv.innerHTML = '';
-    
-    // Hiển thị thông báo tự kiểm chứng
-    showSelfCheckNotification();
-    
-    // Hiển thị kết quả từ cache
-    const analysis = analysisData.analysis;
-    
-    // Hiển thị các phần phân tích
-    if (analysis.textType) {
-        resultDiv.innerHTML += `
-            <div class="analysis-section cached">
-                <h3><i class="fas fa-tags"></i> Kết quả phân loại</h3>
-                <div class="analysis-content">
-                    <p><strong>Loại văn bản:</strong> ${analysis.textType}</p>
-                </div>
-            </div>`;
-    }
-    
-    if (analysis.author) {
-        resultDiv.innerHTML += `
-            <div class="analysis-section cached">
-                <h3><i class="fas fa-user-pen"></i> Tác giả</h3>
-                <div class="analysis-content">
-                    <p><strong>Tác giả:</strong> ${analysis.author}</p>
-                </div>
-            </div>`;
-    }
-    
-    if (analysis.title) {
-        resultDiv.innerHTML += `
-            <div class="analysis-section cached">
-                <h3><i class="fas fa-book"></i> Tên tác phẩm</h3>
-                <div class="analysis-content">
-                    <p><strong>Tác phẩm:</strong> ${analysis.title}</p>
-                </div>
-            </div>`;
-    }
-    
-    if (analysis.poemTypeInfo) {
-        const info = analysis.poemTypeInfo;
-        resultDiv.innerHTML += `
-            <div class="analysis-section cached">
-                <h3><i class="fas fa-ruler-combined"></i> Thể thơ</h3>
-                <div class="analysis-content">
-                    <p><strong>Thể loại:</strong> ${info.poemType}</p>
-                    <p><strong>Giải thích:</strong> ${info.reason}</p>
-                    ${info.link ? `<p><strong>Tìm hiểu thêm:</strong> <a href="${info.link}" target="_blank" class="text-blue-600 hover:underline">${info.poemType}</a></p>` : ''}
-                </div>
-            </div>`;
-    }
-    
-    // Hiển thị các phân tích khác từ cache
-    if (analysis.analyses && Array.isArray(analysis.analyses)) {
-        analysis.analyses.forEach(item => {
-            resultDiv.innerHTML += `
-                <div class="analysis-section cached">
-                    <h3><i class="${item.icon}"></i> ${item.title}</h3>
-                    <div class="analysis-content">
-                        ${parseMarkdown(item.content)}
-                    </div>
-                </div>`;
-        });
-    }
-    
-    // Hiển thị thông tin cache
-    resultDiv.innerHTML += `
-        <div class="analysis-section" style="background-color: #f0f7ff; border-left-color: #4a90e2;">
-            <h3><i class="fas fa-info-circle"></i> Thông tin bộ nhớ đệm</h3>
-            <div class="analysis-content">
-                <p><strong>Nguồn:</strong> Phân tích đã lưu trước đây</p>
-                <p><strong>Số từ:</strong> ${analysisData.wordCount || countWords(inputText)}</p>
-                <p><strong>Trạng thái:</strong> <span class="text-green-600 font-medium">Đã tải từ cơ sở dữ liệu</span></p>
-                <p class="text-sm text-gray-600 mt-2"><i class="fas fa-lightbulb"></i> Kết quả này được tải từ bộ nhớ đệm để tiết kiệm thời gian và tài nguyên API.</p>
-            </div>
-        </div>`;
-    
-    // Kích hoạt lại nút phân tích sau 1 giây
-    setTimeout(() => {
-        analyzeBtn.disabled = false;
-        analyzeBtn.innerHTML = '<i class="fas fa-search mr-2"></i> Bắt đầu phân tích';
-        
-        // Thêm sự kiện chọn văn bản sau khi phân tích xong
-        setTimeout(addTextSelectionFeature, 100);
-    }, 1000);
-}
-
-// Hàm thực hiện phân tích mới
-async function performNewAnalysis(inputText) {
-    const resultDiv = document.getElementById('result');
-    const analyzeBtn = document.getElementById('analyzeBtn');
-    const progressContainer = document.getElementById('progressContainer');
-
     // Vô hiệu hóa nút phân tích và hiển thị tiến trình
     analyzeBtn.disabled = true;
     analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Đang phân tích...';
@@ -1088,15 +851,6 @@ async function performNewAnalysis(inputText) {
         
         const model = GEMINI_CONFIG.models[analysisMode];
         
-        // Đối tượng để lưu kết quả phân tích
-        const analysisResults = {
-            textType: '',
-            author: '',
-            title: '',
-            poemTypeInfo: null,
-            analyses: []
-        };
-        
         // Xác định loại văn bản
         addProgressItem('Xác định loại văn bản');
         const typeResponse = await fetchGemini(
@@ -1104,14 +858,13 @@ async function performNewAnalysis(inputText) {
             model
         );
         let textType = typeResponse.trim().toLowerCase();
-        analysisResults.textType = textType.charAt(0).toUpperCase() + textType.slice(1);
         completeProgressItem(0);
 
         resultDiv.innerHTML = `
             <div class="analysis-section">
                 <h3><i class="fas fa-tags"></i> Kết quả phân loại</h3>
                 <div class="analysis-content">
-                    <p><strong>Loại văn bản:</strong> ${analysisResults.textType}</p>
+                    <p><strong>Loại văn bản:</strong> ${textType.charAt(0).toUpperCase() + textType.slice(1)}</p>
                 </div>
             </div>`;
 
@@ -1123,42 +876,32 @@ async function performNewAnalysis(inputText) {
         );
         let authorResult = authorResponse.trim();
         if (authorResult === '') authorResult = 'Không rõ';
-        analysisResults.author = authorResult;
         completeProgressItem(analysisProgress.items.length - 1);
 
         resultDiv.innerHTML += `
             <div class="analysis-section">
                 <h3><i class="fas fa-user-pen"></i> Tác giả</h3>
                 <div class="analysis-content">
-                    <p><strong>Tác giả:</strong> ${analysisResults.author}</p>
+                    <p><strong>Tác giả:</strong> ${authorResult}</p>
                 </div>
             </div>`;
 
         // Phân tích dựa trên loại văn bản
         if (textType === 'thơ') {
-            await analyzePoem(inputText, model, useAIFull, usePhonetic, useComparison, analysisResults);
+            await analyzePoem(inputText, model, useAIFull, usePhonetic, useComparison);
         } else if (textType === 'ca dao' || textType === 'tục ngữ') {
-            await analyzeFolkLiterature(inputText, model, textType, useComparison, analysisResults);
+            await analyzeFolkLiterature(inputText, model, textType, useComparison);
         } else if (textType === 'văn xuôi') {
-            await analyzeProse(inputText, model, useComparison, analysisResults);
+            await analyzeProse(inputText, model, useComparison);
         } else {
             resultDiv.innerHTML += `<div class="analysis-section"><p>Không có phân tích chi tiết vì nội dung không phải thơ, ca dao, tục ngữ, hay văn xuôi.</p></div>`;
         }
-        
-        // Lưu phân tích vào database
-        if (document.getElementById('saveToDbToggle').checked) {
-            addProgressItem('Lưu vào cơ sở dữ liệu');
-            await saveAnalysisToDatabase(inputText, analysisResults);
-            completeProgressItem(analysisProgress.items.length - 1);
-        }
-        
     } catch (error) {
         resultDiv.innerHTML += `<div class="analysis-section"><p class="text-red-500">Đã xảy ra lỗi: ${error.message}</p></div>`;
     } finally {
         // Kích hoạt lại nút phân tích
         analyzeBtn.disabled = false;
         analyzeBtn.innerHTML = '<i class="fas fa-search mr-2"></i> Bắt đầu phân tích';
-        progressContainer.style.display = 'none';
         
         // Thêm sự kiện chọn văn bản sau khi phân tích xong
         setTimeout(addTextSelectionFeature, 100);
@@ -1249,7 +992,7 @@ function handleTextSelection(e) {
 // ==============================================
 
 // Hàm phân tích thơ
-async function analyzePoem(inputText, model, useAIFull, usePhonetic, useComparison, analysisResults) {
+async function analyzePoem(inputText, model, useAIFull, usePhonetic, useComparison) {
     const resultDiv = document.getElementById('result');
     const lines = inputText.split(/\n+/).filter(line => line.trim() !== '');
     
@@ -1260,7 +1003,6 @@ async function analyzePoem(inputText, model, useAIFull, usePhonetic, useComparis
         model
     );
     let titleResult = titleResponse.trim();
-    analysisResults.title = titleResult;
     completeProgressItem(analysisProgress.items.length - 1);
 
     resultDiv.innerHTML += `
@@ -1287,7 +1029,6 @@ async function analyzePoem(inputText, model, useAIFull, usePhonetic, useComparis
     } else {
         poemTypeInfo = determinePoemType(lines);
     }
-    analysisResults.poemTypeInfo = poemTypeInfo;
     completeProgressItem(analysisProgress.items.length - 1);
 
     resultDiv.innerHTML += `
@@ -1320,11 +1061,6 @@ async function analyzePoem(inputText, model, useAIFull, usePhonetic, useComparis
                 </div>
             </div>
         `;
-        analysisResults.analyses.push({
-            title: 'Phân tích kỹ thuật',
-            content: technicalResponse,
-            icon: 'fas fa-cogs'
-        });
         completeProgressItem(analysisProgress.items.length - 1);
     }
 
@@ -1367,14 +1103,6 @@ async function analyzePoem(inputText, model, useAIFull, usePhonetic, useComparis
             if (itemIndex !== -1) {
                 completeProgressItem(itemIndex);
             }
-            
-            // Lưu kết quả phân tích
-            analysisResults.analyses.push({
-                title: analysis.title,
-                content: result,
-                icon: analysis.icon
-            });
-            
             return {
                 title: analysis.title,
                 content: result,
@@ -1414,7 +1142,7 @@ async function analyzePoem(inputText, model, useAIFull, usePhonetic, useComparis
 // ==============================================
 
 // Hàm phân tích ca dao, tục ngữ
-async function analyzeFolkLiterature(inputText, model, textType, useComparison, analysisResults) {
+async function analyzeFolkLiterature(inputText, model, textType, useComparison) {
     const resultDiv = document.getElementById('result');
     
     const analyses = [
@@ -1461,12 +1189,7 @@ async function analyzeFolkLiterature(inputText, model, textType, useComparison, 
             model
         )
         .then(result => {
-            completeProgressItem(index + 2); // +2 vì đã có 2 mục trước đó
-            analysisResults.analyses.push({
-                title: analysis.title,
-                content: result,
-                icon: analysis.icon
-            });
+            completeProgressItem(index + 1); // +1 vì đã có 1 mục trước đó (xác định loại văn bản)
             return {
                 title: analysis.title,
                 content: result,
@@ -1474,7 +1197,7 @@ async function analyzeFolkLiterature(inputText, model, textType, useComparison, 
             };
         })
         .catch(error => {
-            errorProgressItem(index + 2);
+            errorProgressItem(index + 1);
             return {
                 title: analysis.title,
                 content: `Lỗi khi phân tích: ${error.message}`,
@@ -1502,7 +1225,7 @@ async function analyzeFolkLiterature(inputText, model, textType, useComparison, 
 // ==============================================
 
 // Hàm phân tích văn xuôi
-async function analyzeProse(inputText, model, useComparison, analysisResults) {
+async function analyzeProse(inputText, model, useComparison) {
     const resultDiv = document.getElementById('result');
     
     const analyses = [
@@ -1559,12 +1282,7 @@ async function analyzeProse(inputText, model, useComparison, analysisResults) {
             model
         )
         .then(result => {
-            completeProgressItem(index + 2); // +2 vì đã có 2 mục trước đó
-            analysisResults.analyses.push({
-                title: analysis.title,
-                content: result,
-                icon: analysis.icon
-            });
+            completeProgressItem(index + 1); // +1 vì đã có 1 mục trước đó (xác định loại văn bản)
             return {
                 title: analysis.title,
                 content: result,
@@ -1572,7 +1290,7 @@ async function analyzeProse(inputText, model, useComparison, analysisResults) {
             };
         })
         .catch(error => {
-            errorProgressItem(index + 2);
+            errorProgressItem(index + 1);
             return {
                 title: analysis.title,
                 content: `Lỗi khi phân tích: ${error.message}`,
@@ -1628,7 +1346,6 @@ window.GEMINI_CONFIG = GEMINI_CONFIG;
 document.addEventListener('DOMContentLoaded', function() {
     console.log('VANW Text Analysis Tool đã sẵn sàng!');
     console.log('API Key đã được cấu hình:', GEMINI_API_KEY ? 'Có' : 'Không');
-    console.log('Firebase đã được khởi tạo:', firebase.apps.length > 0 ? 'Có' : 'Không');
     
     // Thêm loading cho chatbot và map popups
     const originalOpenPopup = openPopup;
@@ -1645,5 +1362,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     };
 });
-
-
