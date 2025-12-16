@@ -1,4 +1,4 @@
-// JavaScript cho popup bản đồ văn học - ĐẦY ĐỦ KHÔNG RÚT GỌN
+// JavaScript cho popup bản đồ văn học - ĐÃ SỬA LỖI WIKIPEDIA
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Map popup script đang khởi tạo...');
     
@@ -39,6 +39,45 @@ document.addEventListener('DOMContentLoaded', function() {
     // API Key cho bản đồ
     const MAP_REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
     const MAP_API_KEY = MAP_REVERSED_API_KEY.split('').reverse().join('');
+
+    // Bản đồ chuyển đổi tên quốc gia
+    const countryNameMap = {
+        "Nguyễn Khuyến": "Vietnam",
+        "Việt Nam": "Vietnam",
+        "Anh": "United Kingdom",
+        "Mỹ": "United States",
+        "Hoa Kỳ": "United States",
+        "Pháp": "France",
+        "Đức": "Germany",
+        "Nga": "Russia",
+        "Nhật Bản": "Japan",
+        "Trung Quốc": "China",
+        "Trung Hoa": "China",
+        "Hàn Quốc": "South Korea",
+        "Ấn Độ": "India",
+        "Brazil": "Brazil",
+        "Canada": "Canada",
+        "Ý": "Italy",
+        "Tây Ban Nha": "Spain",
+        "Bồ Đào Nha": "Portugal",
+        "Thụy Điển": "Sweden",
+        "Na Uy": "Norway",
+        "Phần Lan": "Finland",
+        "Đan Mạch": "Denmark",
+        "Hà Lan": "Netherlands",
+        "Bỉ": "Belgium",
+        "Thụy Sĩ": "Switzerland",
+        "Áo": "Austria",
+        "Ba Lan": "Poland",
+        "Hy Lạp": "Greece",
+        "Thổ Nhĩ Kỳ": "Turkey",
+        "Ai Cập": "Egypt",
+        "Nam Phi": "South Africa",
+        "Mexico": "Mexico",
+        "Argentina": "Argentina",
+        "Úc": "Australia",
+        "New Zealand": "New Zealand"
+    };
 
     // ========== HÀM CHÍNH ==========
 
@@ -122,6 +161,108 @@ document.addEventListener('DOMContentLoaded', function() {
         iconSize: [20, 20],
         iconAnchor: [10, 10]
     });
+
+    // Hàm chuyển đổi tên quốc gia (từ code cũ)
+    function translateCountryName(countryName) {
+        if (countryNameMap[countryName]) {
+            return countryNameMap[countryName];
+        }
+        
+        const lowerCountryName = countryName.toLowerCase();
+        for (const [viName, enName] of Object.entries(countryNameMap)) {
+            if (viName.toLowerCase() === lowerCountryName) {
+                return enName;
+            }
+        }
+        
+        return countryName;
+    }
+
+    // Hàm trích xuất tiểu sử ngắn (từ code cũ)
+    function extractShortBio(text) {
+        const firstParagraph = text.split('\n\n')[0] || text;
+        const words = firstParagraph.split(' ');
+        const shortBio = words.slice(0, 300).join(' ');
+        return words.length > 250 ? shortBio + '...' : shortBio;
+    }
+
+    // HÀM TÌM KIẾM TÁC GIẢ TỪ WIKIPEDIA (ĐÃ SỬA THEO CODE CŨ)
+    async function searchAuthorFromWikipedia(authorName) {
+        try {
+            console.log(`Đang tìm kiếm "${authorName}" trên Wikipedia...`);
+            
+            const searchUrl = `https://vi.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(authorName)}&format=json&origin=*`;
+            const searchResponse = await fetch(searchUrl);
+            const searchData = await searchResponse.json();
+            
+            if (searchData.query.search.length === 0) {
+                throw new Error('Không tìm thấy thông tin trên Wikipedia');
+            }
+            
+            const pageTitle = searchData.query.search[0].title;
+            console.log(`Tìm thấy trang: ${pageTitle}`);
+            
+            const contentUrl = `https://vi.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|info&inprop=url&explaintext=true&exchars=1000&pithumbsize=300&titles=${encodeURIComponent(pageTitle)}&format=json&origin=*`;
+            const contentResponse = await fetch(contentUrl);
+            const contentData = await contentResponse.json();
+            
+            const pageId = Object.keys(contentData.query.pages)[0];
+            const pageInfo = contentData.query.pages[pageId];
+            const fullText = pageInfo.extract || '';
+            
+            console.log(`Đã lấy nội dung cho ${pageTitle}, độ dài: ${fullText.length}`);
+            
+            // Xác định quốc gia từ nội dung
+            let country = "Vietnam";
+            const allCountries = [...Object.keys(countryNameMap), ...Object.values(countryNameMap)];
+            
+            for (const countryName of allCountries) {
+                if (fullText.includes(countryName)) {
+                    country = countryName;
+                    break;
+                }
+            }
+            
+            country = translateCountryName(country);
+            
+            // Xác định thế kỷ từ năm sinh
+            let century = 20;
+            const yearMatch = fullText.match(/(\d{4})/);
+            if (yearMatch) {
+                const year = parseInt(yearMatch[1]);
+                century = Math.ceil(year / 100);
+            }
+            
+            // Trích xuất tác phẩm nổi tiếng
+            let works = [];
+            const worksMatch = fullText.match(/tác phẩm nổi tiếng(.+?)(\.|,|;|\n|$)/i);
+            if (worksMatch) {
+                works = worksMatch[1].split(',').map(s => s.trim()).filter(s => s.length > 0);
+            }
+            
+            // Tạo đối tượng tác giả mới
+            const newAuthor = {
+                id: `wiki_${Date.now()}`,
+                name: pageTitle,
+                bio: extractShortBio(fullText),
+                works: works.length > 0 ? works : [],
+                birthPlace: { lat: 0, lng: 0 },
+                country: country,
+                century: century,
+                image: pageInfo.thumbnail ? pageInfo.thumbnail.source : 'https://via.placeholder.com/300x200?text=No+Image',
+                connections: [],
+                source: 'wikipedia'
+            };
+            
+            console.log(`Đã tạo tác giả: ${newAuthor.name}, quốc gia: ${newAuthor.country}, thế kỷ: ${newAuthor.century}`);
+            
+            return newAuthor;
+            
+        } catch (error) {
+            console.error('Lỗi khi tìm kiếm Wikipedia:', error);
+            throw new Error(`Không thể tìm thấy thông tin cho "${authorName}" trên Wikipedia.`);
+        }
+    }
 
     // Hàm hiển thị vị trí người dùng
     function showUserLocation() {
@@ -1120,7 +1261,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="info-section">
                             <span class="info-label"><i class="fas fa-book"></i> Lịch sử văn học:</span>
                             <div class="short-bio">
-                                <p>${historyInfo.history || historyInfo || "Chưa có thông tin lịch sử văn học."}</p>
+                                <p>${historyInfo.history || historyInfo || "Chưa có thông tin lị sử văn học."}</p>
                             </div>
                         </div>
                         
@@ -1367,7 +1508,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.addEventListener('resize', updateToggleButtonPosition);
             }
             
-            // Tìm kiếm với suggestions
+            // Tìm kiếm với suggestions - ĐÃ SỬA
             const searchInput = document.getElementById('mapSearchInput');
             suggestions = document.getElementById('mapSuggestions');
             
@@ -1395,6 +1536,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     const lowerSearchTerm = searchTerm.toLowerCase();
                     
+                    // Tìm tác giả trong cơ sở dữ liệu
                     const filteredAuthors = authors.filter(author => 
                         author.name.toLowerCase().includes(lowerSearchTerm)
                     );
@@ -1420,6 +1562,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
                     }
                     
+                    // Thêm tùy chọn tìm kiếm Wikipedia - ĐÃ SỬA
                     const wikiDiv = document.createElement('div');
                     wikiDiv.className = 'suggestion-item wiki-search-option';
                     wikiDiv.innerHTML = `
@@ -1432,7 +1575,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         const searchInput = document.getElementById('mapSearchInput');
                         if (searchInput) searchInput.value = searchTerm;
                         suggestions.style.display = 'none';
-                        await searchAuthorFromWikipedia(searchTerm);
+                        
+                        // Gọi hàm tìm kiếm Wikipedia đã sửa
+                        await handleWikiSearch(searchTerm);
                     });
                     suggestions.appendChild(wikiDiv);
                     
@@ -1506,53 +1651,64 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Event listeners đã được thiết lập');
         }
         
-        // Hàm tìm kiếm tác giả từ Wikipedia
-        async function searchAuthorFromWikipedia(authorName) {
+        // Hàm xử lý tìm kiếm Wikipedia - ĐÃ SỬA
+        async function handleWikiSearch(authorName) {
             const countryInfoContent = document.getElementById('countryInfoContent');
             
             if (!countryInfoContent) return;
             
+            // Hiển thị trạng thái loading
             countryInfoContent.innerHTML = `
                 <div class="firebase-loading">
                     <span class="loading-spinner"></span>
-                    <p>Đang tìm kiếm thông tin trên Wikipedia...</p>
+                    <p>Đang tìm kiếm thông tin trên Wikipedia cho "${authorName}"...</p>
                 </div>
             `;
             
             try {
-                const searchUrl = `https://vi.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(authorName)}&format=json&origin=*`;
-                const searchResponse = await fetch(searchUrl);
-                const searchData = await searchResponse.json();
+                // Gọi hàm tìm kiếm Wikipedia đã sửa
+                const newAuthor = await searchAuthorFromWikipedia(authorName);
                 
-                if (searchData.query.search.length === 0) {
-                    throw new Error('Không tìm thấy thông tin trên Wikipedia');
+                // Kiểm tra xem tác giả đã tồn tại chưa
+                const existingAuthor = authors.find(a => a.name === newAuthor.name);
+                if (existingAuthor) {
+                    // Nếu đã tồn tại, hiển thị thông tin tác giả đó
+                    showAuthorInfo(existingAuthor);
+                    showNotification(`Tác giả "${newAuthor.name}" đã có trong cơ sở dữ liệu.`, 'info');
+                } else {
+                    // Thêm tác giả mới vào danh sách
+                    authors.push(newAuthor);
+                    
+                    // Thêm marker cho tác giả mới (nếu có vị trí)
+                    if (newAuthor.birthPlace && newAuthor.birthPlace.lat !== 0 && newAuthor.birthPlace.lng !== 0) {
+                        const marker = addAuthorMarker(newAuthor);
+                        if (marker) {
+                            // Zoom đến vị trí tác giả
+                            map.flyTo([newAuthor.birthPlace.lat, newAuthor.birthPlace.lng], 8);
+                            highlightMarker(marker);
+                        }
+                    }
+                    
+                    // Hiển thị thông tin tác giả
+                    showAuthorInfo(newAuthor);
+                    
+                    // Thông báo thành công
+                    showNotification(`Đã thêm tác giả "${newAuthor.name}" từ Wikipedia.`, 'success');
                 }
                 
-                const pageTitle = searchData.query.search[0].title;
-                
-                const newAuthor = {
-                    id: authors.length + 1,
-                    name: pageTitle,
-                    bio: `Thông tin từ Wikipedia về ${pageTitle}. Đang cập nhật đầy đủ...`,
-                    works: [],
-                    birthPlace: { lat: 16, lng: 106.2 },
-                    country: "Vietnam",
-                    century: 20,
-                    image: null,
-                    connections: []
-                };
-                
-                authors.push(newAuthor);
-                addAuthorMarker(newAuthor);
-                showAuthorInfo(newAuthor);
-                
             } catch (error) {
-                console.error('Lỗi khi tìm kiếm Wikipedia:', error);
+                console.error('Lỗi khi xử lý tìm kiếm Wikipedia:', error);
+                
+                // Hiển thị thông báo lỗi
                 countryInfoContent.innerHTML = `
                     <div class="info-section">
                         <h3 style="color: #ef4444;">Lỗi tìm kiếm</h3>
-                        <p>Không thể tìm thấy thông tin cho "${authorName}" trên Wikipedia.</p>
+                        <p>${error.message}</p>
                         <p>Vui lòng thử lại với tên khác hoặc kiểm tra kết nối internet.</p>
+                        <button onclick="loadData()" 
+                                style="margin-top: 15px; width: 100%; padding: 10px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;">
+                            <i class="fas fa-sync-alt"></i> Tải lại dữ liệu từ Firestore
+                        </button>
                     </div>
                 `;
             }
@@ -1560,7 +1716,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Hàm thêm marker cho tác giả mới
         function addAuthorMarker(author) {
-            if (author.birthPlace && author.birthPlace.lat && author.birthPlace.lng) {
+            if (author.birthPlace && author.birthPlace.lat && author.birthPlace.lng && 
+                author.birthPlace.lat !== 0 && author.birthPlace.lng !== 0) {
+                
                 const lat = parseFloat(author.birthPlace.lat);
                 const lng = parseFloat(author.birthPlace.lng);
                 
@@ -1641,9 +1799,9 @@ document.addEventListener('DOMContentLoaded', function() {
         function highlightMarkerForConnection(author, color) {
             const marker = markers.find(m => {
                 const latLng = m.getLatLng();
-                const authorLat = parseFloat(author.birthPlace.lat);
-                const authorLng = parseFloat(author.birthPlace.lng);
-                return latLng.lat === authorLat && latLng.lng === authorLng;
+                const authorLat = author.birthPlace ? parseFloat(author.birthPlace.lat) : null;
+                const authorLng = author.birthPlace ? parseFloat(author.birthPlace.lng) : null;
+                return authorLat && authorLng && latLng.lat === authorLat && latLng.lng === authorLng;
             });
             
             if (marker) {
@@ -2077,5 +2235,5 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(initMapPopup, 500);
     }
     
-    console.log('Map popup script đã được tải đầy đủ');
+    console.log('Map popup script đã được tải đầy đủ và ĐÃ SỬA LỖI WIKIPEDIA');
 });
