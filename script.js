@@ -130,7 +130,7 @@ const ANALYSIS_COLLECTION = "text_analyses";
 // ==============================================
 
 // API Key được lấy trực tiếp từ mã nguồn (không cần đọc file)
-const REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
+const REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
 const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
 
 const GEMINI_CONFIG = {
@@ -1673,3 +1673,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     };
 });
+
