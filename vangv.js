@@ -132,7 +132,7 @@ async function fetchGemini(prompt, maxRetries = 3) {
                 setTimeout(() => reject(new Error('Request timeout after 90 seconds')), 90000);
             });
             
-            const fetchPromise = fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            const fetchPromise = fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -2689,3 +2689,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+
