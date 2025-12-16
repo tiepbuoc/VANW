@@ -124,161 +124,12 @@ function formatDuration(minutes) {
     }
 }
 
-// Hàm kiểm tra trạng thái API key
-function checkAPIStatus() {
-    // Kiểm tra lỗi phổ biến với API key
-    const apiKeyPattern = /^AIzaSy[A-Za-z0-9-_]{33}$/;
-    if (!apiKeyPattern.test(GEMINI_API_KEY)) {
-        return {
-            valid: false,
-            message: "API Key không đúng định dạng. Vui lòng kiểm tra lại."
-        };
-    }
-    
-    // Kiểm tra xem API key có bị hạn chế không
-    if (GEMINI_API_KEY.includes('xxx') || GEMINI_API_KEY.includes('dummy')) {
-        return {
-            valid: false,
-            message: "API Key không hợp lệ hoặc đã bị vô hiệu hóa."
-        };
-    }
-    
-    return {
-        valid: true,
-        message: "API Key hợp lệ"
-    };
-}
-
-// Hàm tạo nội dung mẫu khi API bị lỗi
-function createSampleContent(inputText, duration, teachingStyle, addDiscussion, addHomework, addExamples) {
-    const wordCount = countWords(inputText);
-    const sampleTitle = "Bài giảng mẫu - Sử dụng khi API gặp sự cố";
-    
-    const sampleContent = `
-# ${sampleTitle}
-
-## 1. GIỚI THIỆU BÀI HỌC (15 phút)
-
-**Thông tin văn bản:**
-- Độ dài: ${wordCount} từ
-- Phong cách giảng dạy: ${teachingStyle}
-- Thời lượng: ${formatDuration(duration)}
-
-**Mục tiêu bài học:**
-1. Hiểu được nội dung chính của văn bản
-2. Phân tích các yếu tố nghệ thuật
-3. Rút ra bài học ý nghĩa từ tác phẩm
-
-## 2. PHÂN TÍCH VĂN BẢN (${Math.round(duration * 0.6)} phút)
-
-### A. Nội dung chính
-- **Ý tưởng trung tâm:** Từ văn bản ${wordCount} từ, có thể xác định chủ đề chính là...
-- **Thông điệp:** Tác giả muốn truyền tải thông điệp về...
-
-### B. Đặc điểm nghệ thuật
-- **Ngôn ngữ:** Sử dụng ngôn ngữ ${wordCount < 200 ? 'giản dị, gần gũi' : 'phong phú, đa dạng'}
-- **Biện pháp tu từ:** Có thể có các biện pháp như so sánh, ẩn dụ, nhân hóa
-- **Bố cục:** Văn bản được tổ chức theo cấu trúc phù hợp
-
-${addExamples ? `
-### C. Ví dụ minh họa
-- **Ví dụ 1:** Phân tích một đoạn tiêu biểu trong văn bản
-- **Ví dụ 2:** So sánh với tác phẩm cùng thể loại
-` : ''}
-
-## 3. HOẠT ĐỘNG HỌC TẬP (${Math.round(duration * 0.2)} phút)
-
-${addDiscussion ? `
-### A. Thảo luận nhóm
-**Câu hỏi thảo luận:**
-1. Theo bạn, thông điệp quan trọng nhất của văn bản là gì?
-2. Phân tích một chi tiết nghệ thuật đặc sắc trong văn bản
-3. Bài học nào có thể áp dụng vào cuộc sống hiện tại?
-
-**Hướng dẫn thảo luận:**
-- Chia lớp thành 4 nhóm, mỗi nhóm 5-6 học sinh
-- Thời gian thảo luận: 15 phút
-- Đại diện nhóm trình bày: 5 phút/nhóm
-` : ''}
-
-${addHomework ? `
-### B. Bài tập về nhà
-1. **Bài tập cơ bản:** Viết đoạn văn (200 chữ) nêu cảm nhận về văn bản
-2. **Bài tập nâng cao:** Phân tích giá trị nhân văn trong tác phẩm
-3. **Bài tập sáng tạo:** Viết một đoạn văn có chủ đề tương tự
-` : ''}
-
-## 4. TỔNG KẾT (${Math.round(duration * 0.05)} phút)
-
-**Những điểm chính cần ghi nhớ:**
-1. Nội dung cốt lõi của văn bản
-2. Giá trị nghệ thuật đặc sắc
-3. Ý nghĩa thực tiễn
-
-**Đánh giá kết quả học tập:**
-- Hiểu bài: 80%
-- Vận dụng: 70%
-- Sáng tạo: 60%
-    `;
-    
-    return sampleContent;
-}
-
-// Hàm tạo đề thi mẫu khi API bị lỗi
-function createSampleExam(inputText) {
-    const wordCount = countWords(inputText);
-    const examCode = generateExamCode();
-    
-    return {
-        title: "ĐỀ THI NGỮ VĂN (MẪU)",
-        description: "Đề thi được tạo tự động từ văn bản. Lưu ý: Đang sử dụng chế độ mẫu do API gặp sự cố.",
-        blocks: [
-            {
-                type: "text",
-                title: "Phần I: ĐỌC HIỂU",
-                content: `Đọc đoạn văn sau (khoảng ${wordCount} từ) và trả lời các câu hỏi:\n\n"${inputText.substring(0, 500)}..."`,
-                points: 0
-            },
-            {
-                type: "question",
-                title: "Câu hỏi 1",
-                content: "**Nêu nội dung chính** của đoạn văn trên?",
-                points: 2.0
-            },
-            {
-                type: "question",
-                title: "Câu hỏi 2",
-                content: "*Phân tích* một biện pháp nghệ thuật được sử dụng trong đoạn văn?",
-                points: 2.0
-            },
-            {
-                type: "text",
-                title: "Phần II: LÀM VĂN",
-                content: "Viết bài văn nghị luận phân tích giá trị của văn bản.",
-                points: 0
-            },
-            {
-                type: "question",
-                title: "Câu hỏi 3",
-                content: "__Viết bài văn__ (khoảng 600 chữ) trình bày suy nghĩ của em về thông điệp của tác phẩm.",
-                points: 6.0
-            }
-        ]
-    };
-}
-
 // Hàm gọi API Gemini với timeout và retry
-async function fetchGemini(prompt, maxRetries = 2) { // Giảm số lần retry
-    // Kiểm tra API key trước
-    const apiStatus = checkAPIStatus();
-    if (!apiStatus.valid) {
-        throw new Error(`API Key không hợp lệ: ${apiStatus.message}`);
-    }
-    
+async function fetchGemini(prompt, maxRetries = 3) {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Request timeout after 60 seconds')), 60000); // Giảm timeout
+                setTimeout(() => reject(new Error('Request timeout after 90 seconds')), 90000);
             });
             
             const fetchPromise = fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
@@ -291,7 +142,7 @@ async function fetchGemini(prompt, maxRetries = 2) { // Giảm số lần retry
                         parts: [{ text: prompt }] 
                     }],
                     generationConfig: {
-                        maxOutputTokens: 4000, // Giảm output tokens
+                        maxOutputTokens: 8000,
                         temperature: 0.7,
                         topP: 0.95,
                         topK: 40,
@@ -300,10 +151,6 @@ async function fetchGemini(prompt, maxRetries = 2) { // Giảm số lần retry
             });
             
             const response = await Promise.race([fetchPromise, timeoutPromise]);
-            
-            if (response.status === 429) {
-                throw new Error('API quota exceeded (429 Too Many Requests). Vui lòng thử lại sau ít phút hoặc kiểm tra API key.');
-            }
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -327,20 +174,10 @@ async function fetchGemini(prompt, maxRetries = 2) { // Giảm số lần retry
             console.error(`Attempt ${attempt} failed:`, error);
             
             if (attempt === maxRetries) {
-                // Phân loại lỗi để thông báo chi tiết hơn
-                let errorMessage = error.message;
-                if (error.message.includes('429')) {
-                    errorMessage = 'API key đã vượt quá giới hạn sử dụng (429 Too Many Requests). Vui lòng: 1. Kiểm tra lại API key, 2. Đợi ít phút rồi thử lại, 3. Sử dụng chế độ mẫu bên dưới.';
-                } else if (error.message.includes('timeout')) {
-                    errorMessage = 'Kết nối quá thời gian chờ. Vui lòng thử lại với văn bản ngắn hơn.';
-                } else if (error.message.includes('quota')) {
-                    errorMessage = 'API key đã hết hạn mức sử dụng. Vui lòng kiểm tra lại API key hoặc đợi đến chu kỳ mới.';
-                }
-                
-                throw new Error(errorMessage);
+                throw new Error(`Failed after ${maxRetries} attempts: ${error.message}`);
             }
             
-            await new Promise(resolve => setTimeout(resolve, 3000 * attempt)); // Tăng thời gian chờ giữa các lần retry
+            await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
         }
     }
 }
@@ -554,50 +391,76 @@ function createDetailedPrompt(inputText, duration, teachingStyle, addDiscussion,
     const conclusionTime = Math.round(duration * 0.1);
     const discussionTime = addDiscussion ? Math.round(duration * 0.1) : 0;
     
-    // Giảm độ dài prompt
-    const shortenedText = inputText.length > 1500 ? inputText.substring(0, 1500) + "..." : inputText;
-    
-    return `BẠN LÀ: Một giáo viên văn học giàu kinh nghiệm.
+    return `BẠN LÀ: Một giáo viên văn học giàu kinh nghiệm, chuyên tạo bài giảng chất lượng cao.
 
-NHIỆM VỤ: Tạo bài giảng chi tiết.
+NHIỆM VỤ: Tạo một bài giảng chi tiết, có cấu trúc rõ ràng, đầy đủ thông tin.
 
-VĂN BẢN CẦN GIẢNG DẠY (tóm tắt):
-${shortenedText}
+VĂN BẢN CẦN GIẢNG DẠY:
+"""
+${inputText}
+"""
 
-THÔNG TIN:
+THÔNG TIN BÀI GIẢNG:
 - Thể loại: ${textType}
-- Tác giả: ${authorInfo.substring(0, 100)}
-- Thời lượng: ${duration} phút
-- Phong cách: ${teachingStyle}
-- Thảo luận: ${addDiscussion ? 'CÓ' : 'KHÔNG'}
+- Tác giả/Tác phẩm: ${authorInfo}
+- Thời lượng tổng: ${duration} phút (${formatDuration(duration)})
+- Phong cách giảng dạy: ${teachingStyle}
+- Có hoạt động thảo luận: ${addDiscussion ? 'CÓ' : 'KHÔNG'}
+- Có bài tập về nhà: ${addHomework ? 'CÓ' : 'KHÔNG'}
+- Có ví dụ minh họa: ${addExamples ? 'CÓ' : 'KHÔNG'}
 
-YÊU CẦU:
-1. Bài giảng HOÀN CHỈNH, không bị cắt
-2. Dùng Markdown đơn giản
-3. Có thời gian cho từng phần
-4. KHÔNG dùng --- hoặc *** để ngăn cách
+YÊU CẦU ĐẦU RA:
+1. Tạo bài giảng HOÀN CHỈNH, KHÔNG BỊ CẮT NGANG
+2. Sử dụng cấu trúc Markdown rõ ràng
+3. Thêm thời gian cụ thể cho từng phần
+4. Sử dụng **in đậm** cho các tiêu đề phụ
+5. Sử dụng dấu gạch đầu dòng (-) cho các ý chi tiết
+6. Sử dụng số thứ tự (1., 2., 3.) cho các phần chính
+7. KHÔNG sử dụng --- hoặc *** để ngăn cách
+8. Đảm bảo bài giảng có đầy đủ:
+   - Giới thiệu
+   - Nội dung chính
+   - Kết luận
+   - Hoạt động (nếu có)
 
-CẤU TRÚC:
+CẤU TRÚC BÀI GIẢNG:
 
-1. GIỚI THIỆU (${introTime} phút)
-   - Giới thiệu tác giả
+1. GIỚI THIỆU BÀI HỌC (${introTime} phút)
+   - Giới thiệu tác giả, hoàn cảnh sáng tác
+   - Vị trí tác phẩm trong nền văn học
    - Mục tiêu bài học
 
-2. NỘI DUNG CHÍNH (${mainTime} phút)
-   ${getStructureByGenre(textType).substring(0, 300)}
+2. TÌM HIỂU VĂN BẢN (${mainTime} phút)
+   ${getStructureByGenre(textType)}
 
-3. KẾT LUẬN (${conclusionTime} phút)
-   - Tổng kết giá trị
+3. TỔNG KẾT (${conclusionTime} phút)
+   - Khái quát giá trị tác phẩm
    - Bài học rút ra
+   - Liên hệ thực tế
 
-${addDiscussion ? `4. THẢO LUẬN (${discussionTime} phút)
-   - Câu hỏi thảo luận` : ''}
+${addDiscussion ? `4. HOẠT ĐỘNG THẢO LUẬN (${discussionTime} phút)
+   - Câu hỏi thảo luận nhóm
+   - Hướng dẫn tổ chức
+   - Gợi ý thảo luận` : ''}
 
-${addHomework ? `5. BÀI TẬP
-   - Bài tập cơ bản` : ''}`;
+${addHomework ? `5. BÀI TẬP VỀ NHÀ
+   - Bài tập củng cố
+   - Bài tập mở rộng
+   - Bài tập sáng tạo` : ''}
+
+${addExamples ? `6. VÍ DỤ MINH HỌA
+   - Ví dụ cụ thể
+   - Phân tích ví dụ
+   - Ứng dụng thực tế` : ''}
+
+LƯU Ý QUAN TRỌNG:
+- Trả lời ĐẦY ĐỦ, KHÔNG BỎ DỞ GIỮA CHỪNG
+- Kết thúc bằng dấu chấm đầy đủ
+- Đảm bảo tính logic, mạch lạc
+- Phù hợp với học sinh phổ thông`;
 }
 
-// Hàm tạo nội dung giảng dạy (bài giảng + đề thi) với fallback
+// Hàm tạo nội dung giảng dạy (bài giảng + đề thi)
 async function generateTeachingContent() {
     const inputText = document.getElementById('inputText').value.trim();
     const generateBtn = document.getElementById('generateAllBtn');
@@ -654,178 +517,91 @@ async function generateTeachingContent() {
         };
 
         // Thêm tiến trình cho cả bài giảng và đề thi
-        addProgressItem('Kiểm tra API và kết nối');
         addProgressItem('Phân tích thể loại văn bản');
+        addProgressItem('Xác định tác giả và tác phẩm');
         addProgressItem('Tạo bài giảng chi tiết');
         addProgressItem('Tạo đề thi');
         addProgressItem('Hoàn thiện nội dung');
 
-        // 0. Kiểm tra API
-        const apiStatus = checkAPIStatus();
-        if (!apiStatus.valid) {
-            throw new Error(apiStatus.message);
-        }
+        // 1. Phân tích thể loại văn bản
+        const textTypeResponse = await fetchGemini(
+            `Xác định thể loại chính xác của văn bản sau (chỉ trả về 1-3 từ): "${inputText.substring(0, 800)}"`
+        );
+        const textType = textTypeResponse.trim().replace(/^["']|["']$/g, '');
         completeProgressItem(0);
 
-        let textType = "Văn bản văn học";
-        let authorResponse = "Tác giả: Chưa xác định\nTác phẩm: Văn bản người dùng cung cấp";
-        let teachingPlan = "";
-        let examData = null;
-        
-        let useFallbackMode = false;
-        
-        try {
-            // 1. Phân tích thể loại văn bản
-            const textTypeResponse = await fetchGemini(
-                `Xác định thể loại của văn bản sau (trả về 1-3 từ): "${inputText.substring(0, 500)}"`
-            );
-            textType = textTypeResponse.trim().replace(/^["']|["']$/g, '') || "Văn bản văn học";
-            completeProgressItem(1);
-
-            // 2. Xác định tác giả và tác phẩm
-            const authorPrompt = `Từ văn bản sau, xác định:
+        // 2. Xác định tác giả và tác phẩm
+        const authorPrompt = `Từ văn bản sau, xác định:
 1. Tác giả (nếu biết): 
 2. Tên tác phẩm (nếu biết):
+3. Thời kỳ/trào lưu (nếu biết):
 
-Văn bản: "${inputText.substring(0, 500)}"
+Văn bản: "${inputText.substring(0, 800)}"
 
 Trả lời ngắn gọn, mỗi thông tin một dòng.`;
-            
-            authorResponse = await fetchGemini(authorPrompt);
-            completeProgressItem(2);
+        
+        const authorResponse = await fetchGemini(authorPrompt);
+        completeProgressItem(1);
 
-            // 3. Tạo bài giảng chi tiết
-            const detailedPrompt = createDetailedPrompt(
-                inputText, 
-                duration, 
-                teachingStyle, 
-                addDiscussion, 
-                addHomework, 
-                addExamples,
-                textType,
-                authorResponse
-            );
-            
-            teachingPlan = await fetchGemini(detailedPrompt);
-            completeProgressItem(3);
+        // 3. Tạo bài giảng chi tiết
+        const detailedPrompt = createDetailedPrompt(
+            inputText, 
+            duration, 
+            teachingStyle, 
+            addDiscussion, 
+            addHomework, 
+            addExamples,
+            textType,
+            authorResponse
+        );
+        
+        const teachingPlan = await fetchGemini(detailedPrompt);
+        completeProgressItem(2);
 
-            // 4. Tạo đề thi
-            examData = await generateExamWithGemini(inputText);
-            completeProgressItem(4);
-
-        } catch (apiError) {
-            console.warn('API gặp sự cố, sử dụng chế độ mẫu:', apiError);
-            useFallbackMode = true;
-            
-            // Đánh dấu tất cả các mục tiến trình là lỗi
-            for (let i = 1; i < generationProgress.items.length; i++) {
-                if (generationProgress.items[i].status === 'pending') {
-                    errorProgressItem(i);
-                }
-            }
-            
-            // Sử dụng nội dung mẫu
-            teachingPlan = createSampleContent(inputText, duration, teachingStyle, addDiscussion, addHomework, addExamples);
-            examData = createSampleExam(inputText);
-            
-            // Hiển thị cảnh báo về chế độ mẫu
-            showNotification('Đang sử dụng chế độ mẫu do API gặp sự cố. Nội dung có thể không chi tiết như mong đợi.', 'warning');
-        }
+        // 4. Tạo đề thi
+        const examData = await generateExamWithGemini(inputText);
+        completeProgressItem(3);
 
         // 5. Format và hiển thị kết quả
-        const lessonPlan = formatTeachingResult(teachingPlan, duration, textType, authorResponse, teachingNotes, useFallbackMode);
+        const lessonPlan = formatTeachingResult(teachingPlan, duration, textType, authorResponse, teachingNotes);
         document.getElementById('teachingResult').innerHTML = lessonPlan;
         setupLessonActions();
 
-        showExamResult(examData, examNotes, useFallbackMode);
-        
-        if (!useFallbackMode) {
-            completeProgressItem(4);
-        }
+        showExamResult(examData, examNotes);
+        completeProgressItem(4);
 
         // Hiển thị kết quả tabs
         resultTabs.style.display = 'block';
-        
-        if (useFallbackMode) {
-            showNotification('Tạo nội dung thành công (chế độ mẫu)! Vui lòng kiểm tra API key nếu muốn sử dụng tính năng đầy đủ.', 'warning');
-        } else {
-            showNotification('Tạo nội dung giảng dạy thành công!', 'success');
-        }
+        showNotification('Tạo nội dung giảng dạy thành công!', 'success');
 
     } catch (error) {
         console.error('Lỗi khi tạo nội dung:', error);
         
         let errorMessage = 'Đã xảy ra lỗi khi tạo nội dung. ';
-        
-        if (error.message.includes('429') || error.message.includes('quota')) {
-            errorMessage = 'API key đã vượt quá giới hạn sử dụng. ';
-            errorMessage += 'Vui lòng: 1. Kiểm tra lại API key, 2. Đợi ít phút, 3. Sử dụng chế độ mẫu bằng cách nhấn nút "Tạo Nội Dung Giảng Dạy" lần nữa.';
-            
-            // Hiển thị nút tạo nội dung mẫu
-            document.getElementById('teachingResult').innerHTML = `
-                <div class="analysis-section">
-                    <h2><i class="fas fa-exclamation-triangle"></i> Lỗi API Key</h2>
-                    <div class="highlight-box">
-                        <h4><i class="fas fa-info-circle"></i> Thông tin lỗi</h4>
-                        <p>${errorMessage}</p>
-                        
-                        <div style="margin-top: 20px; padding: 15px; background: rgba(227, 124, 45, 0.1); border-radius: 8px; border-left: 4px solid var(--primary-color);">
-                            <h4 style="color: var(--primary-color); margin-top: 0;"><i class="fas fa-lightbulb"></i> Giải pháp tạm thời</h4>
-                            <p>Bạn có thể sử dụng chế độ mẫu để tạo bài giảng cơ bản:</p>
-                            <button id="useSampleModeBtn" class="action-btn" style="background: linear-gradient(135deg, #FF9800, #F57C00); margin-top: 10px;">
-                                <i class="fas fa-magic mr-2"></i> Sử dụng chế độ mẫu
-                            </button>
-                        </div>
-                        
-                        <div style="margin-top: 20px;">
-                            <h4><i class="fas fa-key"></i> Hướng dẫn sửa API Key</h4>
-                            <ol>
-                                <li>Truy cập <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></li>
-                                <li>Tạo API key mới</li>
-                                <li>Thay thế API key hiện tại trong file vangv.js</li>
-                                <li>Làm mới trang và thử lại</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Thêm sự kiện cho nút sử dụng chế độ mẫu
-            setTimeout(() => {
-                const sampleBtn = document.getElementById('useSampleModeBtn');
-                if (sampleBtn) {
-                    sampleBtn.addEventListener('click', function() {
-                        // Tạo nội dung mẫu ngay lập tức
-                        generateSampleContent();
-                    });
-                }
-            }, 100);
-            
-        } else if (error.message.includes('timeout')) {
-            errorMessage += 'Yêu cầu mất quá nhiều thời gian. Vui lòng thử lại với văn bản ngắn hơn hoặc kiểm tra kết nối mạng.';
+        if (error.message.includes('timeout')) {
+            errorMessage += 'Yêu cầu mất quá nhiều thời gian. Vui lòng thử lại với văn bản ngắn hơn.';
+        } else if (error.message.includes('Failed after')) {
+            errorMessage += 'Không thể kết nối đến AI. Vui lòng kiểm tra kết nối internet và thử lại.';
         } else {
             errorMessage += error.message;
         }
         
-        if (!error.message.includes('429')) {
-            document.getElementById('teachingResult').innerHTML = `
-                <div class="analysis-section">
-                    <h2><i class="fas fa-exclamation-triangle"></i> Lỗi khi tạo nội dung</h2>
-                    <div class="highlight-box">
-                        <h4><i class="fas fa-info-circle"></i> Thông tin lỗi</h4>
-                        <p>${errorMessage}</p>
-                        <p><strong>Gợi ý:</strong></p>
-                        <ul>
-                            <li>Kiểm tra kết nối internet</li>
-                            <li>Thử lại với văn bản ngắn hơn (dưới 500 từ)</li>
-                            <li>Đảm bảo văn bản có ít nhất 10 từ</li>
-                            <li>Thử lại sau vài phút</li>
-                            <li>Kiểm tra API key trong file vangv.js</li>
-                        </ul>
-                    </div>
+        document.getElementById('teachingResult').innerHTML = `
+            <div class="analysis-section">
+                <h2><i class="fas fa-exclamation-triangle"></i> Lỗi khi tạo nội dung</h2>
+                <div class="highlight-box">
+                    <h4><i class="fas fa-info-circle"></i> Thông tin lỗi</h4>
+                    <p>${errorMessage}</p>
+                    <p><strong>Gợi ý:</strong></p>
+                    <ul>
+                        <li>Kiểm tra kết nối internet</li>
+                        <li>Thử lại với văn bản ngắn hơn</li>
+                        <li>Đảm bảo văn bản có ít nhất 50 từ</li>
+                        <li>Thử lại sau vài phút</li>
+                    </ul>
                 </div>
-            `;
-        }
+            </div>
+        `;
         
         showNotification(errorMessage, 'error');
         
@@ -837,42 +613,6 @@ Trả lời ngắn gọn, mỗi thông tin một dòng.`;
         generateBtn.disabled = false;
         generateBtn.innerHTML = '<i class="fas fa-chalkboard-teacher mr-2"></i> Tạo Nội Dung Giảng Dạy';
     }
-}
-
-// Hàm tạo nội dung mẫu
-function generateSampleContent() {
-    const inputText = document.getElementById('inputText').value.trim();
-    const duration = parseInt(document.getElementById('durationSlider').value);
-    const teachingStyle = document.getElementById('teachingStyle').value;
-    const addDiscussion = document.getElementById('discussionToggle').checked;
-    const addHomework = document.getElementById('homeworkToggle').checked;
-    const addExamples = document.getElementById('exampleToggle').checked;
-    const teachingNotes = document.getElementById('teachingNotes').value;
-    const examNotes = document.getElementById('examNotes').value;
-    
-    if (!inputText) {
-        showNotification('Vui lòng nhập nội dung văn bản trước!', 'error');
-        return;
-    }
-    
-    // Tạo nội dung mẫu
-    const teachingPlan = createSampleContent(inputText, duration, teachingStyle, addDiscussion, addHomework, addExamples);
-    const examData = createSampleExam(inputText);
-    
-    // Hiển thị kết quả
-    const lessonPlan = formatTeachingResult(teachingPlan, duration, "Văn bản mẫu", "Tác giả: Mẫu\nTác phẩm: Văn bản người dùng", teachingNotes, true);
-    document.getElementById('teachingResult').innerHTML = lessonPlan;
-    document.getElementById('resultTabs').style.display = 'block';
-    
-    // Kích hoạt tab bài giảng
-    document.querySelector('[data-tab="teaching-result"]').click();
-    
-    showExamResult(examData, examNotes, true);
-    
-    showNotification('Đã tạo nội dung mẫu thành công!', 'success');
-    
-    // Setup lại các nút action
-    setupLessonActions();
 }
 
 // Hàm parse thông tin tác giả
@@ -911,22 +651,9 @@ function parseAuthorInfo(authorResponse) {
 }
 
 // Hàm format kết quả bài giảng
-function formatTeachingResult(plan, duration, genre, authorResponse, teachingNotes, isFallback = false) {
+function formatTeachingResult(plan, duration, genre, authorResponse, teachingNotes) {
     const formattedPlan = parseAndFormatContent(plan);
     const authorInfo = parseAuthorInfo(authorResponse);
-    
-    const fallbackNotice = isFallback ? `
-        <div class="highlight-box" style="border-color: #ff9800; background: rgba(255, 152, 0, 0.1);">
-            <h4><i class="fas fa-exclamation-triangle" style="color: #ff9800;"></i> Đang sử dụng chế độ mẫu</h4>
-            <p>Nội dung này được tạo bằng chế độ mẫu do API gặp sự cố. Để có nội dung chi tiết hơn, vui lòng:</p>
-            <ol>
-                <li>Kiểm tra API key trong file vangv.js</li>
-                <li>Đảm bảo API key còn hiệu lực</li>
-                <li>Thử lại sau ít phút</li>
-            </ol>
-            <p style="margin-top: 10px; font-weight: bold;">Bạn vẫn có thể chỉnh sửa, lưu và in bài giảng này.</p>
-        </div>
-    ` : '';
     
     const authorInfoHTML = `
         <div class="author-info-section">
@@ -969,10 +696,8 @@ function formatTeachingResult(plan, duration, genre, authorResponse, teachingNot
     }
     
     return `
-        ${fallbackNotice}
-        
         <div class="lesson-header">
-            <h2><i class="fas fa-chalkboard-teacher"></i> KẾ HOẠCH BÀI GIẢNG VĂN HỌC ${isFallback ? '(MẪU)' : ''}</h2>
+            <h2><i class="fas fa-chalkboard-teacher"></i> KẾ HOẠCH BÀI GIẢNG VĂN HỌC</h2>
             <div class="lesson-meta">
                 <span class="meta-item"><i class="fas fa-clock"></i> ${formatDuration(duration)}</span>
                 <span class="meta-item"><i class="fas fa-book"></i> ${genre}</span>
@@ -1012,35 +737,68 @@ function formatTeachingResult(plan, duration, genre, authorResponse, teachingNot
     `;
 }
 
-// Hàm tạo đề thi với Gemini (có fallback)
+// Hàm tạo đề thi với Gemini
 async function generateExamWithGemini(text) {
-    // Sử dụng text ngắn hơn để tránh quá tải
-    const shortText = text.length > 1000 ? text.substring(0, 1000) + "..." : text;
-    
     const prompt = `
-        Tạo đề thi Ngữ Văn ngắn gọn:
+        Tạo một đề thi Ngữ Văn dựa trên thông tin sau:
         
-        VĂN BẢN: ${shortText}
+        VĂN BẢN TÁC PHẨM: ${text.substring(0, 1500)}
         
-        THÔNG TIN:
+        THÔNG TIN ĐỀ THI:
         - Thời gian: ${examSettings.time} phút
         - Độ khó: ${examSettings.difficulty}
         - Khối lớp: ${examSettings.grade}
+        - Số câu hỏi: ${examSettings.questionCount}
+        - Phần đọc hiểu: ${examSettings.hasReading ? 'CÓ' : 'KHÔNG'}
+        - Phần nghị luận: ${examSettings.hasEssay ? 'CÓ' : 'KHÔNG'}
+        - Phần liên hệ thực tế: ${examSettings.hasPractice ? 'CÓ' : 'KHÔNG'}
         
         YÊU CẦU:
-        1. Tạo 3-4 câu hỏi
-        2. Dùng Markdown đơn giản
-        3. Trả về JSON đơn giản
-        
-        Định dạng JSON:
+        1. Tạo đề thi hoàn chỉnh với cấu trúc phù hợp
+        2. Sử dụng Markdown để định dạng:
+           - **text** cho in đậm
+           - *text* cho in nghiêng
+           - __text__ cho gạch chân
+           - # Tiêu đề lớn
+           - ## Tiêu đề nhỏ
+           - - hoặc * cho danh sách
+           - 1. 2. 3. cho danh sách có thứ tự
+        3. Định dạng trả về JSON như sau:
         {
-            "title": "ĐỀ THI NGỮ VĂN",
-            "description": "Mô tả ngắn",
+            "title": "Tiêu đề đề thi",
+            "description": "Mô tả ngắn về đề thi",
             "blocks": [
-                {"type": "text", "title": "Phần I", "content": "Nội dung", "points": 0},
-                {"type": "question", "title": "Câu 1", "content": "Câu hỏi?", "points": 2.0}
+                {
+                    "type": "text",
+                    "title": "Phần I: ĐỌC HIỂU",
+                    "content": "Đoạn văn bản cho phần đọc hiểu...",
+                    "points": 0
+                },
+                {
+                    "type": "question",
+                    "title": "Câu hỏi 1",
+                    "content": "Nêu nội dung chính của đoạn văn trên?",
+                    "points": 1.0
+                },
+                {
+                    "type": "text",
+                    "title": "Phần II: LÀM VĂN",
+                    "content": "Phần làm văn...",
+                    "points": 0
+                },
+                {
+                    "type": "question",
+                    "title": "Câu hỏi 2",
+                    "content": "Viết bài văn nghị luận về...",
+                    "points": 5.0
+                }
             ]
         }
+        
+        4. Tổng điểm: 10 điểm
+        5. Câu hỏi phù hợp với độ khó và khối lớp
+        6. Có hướng dẫn làm bài rõ ràng
+        7. Sử dụng định dạng markdown đúng cách để hỗ trợ hiển thị đẹp
     `;
 
     try {
@@ -1056,7 +814,7 @@ async function generateExamWithGemini(text) {
                     }]
                 }],
                 generationConfig: {
-                    maxOutputTokens: 2000, // Giảm output
+                    maxOutputTokens: 8000,
                     temperature: 0.7,
                     topP: 0.95,
                     topK: 40,
@@ -1064,17 +822,10 @@ async function generateExamWithGemini(text) {
             })
         });
 
-        if (!response.ok) {
-            if (response.status === 429) {
-                throw new Error('API quota exceeded. Using sample exam.');
-            }
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
         const data = await response.json();
         
-        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts || !data.candidates[0].content.parts[0]) {
-            throw new Error('Invalid response format');
+        if (!response.ok) {
+            throw new Error(data.error?.message || 'Lỗi từ API');
         }
 
         const resultText = data.candidates[0].content.parts[0].text;
@@ -1083,26 +834,47 @@ async function generateExamWithGemini(text) {
         if (jsonMatch) {
             return JSON.parse(jsonMatch[0]);
         } else {
-            throw new Error('No valid JSON found in response');
+            // Fallback nếu không parse được JSON
+            return {
+                title: "ĐỀ THI NGỮ VĂN",
+                description: "Đề thi được tạo tự động từ văn bản tác phẩm",
+                blocks: [
+                    {
+                        type: "text",
+                        title: "Phần I: ĐỌC HIỂU",
+                        content: text.substring(0, 500),
+                        points: 0
+                    },
+                    {
+                        type: "question",
+                        title: "Câu hỏi 1",
+                        content: "**Nêu nội dung chính** của đoạn văn trên?",
+                        points: 1.0
+                    },
+                    {
+                        type: "text",
+                        title: "Phần II: LÀM VĂN",
+                        content: "Viết bài văn nghị luận phân tích tác phẩm.",
+                        points: 0
+                    },
+                    {
+                        type: "question",
+                        title: "Câu hỏi 2",
+                        content: "*Phân tích* giá trị nghệ thuật và nội dung của tác phẩm.",
+                        points: 5.0
+                    }
+                ]
+            };
         }
     } catch (error) {
-        console.warn('Failed to generate exam with Gemini:', error);
-        // Fallback to sample exam
-        return createSampleExam(text);
+        throw new Error('Lỗi kết nối với Gemini API: ' + error.message);
     }
 }
 
 // Hàm hiển thị kết quả đề thi
-function showExamResult(examData, examNotes, isFallback = false) {
+function showExamResult(examData, examNotes) {
     currentExamBlocks = examData.blocks || [];
     currentExamCode = generateExamCode();
-    
-    const fallbackNotice = isFallback ? `
-        <div class="highlight-box" style="border-color: #ff9800; background: rgba(255, 152, 0, 0.1); margin-bottom: 20px;">
-            <h4><i class="fas fa-exclamation-triangle" style="color: #ff9800;"></i> Đề thi mẫu</h4>
-            <p>Đề thi này được tạo bằng chế độ mẫu. Bạn vẫn có thể chỉnh sửa, lưu và in đề thi.</p>
-        </div>
-    ` : '';
     
     let examNotesHTML = '';
     if (examNotes.trim()) {
@@ -1115,8 +887,6 @@ function showExamResult(examData, examNotes, isFallback = false) {
     }
     
     let previewHTML = `
-        ${fallbackNotice}
-        
         <div class="exam-header">
             <h3><i class="fas fa-file-alt mr-2"></i> ${examData.title || 'ĐỀ THI NGỮ VĂN'}</h3>
             <div class="exam-code">
@@ -2918,14 +2688,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Firestore Database đã sẵn sàng để lưu đề thi');
     }
 
-    // Kiểm tra API key và hiển thị cảnh báo nếu cần
-    setTimeout(() => {
-        const apiStatus = checkAPIStatus();
-        if (!apiStatus.valid) {
-            showNotification(`Cảnh báo: ${apiStatus.message} Vui lòng cập nhật API key trong file vangv.js`, 'warning');
-        }
-    }, 2000);
-
 });
-
-
