@@ -110,9 +110,7 @@
     background-color: var(--card-bg);
     border-bottom: 2px solid var(--border-color);
     flex-shrink: 0;
-    overflow: visible; /* SỬA: đổi từ hidden sang visible để danh sách gợi ý không bị cắt */
-    position: relative;
-    z-index: 10000; /* SỬA: tăng z-index cao để phần cố định luôn nằm trên phần cuộn bên dưới */
+    overflow: hidden; /* Đảm bảo không tràn */
 }
 
 .map-scrollable-content {
@@ -120,14 +118,11 @@
     overflow-y: auto;
     padding-right: 5px;
     min-height: 200px;
-    position: relative;
-    z-index: 1; /* z-index thấp hơn phần fixed để bị đè khi cần */
 }
 
 .search-container {
     margin-bottom: 15px;
     position: relative;
-    z-index: 10001; /* SỬA: tăng cao hơn để container tìm kiếm nằm trên */
 }
 
 .search-input {
@@ -438,8 +433,6 @@
     padding: 15px;
     background-color: var(--card-bg);
     min-height: 200px; /* Đảm bảo chiều cao tối thiểu */
-    position: relative;
-    z-index: 1;
 }
 
 .info-section {
@@ -594,7 +587,7 @@
     pointer-events: none !important;
 }
 
-/* Suggestion styles - ĐÃ SỬA LỖI: Gợi ý sẽ luôn nằm trên phần hiển thị thông tin */
+/* Suggestion styles */
 .suggestions {
     position: absolute;
     top: 100%;
@@ -604,11 +597,10 @@
     border: 2px solid var(--border-color);
     border-radius: 8px;
     box-shadow: var(--shadow);
-    z-index: 10002; /* SỬA: Tăng z-index cao nhất để gợi ý LUÔN đè lên phần hiển thị thông tin */
+    z-index: 1001;
     display: none;
     max-height: 250px;
     overflow-y: auto;
-    margin-top: 5px; /* Thêm khoảng cách nhẹ để đẹp hơn */
 }
 
 .suggestion-item {
@@ -649,29 +641,6 @@
     }
 }
 
-/* Thêm animation cho notification */
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slideOut {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-}
-
 /* Responsive */
 @media (max-width: 768px) {
     .map-sidebar {
@@ -689,20 +658,6 @@
         font-size: 0.9rem;
     }
     
-    /* FIXED: Cập nhật vị trí nút toggle trên màn hình nhỏ */
-    .sidebar-toggle-btn {
-        transition: left 0.3s ease;
-    }
-    
-    .map-sidebar.hidden ~ .sidebar-toggle-btn {
-        left: 0;
-    }
-    
-    .map-sidebar:not(.hidden) ~ .sidebar-toggle-btn {
-        left: 50%;
-        max-left: 300px;
-    }
-    
     .location-controls {
         flex-direction: column;
     }
@@ -714,47 +669,4 @@
     .advanced-search-panel {
         max-height: 400px;
     }
-    
-    .map-fixed-controls {
-        padding: 10px;
-    }
-    
-    .search-input {
-        padding: 10px 12px;
-        font-size: 0.9rem;
-    }
-    
-    .control-btn {
-        padding: 10px;
-        font-size: 0.8rem;
-    }
-    
-    .info-section {
-        padding: 10px;
-    }
-}
-
-/* THÊM THANH CUỘN CHO PHẦN HIỂN THỊ THÔNG TIN */
-.map-scrollable-content {
-    max-height: 500px !important;
-    overflow-y: auto !important;
-}
-
-/* THÊM THANH CUỘN CUSTOM */
-.map-scrollable-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.map-scrollable-content::-webkit-scrollbar-track {
-    background: rgba(227, 124, 45, 0.1);
-    border-radius: 4px;
-}
-
-.map-scrollable-content::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 4px;
-}
-
-.map-scrollable-content::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-color);
 }
