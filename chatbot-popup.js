@@ -750,4 +750,3 @@ document.addEventListener('DOMContentLoaded', function() {
 // Xuất hàm initChatbot ra global scope
 
 window.initChatbot = initChatbot;
-
