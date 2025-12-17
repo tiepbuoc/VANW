@@ -303,14 +303,14 @@ closePopup.addEventListener('click', function() {
 
 // API Key được lấy trực tiếp từ mã nguồn (không cần đọc file)
 const REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
-const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
+const GEMINI_API_KEY = "AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
 
 const GEMINI_CONFIG = {
     apiKey: GEMINI_API_KEY,
     models: {
-        'flash-lite': 'gemini-2.5-flash',
-        'flash': 'gemini-2.5-flash',
-        'pro': 'gemini-2.5-flash'
+        'flash-lite': 'gemini-2.5-flash-lite',
+        'flash': 'gemini-2.5-flash-lite',
+        'pro': 'gemini-2.5-flash-lite'
     }
 };
 
@@ -1646,3 +1646,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     };
 });
+
