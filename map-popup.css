@@ -114,7 +114,8 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding-right: 5px;
+    padding: 15px;
+    padding-right: 10px;
     min-height: 200px;
     position: relative;
     z-index: 1;
@@ -129,6 +130,7 @@
 .search-input {
     width: 100%;
     padding: 12px 15px;
+    padding-right: 40px;
     border-radius: 8px;
     border: 2px solid var(--card-outline);
     background-color: var(--card-bg);
@@ -154,6 +156,7 @@
     cursor: pointer;
     font-size: 1.1rem;
     padding: 5px;
+    z-index: 10002;
 }
 
 .advanced-search-panel {
@@ -166,6 +169,8 @@
     background-color: rgba(227, 124, 45, 0.1);
     border-radius: 8px;
     border: 2px solid var(--primary-color);
+    position: relative;
+    z-index: 10001;
 }
 
 .advanced-search-panel.active {
@@ -507,6 +512,8 @@
     overflow-x: hidden;
     width: 100%;
     box-sizing: border-box;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .works-list li {
@@ -555,7 +562,8 @@
 .author-info-content::-webkit-scrollbar,
 .short-bio::-webkit-scrollbar,
 .nearby-authors::-webkit-scrollbar,
-.advanced-search-panel::-webkit-scrollbar {
+.advanced-search-panel::-webkit-scrollbar,
+.works-list::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
@@ -565,7 +573,8 @@
 .author-info-content::-webkit-scrollbar-track,
 .short-bio::-webkit-scrollbar-track,
 .nearby-authors::-webkit-scrollbar-track,
-.advanced-search-panel::-webkit-scrollbar-track {
+.advanced-search-panel::-webkit-scrollbar-track,
+.works-list::-webkit-scrollbar-track {
     background: var(--scrollbar-track);
     border-radius: 4px;
     border: 1px solid var(--card-outline);
@@ -576,7 +585,8 @@
 .author-info-content::-webkit-scrollbar-thumb,
 .short-bio::-webkit-scrollbar-thumb,
 .nearby-authors::-webkit-scrollbar-thumb,
-.advanced-search-panel::-webkit-scrollbar-thumb {
+.advanced-search-panel::-webkit-scrollbar-thumb,
+.works-list::-webkit-scrollbar-thumb {
     background: var(--scrollbar-thumb);
     border-radius: 4px;
     border: 1px solid var(--card-outline);
@@ -587,7 +597,8 @@
 .author-info-content::-webkit-scrollbar-thumb:hover,
 .short-bio::-webkit-scrollbar-thumb:hover,
 .nearby-authors::-webkit-scrollbar-thumb:hover,
-.advanced-search-panel::-webkit-scrollbar-thumb:hover {
+.advanced-search-panel::-webkit-scrollbar-thumb:hover,
+.works-list::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover);
 }
 
