@@ -1,8 +1,7 @@
-// API Key - Đã thay bằng key mới
-const REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
-const GEMINI_API_KEY ="AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
 
-// Firebase Configuration
+const REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
+const GEMINI_API_KEY = "AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
+
 const firebaseConfig = {
     apiKey: "AIzaSyBLZpLQKl0x-kMez2v5NURU5qSthT_6qYI",
     authDomain: "loginnn-b1dc0.firebaseapp.com",
@@ -13,17 +12,15 @@ const firebaseConfig = {
     measurementId: "G-XF2ZBFBCR7"
 };
 
-// Initialize Firebase
 let firestoreDb = null;
 try {
     firebase.initializeApp(firebaseConfig);
     firestoreDb = firebase.firestore();
-    console.log("Firebase Firestore initialized successfully");
+    console.log("Firebase Firestore đã được khởi tạo thành công");
 } catch (error) {
-    console.warn("Firebase initialization error (may be already initialized):", error);
+    console.warn("Lỗi khởi tạo Firebase (có thể đã được khởi tạo trước đó):", error);
 }
 
-// Biến toàn cục
 let generationProgress = {
     total: 0,
     completed: 0,
@@ -44,12 +41,10 @@ let examSettings = {
 
 let richTextEditors = [];
 
-// Hàm đếm từ
 function countWords(text) {
     return text.trim().split(/\s+/).filter(word => word.length > 0).length;
 }
 
-// Hàm cập nhật tiến trình
 function updateProgress() {
     const progressFill = document.getElementById('progressFill');
     const progressStatus = document.getElementById('progressStatus');
@@ -87,7 +82,6 @@ function updateProgress() {
     }).join('');
 }
 
-// Hàm thêm mục vào tiến trình
 function addProgressItem(name) {
     generationProgress.items.push({
         name: name,
@@ -97,21 +91,18 @@ function addProgressItem(name) {
     updateProgress();
 }
 
-// Hàm đánh dấu mục hoàn thành
 function completeProgressItem(index) {
     generationProgress.items[index].status = 'completed';
     generationProgress.completed++;
     updateProgress();
 }
 
-// Hàm đánh dấu mục lỗi
 function errorProgressItem(index) {
     generationProgress.items[index].status = 'error';
     generationProgress.completed++;
     updateProgress();
 }
 
-// Hàm format thời gian
 function formatDuration(minutes) {
     if (minutes < 60) {
         return `${minutes} phút`;
@@ -124,12 +115,11 @@ function formatDuration(minutes) {
     }
 }
 
-// Hàm gọi API Gemini với timeout và retry
 async function fetchGemini(prompt, maxRetries = 3) {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Request timeout after 90 seconds')), 90000);
+                setTimeout(() => reject(new Error('Yêu cầu quá thời gian sau 90 giây')), 90000);
             });
             
             const fetchPromise = fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`, {
@@ -153,28 +143,28 @@ async function fetchGemini(prompt, maxRetries = 3) {
             const response = await Promise.race([fetchPromise, timeoutPromise]);
             
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`Lỗi HTTP! status: ${response.status}`);
             }
             
             const data = await response.json();
             if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts || !data.candidates[0].content.parts[0]) {
-                throw new Error('Invalid response format from API');
+                throw new Error('Định dạng phản hồi từ API không hợp lệ');
             }
             
             const result = data.candidates[0].content.parts[0].text.trim();
             
             if (result.length > 0 && !isCompleteResponse(result)) {
-                console.warn('Response appears to be truncated, retrying...');
+                console.warn('Phản hồi có vẻ bị cắt ngắn, thử lại...');
                 if (attempt < maxRetries) continue;
             }
             
             return result;
             
         } catch (error) {
-            console.error(`Attempt ${attempt} failed:`, error);
+            console.error(`Lần thử ${attempt} thất bại:`, error);
             
             if (attempt === maxRetries) {
-                throw new Error(`Failed after ${maxRetries} attempts: ${error.message}`);
+                throw new Error(`Thất bại sau ${maxRetries} lần thử: ${error.message}`);
             }
             
             await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
@@ -182,7 +172,6 @@ async function fetchGemini(prompt, maxRetries = 3) {
     }
 }
 
-// Hàm kiểm tra xem response có bị cắt cụt không
 function isCompleteResponse(text) {
     const incompleteIndicators = [
         /\.\.\.$/,
@@ -207,7 +196,6 @@ function isCompleteResponse(text) {
     return true;
 }
 
-// Hàm parse và format nội dung từ AI
 function parseAndFormatContent(text) {
     if (!text) return '';
     
@@ -299,39 +287,31 @@ function parseAndFormatContent(text) {
     return formatted;
 }
 
-// Hàm chuyển đổi markdown sang HTML cho đề thi
 function markdownToHtml(text) {
     if (!text) return '';
     
     let html = text;
     
-    // Tiêu đề
     html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
     html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
     html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
     
-    // In đậm
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     
-    // In nghiêng
     html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
     
-    // Gạch chân (sử dụng __text__)
     html = html.replace(/__(.*?)__/g, '<u>$1</u>');
     
-    // Danh sách không thứ tự
     html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
     html = html.replace(/(<li>.*<\/li>\n?)+/g, function(match) {
         return '<ul>' + match + '</ul>';
     });
     
-    // Danh sách có thứ tự
     html = html.replace(/^\d+\. (.*$)/gm, '<li>$1</li>');
     html = html.replace(/(<li>.*<\/li>\n?)+/g, function(match) {
         return '<ol>' + match + '</ol>';
     });
     
-    // Đoạn văn
     const lines = html.split('\n');
     html = '';
     let inParagraph = false;
@@ -363,13 +343,11 @@ function markdownToHtml(text) {
         html += '</p>';
     }
     
-    // Xuống dòng
     html = html.replace(/\\n/g, '<br>');
     
     return html;
 }
 
-// Hàm lấy cấu trúc theo thể loại
 function getStructureByGenre(genre) {
     const lowerGenre = genre.toLowerCase();
     
@@ -384,7 +362,6 @@ function getStructureByGenre(genre) {
     }
 }
 
-// Hàm tạo prompt chi tiết cho AI
 function createDetailedPrompt(inputText, duration, teachingStyle, addDiscussion, addHomework, addExamples, textType, authorInfo) {
     const introTime = Math.round(duration * 0.15);
     const mainTime = Math.round(duration * 0.65);
@@ -460,7 +437,6 @@ LƯU Ý QUAN TRỌNG:
 - Phù hợp với học sinh phổ thông`;
 }
 
-// Hàm tạo nội dung giảng dạy (bài giảng + đề thi)
 async function generateTeachingContent() {
     const inputText = document.getElementById('inputText').value.trim();
     const generateBtn = document.getElementById('generateAllBtn');
@@ -472,20 +448,17 @@ async function generateTeachingContent() {
         return;
     }
 
-    // Kiểm tra số từ
     const wordCount = countWords(inputText);
     if (wordCount < 10) {
         showNotification(`Văn bản quá ngắn (${wordCount} từ)! Vui lòng nhập ít nhất 10 từ.`, 'error');
         return;
     }
 
-    // Vô hiệu hóa nút và hiển thị tiến trình
     generateBtn.disabled = true;
     generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Đang tạo nội dung...';
     progressContainer.style.display = 'block';
     resultTabs.style.display = 'none';
     
-    // Reset tiến trình
     generationProgress = {
         total: 0,
         completed: 0,
@@ -496,7 +469,6 @@ async function generateTeachingContent() {
     document.getElementById('examResult').innerHTML = '';
 
     try {
-        // Lấy các tùy chọn từ người dùng
         const duration = parseInt(document.getElementById('durationSlider').value);
         const teachingStyle = document.getElementById('teachingStyle').value;
         const addDiscussion = document.getElementById('discussionToggle').checked;
@@ -505,7 +477,6 @@ async function generateTeachingContent() {
         const teachingNotes = document.getElementById('teachingNotes').value;
         const examNotes = document.getElementById('examNotes').value;
         
-        // Cập nhật exam settings
         examSettings = {
             time: parseInt(document.getElementById('examTimeSlider').value),
             difficulty: document.getElementById('difficulty').value,
@@ -516,21 +487,18 @@ async function generateTeachingContent() {
             questionCount: parseInt(document.getElementById('questionCount').value)
         };
 
-        // Thêm tiến trình cho cả bài giảng và đề thi
         addProgressItem('Phân tích thể loại văn bản');
         addProgressItem('Xác định tác giả và tác phẩm');
         addProgressItem('Tạo bài giảng chi tiết');
         addProgressItem('Tạo đề thi');
         addProgressItem('Hoàn thiện nội dung');
 
-        // 1. Phân tích thể loại văn bản
         const textTypeResponse = await fetchGemini(
             `Xác định thể loại chính xác của văn bản sau (chỉ trả về 1-3 từ): "${inputText.substring(0, 800)}"`
         );
         const textType = textTypeResponse.trim().replace(/^["']|["']$/g, '');
         completeProgressItem(0);
 
-        // 2. Xác định tác giả và tác phẩm
         const authorPrompt = `Từ văn bản sau, xác định:
 1. Tác giả (nếu biết): 
 2. Tên tác phẩm (nếu biết):
@@ -543,7 +511,6 @@ Trả lời ngắn gọn, mỗi thông tin một dòng.`;
         const authorResponse = await fetchGemini(authorPrompt);
         completeProgressItem(1);
 
-        // 3. Tạo bài giảng chi tiết
         const detailedPrompt = createDetailedPrompt(
             inputText, 
             duration, 
@@ -558,11 +525,9 @@ Trả lời ngắn gọn, mỗi thông tin một dòng.`;
         const teachingPlan = await fetchGemini(detailedPrompt);
         completeProgressItem(2);
 
-        // 4. Tạo đề thi
         const examData = await generateExamWithGemini(inputText);
         completeProgressItem(3);
 
-        // 5. Format và hiển thị kết quả
         const lessonPlan = formatTeachingResult(teachingPlan, duration, textType, authorResponse, teachingNotes);
         document.getElementById('teachingResult').innerHTML = lessonPlan;
         setupLessonActions();
@@ -570,7 +535,6 @@ Trả lời ngắn gọn, mỗi thông tin một dòng.`;
         showExamResult(examData, examNotes);
         completeProgressItem(4);
 
-        // Hiển thị kết quả tabs
         resultTabs.style.display = 'block';
         showNotification('Tạo nội dung giảng dạy thành công!', 'success');
 
@@ -615,7 +579,6 @@ Trả lời ngắn gọn, mỗi thông tin một dòng.`;
     }
 }
 
-// Hàm parse thông tin tác giả
 function parseAuthorInfo(authorResponse) {
     const lines = authorResponse.split('\n');
     const authorInfo = {
@@ -650,7 +613,6 @@ function parseAuthorInfo(authorResponse) {
     return authorInfo;
 }
 
-// Hàm format kết quả bài giảng
 function formatTeachingResult(plan, duration, genre, authorResponse, teachingNotes) {
     const formattedPlan = parseAndFormatContent(plan);
     const authorInfo = parseAuthorInfo(authorResponse);
@@ -737,7 +699,6 @@ function formatTeachingResult(plan, duration, genre, authorResponse, teachingNot
     `;
 }
 
-// Hàm tạo đề thi với Gemini
 async function generateExamWithGemini(text) {
     const prompt = `
         Tạo một đề thi Ngữ Văn dựa trên thông tin sau:
@@ -834,7 +795,6 @@ async function generateExamWithGemini(text) {
         if (jsonMatch) {
             return JSON.parse(jsonMatch[0]);
         } else {
-            // Fallback nếu không parse được JSON
             return {
                 title: "ĐỀ THI NGỮ VĂN",
                 description: "Đề thi được tạo tự động từ văn bản tác phẩm",
@@ -871,7 +831,6 @@ async function generateExamWithGemini(text) {
     }
 }
 
-// Hàm hiển thị kết quả đề thi
 function showExamResult(examData, examNotes) {
     currentExamBlocks = examData.blocks || [];
     currentExamCode = generateExamCode();
@@ -963,7 +922,6 @@ function showExamResult(examData, examNotes) {
     
     document.getElementById('examResult').innerHTML = previewHTML + examActions;
     
-    // Thêm sự kiện cho các nút
     document.getElementById('previewExamBtn')?.addEventListener('click', updateExamPreview);
     document.getElementById('editExamBtn')?.addEventListener('click', openExamEditor);
     document.getElementById('saveExamBtn')?.addEventListener('click', saveExam);
@@ -971,7 +929,6 @@ function showExamResult(examData, examNotes) {
     document.getElementById('saveExamToDatabase')?.addEventListener('click', saveExamToDatabase);
 }
 
-// Hàm lưu đề thi vào Firestore Database
 async function saveExamToDatabase() {
     if (!firestoreDb) {
         showNotification('Firestore Database chưa được khởi tạo!', 'error');
@@ -979,20 +936,17 @@ async function saveExamToDatabase() {
     }
     
     try {
-        // Cập nhật từ editor nếu đang mở
         updateExamFromEditor();
         
         const inputText = document.getElementById('inputText').value.trim();
         const examNotes = document.getElementById('examNotes').value;
         
-        // Tính tổng điểm
         const totalPoints = currentExamBlocks.reduce((sum, block) => sum + (block.points || 0), 0);
         
-        // Chuẩn bị dữ liệu để lưu
         const examData = {
             examId: currentExamCode,
             title: "Đề thi Ngữ Văn",
-            literaryText: inputText.substring(0, 500), // Lưu 500 ký tự đầu
+            literaryText: inputText.substring(0, 500),
             examTime: examSettings.time,
             difficulty: examSettings.difficulty,
             grade: examSettings.grade,
@@ -1005,19 +959,15 @@ async function saveExamToDatabase() {
         
         showNotification('Đang lưu đề thi vào database...', 'info');
         
-        // Lưu vào Firestore
         await firestoreDb.collection('exams').doc(currentExamCode).set(examData);
         
         showNotification(`Đã lưu đề thi vào database thành công! Mã đề: ${currentExamCode}`, 'success');
         
-        // Tạo link để chia sẻ
         const link = `${window.location.origin}/take_exam.html?code=${currentExamCode}`;
         
-        // Hiển thị thông báo với link
         setTimeout(() => {
             showNotification(`Link đề thi: ${link} (Đã sao chép vào clipboard)`, 'info');
             
-            // Sao chép link vào clipboard
             navigator.clipboard.writeText(link).then(() => {
                 console.log('Link đã được sao chép:', link);
             });
@@ -1029,15 +979,12 @@ async function saveExamToDatabase() {
     }
 }
 
-// Hàm mở trình chỉnh sửa đề thi
 function openExamEditor() {
     const modal = document.getElementById('editExamModal');
     const editorContainer = document.getElementById('examEditorContainer');
     
-    // Tạo giao diện editor
     editorContainer.innerHTML = createExamEditorHTML();
     
-    // Khởi tạo trình soạn thảo cho từng block
     setTimeout(() => {
         initRichTextEditors();
     }, 100);
@@ -1045,7 +992,6 @@ function openExamEditor() {
     modal.classList.add('active');
 }
 
-// Hàm tạo HTML cho trình chỉnh sửa đề thi
 function createExamEditorHTML() {
     let editorHTML = `
         <div class="exam-editor-container">
@@ -1085,7 +1031,6 @@ function createExamEditorHTML() {
     return editorHTML;
 }
 
-// Hàm tạo HTML cho một block chỉnh sửa
 function createBlockEditorHTML(block, index) {
     return `
         <div class="exam-block-editor" data-index="${index}">
@@ -1133,7 +1078,6 @@ function createBlockEditorHTML(block, index) {
     `;
 }
 
-// Hàm khởi tạo trình soạn thảo rich text
 function initRichTextEditors() {
     richTextEditors = [];
     
@@ -1154,19 +1098,16 @@ function initRichTextEditors() {
             placeholder: 'Nhập nội dung...'
         });
         
-        // Thiết lập nội dung ban đầu
         const textarea = document.getElementById(textareaId);
         if (textarea) {
             quill.root.innerHTML = markdownToHtml(textarea.value);
         }
         
-        // Lưu lại editor
         richTextEditors[index] = {
             quill: quill,
             textareaId: textareaId
         };
         
-        // Cập nhật textarea khi nội dung thay đổi
         quill.on('text-change', function() {
             if (textarea) {
                 textarea.value = quill.root.innerHTML;
@@ -1175,12 +1116,9 @@ function initRichTextEditors() {
     });
 }
 
-// Hàm cập nhật đề thi từ editor
 function updateExamFromEditor() {
-    // Kiểm tra xem trình chỉnh sửa có đang mở không
     const blocksContainer = document.getElementById('examBlocksContainer');
     
-    // Nếu không có trình chỉnh sửa, không làm gì cả
     if (!blocksContainer) {
         console.log('Trình chỉnh sửa không mở, bỏ qua cập nhật từ editor');
         return;
@@ -1190,7 +1128,6 @@ function updateExamFromEditor() {
     
     const updatedBlocks = [];
     
-    // Convert NodeList to Array để sử dụng find
     const blockArray = Array.from(blockElements);
     
     blockArray.forEach((blockElement, blockIndex) => {
@@ -1199,13 +1136,11 @@ function updateExamFromEditor() {
         const titleInput = blockElement.querySelector('.block-title');
         const pointsInput = blockElement.querySelector('.block-points-input');
         
-        // Lấy nội dung từ trình soạn thảo
         let content = '';
         if (richTextEditors[dataIndex]) {
             const quill = richTextEditors[dataIndex].quill;
             content = quill.root.innerHTML;
         } else {
-            // Fallback nếu không có editor
             const textarea = document.getElementById(`editor-text-${dataIndex}`);
             content = textarea ? textarea.value : '';
         }
@@ -1220,19 +1155,14 @@ function updateExamFromEditor() {
         updatedBlocks.push(blockData);
     });
     
-    // Sắp xếp lại theo thứ tự hiện tại
     currentExamBlocks = updatedBlocks;
 }
 
-// Hàm sắp xếp lại blocks
 function reorderBlocks() {
-    // Hiển thị thông báo
     showNotification('Kéo và thả các block để sắp xếp lại', 'info');
     
-    // Cập nhật từ editor trước
     updateExamFromEditor();
     
-    // Đóng modal và mở lại để refresh
     const modal = document.getElementById('editExamModal');
     modal.classList.remove('active');
     
@@ -1241,7 +1171,6 @@ function reorderBlocks() {
     }, 300);
 }
 
-// Hàm thêm block mới
 function addBlock(type) {
     const newBlock = {
         type: type,
@@ -1252,15 +1181,12 @@ function addBlock(type) {
     
     currentExamBlocks.push(newBlock);
     
-    // Cập nhật giao diện editor
     const blocksContainer = document.getElementById('examBlocksContainer');
     blocksContainer.insertAdjacentHTML('beforeend', createBlockEditorHTML(newBlock, currentExamBlocks.length - 1));
     
-    // Khởi tạo lại trình soạn thảo
     initRichTextEditors();
 }
 
-// Hàm xóa block
 function deleteBlock(index) {
     if (currentExamBlocks.length <= 1) {
         showNotification('Đề thi phải có ít nhất một phần!', 'error');
@@ -1269,17 +1195,14 @@ function deleteBlock(index) {
     
     currentExamBlocks.splice(index, 1);
     
-    // Cập nhật giao diện
     const editorContainer = document.getElementById('examEditorContainer');
     editorContainer.innerHTML = createExamEditorHTML();
     
-    // Khởi tạo lại trình soạn thảo
     setTimeout(() => {
         initRichTextEditors();
     }, 100);
 }
 
-// Hàm di chuyển block
 function moveBlock(index, direction) {
     if (direction === 'up' && index > 0) {
         [currentExamBlocks[index], currentExamBlocks[index - 1]] = [currentExamBlocks[index - 1], currentExamBlocks[index]];
@@ -1287,25 +1210,20 @@ function moveBlock(index, direction) {
         [currentExamBlocks[index], currentExamBlocks[index + 1]] = [currentExamBlocks[index + 1], currentExamBlocks[index]];
     }
     
-    // Cập nhật giao diện
     const editorContainer = document.getElementById('examEditorContainer');
     editorContainer.innerHTML = createExamEditorHTML();
     
-    // Khởi tạo lại trình soạn thảo
     setTimeout(() => {
         initRichTextEditors();
     }, 100);
 }
 
-// Hàm lưu đề thi đã chỉnh sửa
 function saveEditedExam() {
     updateExamFromEditor();
     
-    // Đóng modal
     const modal = document.getElementById('editExamModal');
     modal.classList.remove('active');
     
-    // Cập nhật giao diện xem trước
     const examData = {
         title: "Đề thi Ngữ Văn",
         description: "Đề thi đã được chỉnh sửa",
@@ -1318,7 +1236,6 @@ function saveEditedExam() {
     showNotification('Đã lưu thay đổi đề thi!', 'success');
 }
 
-// Hàm tạo mã đề thi
 function generateExamCode() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
@@ -1328,7 +1245,6 @@ function generateExamCode() {
     return result;
 }
 
-// Hàm cập nhật preview
 function updateExamPreview() {
     updateExamFromEditor();
     
@@ -1383,9 +1299,7 @@ function updateExamPreview() {
     modal.classList.add('active');
 }
 
-// Hàm lưu đề thi
 function saveExam() {
-    // Chỉ cập nhật từ editor nếu editor đang mở
     const editModal = document.getElementById('editExamModal');
     if (editModal && editModal.classList.contains('active')) {
         updateExamFromEditor();
@@ -1409,7 +1323,6 @@ function saveExam() {
     showNotification(`Đã lưu đề thi thành công! Mã đề: ${currentExamCode}`, 'success');
 }
 
-// Hàm in đề thi
 function printExam() {
     updateExamFromEditor();
     
@@ -1570,7 +1483,6 @@ function printExam() {
     printWindow.document.close();
 }
 
-// Hàm thiết lập sự kiện cho các nút action
 function setupLessonActions() {
     const printBtn = document.getElementById('printLesson');
     const saveWordBtn = document.getElementById('saveWord');
@@ -1594,7 +1506,6 @@ function setupLessonActions() {
     }
 }
 
-// Hàm lưu bài giảng vào database
 async function saveLessonToDatabase() {
     if (!firestoreDb) {
         showNotification('Firestore Database chưa được khởi tạo!', 'error');
@@ -1607,7 +1518,6 @@ async function saveLessonToDatabase() {
         const duration = parseInt(document.getElementById('durationSlider').value);
         const teachingStyle = document.getElementById('teachingStyle').value;
         
-        // Lấy nội dung bài giảng
         const lessonContent = document.querySelector('.lesson-content');
         if (!lessonContent) {
             showNotification('Không tìm thấy nội dung bài giảng!', 'error');
@@ -1628,7 +1538,6 @@ async function saveLessonToDatabase() {
         
         showNotification('Đang lưu bài giảng vào database...', 'info');
         
-        // Lưu vào Firestore
         await firestoreDb.collection('lessons').doc(lessonData.lessonId).set(lessonData);
         
         showNotification(`Đã lưu bài giảng vào database thành công! Mã bài: ${lessonData.lessonId}`, 'success');
@@ -1639,7 +1548,6 @@ async function saveLessonToDatabase() {
     }
 }
 
-// Hàm xuất bài giảng ra Word (DOCX)
 function exportToWord() {
     const lessonContent = document.querySelector('.lesson-content');
     const lessonHeader = document.querySelector('.lesson-header');
@@ -1889,7 +1797,6 @@ function exportToWord() {
     }, 1000);
 }
 
-// Hàm in bài giảng
 function printLesson() {
     const lessonContent = document.querySelector('.lesson-content');
     const lessonHeader = document.querySelector('.lesson-header');
@@ -2138,7 +2045,6 @@ function printLesson() {
     printWindow.document.close();
 }
 
-// Hàm sao chép bài giảng
 async function copyLesson() {
     const lessonContent = document.querySelector('.lesson-content');
     const lessonHeader = document.querySelector('.lesson-header');
@@ -2177,9 +2083,6 @@ Ngày tạo: ${new Date().toLocaleDateString('vi-VN')}
     }
 }
 
-// ==================== KHỞI TẠO KHI TRANG TẢI ====================
-
-// Hàm hiển thị thông báo
 function showNotification(message, type = 'info') {
     const oldNotification = document.querySelector('.notification');
     if (oldNotification) {
@@ -2226,7 +2129,6 @@ function showNotification(message, type = 'info') {
     }, 4000);
 }
 
-// Hàm xử lý slider thời lượng
 function setupDurationSlider() {
     const slider = document.getElementById('durationSlider');
     const valueDisplay = document.getElementById('durationValue');
@@ -2268,14 +2170,12 @@ function setupDurationSlider() {
     }
 }
 
-// Hàm cập nhật màu slider
 function updateSliderColor(value) {
     const slider = document.getElementById('durationSlider');
     const percent = ((value - slider.min) / (slider.max - slider.min)) * 100;
     slider.style.background = `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${percent}%, var(--border-color) ${percent}%, var(--border-color) 100%)`;
 }
 
-// Hàm khởi tạo exam slider
 function setupExamSlider() {
     const slider = document.getElementById('examTimeSlider');
     const valueDisplay = document.getElementById('examTimeValue');
@@ -2313,14 +2213,12 @@ function setupExamSlider() {
     });
 }
 
-// Hàm cập nhật màu slider đề thi
 function updateExamSliderColor(value) {
     const slider = document.getElementById('examTimeSlider');
     const percent = ((value - slider.min) / (slider.max - slider.min)) * 100;
     slider.style.background = `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${percent}%, var(--border-color) ${percent}%, var(--border-color) 100%)`;
 }
 
-// Hàm đếm từ
 function setupWordCounter() {
     const textarea = document.getElementById('inputText');
     const wordCount = document.getElementById('wordCount');
@@ -2341,7 +2239,6 @@ function setupWordCounter() {
     });
 }
 
-// Hàm xử lý tabs trong settings
 function setupSettingsTabs() {
     const tabBtns = document.querySelectorAll('#settingsPanel .tab-btn');
     const tabContents = document.querySelectorAll('#settingsPanel .tab-content');
@@ -2359,7 +2256,6 @@ function setupSettingsTabs() {
     });
 }
 
-// Hàm xử lý tabs trong kết quả
 function setupResultTabs() {
     const tabBtns = document.querySelectorAll('#resultTabs .tab-btn');
     const tabContents = document.querySelectorAll('#resultTabs .tab-content');
@@ -2377,7 +2273,6 @@ function setupResultTabs() {
     });
 }
 
-// Hàm xử lý modal
 function setupModal() {
     const previewModal = document.getElementById('previewModal');
     const editModal = document.getElementById('editExamModal');
@@ -2387,7 +2282,6 @@ function setupModal() {
     const cancelEditBtn = document.getElementById('cancelEditBtn');
     const saveEditedExamBtn = document.getElementById('saveEditedExamBtn');
     
-    // Đóng modal
     closeButtons.forEach(btn => {
         btn.addEventListener('click', function() {
             const modal = this.closest('.modal');
@@ -2533,7 +2427,6 @@ function setupModal() {
         });
     }
     
-    // Đóng modal khi click bên ngoài
     [previewModal, editModal].forEach(modal => {
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
@@ -2542,21 +2435,17 @@ function setupModal() {
         });
     });
     
-    // Xử lý sự kiện trong modal chỉnh sửa
     document.addEventListener('click', function(e) {
-        // Thêm block văn bản
         if (e.target && e.target.id === 'addTextBlockBtn') {
             e.preventDefault();
             addBlock('text');
         }
         
-        // Thêm block câu hỏi
         if (e.target && e.target.id === 'addQuestionBlockBtn') {
             e.preventDefault();
             addBlock('question');
         }
         
-        // Xem trước đề thi đã chỉnh sửa
         if (e.target && e.target.id === 'previewEditedExamBtn') {
             e.preventDefault();
             updateExamFromEditor();
@@ -2564,7 +2453,6 @@ function setupModal() {
             editModal.classList.remove('active');
         }
         
-        // Xóa block
         if (e.target && e.target.closest('.block-btn.delete')) {
             e.preventDefault();
             const btn = e.target.closest('.block-btn.delete');
@@ -2572,7 +2460,6 @@ function setupModal() {
             deleteBlock(index);
         }
         
-        // Di chuyển block lên
         if (e.target && e.target.closest('.block-btn.move-up')) {
             e.preventDefault();
             const btn = e.target.closest('.block-btn.move-up');
@@ -2580,7 +2467,6 @@ function setupModal() {
             moveBlock(index, 'up');
         }
         
-        // Di chuyển block xuống
         if (e.target && e.target.closest('.block-btn.move-down')) {
             e.preventDefault();
             const btn = e.target.closest('.block-btn.move-down');
@@ -2590,15 +2476,12 @@ function setupModal() {
     });
 }
 
-// Khởi tạo khi trang được tải
 document.addEventListener('DOMContentLoaded', function() {
-    // Gán sự kiện cho nút tạo nội dung giảng dạy
     const generateAllBtn = document.getElementById('generateAllBtn');
     if (generateAllBtn) {
         generateAllBtn.addEventListener('click', generateTeachingContent);
     }
     
-    // Gán sự kiện cho phím Enter trong textarea (Ctrl+Enter)
     const inputText = document.getElementById('inputText');
     if (inputText) {
         inputText.addEventListener('keydown', function(e) {
@@ -2609,7 +2492,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Settings Panel Toggle
     const settingsBtn = document.getElementById('settingsBtn');
     if (settingsBtn) {
         settingsBtn.addEventListener('click', function() {
@@ -2631,7 +2513,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Khởi tạo các thành phần
     setupDurationSlider();
     setupExamSlider();
     setupWordCounter();
@@ -2639,7 +2520,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupResultTabs();
     setupModal();
     
-    // Thêm animation cho notification
     const style = document.createElement('style');
     style.textContent = `
         @keyframes slideIn {
@@ -2680,15 +2560,10 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(style);
     
-    // Focus vào textarea
     document.getElementById('inputText')?.focus();
     
-    // Hiển thị thông báo nếu Firebase đã được khởi tạo
     if (firestoreDb) {
         console.log('Firestore Database đã sẵn sàng để lưu đề thi');
     }
 
 });
-
-
-
