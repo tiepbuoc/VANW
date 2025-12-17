@@ -1,6 +1,6 @@
 // API Key - Đã thay bằng key mới
 const REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
-const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
+const GEMINI_API_KEY ="AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -132,7 +132,7 @@ async function fetchGemini(prompt, maxRetries = 3) {
                 setTimeout(() => reject(new Error('Request timeout after 90 seconds')), 90000);
             });
             
-            const fetchPromise = fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            const fetchPromise = fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -802,7 +802,7 @@ async function generateExamWithGemini(text) {
     `;
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -2689,5 +2689,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+
 
 
