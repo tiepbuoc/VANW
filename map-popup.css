@@ -1,34 +1,33 @@
-/* CSS cho popup bản đồ văn học - Giao diện giống chatbot */
+/* CSS cho popup bản đồ văn học - ĐÃ SỬA */
 .map-popup {
     padding: 0;
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Chiếm toàn bộ chiều cao viewport */
+    height: 100vh;
     overflow: hidden;
     position: relative;
     width: 100%;
     box-sizing: border-box;
-    z-index: 100; /* Z-index cao để nằm trên */
+    z-index: 100;
 }
 
-/* Sidebar Toggle Button - ĐÃ SỬA: Đổi sang bên trái */
 .sidebar-toggle-btn {
     position: absolute;
     top: 50%;
-    left: 0; /* SỬA: từ right: 0 thành left: 0 */
+    left: 0;
     transform: translateY(-50%);
-    z-index: 1001; /* Z-index rất cao */
+    z-index: 1001;
     background-color: var(--primary-color);
     color: white;
     width: 30px;
     height: 50px;
-    border-radius: 0 8px 8px 0; /* SỬA: đổi góc bo từ "8px 0 0 8px" thành "0 8px 8px 0" */
+    border-radius: 0 8px 8px 0;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     cursor: pointer;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* SỬA: đổi hướng đổ bóng */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 }
 
@@ -46,26 +45,24 @@
     z-index: 1;
 }
 
-/* SỬA: Thanh bên ở bên trái */
 .map-sidebar {
     width: 350px;
     background-color: var(--card-bg);
     display: flex;
     flex-direction: column;
-    border-right: 2px solid var(--border-color); /* SỬA: từ border-left thành border-right */
+    border-right: 2px solid var(--border-color);
     position: absolute;
-    left: 0; /* SỬA: từ right: 0 thành left: 0 */
+    left: 0;
     top: 0;
     bottom: 0;
     z-index: 1000;
     transition: transform 0.3s ease;
-    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15); /* SỬA: đổi hướng đổ bóng */
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
     overflow: hidden;
 }
 
-/* SỬA: Ẩn sang trái */
 .map-sidebar.hidden {
-    transform: translateX(-100%); /* SỬA: từ translateX(100%) thành translateX(-100%) */
+    transform: translateX(-100%);
 }
 
 .map-main {
@@ -97,7 +94,6 @@
     z-index: 1;
 }
 
-/* SỬA: Map controls cố định trên cùng */
 .map-controls-container {
     display: flex;
     flex-direction: column;
@@ -110,24 +106,26 @@
     background-color: var(--card-bg);
     border-bottom: 2px solid var(--border-color);
     flex-shrink: 0;
-    overflow: visible; /* SỬA: đổi từ hidden sang visible để danh sách gợi ý không bị cắt */
+    overflow: visible;
     position: relative;
-    z-index: 10000; /* SỬA: tăng z-index cao để phần cố định luôn nằm trên phần cuộn bên dưới */
+    z-index: 10000;
 }
 
+/* ĐÃ SỬA: Xóa thanh cuộn ngang cho map-scrollable-content */
 .map-scrollable-content {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden; /* Ngăn cuộn ngang */
     padding-right: 5px;
     min-height: 200px;
     position: relative;
-    z-index: 1; /* z-index thấp hơn phần fixed để bị đè khi cần */
+    z-index: 1;
 }
 
 .search-container {
     margin-bottom: 15px;
     position: relative;
-    z-index: 10001; /* SỬA: tăng cao hơn để container tìm kiếm nằm trên */
+    z-index: 10001;
 }
 
 .search-input {
@@ -160,11 +158,11 @@
     padding: 5px;
 }
 
-/* Advanced Search Panel */
 .advanced-search-panel {
     display: none;
     max-height: 500px;
     overflow-y: auto;
+    overflow-x: hidden; /* Ngăn cuộn ngang */
     padding: 15px;
     margin-top: 10px;
     background-color: rgba(227, 124, 45, 0.1);
@@ -224,7 +222,6 @@
     margin-top: 15px;
 }
 
-/* Toggle button cho chế độ liên hệ */
 .toggle-btn {
     position: relative;
     display: inline-block;
@@ -271,7 +268,6 @@
     transform: translateX(26px);
 }
 
-/* Thanh trượt */
 .slider {
     width: 100%;
     margin: 10px 0;
@@ -300,7 +296,7 @@
     transform: scale(1.1);
 }
 
-/* Nút điều khiển vị trí */
+/* ĐÃ SỬA: Xóa nút "Hiển thị tác giả gần tôi" */
 .location-controls {
     display: flex;
     gap: 10px;
@@ -384,6 +380,7 @@
 .nearby-authors {
     max-height: 400px;
     overflow-y: auto;
+    overflow-x: hidden; /* Ngăn cuộn ngang */
     margin-top: 15px;
     border-top: 1px solid var(--border-color);
     padding-top: 10px;
@@ -431,13 +428,13 @@
     color: var(--primary-color);
 }
 
-/* Đảm bảo author-info-content có thể cuộn */
 .author-info-content {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden; /* Ngăn cuộn ngang */
     padding: 15px;
     background-color: var(--card-bg);
-    min-height: 200px; /* Đảm bảo chiều cao tối thiểu */
+    min-height: 200px;
     position: relative;
     z-index: 1;
 }
@@ -466,6 +463,7 @@
 .short-bio {
     max-height: 200px;
     overflow-y: auto;
+    overflow-x: hidden; /* Ngăn cuộn ngang */
     padding: 12px;
     background-color: rgba(0, 0, 0, 0.03);
     border-radius: 6px;
@@ -478,12 +476,14 @@
 .works-list {
     padding-left: 20px;
     margin: 10px 0;
+    overflow-x: hidden; /* Ngăn cuộn ngang */
 }
 
 .works-list li {
     margin-bottom: 5px;
     padding: 3px 0;
     color: var(--text-primary);
+    overflow-wrap: break-word; /* Ngăn tràn chữ */
 }
 
 .loading-spinner {
@@ -577,7 +577,7 @@
     }
 }
 
-/* Leaflet tooltip styles - QUAN TRỌNG: Sửa chữ Hoàng Sa/Trường Sa */
+/* Leaflet tooltip styles */
 .leaflet-tooltip {
     background: transparent !important;
     border: none !important;
@@ -594,7 +594,6 @@
     pointer-events: none !important;
 }
 
-/* Suggestion styles - ĐÃ SỬA LỖI: Gợi ý sẽ luôn nằm trên phần hiển thị thông tin */
 .suggestions {
     position: absolute;
     top: 100%;
@@ -604,11 +603,12 @@
     border: 2px solid var(--border-color);
     border-radius: 8px;
     box-shadow: var(--shadow);
-    z-index: 10002; /* SỬA: Tăng z-index cao nhất để gợi ý LUÔN đè lên phần hiển thị thông tin */
+    z-index: 10002;
     display: none;
     max-height: 250px;
     overflow-y: auto;
-    margin-top: 5px; /* Thêm khoảng cách nhẹ để đẹp hơn */
+    overflow-x: hidden; /* Ngăn cuộn ngang */
+    margin-top: 5px;
 }
 
 .suggestion-item {
@@ -616,6 +616,7 @@
     cursor: pointer;
     border-bottom: 1px solid var(--border-color);
     transition: background-color 0.3s ease;
+    overflow-wrap: break-word; /* Ngăn tràn chữ */
 }
 
 .suggestion-item:hover {
@@ -629,7 +630,6 @@
     border-top: 2px solid var(--primary-color);
 }
 
-/* User location marker animation */
 .user-location-marker {
     animation: pulse 1.5s infinite;
 }
@@ -649,7 +649,6 @@
     }
 }
 
-/* Thêm animation cho notification */
 @keyframes slideIn {
     from {
         transform: translateX(100%);
@@ -672,7 +671,6 @@
     }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .map-sidebar {
         width: 85%;
@@ -689,7 +687,6 @@
         font-size: 0.9rem;
     }
     
-    /* FIXED: Cập nhật vị trí nút toggle trên màn hình nhỏ */
     .sidebar-toggle-btn {
         transition: left 0.3s ease;
     }
@@ -734,13 +731,6 @@
     }
 }
 
-/* THÊM THANH CUỘN CHO PHẦN HIỂN THỊ THÔNG TIN */
-.map-scrollable-content {
-    max-height: 500px !important;
-    overflow-y: auto !important;
-}
-
-/* THÊM THANH CUỘN CUSTOM */
 .map-scrollable-content::-webkit-scrollbar {
     width: 8px;
 }
