@@ -1,10 +1,8 @@
-/* Import Normalize CSS */
+
 @import url('https://unpkg.com/normalize.css') layer(normalize);
 
-/* CSS Layers */
 @layer normalize, base, demo;
 
-/* Base Layer */
 @layer base {
     :root {
         --font-size-min: 16;
@@ -23,7 +21,6 @@
         --border-brightness: 2.5;
         --border-contrast: 2.5;
         
-        /* Light theme variables - Màu cam đậm hơn (#e37c2d) */
         --bg-color: #f5f5f5;
         --card-bg: #ffffff;
         --card-outline: #b0b0b0;
@@ -72,7 +69,6 @@
         box-sizing: border-box;
     }
 
-    /* Custom Scrollbar Styles */
     ::-webkit-scrollbar {
         width: 10px;
         height: 10px;
@@ -94,7 +90,6 @@
         background: var(--scrollbar-thumb-hover);
     }
 
-    /* Firefox */
     * {
         scrollbar-width: thin;
         scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
@@ -117,7 +112,6 @@
         --size: 45px;
         --line: var(--grid-color);
         content: '';
-;
         height: 100vh;
         width: 100vw;
         position: fixed;
@@ -147,7 +141,6 @@
         place-items: center;
         opacity: 0.8;
         transition: opacity 0.2s;
-        /* Không áp dụng filter cho logo trong chế độ sáng */
     }
 
     .web-icon:hover {
@@ -161,7 +154,6 @@
         object-fit: contain;
     }
 
-    /* Utilities */
     .sr-only {
         position: absolute;
         width: 1px;
@@ -183,7 +175,6 @@
     }
 }
 
-/* Demo Layer */
 @layer demo {
     body {
         align-content: center;
@@ -213,13 +204,11 @@
         align-items: center;
     }
     
-    /* Result Tabs Container */
     .result-tabs-container {
         width: 100%;
         margin-top: 2rem;
     }
     
-    /* Tab Navigation */
     .tab-navigation {
         display: flex;
         gap: 1rem;
@@ -265,7 +254,6 @@
         display: block;
     }
     
-    /* Teaching Tool Styles */
     .teaching-tool {
         padding: 0 0;
         background-color: transparent;
@@ -469,7 +457,6 @@
         line-height: 1.5;
     }
     
-    /* Duration Control */
     .duration-control {
         margin-top: 15px;
     }
@@ -667,7 +654,6 @@
         margin-top: 2rem;
     }
     
-    /* Lesson Result Styles */
     .author-info-section {
         background: var(--card-bg);
         padding: 25px;
@@ -1064,7 +1050,6 @@
         background-color: rgba(239, 68, 68, 0.08);
     }
     
-    /* Exam Tab Styles */
     .block-label {
         display: block;
         font-size: 0.9rem;
@@ -1097,7 +1082,6 @@
         margin-top: 0.25rem;
     }
     
-    /* Exam Editor */
     .exam-header {
         display: flex;
         justify-content: space-between;
@@ -1330,7 +1314,6 @@
         opacity: 0.95;
     }
     
-    /* Modal Styles */
     .modal {
         display: none;
         position: fixed;
@@ -1435,7 +1418,6 @@
         background: rgba(227, 124, 45, 0.1);
     }
     
-    /* Editor Container */
     .exam-editor-container {
         max-width: 100%;
     }
@@ -1467,7 +1449,6 @@
         border-color: var(--primary-color);
     }
     
-    /* Rich Text Editor */
     .rich-text-editor {
         border: 2px solid var(--card-outline);
         border-radius: 8px;
@@ -1492,7 +1473,6 @@
         min-height: 200px;
     }
     
-    /* Block Controls */
     .block-controls {
         display: flex;
         gap: 1rem;
@@ -1520,7 +1500,6 @@
         color: var(--text-primary);
     }
     
-    /* Preview Content Styles */
     .preview-exam {
         font-family: inherit;
     }
@@ -1632,7 +1611,6 @@
         color: var(--accent-color);
     }
     
-    /* Markdown Formatted Content */
     .markdown-content {
         font-family: inherit;
         line-height: 1.6;
@@ -1691,7 +1669,6 @@
         font-style: italic;
     }
     
-    /* Responsive Design */
     @media (max-width: 992px) {
         .options-grid {
             grid-template-columns: 1fr;
@@ -1808,7 +1785,6 @@
             text-align: center;
         }
         
-        /* Exam Tab Responsive */
         .exam-header {
             flex-direction: column;
             gap: 1rem;
