@@ -1,18 +1,12 @@
-// JavaScript cho popup chatbot AI - Không dùng ES Module
-
-// API Key được lấy trực tiếp từ mã nguồn (không cần đọc file)
-// Sử dụng tên biến khác để tránh trùng với script.js
 const CHATBOT_REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
 const CHATBOT_API_KEY = "AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
 
-// Biến toàn cục
 let chats = [];
 let currentChatId = null;
 let isSending = false;
 let isStopped = false;
-let isSidebarVisible = false; // Sidebar ẩn mặc định
+let isSidebarVisible = false;
 
-// Literary Keywords for filtering
 const literaryKeywords = [
     "văn học", "tác phẩm", "nhà văn", "thơ", "truyện", "tác giả", "chào", "là ai", 
     "tiểu thuyết", "chào", "bởi ai", "cảm hứng", "viết", "chữ", "từ", "câu", 
@@ -46,14 +40,12 @@ function isLiteraryQuestion(question) {
 function generateSuggestions(messages) {
     const userMessages = messages.filter(msg => msg.role === "user");
     if (userMessages.length === 0) {
-        // Chỉ trả về 2 gợi ý ban đầu
         return [
             "Phân tích bài thơ 'Đây thôn Vĩ Dạ' của Hàn Mặc Tử",
             "Giới thiệu về phong trào Thơ mới 1932-1945"
         ];
     }
     
-    // Chỉ lấy 2 gợi ý tiếp theo
     const lastMessage = userMessages[userMessages.length - 1].content;
     
     if (lastMessage.includes("phân tích")) {
@@ -73,7 +65,6 @@ function generateSuggestions(messages) {
         ];
     }
     
-    // Gợi ý mặc định, chỉ 2 câu
     return [
         "Bạn có thể giải thích rõ hơn về điều này không?",
         "Có tác phẩm nào tương tự như vậy không?"
@@ -84,17 +75,14 @@ function initChatbot() {
     const popupContent = document.getElementById('popupContent');
     const popupTitle = document.getElementById('popupTitle');
     
-    // KIỂM TRA KỸ TRƯỚC KHI THAO TÁC
     if (!popupContent || !popupTitle) {
         console.error('Không tìm thấy popupContent hoặc popupTitle');
         return;
     }
     
     if (popupTitle.textContent === 'Chatbot AI Văn Học') {
-        // Tạo nội dung cho popup chatbot
         popupContent.innerHTML = `
             <div class="chatbot-popup">
-                <!-- Sidebar Toggle Button -->
                 <button class="sidebar-toggle-btn" id="sidebarToggleBtn">
                     <i class="fas fa-chevron-right"></i>
                 </button>
@@ -111,20 +99,17 @@ function initChatbot() {
                             </button>
                         </div>
                         <div class="chat-history" id="chat-history">
-                            <!-- Chat history will be populated here -->
                         </div>
                     </div>
                     
                     <div class="chat-main">
                         <div class="chat-container">
                             <div class="chat-messages" id="chat-messages">
-                                <!-- Messages will appear here -->
                             </div>
                             
                             <div class="suggestions-bar" id="suggestions-bar">
                                 <div class="suggestions-title">Gợi ý nhanh:</div>
                                 <div class="suggestions-container" id="suggestions-container">
-                                    <!-- Suggestions will be added here -->
                                 </div>
                             </div>
                             
@@ -149,27 +134,23 @@ function initChatbot() {
             </div>
         `;
 
-        // Khởi tạo chatbot với delay để đảm bảo DOM đã render
         setTimeout(() => {
             setupChatbot();
             
-            // Kiểm tra nếu có selected text từ trang chính
             if (window.lastSelectedText) {
                 const messageInput = document.getElementById('message-input');
                 if (messageInput) {
                     messageInput.value = `"${window.lastSelectedText}" là gì?`;
                     messageInput.focus();
                     
-                    // Auto-resize textarea
                     messageInput.style.height = 'auto';
                     const newHeight = Math.min(messageInput.scrollHeight, 120);
                     messageInput.style.height = `${newHeight}px`;
                     
-                    // Clear the stored text
                     window.lastSelectedText = null;
                 }
             }
-        }, 200); // Tăng delay để đảm bảo DOM đã render
+        }, 200);
     }
 }
 
@@ -219,14 +200,12 @@ function setupChatbot() {
     const closeSidebarBtn = document.getElementById('closeSidebarBtn');
     const chatSidebar = document.getElementById('chatSidebar');
 
-    // KIỂM TRA XEM TẤT CẢ ELEMENT CÓ TỒN TẠI KHÔNG
     if (!chatMessages || !messageInput || !sendButton || !newChatBtn || !chatHistory || 
         !suggestionsContainer || !sidebarToggleBtn || !closeSidebarBtn || !chatSidebar) {
         console.error('Một số element DOM không tìm thấy trong chatbot');
         return;
     }
 
-    // Toggle sidebar
     sidebarToggleBtn.addEventListener('click', toggleSidebar);
     closeSidebarBtn.addEventListener('click', toggleSidebar);
 
@@ -236,7 +215,6 @@ function setupChatbot() {
         if (isSidebarVisible) {
             chatSidebar.style.left = '0';
 
-            // Kiểm tra kích thước màn hình
             const isMobile = window.innerWidth <= 768;
             sidebarToggleBtn.style.left = isMobile ? '300px' : '250px';
 
@@ -248,7 +226,6 @@ function setupChatbot() {
         }
     }
 
-    // Thêm sự kiện resize để cập nhật khi thay đổi kích thước màn hình
     window.addEventListener('resize', function() {
         if (isSidebarVisible) {
             const isMobile = window.innerWidth <= 768;
@@ -256,16 +233,12 @@ function setupChatbot() {
         }
     });
 
-    // Load existing chats
     loadChats();
 
-    // Setup event listeners
     newChatBtn.addEventListener('click', createNewChat);
     
-    // Send message on button click
     sendButton.addEventListener('click', handleSubmit);
     
-    // Send message on Enter key (but allow Shift+Enter for new line)
     messageInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -275,10 +248,8 @@ function setupChatbot() {
         }
     });
     
-    // Auto-resize textarea
     messageInput.addEventListener('input', autoResizeTextarea);
 
-    // Initialize with welcome message if no chats
     if (chats.length === 0) {
         createNewChat();
         addWelcomeMessage();
@@ -317,7 +288,6 @@ function setupChatbot() {
         isSending = true;
         addMessageToUI("user", userMessage);
         
-        // Change send button to loading state
         sendButton.innerHTML = '<div class="loading-spinner"></div>';
         sendButton.disabled = true;
 
@@ -356,7 +326,6 @@ function setupChatbot() {
         isStopped = false;
 
         try {
-            // Tạo prompt từ lịch sử chat
             const history = currentChat.messages.slice(-5).map(msg => 
                 `${msg.role === "user" ? "User" : "Assistant"}: ${msg.content}`
             ).join('\n');
@@ -401,7 +370,6 @@ Hãy trả lời bằng tiếng Việt, tập trung vào chủ đề văn học.
     function updateSuggestions(messages) {
         const suggestions = generateSuggestions(messages);
         
-        // KIỂM TRA suggestionsContainer CÓ TỒN TẠI KHÔNG
         if (!suggestionsContainer) {
             console.warn('suggestionsContainer không tìm thấy');
             return;
@@ -424,7 +392,6 @@ Hãy trả lời bằng tiếng Việt, tập trung vào chủ đề văn học.
                 suggestionsContainer.appendChild(chip);
             });
             
-            // KIỂM TRA suggestionsBar CÓ TỒN TẠI KHÔNG
             if (suggestionsBar) {
                 suggestionsBar.style.display = 'block';
             }
@@ -566,14 +533,12 @@ Hãy trả lời bằng tiếng Việt, tập trung vào chủ đề văn học.
             suggestionsBar.style.display = 'none';
         }
         
-        // Add welcome message to new chat
         setTimeout(addWelcomeMessage, 300);
     }
 
     function loadChat(chatId) {
         currentChatId = chatId;
 
-        // Cập nhật active class cho chat items
         document.querySelectorAll('.chat-item').forEach(item => {
             if (item.dataset.id === chatId) {
                 item.classList.add('active');
@@ -716,7 +681,6 @@ Hãy trả lời bằng tiếng Việt, tập trung vào chủ đề văn học.
         localStorage.setItem('vanw-chatbot-chats', JSON.stringify(chats));
     }
 
-    // Thêm hàm copyToClipboard vào window để có thể gọi từ các nút trong message
     window.copyToClipboard = function(button) {
         const code = decodeURIComponent(button.getAttribute('data-code'));
         navigator.clipboard.writeText(code).then(() => {
@@ -734,20 +698,13 @@ Hãy trả lời bằng tiếng Việt, tập trung vào chủ đề văn học.
         });
     };
 
-    // Khởi tạo gợi ý ban đầu
     updateSuggestions([]);
 }
 
-// Khởi tạo popup chatbot khi mở
 document.addEventListener('DOMContentLoaded', function() {
-    // Kiểm tra nếu popup đã mở và là chatbot
     if (document.getElementById('popupTitle') && document.getElementById('popupTitle').textContent === 'Chatbot AI Văn Học') {
-        // Chờ một chút để đảm bảo DOM đã render
         setTimeout(initChatbot, 300);
     }
 });
 
-// Xuất hàm initChatbot ra global scope
-
 window.initChatbot = initChatbot;
-
