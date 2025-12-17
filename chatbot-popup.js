@@ -3,7 +3,7 @@
 // API Key được lấy trực tiếp từ mã nguồn (không cần đọc file)
 // Sử dụng tên biến khác để tránh trùng với script.js
 const CHATBOT_REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
-const CHATBOT_API_KEY = CHATBOT_REVERSED_API_KEY.split('').reverse().join('');
+const CHATBOT_API_KEY = "AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
 
 // Biến toàn cục
 let chats = [];
@@ -175,7 +175,7 @@ function initChatbot() {
 
 async function callGeminiAPI(prompt) {
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${CHATBOT_API_KEY}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${CHATBOT_API_KEY}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -750,3 +750,4 @@ document.addEventListener('DOMContentLoaded', function() {
 // Xuất hàm initChatbot ra global scope
 
 window.initChatbot = initChatbot;
+
