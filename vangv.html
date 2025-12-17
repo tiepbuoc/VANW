@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -10,7 +11,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
 </head>
 <body>
-    <!-- Web Icon ở góc trái -->
     <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
         <img src="logo.png" alt="Website Icon" />
     </a>
@@ -21,13 +21,11 @@
                 <div class="teaching-card">
                     <h2>HỖ TRỢ GIẢNG DẠY VĂN HỌC</h2>
                     
-                    <!-- Input Area -->
                     <div class="input-area">
                         <textarea id="inputText" placeholder="Nhập nội dung văn bản văn học cần giảng dạy... (Tối thiểu 50 từ)"></textarea>
                         <div class="word-count" id="wordCount">0 từ</div>
                     </div>
                     
-                    <!-- Action Buttons -->
                     <div class="action-buttons">
                         <button id="generateAllBtn" class="generate-btn">
                             <i class="fas fa-chalkboard-teacher mr-2"></i> Tạo Nội Dung Giảng Dạy
@@ -37,9 +35,7 @@
                         </button>
                     </div>
                     
-                    <!-- Settings Panel -->
                     <div class="settings-panel" id="settingsPanel">
-                        <!-- Tab Navigation for Settings -->
                         <div class="tab-navigation">
                             <button class="tab-btn active" data-tab="teaching-settings">
                                 <i class="fas fa-chalkboard-teacher mr-2"></i> Cài đặt bài giảng
@@ -52,7 +48,6 @@
                             </button>
                         </div>
                         
-                        <!-- Teaching Settings Tab -->
                         <div class="tab-content active" id="teaching-settings-tab">
                             <div class="options-grid">
                                 <div class="option-card">
@@ -112,7 +107,6 @@
                             </div>
                         </div>
                         
-                        <!-- Exam Settings Tab -->
                         <div class="tab-content" id="exam-settings-tab">
                             <div class="options-grid">
                                 <div class="option-card">
@@ -184,7 +178,6 @@
                             </div>
                         </div>
                         
-                        <!-- Notes Settings Tab -->
                         <div class="tab-content" id="notes-settings-tab">
                             <div class="options-grid">
                                 <div class="option-card">
@@ -202,7 +195,6 @@
                         </div>
                     </div>
                     
-                    <!-- Progress Area -->
                     <div class="progress-container" id="progressContainer" style="display: none;">
                         <div class="progress-header">
                             <div class="progress-title">Đang tạo nội dung giảng dạy</div>
@@ -212,11 +204,9 @@
                             <div class="progress-fill" id="progressFill" style="width: 0%"></div>
                         </div>
                         <div class="progress-items" id="progressItems">
-                            <!-- Progress items will be added here dynamically -->
                         </div>
                     </div>
                     
-                    <!-- Result Tabs -->
                     <div class="result-tabs-container" id="resultTabs" style="display: none;">
                         <div class="tab-navigation">
                             <button class="tab-btn active" data-tab="teaching-result">
@@ -227,12 +217,10 @@
                             </button>
                         </div>
                         
-                        <!-- Teaching Result Tab -->
                         <div class="tab-content active" id="teaching-result-tab">
                             <div class="result-area" id="teachingResult"></div>
                         </div>
                         
-                        <!-- Exam Result Tab -->
                         <div class="tab-content" id="exam-result-tab">
                             <div class="result-area" id="examResult"></div>
                         </div>
@@ -246,7 +234,6 @@
         </footer>
     </div>
 
-    <!-- Preview Modal -->
     <div id="previewModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -254,7 +241,6 @@
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body" id="previewContent">
-                <!-- Preview content will be inserted here -->
             </div>
             <div class="modal-footer">
                 <button class="modal-btn" id="printPreviewBtn">
@@ -267,7 +253,6 @@
         </div>
     </div>
 
-    <!-- Edit Exam Modal -->
     <div id="editExamModal" class="modal">
         <div class="modal-content large-modal">
             <div class="modal-header">
@@ -276,7 +261,6 @@
             </div>
             <div class="modal-body">
                 <div class="exam-editor-container" id="examEditorContainer">
-                    <!-- Exam editor will be loaded here -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -290,7 +274,6 @@
         </div>
     </div>
 
-    <!-- Firestore Database Integration -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
