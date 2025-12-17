@@ -1,4 +1,3 @@
-// JavaScript cho popup bản đồ văn học - ĐÃ SỬA
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Map popup script đang khởi tạo...');
     
@@ -23,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentAuthorMarker = null;
     let countryLayers = {};
     let selectedCountryLayer = null;
+    let currentlySelectedCountry = null;
     let hoangSaLayer = null;
     let truongSaLayer = null;
     let hoangSaText = null;
@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let userLocation = null;
     let db = null;
 
-    const MAP_REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
     const MAP_API_KEY = "AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
 
     const countryNameMap = {
@@ -238,7 +237,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ĐÃ SỬA: Ẩn marker vị trí người dùng
     function showUserLocation() {
         if (navigator.geolocation) {
             console.log('Đang lấy vị trí người dùng...');
@@ -263,23 +261,37 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     console.log('Vị trí người dùng:', userLocation);
                     
-                    // ĐÃ SỬA: Không hiển thị marker, chỉ cập nhật vị trí
                     if (userLocationMarker) {
                         map.removeLayer(userLocationMarker);
-                        userLocationMarker = null;
                     }
                     
-                    // Cập nhật trạng thái nút
+                    userLocationMarker = L.marker([userLocation.lat, userLocation.lng], {
+                        icon: userLocationIcon,
+                        zIndexOffset: 1000
+                    }).addTo(map);
+                    
+                    const accuracy = position.coords.accuracy;
+                    userLocationMarker.bindPopup(`
+                        <div style="text-align: center;">
+                            <h3 style="margin: 5px 0; color: #4285F4;">Vị trí của bạn</h3>
+                            <p style="margin: 5px 0;"><strong>Kinh độ:</strong> ${userLocation.lng.toFixed(6)}</p>
+                            <p style="margin: 5px 0;"><strong>Vĩ độ:</strong> ${userLocation.lat.toFixed(6)}</p>
+                            <p style="margin: 5px 0;"><strong>Độ chính xác:</strong> ~${Math.round(accuracy)} mét</p>
+                            <small style="color: #666;">Cập nhật: ${new Date().toLocaleTimeString()}</small>
+                        </div>
+                    `);
+                    
+                    const zoomLevel = accuracy < 100 ? 16 : accuracy < 500 ? 14 : 12;
+                    map.flyTo([userLocation.lat, userLocation.lng], zoomLevel);
+                    
                     const toggleLocationBtn = document.getElementById('toggleLocationBtn');
                     if (toggleLocationBtn) {
                         toggleLocationBtn.classList.add('active');
                         toggleLocationBtn.innerHTML = '<i class="fas fa-location-crosshairs"></i> Ẩn vị trí của tôi';
                     }
                     
-                    // Cập nhật thông tin vị trí hiển thị
                     updateLocationInfo(userLocation);
                     
-                    // Tự động tìm tác giả gần đó
                     setTimeout(() => {
                         findAndShowNearbyAuthors();
                     }, 1000);
@@ -336,7 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function toggleUserLocation() {
-        if (userLocation) {
+        if (userLocationMarker) {
             hideUserLocation();
         } else {
             showUserLocation();
@@ -381,7 +393,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const nearbyAuthors = findAuthorsNearby(userLocation.lat, userLocation.lng);
             showNearbyAuthors(nearbyAuthors);
             
-            // Zoom đến khu vực xung quanh
             map.flyTo([userLocation.lat, userLocation.lng], 10);
         }, 500);
     }
@@ -628,7 +639,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                         <i class="fas fa-history"></i> Lọc theo thế kỷ:
                                                         <span id="centuryValue" class="info-value" style="font-weight: normal;">Tất cả thế kỷ</span>
                                                     </label>
-                                                    <input type="range" id="centurySlider" class="slider" min="0" max="5" value="5">
+                                                    <input type="range" id="centurySlider" class="slider" min="0" max="6" value="6" step="1">
                                                 </div>
                                                 
                                                 <div class="advanced-field">
@@ -659,7 +670,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                                     <button id="toggleLocationBtn" class="control-btn secondary">
                                                         <i class="fas fa-location-crosshairs"></i> Vị trí của tôi
                                                     </button>
-                                                    <!-- ĐÃ SỬA: Xóa nút "Hiển thị tác giả gần tôi" -->
                                                     <button id="refreshDataBtn" class="control-btn secondary">
                                                         <i class="fas fa-sync-alt"></i> Tải lại dữ liệu
                                                     </button>
@@ -674,7 +684,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                                     <div id="locationAddress" style="font-size: 0.8rem; color: #666; margin-top: 5px;"></div>
                                                 </div>
                                             </div>
-                                            <!-- ĐÃ SỬA: Đổi tên nút "Áp dụng" thành "Tác giả" -->
                                             <div class="advanced-search-actions">
                                                 <button id="applyAdvancedSearch" class="control-btn secondary" style="flex: 2;">
                                                     <i class="fas fa-users"></i> Tác giả
@@ -997,8 +1006,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             countryLayers[countryName] = layer;
                             
                             layer.on('click', (e) => {
-                                highlightCountry(countryName);
-                                showCountryInfo(countryName);
+                                toggleCountrySelection(countryName);
                             });
                             
                             layer.on('mouseover', function() {
@@ -1030,6 +1038,55 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch(error => {
                     console.error('Lỗi tải dữ liệu địa lý quốc gia:', error);
                 });
+        }
+        
+        function toggleCountrySelection(countryName) {
+            if (currentlySelectedCountry === countryName) {
+                clearCountrySelection();
+                return;
+            }
+            
+            highlightCountry(countryName);
+            showCountryInfo(countryName);
+            currentlySelectedCountry = countryName;
+        }
+        
+        function clearCountrySelection() {
+            if (selectedCountryLayer) {
+                selectedCountryLayer.setStyle({ 
+                    color: 'transparent',
+                    fillOpacity: 0,
+                    weight: 0
+                });
+                if (selectedCountryLayer.getElement()) {
+                    selectedCountryLayer.getElement().classList.remove('country-highlight');
+                }
+                selectedCountryLayer = null;
+            }
+            
+            currentlySelectedCountry = null;
+            
+            const countryInfoContent = document.getElementById('countryInfoContent');
+            if (countryInfoContent) {
+                countryInfoContent.innerHTML = `
+                    <div class="info-section">
+                        <h3 style="margin: 0 0 15px 0; color: var(--primary-color);">
+                            <i class="fas fa-globe-asia"></i> Bản đồ Văn học
+                        </h3>
+                        <p style="color: var(--text-secondary);">
+                            Nhấp vào một quốc gia trên bản đồ để xem thông tin văn học và các tác giả nổi bật.
+                        </p>
+                        ${userLocation ? `
+                            <div style="margin-top: 15px; padding: 10px; background-color: rgba(66, 133, 244, 0.1); border-radius: 6px;">
+                                <p style="margin: 0; color: #4285F4; font-size: 0.9rem;">
+                                    <i class="fas fa-map-marker-alt"></i> Vị trí của bạn đã được xác định. 
+                                    <a href="javascript:void(0)" onclick="findAndShowNearbyAuthors()" style="color: #4285F4; text-decoration: underline;">Tìm tác giả gần bạn</a>
+                                </p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
         }
         
         function displayAuthors() {
@@ -1125,7 +1182,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // ĐÃ SỬA: Hiển thị toàn bộ tác giả của quốc gia, không bị cắt
         async function showCountryInfo(countryName) {
             const countryInfoContent = document.getElementById('countryInfoContent');
             
@@ -1152,7 +1208,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="info-section">
                             <span class="info-label"><i class="fas fa-book"></i> Lịch sử văn học:</span>
                             <div class="short-bio">
-                                <p>${historyInfo.history || historyInfo || "Chưa có thông tin lị sử văn học."}</p>
+                                <p>${historyInfo.history || historyInfo || "Chưa có thông tin lịch sử văn học."}</p>
                             </div>
                         </div>
                         
@@ -1162,7 +1218,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 
                 if (countryAuthors.length > 0) {
-                    // ĐÃ SỬA: Hiển thị toàn bộ tác giả, không bị cắt 10 tác giả
                     countryInfoHTML += `
                         <div style="max-height: 300px; overflow-y: auto;">
                             ${countryAuthors.map(author => `
@@ -1486,7 +1541,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (applyAdvancedSearch) {
                 applyAdvancedSearch.addEventListener('click', function() {
-                    // ĐÃ SỬA: Khi nhấn nút "Tác giả", hiển thị tất cả tác giả và cho phép click để zoom đến vị trí
                     const allAuthors = [...authors];
                     displayAllAuthorsList(allAuthors);
                 });
@@ -1505,8 +1559,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             if (centurySlider) {
+                const centuryValueElement = document.getElementById('centuryValue');
+                const centuryLabels = [
+                    "Trước thế kỷ 16",
+                    "Thế kỷ 16",
+                    "Thế kỷ 17",
+                    "Thế kỷ 18",
+                    "Thế kỷ 19",
+                    "Thế kỷ 20",
+                    "Thế kỷ 21",
+                    "Tất cả thế kỷ"
+                ];
+                
                 centurySlider.addEventListener('input', (e) => {
-                    filterByCentury(parseInt(e.target.value));
+                    const value = parseInt(e.target.value);
+                    centuryValueElement.textContent = centuryLabels[value];
+                    filterByCentury(value);
                 });
             }
             
@@ -1524,7 +1592,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Event listeners đã được thiết lập');
         }
         
-        // ĐÃ SỬA: Hàm hiển thị danh sách tất cả tác giả và cho phép click để zoom
         function displayAllAuthorsList(allAuthors) {
             const countryInfoContent = document.getElementById('countryInfoContent');
             
@@ -1567,7 +1634,6 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         }
         
-        // ĐÃ SỬA: Hàm mới để zoom đến tác giả và hiển thị thông tin
         window.zoomToAuthorAndShowInfo = function(authorId) {
             const author = authors.find(a => a.id === authorId);
             if (author) {
@@ -1795,92 +1861,7 @@ document.addEventListener('DOMContentLoaded', function() {
             markers.forEach(marker => marker.setIcon(defaultIcon));
         }
         
-        async function checkConnection() {
-            if (!selectedAuthor1 || !selectedAuthor2) return;
-            
-            const connectionResult = document.getElementById('connectionResult');
-            if (!connectionResult) return;
-            
-            connectionResult.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <div class="loading-spinner"></div>
-                    <p style="margin-top: 10px; color: var(--text-secondary);">Đang phân tích mối liên hệ...</p>
-                </div>
-            `;
-            connectionResult.style.display = 'block';
-            
-            try {
-                const apiKey = MAP_API_KEY;
-                if (!apiKey) {
-                    throw new Error('Không tìm thấy API key');
-                }
-                
-                const prompt = `Phân tích mối liên hệ giữa hai nhà văn ${selectedAuthor1.name} và ${selectedAuthor2.name}. 
-                Hãy so sánh về: thời đại sống, phong cách sáng tác, chủ đề chính trong tác phẩm, và ảnh hưởng của họ đến văn học. 
-                Trả lời bằng tiếng Việt, khoảng 150-200 từ.`;
-                
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: prompt
-                            }]
-                        }]
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.candidates && data.candidates[0].content.parts[0].text) {
-                    const connectionText = data.candidates[0].content.parts[0].text;
-                    connectionResult.innerHTML = `
-                        <h4 style="margin: 0 0 10px 0; color: var(--primary-color);">
-                            <i class="fas fa-link"></i> Mối liên hệ giữa ${selectedAuthor1.name} và ${selectedAuthor2.name}
-                        </h4>
-                        <div style="line-height: 1.6; font-size: 0.95rem;">
-                            ${connectionText}
-                        </div>
-                    `;
-                } else {
-                    connectionResult.innerHTML = `
-                        <p style="color: var(--text-secondary); text-align: center;">
-                            Không tìm thấy thông tin liên hệ trực tiếp giữa hai tác giả này.
-                        </p>
-                    `;
-                }
-            } catch (error) {
-                console.error('Lỗi khi kiểm tra kết nối:', error);
-                connectionResult.innerHTML = `
-                    <p style="color: #ef4444; text-align: center;">
-                        Đã xảy ra lỗi khi phân tích. Vui lòng thử lại sau.
-                    </p>
-                `;
-            }
-        }
-        
         function filterByCentury(selectedValue) {
-            let centuryText = "Tất cả thế kỷ";
-            
-            if (selectedValue === 0) {
-                centuryText = "Trước thế kỷ 17";
-            } else if (selectedValue >= 1 && selectedValue <= 4) {
-                const targetCentury = selectedValue + 16;
-                centuryText = `Thế kỷ ${targetCentury}`;
-            }
-            
-            const centuryValueElement = document.getElementById('centuryValue');
-            if (centuryValueElement) {
-                centuryValueElement.textContent = centuryText;
-            }
-            
             markers.forEach(marker => {
                 const author = authors.find(a => {
                     const latLng = marker.getLatLng();
@@ -1893,13 +1874,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 let showMarker = false;
                 
-                if (selectedValue === 5) {
+                if (selectedValue === 7) {
                     showMarker = true;
                 } else if (selectedValue === 0) {
-                    showMarker = author.century <= 16;
-                } else {
-                    const targetCentury = selectedValue + 16;
-                    showMarker = author.century === targetCentury;
+                    showMarker = author.century < 16;
+                } else if (selectedValue === 1) {
+                    showMarker = author.century === 16;
+                } else if (selectedValue === 2) {
+                    showMarker = author.century === 17;
+                } else if (selectedValue === 3) {
+                    showMarker = author.century === 18;
+                } else if (selectedValue === 4) {
+                    showMarker = author.century === 19;
+                } else if (selectedValue === 5) {
+                    showMarker = author.century === 20;
+                } else if (selectedValue === 6) {
+                    showMarker = author.century === 21;
                 }
                 
                 if (showMarker) {
@@ -2014,7 +2004,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const centurySlider = document.getElementById('centurySlider');
             const centuryValue = document.getElementById('centuryValue');
             if (centurySlider && centuryValue) {
-                centurySlider.value = 5;
+                centurySlider.value = 7;
                 centuryValue.textContent = "Tất cả thế kỷ";
             }
             
