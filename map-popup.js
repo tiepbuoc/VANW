@@ -639,7 +639,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                         <i class="fas fa-history"></i> Lọc theo thế kỷ:
                                                         <span id="centuryValue" class="info-value" style="font-weight: normal;">Tất cả thế kỷ</span>
                                                     </label>
-                                                    <input type="range" id="centurySlider" class="slider" min="0" max="6" value="6" step="1">
+                                                    <input type="range" id="centurySlider" class="slider" min="0" max="7" value="7" step="1">
                                                 </div>
                                                 
                                                 <div class="advanced-field">
@@ -686,7 +686,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             </div>
                                             <div class="advanced-search-actions">
                                                 <button id="applyAdvancedSearch" class="control-btn secondary" style="flex: 2;">
-                                                    <i class="fas fa-users"></i> Tác giả
+                                                    <i class="fas fa-filter"></i> Áp dụng bộ lọc
                                                 </button>
                                                 <button id="clearAdvancedSearch" class="control-btn" style="flex: 1;">
                                                     <i class="fas fa-times"></i> Xóa
@@ -1208,7 +1208,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="info-section">
                             <span class="info-label"><i class="fas fa-book"></i> Lịch sử văn học:</span>
                             <div class="short-bio">
-                                <p>${historyInfo.history || historyInfo || "Chưa có thông tin lịch sử văn học."}</p>
+                                <p>${historyInfo.history || historyInfo || "Chưa có thông tin lị sử văn học."}</p>
                             </div>
                         </div>
                         
@@ -1540,10 +1540,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const refreshDataBtn = document.getElementById('refreshDataBtn');
             
             if (applyAdvancedSearch) {
-                applyAdvancedSearch.addEventListener('click', function() {
-                    const allAuthors = [...authors];
-                    displayAllAuthorsList(allAuthors);
-                });
+                applyAdvancedSearch.addEventListener('click', applyAdvancedSearchFilter);
             }
             
             if (clearAdvancedSearch) {
@@ -2075,6 +2072,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     marker.addTo(map);
                 }
             });
+        }
+        
+        function checkConnection() {
+            if (!selectedAuthor1 || !selectedAuthor2) {
+                showNotification('Vui lòng chọn cả hai tác giả để kiểm tra liên hệ!', 'error');
+                return;
+            }
+            
+            const connectionResult = document.getElementById('connectionResult');
+            if (!connectionResult) return;
+            
+            connectionResult.style.display = 'block';
+            connectionResult.innerHTML = `
+                <h4 style="margin: 0 0 10px 0; color: var(--primary-color);">
+                    <i class="fas fa-link"></i> Kết nối giữa ${selectedAuthor1.name} và ${selectedAuthor2.name}
+                </h4>
+                <div style="margin-bottom: 10px;">
+                    <p><strong>Tác giả 1:</strong> ${selectedAuthor1.name} (${selectedAuthor1.country || 'Không rõ'}, ${selectedAuthor1.century ? 'Thế kỷ ' + selectedAuthor1.century : 'Không rõ'})</p>
+                    <p><strong>Tác giả 2:</strong> ${selectedAuthor2.name} (${selectedAuthor2.country || 'Không rõ'}, ${selectedAuthor2.century ? 'Thế kỷ ' + selectedAuthor2.century : 'Không rõ'})</p>
+                </div>
+                ${selectedAuthor1.connections && selectedAuthor1.connections.includes(selectedAuthor2.id) ? 
+                    `<p style="color: #28a745;"><i class="fas fa-check-circle"></i> Hai tác giả có kết nối trực tiếp trong cơ sở dữ liệu.</p>` :
+                    `<p style="color: var(--text-secondary);"><i class="fas fa-info-circle"></i> Không tìm thấy kết nối trực tiếp trong cơ sở dữ liệu.</p>`
+                }
+            `;
+            
+            connectionResult.scrollIntoView({ behavior: 'smooth' });
         }
     }
     
