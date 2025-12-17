@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // API Key cho bản đồ
     const MAP_REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
-    const MAP_API_KEY = MAP_REVERSED_API_KEY.split('').reverse().join('');
+    const MAP_API_KEY = "AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
 
     // Bản đồ chuyển đổi tên quốc gia
     const countryNameMap = {
@@ -1898,7 +1898,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 Hãy so sánh về: thời đại sống, phong cách sáng tác, chủ đề chính trong tác phẩm, và ảnh hưởng của họ đến văn học. 
                 Trả lời bằng tiếng Việt, khoảng 150-200 từ.`;
                 
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -2237,3 +2237,4 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Map popup script đã được tải đầy đủ và ĐÃ SỬA LỖI WIKIPEDIA');
 });
+
