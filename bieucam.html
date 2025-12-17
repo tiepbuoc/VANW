@@ -7,13 +7,10 @@
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Import Normalize CSS */
         @import url('https://unpkg.com/normalize.css') layer(normalize);
         
-        /* CSS Layers */
         @layer normalize, base, demo;
         
-        /* Demo Layer */
         @layer demo {
             body {
                 align-content: center;
@@ -176,7 +173,6 @@
                 text-decoration: underline;
             }
             
-            /* Responsive */
             @media (max-width: 768px) {
                 body {
                     padding: 1rem;
@@ -258,7 +254,6 @@
                 }
             }
             
-            /* Cải thiện cho màn hình lớn */
             @media (min-width: 1200px) {
                 .app-header img {
                     margin-top: 30px;
@@ -280,7 +275,6 @@
             }
         }
         
-        /* Base Layer */
         @layer base {
             :root {
                 --font-size-min: 16;
@@ -372,7 +366,6 @@
                 opacity: 1;
             }
 
-            /* Utilities */
             .sr-only {
                 position: absolute;
                 width: 1px;
@@ -388,12 +381,10 @@
     </style>
 </head>
 <body>
-    <!-- Web Icon -->
     <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
         <img src="logo.png" alt="Website Icon" />
     </a>
     
-    <!-- Main Content -->
     <div class="app-container">
         <header class="app-header">
             <img src="error.png" alt="VANW" />
@@ -415,9 +406,7 @@
     </div>
 
     <script>
-        // Thêm hiệu ứng khi trang tải xong
         document.addEventListener('DOMContentLoaded', function() {
-            // Hiệu ứng fade in cho container
             const errorContainer = document.querySelector('.error-container');
             errorContainer.style.opacity = '0';
             errorContainer.style.transform = 'translateY(20px)';
@@ -428,7 +417,6 @@
                 errorContainer.style.transform = 'translateY(0)';
             }, 100);
             
-            // Thêm hiệu ứng hover cho các contact item
             document.querySelectorAll('.contact-item').forEach(item => {
                 item.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-3px)';
