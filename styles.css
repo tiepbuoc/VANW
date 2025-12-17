@@ -1,6 +1,4 @@
-Dưới đây là toàn bộ chương trình CSS đã được viết lại và xóa hết các comment:
 
-```css
 @import url('https://unpkg.com/normalize.css') layer(normalize);
 @layer normalize, base, demo;
 @layer base {
@@ -808,3 +806,4 @@ Dưới đây là toàn bộ chương trình CSS đã được viết lại và 
     }
 }
 ```
+
