@@ -7,7 +7,6 @@
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Layers */
         :root {
             --font-size-min: 16;
             --font-size-max: 20;
@@ -16,7 +15,6 @@
             --font-width-min: 375;
             --font-width-max: 1500;
             
-            /* Light theme variables - Màu cam đậm hơn (#e37c2d) */
             --bg-color: #f5f5f5;
             --card-bg: #ffffff;
             --card-outline: #b0b0b0;
@@ -40,7 +38,6 @@
             box-sizing: border-box;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
             height: 10px;
@@ -406,7 +403,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
@@ -442,7 +438,6 @@
             }
         }
 
-        /* Form validation styles */
         .input-with-icon input.error {
             border-color: var(--error-color);
             box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.2);
@@ -464,7 +459,6 @@
             display: block;
         }
 
-        /* Additional info text */
         .info-text {
             color: var(--text-secondary);
             font-size: 0.85rem;
@@ -474,7 +468,6 @@
     </style>
 </head>
 <body>
-    <!-- Web Icon ở góc trái -->
     <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
         <img src="logo.png" alt="Website Icon" />
     </a>
@@ -485,13 +478,11 @@
                 <h2>VANW</h2>
             </div>
             
-            <!-- Tab Navigation -->
             <div class="auth-tabs">
                 <button class="auth-tab active" id="loginTab">Đăng nhập</button>
                 <button class="auth-tab" id="registerTab">Đăng ký</button>
             </div>
             
-            <!-- Login Form -->
             <form class="auth-form active" id="loginForm">
                 <div class="form-group">
                     <label for="loginEmail">Email</label>
@@ -525,7 +516,6 @@
                 </div>
             </form>
             
-            <!-- Register Form -->
             <form class="auth-form" id="registerForm">
                 <div class="form-group">
                     <label for="registerName">Họ và tên</label>
@@ -584,13 +574,11 @@
         </div>
     </div>
 
-    <!-- Firebase Configuration -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
     <script>
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBLZpLQKl0x-kMez2v5NURU5qSthT_6qYI",
             authDomain: "loginnn-b1dc0.firebaseapp.com",
@@ -601,7 +589,6 @@
             measurementId: "G-XF2ZBFBCR7"
         };
 
-        // Initialize Firebase
         let firebaseApp = null;
         let auth = null;
         let db = null;
@@ -615,7 +602,6 @@
             console.warn("Firebase initialization error:", error);
         }
 
-        // Hiển thị thông báo
         function showNotification(message, type = 'info') {
             const oldNotification = document.querySelector('.notification');
             if (oldNotification) {
@@ -643,18 +629,15 @@
             }, 4000);
         }
 
-        // Kiểm tra email hợp lệ
         function isValidEmail(email) {
             const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(email).toLowerCase());
         }
 
-        // Kiểm tra mật khẩu mạnh
         function isStrongPassword(password) {
             return password.length >= 6;
         }
 
-        // Hiển thị/ẩn mật khẩu
         function setupPasswordToggle() {
             const toggles = [
                 { toggleId: 'loginPasswordToggle', inputId: 'loginPassword' },
@@ -682,7 +665,6 @@
             });
         }
 
-        // Chuyển đổi giữa đăng nhập và đăng ký
         function setupAuthTabs() {
             const loginTab = document.getElementById('loginTab');
             const registerTab = document.getElementById('registerTab');
@@ -717,7 +699,6 @@
             });
         }
 
-        // Xử lý lỗi validation
         function showError(elementId, message) {
             const element = document.getElementById(elementId);
             const errorElement = document.getElementById(`${elementId}Error`);
@@ -753,13 +734,11 @@
             }
         }
 
-        // Xử lý đăng ký
         function setupRegisterForm() {
             const registerForm = document.getElementById('registerForm');
             const registerBtn = document.getElementById('registerBtn');
             const registerText = document.getElementById('registerText');
 
-            // Real-time validation
             const nameInput = document.getElementById('registerName');
             const emailInput = document.getElementById('registerEmail');
             const passwordInput = document.getElementById('registerPassword');
@@ -788,7 +767,6 @@
                     showSuccess('registerPassword');
                 }
                 
-                // Check confirm password again
                 if (confirmPasswordInput.value) {
                     if (confirmPasswordInput.value !== passwordInput.value) {
                         showError('registerConfirmPassword', 'Mật khẩu không khớp');
@@ -814,7 +792,6 @@
                 const password = passwordInput.value;
                 const confirmPassword = confirmPasswordInput.value;
 
-                // Validation
                 let isValid = true;
 
                 if (name.length < 2) {
@@ -842,38 +819,32 @@
                     return;
                 }
 
-                // Disable button và hiển thị loading
                 registerBtn.disabled = true;
                 const originalText = registerText.textContent;
                 registerText.innerHTML = '<div class="loading"></div> Đang xử lý...';
 
                 try {
-                    // Tạo người dùng với Firebase Authentication
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     const user = userCredential.user;
 
-                    // Lưu thông tin bổ sung vào Firestore
                     await db.collection('users').doc(user.uid).set({
                         name: name,
                         email: email,
-                        role: 'student', // Mặc định là học sinh
+                        role: 'student',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
 
-                    // Gửi email xác nhận
                     await user.sendEmailVerification();
 
                     showNotification('Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.', 'success');
                     
-                    // Reset form
                     registerForm.reset();
                     clearError('registerName');
                     clearError('registerEmail');
                     clearError('registerPassword');
                     clearError('registerConfirmPassword');
                     
-                    // Chuyển sang tab đăng nhập sau 2 giây
                     setTimeout(() => {
                         document.getElementById('loginTab').click();
                     }, 2000);
@@ -904,20 +875,17 @@
                     
                     showNotification(errorMessage, 'error');
                 } finally {
-                    // Khôi phục button
                     registerBtn.disabled = false;
                     registerText.textContent = originalText;
                 }
             });
         }
 
-        // Xử lý đăng nhập
         function setupLoginForm() {
             const loginForm = document.getElementById('loginForm');
             const loginBtn = document.getElementById('loginBtn');
             const loginText = document.getElementById('loginText');
 
-            // Real-time validation
             const emailInput = document.getElementById('loginEmail');
             const passwordInput = document.getElementById('loginPassword');
 
@@ -943,7 +911,6 @@
                 const email = emailInput.value.trim();
                 const password = passwordInput.value;
 
-                // Validation
                 let isValid = true;
 
                 if (!isValidEmail(email)) {
@@ -961,30 +928,24 @@
                     return;
                 }
 
-                // Disable button và hiển thị loading
                 loginBtn.disabled = true;
                 const originalText = loginText.textContent;
                 loginText.innerHTML = '<div class="loading"></div> Đang đăng nhập...';
 
                 try {
-                    // Đăng nhập với Firebase Authentication
                     const userCredential = await auth.signInWithEmailAndPassword(email, password);
                     const user = userCredential.user;
 
-                    // Kiểm tra email đã được xác nhận chưa
                     if (!user.emailVerified) {
                         showNotification('Vui lòng xác nhận email trước khi đăng nhập. Kiểm tra hộp thư của bạn.', 'error');
                         
-                        // Đăng xuất nếu email chưa xác nhận
                         await auth.signOut();
                         return;
                     }
 
-                    // Lấy thông tin người dùng từ Firestore
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     const userData = userDoc.data();
 
-                    // Lưu thông tin người dùng vào localStorage
                     localStorage.setItem('user', JSON.stringify({
                         uid: user.uid,
                         email: user.email,
@@ -994,7 +955,6 @@
 
                     showNotification('Đăng nhập thành công!', 'success');
                     
-                    // Chuyển hướng đến trang chính sau 1 giây
                     setTimeout(() => {
                         window.location.href = 'index.html';
                     }, 1000);
@@ -1026,29 +986,24 @@
                     
                     showNotification(errorMessage, 'error');
                 } finally {
-                    // Khôi phục button
                     loginBtn.disabled = false;
                     loginText.textContent = originalText;
                 }
             });
         }
 
-        // Khởi tạo khi trang được tải
         document.addEventListener('DOMContentLoaded', function() {
             setupPasswordToggle();
             setupAuthTabs();
             setupRegisterForm();
             setupLoginForm();
 
-            // Kiểm tra nếu đã đăng nhập thì chuyển hướng
             auth.onAuthStateChanged((user) => {
                 if (user && user.emailVerified) {
-                    // Đã đăng nhập và email đã xác nhận, chuyển hướng đến trang chính
                     window.location.href = 'index.html';
                 }
             });
 
-            // Focus vào email input của form đăng nhập
             document.getElementById('loginEmail')?.focus();
         });
     </script>
