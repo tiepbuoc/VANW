@@ -6,17 +6,13 @@
     <title>VANW</title>
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <style>
-        /* Import Normalize CSS */
         @import url('https://unpkg.com/normalize.css') layer(normalize);
         
-        /* CSS Layers */
         @layer normalize, base, demo;
         
-        /* Demo Layer */
         @layer demo {
             body {
                 align-content: center;
@@ -135,7 +131,6 @@
                 color: #000000;
             }
             
-            /* LIQUID GLASS BAR STYLES */
             .liquid-glass-section {
                 width: 100%;
                 max-width: 800px;
@@ -194,7 +189,6 @@
                 border-radius: inherit;
             }
 
-            /* Text styling */
             .liquidGlass-text {
                 z-index: 3;
                 font-size: 1.4rem;
@@ -216,7 +210,6 @@
                 paint-order: stroke fill;
             }
             
-            /* Icon styling */
             .liquidGlass-text i {
                 font-size: 1.2rem;
                 transition: transform 0.3s ease;
@@ -239,7 +232,6 @@
                 transform: translateY(3px);
             }
             
-            /* Dropdown Menu Styles */
             .features-dropdown {
                 max-height: 0;
                 overflow: hidden;
@@ -261,7 +253,6 @@
                 overflow: visible;
             }
             
-            /* Container cho dropdown */
             .dropdown-container {
                 position: relative;
                 border-radius: 1.5rem;
@@ -308,7 +299,6 @@
                 justify-content: center;
             }
             
-            /* Hiệu ứng làm mờ cho từng feature item */
             .feature-item .liquidGlass-effect {
                 opacity: 0;
                 transition: opacity 0.3s ease;
@@ -335,7 +325,6 @@
                 background: rgba(255, 255, 255, 0.25);
             }
             
-            /* Text styling trong dropdown */
             .feature-item h3 {
                 margin: 0 0 0.8rem 0;
                 color: #ed7839;
@@ -356,7 +345,6 @@
                 paint-order: stroke fill;
             }
             
-            /* Icon styling trong dropdown */
             .feature-item h3 i {
                 color: #ed7839;
                 font-size: 1.3rem;
@@ -372,7 +360,6 @@
                     -0.5px 0 0 #fff;
             }
             
-            /* Paragraph styling trong dropdown */
             .feature-item p {
                 margin: 0;
                 color: #ed7839;
@@ -381,7 +368,6 @@
                 font-weight: 500;
             }
             
-            /* Footer với nút đăng xuất */
             .app-footer {
                 text-align: center;
                 margin-top: 3rem;
@@ -435,7 +421,6 @@
                 text-decoration: underline;
             }
             
-            /* Responsive */
             @media (max-width: 768px) {
                 .app-container {
                     padding: 1rem;
@@ -564,7 +549,6 @@
                 }
             }
             
-            /* Cải thiện cho màn hình lớn */
             @media (min-width: 1200px) {
                 .app-header img {
                     margin-top: 30px;
@@ -580,7 +564,6 @@
                 }
             }
             
-            /* Animation cho icon khi mở dropdown */
             @keyframes bounce {
                 0%, 20%, 50%, 80%, 100% {
                     transform: translateY(0);
@@ -598,7 +581,6 @@
             }
         }
         
-        /* Base Layer */
         @layer base {
             :root {
                 --font-size-min: 16;
@@ -699,7 +681,6 @@
                 opacity: 1;
             }
 
-            /* Utilities */
             .sr-only {
                 position: absolute;
                 width: 1px;
@@ -712,7 +693,6 @@
                 border-width: 0;
             }
             
-            /* Loading Screen */
             .loading-screen {
                 position: fixed;
                 top: 0;
@@ -760,7 +740,6 @@
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-container">
             <svg viewBox="0 0 200 200">
@@ -781,7 +760,6 @@
         </div>
     </div>
     
-    <!-- Main Content -->
     <div class="app-container" id="mainContent" style="display: none;">
         <header class="app-header">
             <img src="text.png" alt="VANW" />
@@ -809,9 +787,7 @@
             </article>
         </main>
         
-        <!-- Liquid Glass Bar Section -->
         <div class="liquid-glass-section">
-            <!-- Thanh ngang Liquid Glass -->
             <div class="liquidGlass-wrapper" id="liquidGlassBar">
                 <div class="liquidGlass-effect"></div>
                 <div class="liquidGlass-tint"></div>
@@ -822,7 +798,6 @@
                 </div>
             </div>
             
-            <!-- Dropdown Menu - Nối liền với thanh ngang -->
             <div class="features-dropdown" id="featuresDropdown">
                 <div class="dropdown-container">
                     <div class="liquidGlass-effect"></div>
@@ -868,20 +843,17 @@
         </footer>
     </div>
     
-    <!-- SVG Filters -->
     <svg class="sr-only" style="overflow: visible !important;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <filter id="blur" width="500%" height="500%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="28" />
         </filter>
     </svg>
     
-    <!-- Web Icon -->
     <a aria-label="Website Icon" class="web-icon" href="#" target="_blank" rel="noreferrer noopener">
         <img src="logo.png" alt="Website Icon" />
     </a>
 
     <script>
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBLZpLQKl0x-kMez2v5NURU5qSthT_6qYI",
             authDomain: "loginnn-b1dc0.firebaseapp.com",
@@ -892,37 +864,29 @@
             measurementId: "G-XF2ZBFBCR7"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // Kiểm tra trạng thái đăng nhập
         function checkAuthState() {
             auth.onAuthStateChanged((user) => {
                 if (user) {
-                    // Người dùng đã đăng nhập - CHỈ bắt đầu animation loading
                     startLoadingAnimation(user);
                 } else {
-                    // Chưa đăng nhập, chuyển hướng đến trang login
                     window.location.href = 'login.html';
                 }
             });
         }
 
-        // Bắt đầu animation loading và sau đó hiển thị nội dung
         function startLoadingAnimation(user) {
             const loadingScreen = document.getElementById('loadingScreen');
             const mainContent = document.getElementById('mainContent');
             
-            // Hiển thị màn hình loading
             loadingScreen.style.display = 'grid';
             loadingScreen.style.opacity = '1';
             loadingScreen.style.visibility = 'visible';
             
-            // Bắt đầu animation spinner
             animateSpinner();
             
-            // Sau 4 giây (đủ để xem hiệu ứng loading), hiển thị nội dung chính
             setTimeout(() => {
                 loadingScreen.style.opacity = '0';
                 loadingScreen.style.visibility = 'hidden';
@@ -930,13 +894,11 @@
                 setTimeout(() => {
                     loadingScreen.style.display = 'none';
                 }, 500);
-            }, 4000); // 4 giây delay
+            }, 4000);
         }
 
-        // Đăng xuất
         function logout() {
             auth.signOut().then(() => {
-                // Đăng xuất thành công, chuyển hướng đến trang login
                 window.location.href = 'login.html';
             }).catch((error) => {
                 console.error('Lỗi đăng xuất:', error);
@@ -944,7 +906,6 @@
             });
         }
 
-        // Navigation function với kiểm tra đăng nhập
         function navigateTo(url) {
             auth.onAuthStateChanged((user) => {
                 if (user) {
@@ -955,7 +916,6 @@
             });
         }
 
-        // Loading animation - GIỮ NGUYÊN HIỆU ỨNG LOADING TRONG 4 GIÂY
         function animateSpinner() {
             const svgGroup = document.querySelector("#gooey");
             if (!svgGroup) return;
@@ -977,7 +937,6 @@
             svgGroup.querySelectorAll(".dot").forEach((dot) => dot.remove());
             centerDot = createDot(100, 100, 6);
 
-            // Cardinal directions
             const first4 = [
                 { cx: 100, cy: 100 - spacing },
                 { cx: 100, cy: 100 + spacing },
@@ -1004,7 +963,6 @@
                 }, 500);
             });
 
-            // Diagonals
             setTimeout(() => {
                 const diagSpacing = spacing / Math.sqrt(2);
                 const diagonal = [
@@ -1031,12 +989,10 @@
                 });
             }, 1000);
 
-            // Rotate the whole group
             setTimeout(() => {
                 svgGroup.style.transform = "rotate(360deg)";
             }, 2500);
 
-            // Back to single dot
             setTimeout(() => {
                 svgGroup.style.transition = "transform 0.5s linear";
                 svgGroup.style.transform = "rotate(0deg)";
@@ -1048,22 +1004,18 @@
             }, 3000);
         }
 
-        // Liquid Glass Bar functionality
         const liquidGlassBar = document.getElementById('liquidGlassBar');
         const featuresDropdown = document.getElementById('featuresDropdown');
         const chevronIcon = liquidGlassBar.querySelector('.fa-chevron-down');
         
-        // Đo chiều cao của dropdown khi mở
         function updateDropdownHeight() {
             if (featuresDropdown.classList.contains('active')) {
                 const container = featuresDropdown.querySelector('.dropdown-container');
                 const grid = container.querySelector('.features-grid');
-                // Tính toán chiều cao thực tế
                 const containerHeight = container.scrollHeight;
                 const gridHeight = grid.scrollHeight;
-                const totalHeight = Math.max(containerHeight, gridHeight) + 50; // Thêm padding
+                const totalHeight = Math.max(containerHeight, gridHeight) + 50;
                 
-                // Đặt max-height động dựa trên nội dung
                 featuresDropdown.style.maxHeight = totalHeight + 'px';
             }
         }
@@ -1079,10 +1031,8 @@
                 liquidGlassBar.style.transform = 'translateY(-5px)';
                 liquidGlassBar.style.boxShadow = '0 12px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 0, 0, 0.2)';
                 
-                // Cập nhật chiều cao dropdown
                 setTimeout(updateDropdownHeight, 10);
                 
-                // Add liquid glass effect to dropdown items
                 document.querySelectorAll('.feature-item').forEach(item => {
                     item.addEventListener('mouseenter', function() {
                         this.style.transform = 'translateY(-8px)';
@@ -1105,7 +1055,6 @@
             }
         });
         
-        // Add hover effect for liquid glass bar
         liquidGlassBar.addEventListener('mouseenter', function() {
             if (!featuresDropdown.classList.contains('active')) {
                 this.style.transform = 'translateY(-5px)';
@@ -1120,7 +1069,6 @@
             }
         });
         
-        // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             if (!liquidGlassBar.contains(event.target) && !featuresDropdown.contains(event.target)) {
                 featuresDropdown.classList.remove('active');
@@ -1136,11 +1084,9 @@
             }
         });
         
-        // Add click handlers for the feature items
         document.querySelectorAll('.feature-item').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.stopPropagation();
-                // Animation when clicking
                 this.classList.add('clicked');
                 this.style.transform = 'translateY(-8px) scale(0.98)';
                 
@@ -1148,14 +1094,12 @@
                     this.style.transform = 'translateY(-8px) scale(1)';
                 }, 150);
                 
-                // Remove clicked class after animation
                 setTimeout(() => {
                     this.classList.remove('clicked');
                 }, 300);
             });
         });
         
-        // Add keyboard support
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && featuresDropdown.classList.contains('active')) {
                 featuresDropdown.classList.remove('active');
@@ -1168,19 +1112,15 @@
             }
         });
         
-        // Cập nhật chiều cao dropdown khi thay đổi kích thước cửa sổ
         window.addEventListener('resize', function() {
             if (featuresDropdown.classList.contains('active')) {
                 setTimeout(updateDropdownHeight, 100);
             }
         });
         
-        // Event listeners
         document.getElementById('logoutBtn').addEventListener('click', logout);
         
-        // Khởi tạo ứng dụng
         document.addEventListener('DOMContentLoaded', function() {
-            // Kiểm tra trạng thái đăng nhập
             checkAuthState();
         });
     </script>
