@@ -35,7 +35,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
         
-        /* Self-check styles */
         .self-check-notice {
             background: linear-gradient(135deg, #ff8c00, #ffa500);
             color: white;
@@ -118,7 +117,6 @@
     </style>
 </head>
 <body>
-    <!-- Top Navigation Bar - Chỉ có 2 nút popup -->
     <div class="top-nav">
         <button class="nav-btn" id="mapMenu" aria-label="Bản đồ văn học">
             <i class="fas fa-map-marked-alt"></i>
@@ -131,17 +129,13 @@
         </button>
     </div>
     
-    <!-- ĐÃ XÓA NÚT THEME TOGGLE Ở ĐÂY -->
-    
     <div class="app-container">
         
         <main>
-            <!-- Analysis Tool -->
             <section class="analysis-tool">
                 <div class="analysis-card" id="mainAnalysisCard">
                     <h2>KHÁM PHÁ VĂN HỌC</h2>
                     
-                    <!-- Self-check notice (hidden by default) -->
                     <div class="self-check-notice" id="selfCheckNotice" style="display: none;">
                         <i class="fas fa-bolt"></i>
                         <span>Phản hồi nhanh - Đang thực hiện tự kiểm chứng</span>
@@ -150,12 +144,10 @@
                         </div>
                     </div>
                     
-                    <!-- Input Area -->
                     <div class="input-area">
                         <textarea id="inputText" placeholder="Nhập nội dung văn bản cần phân tích..."></textarea>
                     </div>
                     
-                    <!-- Action Buttons -->
                     <div class="action-buttons">
                         <button id="analyzeBtn" class="analyze-btn">
                             <i class="fas fa-search mr-2"></i> Bắt đầu phân tích
@@ -165,7 +157,6 @@
                         </button>
                     </div>
                     
-                    <!-- Settings Panel -->
                     <div class="settings-panel" id="settingsPanel">
                         <div class="options-grid">
                             <div class="option-card">
@@ -214,7 +205,6 @@
                         </div>
                     </div>
                     
-                    <!-- Progress Area -->
                     <div class="progress-container" id="progressContainer" style="display: none;">
                         <div class="progress-header">
                             <div class="progress-title">Tiến trình phân tích</div>
@@ -224,11 +214,9 @@
                             <div class="progress-fill" id="progressFill" style="width: 0%"></div>
                         </div>
                         <div class="progress-items" id="progressItems">
-                            <!-- Progress items will be added here dynamically -->
                         </div>
                     </div>
                     
-                    <!-- Result Area -->
                     <div class="result-area" id="result"></div>
                 </div>
             </section>
@@ -239,7 +227,6 @@
         </footer>
     </div>
     
-    <!-- Sidebar Popup -->
     <div class="sidebar-popup" id="sidebarPopup">
         <div class="popup-header">
             <div class="popup-title" id="popupTitle">Tiêu đề</div>
@@ -248,33 +235,26 @@
             </button>
         </div>
         <div class="popup-content" id="popupContent">
-            <!-- Nội dung popup sẽ được thêm vào đây -->
         </div>
     </div>
     
-    <!-- SVG Filter -->
     <svg class="sr-only" style="overflow: visible !important;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <filter id="blur" width="500%" height="500%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="28" />
         </filter>
     </svg>
     
-    <!-- Web Icon -->
     <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
         <img src="logo.png" alt="Website Icon" />
     </a>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     
-    <!-- Leaflet -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     
-    <!-- Font Awesome -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     
-    <!-- Geometry Utility -->
     <script src="https://cdn.jsdelivr.net/npm/leaflet.geometryutil@1.3.0/leaflet.geometryutil.min.js"></script>
 
     <script src="script.js"></script>
