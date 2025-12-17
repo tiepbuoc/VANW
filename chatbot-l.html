@@ -702,12 +702,12 @@
         const ENCODED_API_KEY = "cSrpZ5sOecGANFvg8sg3jYjki3InbsPUAySazIA";
         
         // Giải mã API key
-        const API_KEY = reverseApiKey(ENCODED_API_KEY);
+        const API_KEY = "AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
         
         import { GoogleGenerativeAI } from "@google/generative-ai";
         
         const genAI = new GoogleGenerativeAI(API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
         const chatMessages = document.getElementById('chat-messages');
         const chatForm = document.getElementById('chat-form');
