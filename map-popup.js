@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let db = null;
 
     const MAP_REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
-    const MAP_API_KEY = "AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
+    const MAP_API_KEY = "AIzaSyDq_sSF2kgHzuDgYNpQef6EDrk8MsP0vlM";
 
     const countryNameMap = {
         "Nguyễn Khuyến": "Vietnam",
@@ -2130,3 +2130,4 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Map popup script đã được tải đầy đủ và ĐÃ SỬA TẤT CẢ LỖI');
 });
+
