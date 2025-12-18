@@ -1,5 +1,5 @@
 const CHATBOT_REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
-const CHATBOT_API_KEY = "AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
+const CHATBOT_API_KEY = "AIzaSyDq_sSF2kgHzuDgYNpQef6EDrk8MsP0vlM";
 
 let chats = [];
 let currentChatId = null;
@@ -708,3 +708,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.initChatbot = initChatbot;
+
