@@ -8,13 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
     <style>
-        /* Import Normalize CSS */
         @import url('https://unpkg.com/normalize.css') layer(normalize);
 
-        /* CSS Layers */
         @layer normalize, base, demo;
 
-        /* Base Layer */
         @layer base {
             :root {
                 --font-size-min: 16;
@@ -24,7 +21,6 @@
                 --font-width-min: 375;
                 --font-width-max: 1500;
                 
-                /* Light theme variables - Màu cam đậm hơn (#e37c2d) */
                 --bg-color: #f5f5f5;
                 --card-bg: #ffffff;
                 --card-outline: #b0b0b0;
@@ -54,7 +50,6 @@
                 box-sizing: border-box;
             }
 
-            /* Custom Scrollbar Styles */
             ::-webkit-scrollbar {
                 width: 10px;
                 height: 10px;
@@ -76,7 +71,6 @@
                 background: var(--scrollbar-thumb-hover);
             }
 
-            /* Firefox */
             * {
                 scrollbar-width: thin;
                 scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
@@ -141,7 +135,6 @@
                 object-fit: contain;
             }
 
-            /* Utilities */
             .sr-only {
                 position: absolute;
                 width: 1px;
@@ -207,7 +200,6 @@
             }
         }
 
-        /* Demo Layer */
         @layer demo {
             body {
                 align-content: center;
@@ -237,7 +229,6 @@
                 align-items: center;
             }
             
-            /* Exam Tool Styles */
             .exam-tool {
                 padding: 0 0;
                 background-color: transparent;
@@ -265,7 +256,6 @@
                 text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
             }
             
-            /* Mode Selection */
             .mode-selection {
                 margin-bottom: 2rem;
             }
@@ -327,7 +317,6 @@
                 color: white;
             }
             
-            /* Input Areas */
             .input-area, .text-gen-area {
                 margin-bottom: 2rem;
                 position: relative;
@@ -367,7 +356,6 @@
                 border: 1px solid var(--card-outline);
             }
             
-            /* Text Generation Options */
             .text-gen-area .gen-options {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -445,7 +433,6 @@
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             }
             
-            /* Action Buttons */
             .action-buttons {
                 display: flex;
                 gap: 1rem;
@@ -527,7 +514,6 @@
                 border-color: var(--primary-color);
             }
             
-            /* Settings Panel */
             .settings-panel {
                 background: var(--card-bg);
                 border-radius: 15px;
@@ -581,7 +567,6 @@
                 font-size: 1.1rem;
             }
             
-            /* Duration Control */
             .duration-control {
                 margin-top: 15px;
             }
@@ -666,7 +651,6 @@
                 box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
             }
             
-            /* Toggle Switch */
             .toggle-container {
                 display: flex;
                 align-items: center;
@@ -737,7 +721,6 @@
                 transform: translateX(24px);
             }
             
-            /* Select Container */
             .select-container {
                 margin-bottom: 1rem;
             }
@@ -769,7 +752,6 @@
                 box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
             }
             
-            /* Progress Container */
             .progress-container {
                 margin-top: 2rem;
                 background-color: var(--card-bg);
@@ -882,7 +864,6 @@
                 }
             }
             
-            /* Exam Result Container */
             .exam-result-container {
                 margin-top: 2rem;
                 background: var(--card-bg);
@@ -892,7 +873,6 @@
                 border: 2px solid var(--card-outline);
             }
             
-            /* Exam Header */
             .exam-header {
                 display: flex;
                 justify-content: space-between;
@@ -925,7 +905,6 @@
                 border: 1px solid var(--card-outline);
             }
             
-            /* Preview Exam Styles */
             .preview-exam {
                 font-family: inherit;
             }
@@ -1019,7 +998,6 @@
                 white-space: pre-wrap;
             }
             
-            /* Exam Actions */
             .exam-actions {
                 display: flex;
                 gap: 1rem;
@@ -1073,7 +1051,6 @@
                 opacity: 0.95;
             }
             
-            /* Modal Styles */
             .modal {
                 display: none;
                 position: fixed;
@@ -1178,7 +1155,6 @@
                 background: rgba(227, 124, 45, 0.1);
             }
             
-            /* Editor Container */
             .exam-editor-container {
                 max-width: 100%;
             }
@@ -1210,7 +1186,6 @@
                 border-color: var(--primary-color);
             }
             
-            /* Rich Text Editor */
             .rich-text-editor {
                 border: 2px solid var(--card-outline);
                 border-radius: 8px;
@@ -1236,7 +1211,6 @@
                 white-space: pre-wrap;
             }
             
-            /* Text Preview */
             .text-preview {
                 font-family: inherit;
                 line-height: 1.8;
@@ -1281,7 +1255,6 @@
                 gap: 0.5rem;
             }
             
-            /* App Footer */
             .app-footer {
                 text-align: center;
                 margin-top: 3rem;
@@ -1302,7 +1275,6 @@
                 color: var(--accent-color);
             }
             
-            /* Markdown Formatted Content */
             .markdown-content {
                 font-family: inherit;
                 line-height: 1.6;
@@ -1361,7 +1333,6 @@
                 font-style: italic;
             }
             
-            /* Responsive Design */
             @media (max-width: 992px) {
                 .options-grid {
                     grid-template-columns: 1fr;
@@ -1419,7 +1390,6 @@
                     text-align: center;
                 }
                 
-                /* Exam Tab Responsive */
                 .exam-header {
                     flex-direction: column;
                     gap: 1rem;
@@ -1497,7 +1467,6 @@
     </style>
 </head>
 <body>
-    <!-- Web Icon ở góc trái -->
     <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
         <img src="logo.png" alt="Website Icon" />
     </a>
@@ -1508,7 +1477,6 @@
                 <div class="exam-card">
                     <h2>HỆ THỐNG TẠO BÀI THI VĂN HỌC</h2>
                     
-                    <!-- Mode Selection -->
                     <div class="mode-selection">
                         <div class="mode-buttons">
                             <button class="mode-btn active" data-mode="from-text">
@@ -1522,13 +1490,11 @@
                         </div>
                     </div>
                     
-                    <!-- Input Area for Existing Text -->
                     <div class="input-area" id="existingTextArea">
                         <textarea id="inputText" placeholder="Nhập hoặc dán nội dung văn bản văn học cần tạo đề thi... (Tối thiểu 20 từ)"></textarea>
                         <div class="word-count" id="wordCount">0 từ</div>
                     </div>
                     
-                    <!-- Text Generation Options -->
                     <div class="text-gen-area" id="textGenArea" style="display: none;">
                         <div class="gen-options">
                             <div class="option-group">
@@ -1539,7 +1505,7 @@
                                     <option value="random">Tác phẩm ngẫu nhiên</option>
                                     <option value="tho">Tác phẩm thơ</option>
                                     <option value="truyen">Tác phẩm truyện</option>
-                                    <option value="tieu_thuyet">Tác phẩm tiểu thuyết</option>
+                                    <option value="tieu_thuyet">Tác phẩm tiểu thuyet</option>
                                     <option value="ky">Tác phẩm ký</option>
                                 </select>
                             </div>
@@ -1580,7 +1546,6 @@
                         </button>
                     </div>
                     
-                    <!-- Action Buttons -->
                     <div class="action-buttons">
                         <button id="generateExamBtn" class="generate-btn">
                             <i class="fas fa-file-alt mr-2"></i> Tạo Bài Thi
@@ -1590,7 +1555,6 @@
                         </button>
                     </div>
                     
-                    <!-- Settings Panel -->
                     <div class="settings-panel" id="settingsPanel">
                         <div class="options-grid">
                             <div class="option-card">
@@ -1664,7 +1628,6 @@
                         </div>
                     </div>
                     
-                    <!-- Progress Area -->
                     <div class="progress-container" id="progressContainer" style="display: none;">
                         <div class="progress-header">
                             <div class="progress-title">Đang tạo đề thi</div>
@@ -1674,13 +1637,10 @@
                             <div class="progress-fill" id="progressFill" style="width: 0%"></div>
                         </div>
                         <div class="progress-items" id="progressItems">
-                            <!-- Progress items will be added here dynamically -->
                         </div>
                     </div>
                     
-                    <!-- Exam Result -->
                     <div class="exam-result-container" id="examResult" style="display: none;">
-                        <!-- Exam content will be displayed here -->
                     </div>
                 </div>
             </div>
@@ -1691,7 +1651,6 @@
         </footer>
     </div>
 
-    <!-- Preview Modal -->
     <div id="previewModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1699,7 +1658,6 @@
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body" id="previewContent">
-                <!-- Preview content will be inserted here -->
             </div>
             <div class="modal-footer">
                 <button class="modal-btn" id="printPreviewBtn">
@@ -1712,7 +1670,6 @@
         </div>
     </div>
 
-    <!-- Edit Exam Modal -->
     <div id="editExamModal" class="modal">
         <div class="modal-content large-modal">
             <div class="modal-header">
@@ -1721,7 +1678,6 @@
             </div>
             <div class="modal-body">
                 <div class="exam-editor-container" id="examEditorContainer">
-                    <!-- Exam editor will be loaded here -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -1735,7 +1691,6 @@
         </div>
     </div>
 
-    <!-- Text Preview Modal -->
     <div id="textPreviewModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1743,7 +1698,6 @@
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body" id="textPreviewContent">
-                <!-- Text preview will be inserted here -->
             </div>
             <div class="modal-footer">
                 <button class="modal-btn" id="useTextBtn">
@@ -1756,17 +1710,14 @@
         </div>
     </div>
 
-    <!-- Firestore Database Integration -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
     <script>
-        // API Key - Đã thay bằng key mới
         const REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
         const GEMINI_API_KEY = "AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
 
-        // Firebase Configurations
         const firebaseConfigPrimary = {
             apiKey: "AIzaSyBLZpLQKl0x-kMez2v5NURU5qSthT_6qYI",
             authDomain: "loginnn-b1dc0.firebaseapp.com",
@@ -1787,18 +1738,15 @@
             measurementId: "G-F23NN1KLW0"
         };
 
-        // Initialize Firebase Databases
         let firestoreDbPrimary = null;
         let firestoreDbSecondary = null;
         
         try {
-            // Khởi tạo Firebase app chính
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfigPrimary, "primary");
                 console.log("Firebase Primary initialized successfully");
             }
             
-            // Khởi tạo Firebase app thứ cấp
             try {
                 firebase.initializeApp(firebaseConfigSecondary, "secondary");
                 console.log("Firebase Secondary initialized successfully");
@@ -1806,11 +1754,9 @@
                 console.log("Secondary app already exists or error:", e.message);
             }
             
-            // Lấy Firestore instances
             firestoreDbPrimary = firebase.app("primary").firestore();
             firestoreDbSecondary = firebase.app("secondary").firestore();
             
-            // Thiết lập cài đặt Firestore
             [firestoreDbPrimary, firestoreDbSecondary].forEach(db => {
                 db.settings({
                     ignoreUndefinedProperties: true
@@ -1821,7 +1767,6 @@
             
         } catch (error) {
             console.warn("Firebase initialization warning:", error.message);
-            // Tạo firestoreDb giả để không bị lỗi
             const fakeDb = {
                 collection: () => ({
                     doc: () => ({
@@ -1840,7 +1785,6 @@
             firestoreDbSecondary = fakeDb;
         }
 
-        // Biến toàn cục
         let generationProgress = {
             total: 0,
             completed: 0,
@@ -1860,11 +1804,10 @@
         };
 
         let richTextEditors = [];
-        let currentMode = 'from-text'; // 'from-text' or 'generate-text'
+        let currentMode = 'from-text';
         let generatedText = '';
         let currentRealWorkInfo = null;
 
-        // Error handling for extension conflicts
         window.addEventListener('error', function(e) {
             if (e.error && e.error.message && e.error.message.includes('asynchronous response')) {
                 console.warn('Browser extension conflict detected. You may disable extensions if issues persist.');
@@ -1875,12 +1818,10 @@
             console.warn('Unhandled promise rejection:', e.reason);
         });
 
-        // Hàm đếm từ
         function countWords(text) {
             return text.trim().split(/\s+/).filter(word => word.length > 0).length;
         }
 
-        // Hàm cập nhật tiến trình
         function updateProgress() {
             const progressFill = document.getElementById('progressFill');
             const progressStatus = document.getElementById('progressStatus');
@@ -1921,7 +1862,6 @@
             }).join('');
         }
 
-        // Hàm thêm mục vào tiến trình với kiểu đặc biệt
         function addProgressItem(name, type = 'normal') {
             generationProgress.items.push({
                 name: name,
@@ -1932,27 +1872,23 @@
             updateProgress();
         }
 
-        // Hàm đánh dấu mục hoàn thành
         function completeProgressItem(index) {
             generationProgress.items[index].status = 'completed';
             generationProgress.completed++;
             updateProgress();
         }
 
-        // Hàm đánh dấu mục là kiểm chứng
         function markAsVerification(index) {
             generationProgress.items[index].status = 'verification';
             updateProgress();
         }
 
-        // Hàm đánh dấu mục lỗi
         function errorProgressItem(index) {
             generationProgress.items[index].status = 'error';
             generationProgress.completed++;
             updateProgress();
         }
 
-        // Hàm format thời gian
         function formatDuration(minutes) {
             if (minutes < 60) {
                 return `${minutes} phút`;
@@ -1965,7 +1901,6 @@
             }
         }
 
-        // Hàm gọi API Gemini với timeout và retry
         async function fetchGemini(prompt, maxRetries = 3) {
             for (let attempt = 1; attempt <= maxRetries; attempt++) {
                 try {
@@ -2004,7 +1939,6 @@
                     
                     const result = data.candidates[0].content.parts[0].text.trim();
                     
-                    // Giữ nguyên định dạng xuống dòng
                     if (result.includes('\\n')) {
                         result = result.replace(/\\n/g, '\n');
                     }
@@ -2023,14 +1957,11 @@
             }
         }
 
-        // Hàm chuyển đổi markdown sang HTML cho đề thi (giữ nguyên xuống dòng)
         function markdownToHtml(text) {
             if (!text) return '';
             
-            // Giữ nguyên các thẻ HTML cơ bản và xuống dòng
             let html = text;
             
-            // Thay thế xuống dòng bằng <br> nhưng không ảnh hưởng đến các thẻ HTML
             const lines = html.split('\n');
             html = '';
             
@@ -2039,19 +1970,14 @@
                 if (line.trim() === '') {
                     html += '<br>';
                 } else if (line.startsWith('<') && line.endsWith('>')) {
-                    // Giữ nguyên thẻ HTML
                     html += line;
                 } else {
-                    // Xử lý markdown cơ bản
                     let processedLine = line;
                     
-                    // In đậm
                     processedLine = processedLine.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                     
-                    // In nghiêng
                     processedLine = processedLine.replace(/\*(.*?)\*/g, '<em>$1</em>');
                     
-                    // Gạch chân
                     processedLine = processedLine.replace(/__(.*?)__/g, '<u>$1</u>');
                     
                     html += processedLine;
@@ -2065,7 +1991,6 @@
             return html;
         }
 
-        // Hàm tạo đề thi với Gemini (chỉ sử dụng tác phẩm thật)
         async function generateExamWithGemini(text, workInfo = null) {
             let workContext = '';
             if (workInfo) {
@@ -2157,19 +2082,16 @@
 
                 const resultText = data.candidates[0].content.parts[0].text;
                 
-                // Tìm và parse JSON
                 const jsonMatch = resultText.match(/\{[\s\S]*\}/);
                 if (jsonMatch) {
                     const examData = JSON.parse(jsonMatch[0]);
                     
-                    // Đảm bảo có workInfo
                     if (!examData.workInfo && workInfo) {
                         examData.workInfo = workInfo;
                     }
                     
                     return examData;
                 } else {
-                    // Fallback với tác phẩm thật
                     return {
                         title: "ĐỀ THI NGỮ VĂN",
                         description: "Đề thi được tạo từ tác phẩm văn học có thật",
@@ -2199,7 +2121,6 @@
             }
         }
 
-        // Hàm tạo văn bản mẫu từ tác phẩm THẬT
         async function generateRealTextSample() {
             const workType = document.getElementById('realWork').value;
             const author = document.getElementById('authorSelect').value;
@@ -2298,7 +2219,6 @@
                 const result = await fetchGemini(prompt);
                 completeProgressItem(0);
                 
-                // Parse thông tin tác phẩm
                 const lines = result.split('\n');
                 const workInfo = {
                     title: '',
@@ -2318,7 +2238,6 @@
                     } else if (line.startsWith('THỂ LOẠI:')) {
                         workInfo.genre = line.replace('THỂ LOẠI:', '').trim();
                     } else if (line.trim() === '' && workInfo.title && !contentStarted) {
-                        // Bắt đầu nội dung sau dòng trống đầu tiên
                         contentStarted = true;
                     } else if (contentStarted) {
                         if (!line.startsWith('PHÂN TÍCH:')) {
@@ -2329,7 +2248,6 @@
                 
                 workInfo.content = contentLines.join('\n').trim();
                 
-                // Kiểm tra và gán giá trị mặc định nếu cần
                 if (!workInfo.title) workInfo.title = "Tác phẩm văn học";
                 if (!workInfo.author) workInfo.author = "Tác giả";
                 if (!workInfo.genre) workInfo.genre = "Văn học";
@@ -2341,7 +2259,6 @@
                 console.error('Lỗi khi tạo văn bản mẫu:', error);
                 errorProgressItem(0);
                 
-                // Fallback: Tác phẩm mẫu
                 currentRealWorkInfo = {
                     title: "Chí Phèo",
                     author: "Nam Cao",
@@ -2353,7 +2270,6 @@
             }
         }
 
-        // Hàm hiển thị văn bản mẫu đã tạo
         function showGeneratedText(text) {
             generatedText = text;
             
@@ -2402,13 +2318,11 @@
             modal.classList.add('active');
         }
 
-        // Hàm sử dụng văn bản đã tạo
         function useGeneratedText() {
             const inputText = document.getElementById('inputText');
             if (inputText && generatedText) {
                 inputText.value = generatedText;
                 
-                // Cập nhật word count
                 const wordCount = countWords(generatedText);
                 document.getElementById('wordCount').textContent = `${wordCount} từ`;
                 
@@ -2420,10 +2334,8 @@
                     document.getElementById('wordCount').style.fontWeight = 'normal';
                 }
                 
-                // Chuyển về mode từ văn bản có sẵn
                 switchMode('from-text');
                 
-                // Đóng modal
                 const modal = document.getElementById('textPreviewModal');
                 modal.classList.remove('active');
                 
@@ -2431,7 +2343,6 @@
             }
         }
 
-        // Hàm tạo bài thi
         async function generateExam() {
             let text = '';
             let workInfo = null;
@@ -2450,7 +2361,6 @@
                     return;
                 }
                 
-                // Nếu có thông tin tác phẩm từ generate-text, sử dụng nó
                 if (currentRealWorkInfo) {
                     workInfo = currentRealWorkInfo;
                 }
@@ -2467,13 +2377,11 @@
             const progressContainer = document.getElementById('progressContainer');
             const examResult = document.getElementById('examResult');
 
-            // Vô hiệu hóa nút và hiển thị tiến trình
             generateBtn.disabled = true;
             generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Đang tạo đề thi...';
             progressContainer.style.display = 'block';
             examResult.style.display = 'none';
             
-            // Reset tiến trình
             generationProgress = {
                 total: 0,
                 completed: 0,
@@ -2483,7 +2391,6 @@
             examResult.innerHTML = '';
 
             try {
-                // Cập nhật exam settings
                 examSettings = {
                     time: parseInt(document.getElementById('examTimeSlider').value),
                     difficulty: document.getElementById('difficulty').value,
@@ -2496,27 +2403,21 @@
                 
                 const examNotes = document.getElementById('examNotes').value;
 
-                // Thêm tiến trình với mục kiểm chứng nổi bật
                 addProgressItem('Phân tích văn bản');
                 addProgressItem('Thực hiện tự kiểm chứng tác phẩm', 'verification');
                 addProgressItem('Tạo câu hỏi đề thi');
                 addProgressItem('Hoàn thiện cấu trúc đề');
 
-                // 1. Phân tích văn bản
                 const textTypeResponse = await fetchGemini(
                     `Xác định thể loại chính xác của văn bản sau (chỉ trả về 1-3 từ): "${text.substring(0, 800)}"`
                 );
                 completeProgressItem(0);
 
-                // 2. Tự kiểm chứng tác phẩm (nổi bật)
                 markAsVerification(1);
                 
-                // Kiểm tra xem có phải tác phẩm thật không
                 if (workInfo) {
-                    // Đã có thông tin tác phẩm
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 } else {
-                    // Kiểm tra tác phẩm
                     const verificationPrompt = `
                         Văn bản sau có phải là tác phẩm văn học có thật trong chương trình Ngữ Văn Việt Nam không?
                         Trả lời ngắn gọn: CÓ hoặc KHÔNG
@@ -2540,15 +2441,12 @@
                 
                 completeProgressItem(1);
 
-                // 3. Tạo đề thi
                 const examData = await generateExamWithGemini(text, workInfo);
                 completeProgressItem(2);
 
-                // 4. Hoàn thiện
                 showExamResult(examData, examNotes);
                 completeProgressItem(3);
 
-                // Hiển thị kết quả
                 examResult.style.display = 'block';
                 showNotification('Tạo đề thi thành công từ tác phẩm thật!', 'success');
 
@@ -2591,12 +2489,10 @@
             }
         }
 
-        // Hàm hiển thị kết quả đề thi
         function showExamResult(examData, examNotes) {
             currentExamBlocks = examData.blocks || [];
             currentExamCode = generateExamCode();
             
-            // Đảm bảo giữ nguyên xuống dòng trong nội dung
             currentExamBlocks.forEach(block => {
                 if (block.content && typeof block.content === 'string') {
                     block.content = block.content.replace(/\\n/g, '\n');
@@ -2615,7 +2511,6 @@
                 `;
             }
             
-            // Hiển thị thông tin tác phẩm nếu có
             let workInfoHTML = '';
             if (examData.workInfo) {
                 workInfoHTML = `
@@ -2713,7 +2608,6 @@
             
             document.getElementById('examResult').innerHTML = previewHTML + examActions;
             
-            // Thêm sự kiện cho các nút
             document.getElementById('previewExamBtn')?.addEventListener('click', updateExamPreview);
             document.getElementById('editExamBtn')?.addEventListener('click', openExamEditor);
             document.getElementById('saveExamBtn')?.addEventListener('click', saveExam);
@@ -2722,7 +2616,6 @@
             document.getElementById('testDbBtn')?.addEventListener('click', testDatabaseConnection);
         }
 
-        // Hàm tạo mã đề thi
         function generateExamCode() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let result = '';
@@ -2732,12 +2625,10 @@
             return result;
         }
 
-        // Hàm kiểm tra kết nối database
         async function testDatabaseConnection() {
             showNotification('Đang kiểm tra kết nối cả 2 database...', 'info');
             
             try {
-                // Kiểm tra database chính
                 if (firestoreDbPrimary) {
                     const testRef1 = firestoreDbPrimary.collection('_connection_tests').doc('test_' + Date.now());
                     await testRef1.set({
@@ -2752,7 +2643,6 @@
                     }, 5000);
                 }
                 
-                // Kiểm tra database phụ
                 if (firestoreDbSecondary) {
                     const testRef2 = firestoreDbSecondary.collection('_connection_tests').doc('test_' + Date.now());
                     await testRef2.set({
@@ -2773,18 +2663,14 @@
             }
         }
 
-        // Hàm lưu đề thi vào cả 2 Firestore Databases
         async function saveExamToDatabase() {
             try {
-                // Cập nhật từ editor nếu đang mở
                 updateExamFromEditor();
                 
                 const examNotes = document.getElementById('examNotes').value;
                 
-                // Tính tổng điểm
                 const totalPoints = currentExamBlocks.reduce((sum, block) => sum + (block.points || 0), 0);
                 
-                // Chuẩn bị dữ liệu để lưu
                 const examData = {
                     examId: currentExamCode,
                     title: "Đề thi Ngữ Văn",
@@ -2808,10 +2694,8 @@
                 
                 showNotification('Đang lưu đề thi vào cả 2 database...', 'info');
                 
-                // Lưu vào cả 2 databases
                 const savePromises = [];
                 
-                // Database chính
                 if (firestoreDbPrimary) {
                     savePromises.push(
                         firestoreDbPrimary.collection('exams').doc(currentExamCode)
@@ -2819,7 +2703,6 @@
                     );
                 }
                 
-                // Database phụ
                 if (firestoreDbSecondary) {
                     savePromises.push(
                         firestoreDbSecondary.collection('vanw_exams').doc(currentExamCode)
@@ -2827,10 +2710,8 @@
                     );
                 }
                 
-                // Chờ tất cả các promise hoàn thành
                 await Promise.all(savePromises);
                 
-                // Kiểm tra xem đã lưu thành công chưa
                 const savedDoc1 = firestoreDbPrimary ? 
                     await firestoreDbPrimary.collection('exams').doc(currentExamCode).get() : 
                     { exists: false };
@@ -2842,10 +2723,8 @@
                 if (savedDoc1.exists || savedDoc2.exists) {
                     showNotification(`✅ Đã lưu đề thi thành công vào ${savedDoc1.exists && savedDoc2.exists ? 'cả 2 database' : savedDoc1.exists ? 'database chính' : 'database phụ'}! Mã đề: ${currentExamCode}`, 'success');
                     
-                    // Tạo link để chia sẻ
                     const link = `${window.location.origin}/take_exam.html?code=${currentExamCode}`;
                     
-                    // Hiển thị thông báo với link
                     setTimeout(() => {
                         navigator.clipboard.writeText(link).then(() => {
                             showNotification(`📋 Link đề thi đã được sao chép vào clipboard!`, 'info');
@@ -2854,7 +2733,6 @@
                         });
                     }, 1000);
                     
-                    // Lưu vào localStorage làm backup
                     const backupExams = JSON.parse(localStorage.getItem('vanw_exams_backup') || '{}');
                     backupExams[currentExamCode] = {
                         ...examData,
@@ -2870,7 +2748,6 @@
             } catch (error) {
                 console.error('Lỗi khi lưu đề thi vào database:', error);
                 
-                // Fallback: Lưu vào localStorage
                 try {
                     const localExams = JSON.parse(localStorage.getItem('vanw_exams_local') || '{}');
                     localExams[currentExamCode] = {
@@ -2894,17 +2771,12 @@
             }
         }
 
-        // Các hàm khác giữ nguyên (openExamEditor, createExamEditorHTML, createBlockEditorHTML, initRichTextEditors, updateExamFromEditor, reorderBlocks, addBlock, deleteBlock, moveBlock, saveEditedExam, updateExamPreview, saveExam, printExam)...
-
-        // Hàm mở trình chỉnh sửa đề thi
         function openExamEditor() {
             const modal = document.getElementById('editExamModal');
             const editorContainer = document.getElementById('examEditorContainer');
             
-            // Tạo giao diện editor
             editorContainer.innerHTML = createExamEditorHTML();
             
-            // Khởi tạo trình soạn thảo cho từng block
             setTimeout(() => {
                 initRichTextEditors();
             }, 100);
@@ -2912,7 +2784,6 @@
             modal.classList.add('active');
         }
 
-        // Hàm tạo HTML cho trình chỉnh sửa đề thi
         function createExamEditorHTML() {
             let editorHTML = `
                 <div class="exam-editor-container">
@@ -2952,9 +2823,7 @@
             return editorHTML;
         }
 
-        // Hàm tạo HTML cho một block chỉnh sửa
         function createBlockEditorHTML(block, index) {
-            // Xử lý nội dung để hiển thị đúng
             let content = block.content || '';
             content = content.replace(/<br>/g, '\n');
             
@@ -3004,7 +2873,6 @@
             `;
         }
 
-        // Hàm khởi tạo trình soạn thảo rich text
         function initRichTextEditors() {
             richTextEditors = [];
             
@@ -3025,19 +2893,16 @@
                     placeholder: 'Nhập nội dung...'
                 });
                 
-                // Thiết lập nội dung ban đầu
                 const textarea = document.getElementById(textareaId);
                 if (textarea) {
                     quill.root.innerHTML = markdownToHtml(textarea.value);
                 }
                 
-                // Lưu lại editor
                 richTextEditors[index] = {
                     quill: quill,
                     textareaId: textareaId
                 };
                 
-                // Cập nhật textarea khi nội dung thay đổi
                 quill.on('text-change', function() {
                     if (textarea) {
                         textarea.value = quill.root.innerHTML;
@@ -3046,12 +2911,9 @@
             });
         }
 
-        // Hàm cập nhật đề thi từ editor
         function updateExamFromEditor() {
-            // Kiểm tra xem trình chỉnh sửa có đang mở không
             const blocksContainer = document.getElementById('examBlocksContainer');
             
-            // Nếu không có trình chỉnh sửa, không làm gì cả
             if (!blocksContainer) {
                 console.log('Trình chỉnh sửa không mở, bỏ qua cập nhật từ editor');
                 return;
@@ -3061,7 +2923,6 @@
             
             const updatedBlocks = [];
             
-            // Convert NodeList to Array để sử dụng find
             const blockArray = Array.from(blockElements);
             
             blockArray.forEach((blockElement, blockIndex) => {
@@ -3070,13 +2931,11 @@
                 const titleInput = blockElement.querySelector('.block-title');
                 const pointsInput = blockElement.querySelector('.block-points-input');
                 
-                // Lấy nội dung từ trình soạn thảo
                 let content = '';
                 if (richTextEditors[dataIndex]) {
                     const quill = richTextEditors[dataIndex].quill;
                     content = quill.root.innerHTML;
                 } else {
-                    // Fallback nếu không có editor
                     const textarea = document.getElementById(`editor-text-${dataIndex}`);
                     content = textarea ? textarea.value : '';
                 }
@@ -3091,19 +2950,14 @@
                 updatedBlocks.push(blockData);
             });
             
-            // Sắp xếp lại theo thứ tự hiện tại
             currentExamBlocks = updatedBlocks;
         }
 
-        // Hàm sắp xếp lại blocks
         function reorderBlocks() {
-            // Hiển thị thông báo
             showNotification('Kéo và thả các block để sắp xếp lại', 'info');
             
-            // Cập nhật từ editor trước
             updateExamFromEditor();
             
-            // Đóng modal và mở lại để refresh
             const modal = document.getElementById('editExamModal');
             modal.classList.remove('active');
             
@@ -3112,7 +2966,6 @@
             }, 300);
         }
 
-        // Hàm thêm block mới
         function addBlock(type) {
             const newBlock = {
                 type: type,
@@ -3123,15 +2976,12 @@
             
             currentExamBlocks.push(newBlock);
             
-            // Cập nhật giao diện editor
             const blocksContainer = document.getElementById('examBlocksContainer');
             blocksContainer.insertAdjacentHTML('beforeend', createBlockEditorHTML(newBlock, currentExamBlocks.length - 1));
             
-            // Khởi tạo lại trình soạn thảo
             initRichTextEditors();
         }
 
-        // Hàm xóa block
         function deleteBlock(index) {
             if (currentExamBlocks.length <= 1) {
                 showNotification('Đề thi phải có ít nhất một phần!', 'error');
@@ -3140,17 +2990,14 @@
             
             currentExamBlocks.splice(index, 1);
             
-            // Cập nhật giao diện
             const editorContainer = document.getElementById('examEditorContainer');
             editorContainer.innerHTML = createExamEditorHTML();
             
-            // Khởi tạo lại trình soạn thảo
             setTimeout(() => {
                 initRichTextEditors();
             }, 100);
         }
 
-        // Hàm di chuyển block
         function moveBlock(index, direction) {
             if (direction === 'up' && index > 0) {
                 [currentExamBlocks[index], currentExamBlocks[index - 1]] = [currentExamBlocks[index - 1], currentExamBlocks[index]];
@@ -3158,25 +3005,20 @@
                 [currentExamBlocks[index], currentExamBlocks[index + 1]] = [currentExamBlocks[index + 1], currentExamBlocks[index]];
             }
             
-            // Cập nhật giao diện
             const editorContainer = document.getElementById('examEditorContainer');
             editorContainer.innerHTML = createExamEditorHTML();
             
-            // Khởi tạo lại trình soạn thảo
             setTimeout(() => {
                 initRichTextEditors();
             }, 100);
         }
 
-        // Hàm lưu đề thi đã chỉnh sửa
         function saveEditedExam() {
             updateExamFromEditor();
             
-            // Đóng modal
             const modal = document.getElementById('editExamModal');
             modal.classList.remove('active');
             
-            // Cập nhật giao diện xem trước
             const examData = {
                 title: "Đề thi Ngữ Văn",
                 description: "Đề thi đã được chỉnh sửa",
@@ -3190,7 +3032,6 @@
             showNotification('Đã lưu thay đổi đề thi!', 'success');
         }
 
-        // Hàm cập nhật preview
         function updateExamPreview() {
             updateExamFromEditor();
             
@@ -3253,9 +3094,7 @@
             modal.classList.add('active');
         }
 
-        // Hàm lưu đề thi
         function saveExam() {
-            // Chỉ cập nhật từ editor nếu editor đang mở
             const editModal = document.getElementById('editExamModal');
             if (editModal && editModal.classList.contains('active')) {
                 updateExamFromEditor();
@@ -3281,7 +3120,6 @@
             showNotification(`Đã lưu đề thi thành công! Mã đề: ${currentExamCode}`, 'success');
         }
 
-        // Hàm in đề thi
         function printExam() {
             updateExamFromEditor();
             
@@ -3453,9 +3291,6 @@
             printWindow.document.close();
         }
 
-        // ==================== KHỞI TẠO KHI TRANG TẢI ====================
-
-        // Hàm hiển thị thông báo
         function showNotification(message, type = 'info') {
             const oldNotification = document.querySelector('.notification');
             if (oldNotification) {
@@ -3502,7 +3337,6 @@
             }, 4000);
         }
 
-        // Hàm chuyển đổi mode
         function switchMode(mode) {
             currentMode = mode;
             
@@ -3510,7 +3344,6 @@
             const existingTextArea = document.getElementById('existingTextArea');
             const textGenArea = document.getElementById('textGenArea');
             
-            // Cập nhật active class
             modeBtns.forEach(btn => {
                 if (btn.dataset.mode === mode) {
                     btn.classList.add('active');
@@ -3519,7 +3352,6 @@
                 }
             });
             
-            // Hiển thị/ẩn các khu vực tương ứng
             if (mode === 'from-text') {
                 existingTextArea.style.display = 'block';
                 textGenArea.style.display = 'none';
@@ -3529,7 +3361,6 @@
             }
         }
 
-        // Hàm xử lý slider thời gian
         function setupExamSlider() {
             const slider = document.getElementById('examTimeSlider');
             const valueDisplay = document.getElementById('examTimeValue');
@@ -3567,14 +3398,12 @@
             });
         }
 
-        // Hàm cập nhật màu slider đề thi
         function updateExamSliderColor(value) {
             const slider = document.getElementById('examTimeSlider');
             const percent = ((value - slider.min) / (slider.max - slider.min)) * 100;
             slider.style.background = `linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) ${percent}%, var(--border-color) ${percent}%, var(--border-color) 100%)`;
         }
 
-        // Hàm đếm từ
         function setupWordCounter() {
             const textarea = document.getElementById('inputText');
             const wordCount = document.getElementById('wordCount');
@@ -3595,7 +3424,6 @@
             });
         }
 
-        // Hàm xử lý modal
         function setupModal() {
             const previewModal = document.getElementById('previewModal');
             const editModal = document.getElementById('editExamModal');
@@ -3608,7 +3436,6 @@
             const closeTextPreviewBtn = document.getElementById('closeTextPreviewBtn');
             const useTextBtn = document.getElementById('useTextBtn');
             
-            // Đóng modal
             closeButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const modal = this.closest('.modal');
@@ -3769,7 +3596,6 @@
                 });
             }
             
-            // Đóng modal khi click bên ngoài
             [previewModal, editModal, textPreviewModal].forEach(modal => {
                 modal.addEventListener('click', function(e) {
                     if (e.target === modal) {
@@ -3778,27 +3604,22 @@
                 });
             });
             
-            // Xử lý sự kiện trong modal chỉnh sửa
             document.addEventListener('click', function(e) {
-                // Thêm block văn bản
                 if (e.target && e.target.id === 'addTextBlockBtn') {
                     e.preventDefault();
                     addBlock('text');
                 }
                 
-                // Thêm block câu hỏi
                 if (e.target && e.target.id === 'addQuestionBlockBtn') {
                     e.preventDefault();
                     addBlock('question');
                 }
                 
-                // Sắp xếp lại blocks
                 if (e.target && e.target.id === 'reorderBlocksBtn') {
                     e.preventDefault();
                     reorderBlocks();
                 }
                 
-                // Xem trước đề thi đã chỉnh sửa
                 if (e.target && e.target.id === 'previewEditedExamBtn') {
                     e.preventDefault();
                     updateExamFromEditor();
@@ -3806,7 +3627,6 @@
                     editModal.classList.remove('active');
                 }
                 
-                // Xóa block
                 if (e.target && e.target.closest('.block-btn.delete')) {
                     e.preventDefault();
                     const btn = e.target.closest('.block-btn.delete');
@@ -3814,7 +3634,6 @@
                     deleteBlock(index);
                 }
                 
-                // Di chuyển block lên
                 if (e.target && e.target.closest('.block-btn.move-up')) {
                     e.preventDefault();
                     const btn = e.target.closest('.block-btn.move-up');
@@ -3822,7 +3641,6 @@
                     moveBlock(index, 'up');
                 }
                 
-                // Di chuyển block xuống
                 if (e.target && e.target.closest('.block-btn.move-down')) {
                     e.preventDefault();
                     const btn = e.target.closest('.block-btn.move-down');
@@ -3832,15 +3650,12 @@
             });
         }
 
-        // Khởi tạo khi trang được tải
         document.addEventListener('DOMContentLoaded', function() {
-            // Gán sự kiện cho nút tạo đề thi
             const generateExamBtn = document.getElementById('generateExamBtn');
             if (generateExamBtn) {
                 generateExamBtn.addEventListener('click', generateExam);
             }
             
-            // Gán sự kiện cho nút tạo văn bản từ tác phẩm thật
             const generateTextBtn = document.getElementById('generateTextBtn');
             if (generateTextBtn) {
                 generateTextBtn.addEventListener('click', async function() {
@@ -3848,7 +3663,6 @@
                     btn.disabled = true;
                     btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Đang tải tác phẩm...';
                     
-                    // Reset tiến trình
                     generationProgress = {
                         total: 0,
                         completed: 0,
@@ -3872,7 +3686,6 @@
                 });
             }
             
-            // Gán sự kiện cho phím Enter trong textarea (Ctrl+Enter)
             const inputText = document.getElementById('inputText');
             if (inputText) {
                 inputText.addEventListener('keydown', function(e) {
@@ -3885,7 +3698,6 @@
                 });
             }
             
-            // Settings Panel Toggle
             const settingsBtn = document.getElementById('settingsBtn');
             if (settingsBtn) {
                 settingsBtn.addEventListener('click', function() {
@@ -3907,7 +3719,6 @@
                 });
             }
             
-            // Mode selection buttons
             const modeBtns = document.querySelectorAll('.mode-btn');
             modeBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -3916,12 +3727,10 @@
                 });
             });
             
-            // Khởi tạo các thành phần
             setupExamSlider();
             setupWordCounter();
             setupModal();
             
-            // Thêm animation cho notification
             const style = document.createElement('style');
             style.textContent = `
                 @keyframes slideIn {
@@ -3962,10 +3771,8 @@
             `;
             document.head.appendChild(style);
             
-            // Focus vào textarea
             document.getElementById('inputText')?.focus();
             
-            // Hiển thị thông báo nếu Firebase đã được khởi tạo
             if (firestoreDbPrimary && firestoreDbSecondary) {
                 console.log('Cả 2 Firestore Databases đã sẵn sàng để lưu đề thi');
             }
