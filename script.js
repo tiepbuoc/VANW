@@ -303,7 +303,7 @@ closePopup.addEventListener('click', function() {
 
 // API Key được lấy trực tiếp từ mã nguồn (không cần đọc file)
 const REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
-const GEMINI_API_KEY = "AIzaSyB5Fz-GddYagDuc8eIK6jYmuiQ8omH64nA";
+const GEMINI_API_KEY = "AIzaSyDq_sSF2kgHzuDgYNpQef6EDrk8MsP0vlM";
 
 const GEMINI_CONFIG = {
     apiKey: GEMINI_API_KEY,
@@ -1646,4 +1646,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     };
 });
+
 
