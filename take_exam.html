@@ -7,7 +7,6 @@
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS Layers */
         :root {
             --font-size-min: 16;
             --font-size-max: 20;
@@ -16,7 +15,6 @@
             --font-width-min: 375;
             --font-width-max: 1500;
             
-            /* Light theme variables - Màu cam đậm hơn (#e37c2d) */
             --bg-color: #f5f5f5;
             --card-bg: #ffffff;
             --card-outline: #b0b0b0;
@@ -41,7 +39,6 @@
             box-sizing: border-box;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
             height: 10px;
@@ -169,15 +166,14 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        /* Tab Navigation - CĂN GIỮA */
         .tab-navigation {
             display: flex;
-            justify-content: center; /* Căn giữa */
+            justify-content: center;
             gap: 1rem;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
             overflow-x: auto;
-            flex-wrap: wrap; /* Cho phép xuống dòng trên mobile */
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -220,7 +216,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Card Styles */
         .card {
             background: var(--card-bg);
             border-radius: 15px;
@@ -245,7 +240,6 @@
             font-size: 1.3rem;
         }
 
-        /* Enter Exam Code */
         .code-input-section {
             text-align: center;
             max-width: 600px;
@@ -256,8 +250,8 @@
             display: flex;
             gap: 1rem;
             margin: 1.5rem 0;
-            justify-content: center; /* Căn giữa */
-            flex-wrap: wrap; /* Cho phép xuống dòng trên mobile */
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .code-input input {
@@ -310,7 +304,6 @@
             opacity: 0.7;
         }
 
-        /* Exam List */
         .exam-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -428,7 +421,6 @@
             background: rgba(76, 175, 80, 0.2);
         }
 
-        /* Exam Taking Interface - HIỂN THỊ DỌC TOÀN BỘ ĐỀ THI */
         .exam-container {
             max-width: 900px;
             margin: 0 auto;
@@ -542,25 +534,24 @@
             box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
         }
 
-        /* NÚT NỘP BÀI CĂN GIỮA VÀ NỔI BẬT */
         .submit-section {
-            text-align: center; /* Căn giữa */
+            text-align: center;
             margin-top: 3rem;
             padding-top: 2rem;
             border-top: 2px solid var(--card-outline);
         }
 
         .submit-btn {
-            padding: 16px 40px; /* Làm to hơn */
-            background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Màu xanh nổi bật */
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
             color: white;
             border: none;
-            border-radius: 50px; /* Bo tròn hơn */
-            font-size: 1.3rem; /* Chữ to hơn */
-            font-weight: 700; /* Chữ đậm hơn */
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4); /* Đổ bóng nổi bật */
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
             display: inline-flex;
             align-items: center;
             gap: 12px;
@@ -581,8 +572,8 @@
         }
 
         .submit-btn:hover {
-            transform: translateY(-5px) scale(1.05); /* Hiệu ứng phóng to và nổi */
-            box-shadow: 0 12px 30px rgba(76, 175, 80, 0.6); /* Đổ bóng mạnh hơn */
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(76, 175, 80, 0.6);
         }
 
         .submit-btn:active {
@@ -602,7 +593,6 @@
             box-shadow: none;
         }
 
-        /* Result View */
         .result-container {
             max-width: 800px;
             margin: 0 auto;
@@ -687,7 +677,6 @@
             flex-wrap: wrap;
         }
 
-        /* Notification */
         .notification {
             position: fixed;
             top: 30px;
@@ -735,7 +724,6 @@
             to { opacity: 0; transform: translateX(100%) translateY(-20px); }
         }
 
-        /* Loading Spinner */
         .loading-spinner {
             display: inline-block;
             width: 20px;
@@ -751,7 +739,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 3rem;
@@ -764,7 +751,6 @@
             margin-bottom: 1rem;
         }
 
-        /* XỬ LÝ MARKDOWN FORMATTING */
         .markdown-content {
             font-family: inherit;
             line-height: 1.6;
@@ -823,7 +809,6 @@
             font-style: italic;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
@@ -841,7 +826,7 @@
             
             .tab-navigation {
                 flex-direction: column;
-                align-items: center; /* Căn giữa các nút tab trên mobile */
+                align-items: center;
             }
             
             .tab-btn {
@@ -912,12 +897,10 @@
     </style>
 </head>
 <body>
-    <!-- Web Icon ở góc trái -->
     <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
         <img src="logo.png" alt="Website Icon" />
     </a>
     
-    <!-- User Info -->
     <div class="user-info" id="userInfo" style="display: none;">
         <span id="userName">Người dùng</span>
         <button class="logout-btn" id="logoutBtn" title="Đăng xuất">
@@ -928,7 +911,6 @@
     <div class="app-container">
         <h1 class="page-title">THI THỬ VĂN HỌC</h1>
         
-        <!-- Tab Navigation - ĐÃ CĂN GIỮA -->
         <div class="tab-navigation">
             <button class="tab-btn active" data-tab="join-exam">
                 <i class="fas fa-key mr-2"></i> Tham gia bằng mã
@@ -938,7 +920,6 @@
             </button>
         </div>
         
-        <!-- Join Exam by Code Tab -->
         <div class="tab-content active" id="join-exam-tab">
             <div class="card code-input-section">
                 <h3>Tham gia bài thi bằng mã</h3>
@@ -959,12 +940,10 @@
                     <h3>Thông tin đề thi</h3>
                 </div>
                 <div id="examInfoContent">
-                    <!-- Exam info will be loaded here -->
                 </div>
             </div>
         </div>
         
-        <!-- My Exams Tab -->
         <div class="tab-content" id="my-exams-tab">
             <div class="card">
                 <div class="card-header">
@@ -972,7 +951,6 @@
                 </div>
                 
                 <div id="examsList">
-                    <!-- Exams will be loaded here -->
                     <div class="empty-state">
                         <i class="fas fa-clipboard-list"></i>
                         <p>Chưa có bài thi nào</p>
@@ -982,7 +960,6 @@
             </div>
         </div>
         
-        <!-- Exam Taking Interface (Hidden by default) -->
         <div id="examTakingInterface" style="display: none;">
             <div class="exam-container">
                 <div class="exam-header">
@@ -991,10 +968,8 @@
                 </div>
                 
                 <div class="exam-content" id="examContent">
-                    <!-- Exam content will be loaded here -->
                 </div>
                 
-                <!-- NÚT NỘP BÀI CĂN GIỮA VÀ NỔI BẬT -->
                 <div class="submit-section">
                     <button class="submit-btn" id="submitExamBtn">
                         <i class="fas fa-paper-plane"></i> NỘP BÀI THI
@@ -1003,7 +978,6 @@
             </div>
         </div>
         
-        <!-- Result View (Hidden by default) -->
         <div id="resultView" style="display: none;">
             <div class="result-container">
                 <div class="result-header">
@@ -1013,7 +987,6 @@
                 </div>
                 
                 <div class="result-details" id="resultDetails">
-                    <!-- Result details will be loaded here -->
                 </div>
                 
                 <div class="result-actions">
@@ -1028,13 +1001,11 @@
         </div>
     </div>
 
-    <!-- Firebase Configuration -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     
     <script>
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBLZpLQKl0x-kMez2v5NURU5qSthT_6qYI",
             authDomain: "loginnn-b1dc0.firebaseapp.com",
@@ -1045,7 +1016,6 @@
             measurementId: "G-XF2ZBFBCR7"
         };
 
-        // Initialize Firebase
         let firebaseApp = null;
         let auth = null;
         let db = null;
@@ -1059,7 +1029,6 @@
             console.warn("Firebase initialization error:", error);
         }
 
-        // Global variables
         let currentUser = null;
         let currentExam = null;
         let currentExamData = null;
@@ -1068,44 +1037,35 @@
         let timerInterval = null;
         let timeRemaining = 0;
 
-        // HÀM XỬ LÝ MARKDOWN - ĐÃ CẬP NHẬT ĐỂ HỖ TRỢ CẢ HTML
         function markdownToHtml(text) {
             if (!text) return '';
             
-            // Nếu text đã là HTML (chứa thẻ), trả về luôn
             if (text.includes('<') && text.includes('>')) {
                 return text;
             }
             
             let html = text;
             
-            // Tiêu đề
             html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
             html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
             html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
             
-            // In đậm
             html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
             
-            // In nghiêng
             html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
             
-            // Gạch chân (sử dụng __text__)
             html = html.replace(/__(.*?)__/g, '<u>$1</u>');
             
-            // Danh sách không thứ tự
             html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
             html = html.replace(/(<li>.*<\/li>\n?)+/g, function(match) {
                 return '<ul>' + match + '</ul>';
             });
             
-            // Danh sách có thứ tự
             html = html.replace(/^\d+\. (.*$)/gm, '<li>$1</li>');
             html = html.replace(/(<li>.*<\/li>\n?)+/g, function(match) {
                 return '<ol>' + match + '</ol>';
             });
             
-            // Đoạn văn
             const lines = html.split('\n');
             html = '';
             let inParagraph = false;
@@ -1137,13 +1097,11 @@
                 html += '</p>';
             }
             
-            // Xuống dòng
             html = html.replace(/\\n/g, '<br>');
             
             return html;
         }
 
-        // Hiển thị thông báo
         function showNotification(message, type = 'info') {
             const oldNotification = document.querySelector('.notification');
             if (oldNotification) {
@@ -1172,30 +1130,24 @@
             }, 4000);
         }
 
-        // Kiểm tra đăng nhập
         function checkAuth() {
             auth.onAuthStateChanged(async (user) => {
                 if (user && user.emailVerified) {
                     currentUser = user;
                     
-                    // Lấy thông tin người dùng từ Firestore
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     const userData = userDoc.data();
                     
-                    // Hiển thị thông tin người dùng
                     document.getElementById('userInfo').style.display = 'flex';
                     document.getElementById('userName').textContent = userData?.name || user.email;
                     
-                    // Tải danh sách bài thi của người dùng
                     loadUserExams();
                 } else {
-                    // Chưa đăng nhập, chuyển hướng đến trang đăng nhập
                     window.location.href = 'login.html';
                 }
             });
         }
 
-        // Đăng xuất
         function setupLogout() {
             document.getElementById('logoutBtn').addEventListener('click', async () => {
                 try {
@@ -1211,7 +1163,6 @@
             });
         }
 
-        // Thiết lập tab navigation
         function setupTabs() {
             const tabBtns = document.querySelectorAll('.tab-btn');
             const tabContents = document.querySelectorAll('.tab-content');
@@ -1229,17 +1180,14 @@
             });
         }
 
-        // Xử lý tham gia bằng mã
         function setupJoinExam() {
             const examCodeInput = document.getElementById('examCodeInput');
             const joinExamBtn = document.getElementById('joinExamBtn');
             
-            // Tự động chuyển thành chữ hoa
             examCodeInput.addEventListener('input', function() {
                 this.value = this.value.toUpperCase();
             });
             
-            // Cho phép nhấn Enter để tham gia
             examCodeInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     joinExamBtn.click();
@@ -1259,7 +1207,6 @@
                 joinExamBtn.innerHTML = '<div class="loading-spinner"></div> Đang tải...';
                 
                 try {
-                    // Tìm đề thi trong database - SỬA ĐỂ HỖ TRỢ CẢ ĐỊNH DẠNG MỚI VÀ CŨ
                     const examDoc = await db.collection('exams').doc(examCode).get();
                     
                     if (!examDoc.exists) {
@@ -1273,7 +1220,6 @@
                     
                     console.log('Exam data loaded:', examData);
                     
-                    // Kiểm tra xem người dùng đã làm bài thi này chưa
                     const attemptQuery = await db.collection('attempts')
                         .where('examId', '==', examCode)
                         .where('userId', '==', currentUser.uid)
@@ -1281,13 +1227,11 @@
                         .get();
                     
                     if (!attemptQuery.empty) {
-                        // Đã làm bài thi, hiển thị kết quả
                         currentAttempt = attemptQuery.docs[0].id;
                         showExamResult(attemptQuery.docs[0].data());
                         return;
                     }
                     
-                    // Hiển thị thông tin đề thi
                     showExamInfo(examData);
                     
                 } catch (error) {
@@ -1300,12 +1244,10 @@
             });
         }
 
-        // Hiển thị thông tin đề thi - ĐÃ CẬP NHẬT ĐỂ HỖ TRỢ CẢ ĐỊNH DẠNG MỚI
         function showExamInfo(examData) {
             const examInfoCard = document.getElementById('examInfoCard');
             const examInfoContent = document.getElementById('examInfoContent');
             
-            // Xác định cấu trúc đề thi (mới hay cũ)
             const hasBlocks = Array.isArray(examData.blocks);
             const examTime = examData.examTime || examData.time || 90;
             const difficulty = examData.difficulty === 'easy' ? 'Dễ' : 
@@ -1314,7 +1256,6 @@
             const title = examData.title || 'Đề thi Ngữ Văn';
             const description = examData.description || 'Đề thi được tạo tự động từ văn bản tác phẩm';
             
-            // Đếm số câu hỏi
             let questionCount = 0;
             if (hasBlocks) {
                 questionCount = examData.blocks.filter(b => b.type === 'question').length;
@@ -1366,16 +1307,13 @@
             
             examInfoCard.style.display = 'block';
             
-            // Xử lý nút bắt đầu làm bài
             document.getElementById('startExamBtn').addEventListener('click', () => {
                 startExam();
             });
         }
 
-        // Bắt đầu làm bài thi
         async function startExam() {
             try {
-                // Tạo attempt mới trong database
                 const attemptRef = await db.collection('attempts').add({
                     examId: currentExam,
                     userId: currentUser.uid,
@@ -1395,9 +1333,7 @@
                 
                 currentAttempt = attemptRef.id;
                 
-                // Khởi tạo mảng câu trả lời
                 if (Array.isArray(currentExamData.blocks)) {
-                    // Định dạng mới: có mảng blocks
                     userAnswers = currentExamData.blocks
                         .filter(block => block.type === 'question')
                         .map((block, index) => ({
@@ -1409,7 +1345,6 @@
                             feedback: ''
                         }));
                 } else {
-                    // Định dạng cũ: không có blocks, tạo mặc định
                     userAnswers = [{
                         questionId: 0,
                         questionText: 'Câu hỏi mặc định',
@@ -1420,13 +1355,10 @@
                     }];
                 }
                 
-                // Thiết lập thời gian
-                timeRemaining = (currentExamData.examTime || currentExamData.time || 90) * 60; // chuyển sang giây
+                timeRemaining = (currentExamData.examTime || currentExamData.time || 90) * 60;
                 
-                // Hiển thị giao diện làm bài
                 showExamInterface();
                 
-                // Bắt đầu đếm ngược
                 startTimer();
                 
             } catch (error) {
@@ -1435,35 +1367,27 @@
             }
         }
 
-        // Hiển thị giao diện làm bài
         function showExamInterface() {
-            // Ẩn các tab và hiển thị giao diện làm bài
             document.querySelector('.tab-navigation').style.display = 'none';
             document.getElementById('join-exam-tab').style.display = 'none';
             document.getElementById('my-exams-tab').style.display = 'none';
             document.getElementById('examInfoCard').style.display = 'none';
             document.getElementById('examTakingInterface').style.display = 'block';
             
-            // Cập nhật tiêu đề
             document.getElementById('examTitle').textContent = currentExamData.title || 'ĐỀ THI NGỮ VĂN';
             
-            // Tải nội dung đề thi
             loadExamContent();
         }
 
-        // Tải nội dung đề thi (HIỂN THỊ DỌC TOÀN BỘ) - ĐÃ CẬP NHẬT ĐỂ HỖ TRỢ CẢ ĐỊNH DẠNG MỚI
         function loadExamContent() {
             const examContent = document.getElementById('examContent');
             
             let contentHTML = '';
             let questionCounter = 0;
             
-            // Kiểm tra cấu trúc đề thi
             if (Array.isArray(currentExamData.blocks)) {
-                // Định dạng mới: có mảng blocks
                 currentExamData.blocks.forEach((block, index) => {
                     if (block.type === 'text') {
-                        // Sử dụng markdownToHtml để xử lý định dạng
                         contentHTML += `
                             <div class="exam-section">
                                 <h3 class="section-title">${block.title || 'Phần văn bản'}</h3>
@@ -1489,7 +1413,6 @@
                     }
                 });
             } else {
-                // Định dạng cũ: hiển thị văn bản và câu hỏi mặc định
                 contentHTML += `
                     <div class="exam-section">
                         <h3 class="section-title">Văn bản</h3>
@@ -1515,31 +1438,26 @@
             
             examContent.innerHTML = contentHTML;
             
-            // Thiết lập sự kiện cho textarea
             document.querySelectorAll('.answer-textarea').forEach(textarea => {
                 const questionIndex = parseInt(textarea.dataset.question);
                 
-                // Lưu câu trả lời khi người dùng nhập
                 textarea.addEventListener('input', function() {
                     if (userAnswers[questionIndex]) {
                         userAnswers[questionIndex].answer = this.value;
                     }
                 });
                 
-                // Tự động mở rộng textarea khi nhập
                 textarea.addEventListener('input', function() {
                     this.style.height = 'auto';
                     this.style.height = (this.scrollHeight) + 'px';
                 });
                 
-                // Focus vào textarea đầu tiên
                 if (questionIndex === 0) {
                     setTimeout(() => textarea.focus(), 100);
                 }
             });
         }
 
-        // Bắt đầu đếm ngược
         function startTimer() {
             updateTimerDisplay();
             
@@ -1554,7 +1472,6 @@
             }, 1000);
         }
 
-        // Cập nhật hiển thị đồng hồ
         function updateTimerDisplay() {
             const minutes = Math.floor(timeRemaining / 60);
             const seconds = timeRemaining % 60;
@@ -1562,40 +1479,33 @@
             
             timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             
-            // Cảnh báo thời gian
             timerElement.classList.remove('timer-warning', 'timer-danger');
-            if (timeRemaining <= 300) { // 5 phút
+            if (timeRemaining <= 300) {
                 timerElement.classList.add('timer-danger');
-            } else if (timeRemaining <= 600) { // 10 phút
+            } else if (timeRemaining <= 600) {
                 timerElement.classList.add('timer-warning');
             }
         }
 
-        // Tự động nộp bài khi hết giờ
         async function autoSubmitExam() {
             showNotification('Đã hết thời gian làm bài! Đang tự động nộp bài...', 'warning');
             await submitExam(true);
         }
 
-        // Xử lý nộp bài
         async function submitExam(isAutoSubmit = false) {
             try {
-                // Dừng đồng hồ
                 if (timerInterval) {
                     clearInterval(timerInterval);
                 }
                 
-                // Cập nhật trạng thái nút nộp bài
                 const submitBtn = document.getElementById('submitExamBtn');
                 if (submitBtn) {
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = '<div class="loading-spinner"></div> Đang nộp bài...';
                 }
                 
-                // Tính tổng điểm
                 const totalPoints = userAnswers.reduce((sum, answer) => sum + (answer.points || 0), 0);
                 
-                // Cập nhật attempt trong database
                 await db.collection('attempts').doc(currentAttempt).update({
                     status: 'submitted',
                     answers: userAnswers,
@@ -1604,7 +1514,6 @@
                     isAutoSubmit: isAutoSubmit
                 });
                 
-                // Hiển thị kết quả
                 showResultAfterSubmit();
                 
                 if (!isAutoSubmit) {
@@ -1622,12 +1531,9 @@
             }
         }
 
-        // Hiển thị kết quả sau khi nộp bài
         function showResultAfterSubmit() {
-            // Ẩn giao diện làm bài
             document.getElementById('examTakingInterface').style.display = 'none';
             
-            // Hiển thị thông báo chờ chấm điểm
             showResultView({
                 status: 'submitted',
                 score: 0,
@@ -1640,14 +1546,11 @@
             });
         }
 
-        // Hiển thị kết quả bài thi đã chấm
         function showExamResult(attemptData) {
             showResultView(attemptData);
         }
 
-        // Hiển thị view kết quả
         function showResultView(attemptData) {
-            // Ẩn các tab và hiển thị kết quả
             document.querySelector('.tab-navigation').style.display = 'none';
             document.getElementById('join-exam-tab').style.display = 'none';
             document.getElementById('my-exams-tab').style.display = 'none';
@@ -1658,7 +1561,6 @@
             const resultDetails = document.getElementById('resultDetails');
             
             if (attemptData.status === 'graded') {
-                // Đã chấm điểm
                 const score = attemptData.score || 0;
                 const totalPoints = attemptData.totalPoints || 10;
                 const percentage = totalPoints > 0 ? (score / totalPoints) * 100 : 0;
@@ -1673,7 +1575,6 @@
                 
                 resultMessage.textContent = message;
                 
-                // Hiển thị chi tiết
                 resultDetails.innerHTML = `
                     <div class="detail-item">
                         <span class="detail-label">Mã đề thi:</span>
@@ -1704,7 +1605,6 @@
                 `;
                 
             } else {
-                // Chưa chấm điểm
                 scoreDisplay.textContent = 'ĐÃ GỬI BÀI THI';
                 resultMessage.textContent = 'Bài thi của bạn đã được nộp và đang chờ giáo viên chấm điểm.';
                 
@@ -1732,23 +1632,19 @@
                 `;
             }
             
-            // Thiết lập sự kiện cho nút quay lại
             document.getElementById('backToExamsBtn').addEventListener('click', () => {
                 window.location.reload();
             });
             
-            // Thiết lập sự kiện cho nút xem lại bài làm
             document.getElementById('reviewExamBtn').addEventListener('click', () => {
                 showNotification('Tính năng đang được phát triển', 'info');
             });
         }
 
-        // Tải danh sách bài thi của người dùng - ĐÃ CẬP NHẬT
         async function loadUserExams() {
             try {
                 const examsList = document.getElementById('examsList');
                 
-                // Truy vấn các bài thi đã tham gia
                 const attemptsQuery = await db.collection('attempts')
                     .where('userId', '==', currentUser.uid)
                     .orderBy('completedAt', 'desc')
@@ -1772,7 +1668,6 @@
                     const attemptId = doc.id;
                     
                     try {
-                        // Lấy thông tin đề thi từ collection exams
                         const examDoc = await db.collection('exams').doc(attempt.examId).get();
                         const examData = examDoc.exists ? examDoc.data() : {};
                         
@@ -1841,7 +1736,6 @@
                         `;
                     } catch (error) {
                         console.error('Error loading exam data:', error);
-                        // Vẫn hiển thị thông tin cơ bản nếu không lấy được exam data
                         examsHTML += `
                             <div class="exam-card">
                                 <h4 class="exam-title">${attempt.examTitle || 'Đề thi Ngữ Văn'}</h4>
@@ -1853,7 +1747,6 @@
                 
                 examsList.innerHTML = examsHTML;
                 
-                // Thiết lập sự kiện cho các nút
                 document.querySelectorAll('.view-result-btn').forEach(btn => {
                     btn.addEventListener('click', async () => {
                         const attemptId = btn.dataset.attempt;
@@ -1870,13 +1763,11 @@
                     btn.addEventListener('click', async () => {
                         const examCode = btn.dataset.exam;
                         
-                        // Tải đề thi
                         const examDoc = await db.collection('exams').doc(examCode).get();
                         if (examDoc.exists) {
                             currentExam = examCode;
                             currentExamData = examDoc.data();
                             
-                            // Bắt đầu làm bài mới
                             startExam();
                         } else {
                             showNotification('Không tìm thấy đề thi', 'error');
@@ -1890,28 +1781,21 @@
             }
         }
 
-        // Khởi tạo khi trang được tải
         document.addEventListener('DOMContentLoaded', function() {
-            // Kiểm tra đăng nhập
             checkAuth();
             
-            // Thiết lập đăng xuất
             setupLogout();
             
-            // Thiết lập tabs
             setupTabs();
             
-            // Thiết lập tham gia bài thi
             setupJoinExam();
             
-            // Thiết lập sự kiện cho nút nộp bài
             document.getElementById('submitExamBtn').addEventListener('click', () => {
                 if (confirm('Bạn có chắc chắn muốn nộp bài? Sau khi nộp bạn không thể chỉnh sửa câu trả lời.')) {
                     submitExam();
                 }
             });
             
-            // Cho phép submit bằng phím Enter (Ctrl+Enter)
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && e.ctrlKey && document.getElementById('submitExamBtn')) {
                     e.preventDefault();
@@ -1921,7 +1805,6 @@
                 }
             });
             
-            // Focus vào ô nhập mã đề thi
             document.getElementById('examCodeInput')?.focus();
         });
     </script>
