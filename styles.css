@@ -145,6 +145,14 @@
         white-space: nowrap;
         border-width: 0;
     }
+
+    .title-logo {
+        display: block;
+        margin: 0 auto;
+        max-height: 100px; /* Điều chỉnh theo kích thước hình */
+        width: auto;
+    }    
+    
     .top-nav {
         position: fixed;
         top: 0.4rem;
@@ -806,4 +814,5 @@
     }
 }
 ```
+
 
