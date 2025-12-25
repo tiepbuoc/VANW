@@ -280,6 +280,153 @@
                 transform: translateZ(0);
             }
             
+            /* THANH KHÁM PHÁ CÁC TÍNH NĂNG RIÊNG LẺ - THÊM MỚI */
+            .features-individual-section {
+                width: 100%;
+                max-width: 800px;
+                margin: 2rem auto 3rem;
+                position: relative;
+            }
+            
+            /* Thanh mở rộng với hình nền logtext2.png */
+            .features-individual-wrapper {
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-weight: 600;
+                overflow: hidden;
+                cursor: pointer;
+                box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+                border-radius: 12px;
+                padding: 0.8rem 1.5rem;
+                background: url('logtext2.png') center center no-repeat;
+                background-size: contain;
+                background-color: #ffffff;
+                height: 60px;
+                z-index: 10;
+                border: none;
+                min-height: 60px;
+            }
+            
+            .features-individual-wrapper:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 0, 0, 0.2);
+            }
+            
+            .features-individual-wrapper i {
+                position: absolute;
+                right: 15px;
+                font-size: 1.2rem;
+                transition: transform 0.3s ease;
+                color: #ed7839;
+            }
+            
+            .features-individual-wrapper:hover i {
+                transform: translateY(3px);
+            }
+            
+            /* Dropdown container cho tính năng riêng lẻ */
+            .individual-dropdown {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                width: 100%;
+                margin: 0 auto;
+                position: relative;
+                z-index: 8;
+                margin-top: -1px;
+            }
+            
+            .individual-dropdown.active {
+                max-height: 1000px;
+                padding: 20px;
+                overflow: visible;
+                background: #ffffff;
+                border-top: none;
+                border-radius: 0 0 12px 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            }
+            
+            .individual-grid {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1.5rem;
+                position: relative;
+                z-index: 3;
+                overflow: visible;
+                padding: 1rem;
+            }
+            
+            /* Individual item - hình vuông */
+            .individual-item {
+                -webkit-tap-highlight-color: #0000;
+                width: 200px;
+                height: 200px; /* Hình vuông */
+                outline: 3px solid #ed7839;
+                background: #ffffff;
+                position: relative;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                          box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                          outline-color 0.3s ease;
+                box-shadow: 0 4px 12px rgba(237, 120, 57, 0.2);
+                overflow: hidden;
+            }
+            
+            .individual-item > div {
+                clip-path: inset(0 round 12px);
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                inset: 0;
+                border-radius: 12px;
+                overflow: hidden;
+                background-color: #ffffff;
+            }
+            
+            /* Container cho necon trong individual item chỉ chiếm 70% diện tích */
+            .individual-necon-container {
+                width: 70%;
+                height: 70%;
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
+                transition: transform 0.3s ease;
+            }
+            
+            .individual-item:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 25px rgba(237, 120, 57, 0.3);
+                outline-color: #ff8c42;
+            }
+            
+            .individual-item:hover .individual-necon-container {
+                transform: scale(1.05);
+            }
+            
+            .individual-item:active {
+                transform: translateY(-4px);
+                box-shadow: 0 6px 18px rgba(237, 120, 57, 0.25);
+            }
+            
+            .individual-item::after {
+                content: '';
+                position: absolute;
+                pointer-events: none;
+                inset: 0px;
+                border-radius: inherit;
+                border: calc(var(--border-width) * 1px) solid #0000;
+                z-index: 2;
+                clip-path: inset(0 round 12px);
+                transform: translateZ(0);
+            }
+            
             .app-footer {
                 text-align: center;
                 margin-top: 3rem;
@@ -324,13 +471,15 @@
             }
             
             .footer-links a {
-                color: #000000;
+                color: #ed7839; /* Đổi màu thành màu cam */
                 text-decoration: none;
                 font-weight: 600;
+                transition: color 0.3s ease;
             }
             
             .footer-links a:hover {
                 text-decoration: underline;
+                color: #ff8c42; /* Màu cam sáng hơn khi hover */
             }
             
             @media (max-width: 768px) {
@@ -361,25 +510,30 @@
                     height: 250px;
                 }
                 
-                .liquid-glass-section {
+                .liquid-glass-section,
+                .features-individual-section {
                     margin: 1.5rem auto 2rem;
                 }
                 
-                .liquidGlass-wrapper {
+                .liquidGlass-wrapper,
+                .features-individual-wrapper {
                     height: 50px;
                     padding: 0.6rem 1.2rem;
                 }
                 
-                .features-dropdown.active {
+                .features-dropdown.active,
+                .individual-dropdown.active {
                     padding: 15px;
                 }
                 
-                .features-grid {
+                .features-grid,
+                .individual-grid {
                     gap: 1rem;
                     padding: 0.5rem;
                 }
                 
-                .feature-item {
+                .feature-item,
+                .individual-item {
                     width: 160px;
                     height: 160px;
                 }
@@ -416,15 +570,18 @@
                     height: 200px;
                 }
                 
-                .liquidGlass-wrapper {
+                .liquidGlass-wrapper,
+                .features-individual-wrapper {
                     height: 45px;
                 }
                 
-                .features-dropdown.active {
+                .features-dropdown.active,
+                .individual-dropdown.active {
                     padding: 10px;
                 }
                 
-                .feature-item {
+                .feature-item,
+                .individual-item {
                     width: 140px;
                     height: 140px;
                 }
@@ -441,7 +598,8 @@
                     max-width: 400px;
                 }
                 
-                .liquid-glass-section {
+                .liquid-glass-section,
+                .features-individual-section {
                     max-width: 900px;
                 }
                 
@@ -450,7 +608,8 @@
                     height: 300px;
                 }
                 
-                .feature-item {
+                .feature-item,
+                .individual-item {
                     width: 220px;
                     height: 220px;
                 }
@@ -468,7 +627,8 @@
                 }
             }
             
-            .liquidGlass-wrapper.active i {
+            .liquidGlass-wrapper.active i,
+            .features-individual-wrapper.active i {
                 animation: bounce 0.5s ease;
                 transform: rotate(180deg);
             }
@@ -707,6 +867,31 @@
             </div>
         </div>
         
+        <!-- THÊM MỚI: Thanh khám phá các tính năng riêng lẻ -->
+        <div class="features-individual-section">
+            <!-- Thanh mở rộng với hình nền logtext2.png -->
+            <div class="features-individual-wrapper" id="featuresIndividualBar">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            
+            <!-- Dropdown với khối lớn bao quanh 2 khối nhỏ -->
+            <div class="individual-dropdown" id="individualDropdown">
+                <div class="individual-grid">
+                    <!-- 2 khối tính năng riêng lẻ với necon chiếm 70% diện tích ở trung tâm -->
+                    <div class="individual-item" onclick="navigateTo('bandovanhoc.html')">
+                        <div>
+                            <div class="individual-necon-container" style="background-image: url('necon7.png');"></div>
+                        </div>
+                    </div>
+                    <div class="individual-item" onclick="navigateTo('chatbot.html')">
+                        <div>
+                            <div class="individual-necon-container" style="background-image: url('necon8.png');"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <footer class="app-footer">
             <div class="footer-content">
                 <button class="logout-btn" id="logoutBtn">
@@ -880,43 +1065,46 @@
             }, 3000);
         }
 
+        // Xử lý thanh thi thử
         const liquidGlassBar = document.getElementById('liquidGlassBar');
         const featuresDropdown = document.getElementById('featuresDropdown');
         const chevronIcon = liquidGlassBar.querySelector('i');
         
-        function updateDropdownHeight() {
-            if (featuresDropdown.classList.contains('active')) {
-                const grid = featuresDropdown.querySelector('.features-grid');
+        // Xử lý thanh khám phá tính năng riêng lẻ
+        const featuresIndividualBar = document.getElementById('featuresIndividualBar');
+        const individualDropdown = document.getElementById('individualDropdown');
+        const chevronIconIndividual = featuresIndividualBar.querySelector('i');
+        
+        function updateDropdownHeight(dropdown, contentSelector) {
+            if (dropdown.classList.contains('active')) {
+                const grid = dropdown.querySelector(contentSelector);
                 const gridHeight = grid.scrollHeight;
                 const totalHeight = gridHeight + 80;
                 
-                featuresDropdown.style.maxHeight = totalHeight + 'px';
+                dropdown.style.maxHeight = totalHeight + 'px';
             }
         }
         
+        // Sự kiện cho thanh thi thử
         liquidGlassBar.addEventListener('click', function(e) {
             e.stopPropagation();
             featuresDropdown.classList.toggle('active');
             liquidGlassBar.classList.toggle('active');
+            
+            // Đóng thanh khám phá tính năng riêng lẻ nếu đang mở
+            if (individualDropdown.classList.contains('active')) {
+                individualDropdown.classList.remove('active');
+                featuresIndividualBar.classList.remove('active');
+                chevronIconIndividual.style.transform = 'rotate(0deg)';
+                individualDropdown.style.maxHeight = '0';
+            }
             
             if (featuresDropdown.classList.contains('active')) {
                 chevronIcon.style.transform = 'rotate(180deg)';
                 liquidGlassBar.style.transform = 'translateY(-5px)';
                 liquidGlassBar.style.boxShadow = '0 12px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 0, 0, 0.2)';
                 
-                setTimeout(updateDropdownHeight, 10);
-                
-                document.querySelectorAll('.feature-item').forEach(item => {
-                    item.addEventListener('mouseenter', function() {
-                        this.style.transform = 'translateY(-8px)';
-                    });
-                    
-                    item.addEventListener('mouseleave', function() {
-                        if (!this.classList.contains('clicked')) {
-                            this.style.transform = 'translateY(0)';
-                        }
-                    });
-                });
+                setTimeout(() => updateDropdownHeight(featuresDropdown, '.features-grid'), 10);
             } else {
                 chevronIcon.style.transform = 'rotate(0deg)';
                 if (!liquidGlassBar.matches(':hover')) {
@@ -927,6 +1115,37 @@
             }
         });
         
+        // Sự kiện cho thanh khám phá tính năng riêng lẻ
+        featuresIndividualBar.addEventListener('click', function(e) {
+            e.stopPropagation();
+            individualDropdown.classList.toggle('active');
+            featuresIndividualBar.classList.toggle('active');
+            
+            // Đóng thanh thi thử nếu đang mở
+            if (featuresDropdown.classList.contains('active')) {
+                featuresDropdown.classList.remove('active');
+                liquidGlassBar.classList.remove('active');
+                chevronIcon.style.transform = 'rotate(0deg)';
+                featuresDropdown.style.maxHeight = '0';
+            }
+            
+            if (individualDropdown.classList.contains('active')) {
+                chevronIconIndividual.style.transform = 'rotate(180deg)';
+                featuresIndividualBar.style.transform = 'translateY(-5px)';
+                featuresIndividualBar.style.boxShadow = '0 12px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 0, 0, 0.2)';
+                
+                setTimeout(() => updateDropdownHeight(individualDropdown, '.individual-grid'), 10);
+            } else {
+                chevronIconIndividual.style.transform = 'rotate(0deg)';
+                if (!featuresIndividualBar.matches(':hover')) {
+                    featuresIndividualBar.style.transform = 'translateY(0)';
+                    featuresIndividualBar.style.boxShadow = '0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)';
+                }
+                individualDropdown.style.maxHeight = '0';
+            }
+        });
+        
+        // Hiệu ứng hover cho thanh thi thử
         liquidGlassBar.addEventListener('mouseenter', function() {
             if (!featuresDropdown.classList.contains('active')) {
                 this.style.transform = 'translateY(-5px)';
@@ -941,7 +1160,24 @@
             }
         });
         
+        // Hiệu ứng hover cho thanh khám phá tính năng riêng lẻ
+        featuresIndividualBar.addEventListener('mouseenter', function() {
+            if (!individualDropdown.classList.contains('active')) {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 12px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 0, 0, 0.2)';
+            }
+        });
+        
+        featuresIndividualBar.addEventListener('mouseleave', function() {
+            if (!individualDropdown.classList.contains('active')) {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)';
+            }
+        });
+        
+        // Đóng dropdown khi click ra ngoài
         document.addEventListener('click', function(event) {
+            // Kiểm tra click bên ngoài thanh thi thử
             if (!liquidGlassBar.contains(event.target) && !featuresDropdown.contains(event.target)) {
                 featuresDropdown.classList.remove('active');
                 liquidGlassBar.classList.remove('active');
@@ -953,9 +1189,23 @@
                     liquidGlassBar.style.boxShadow = '0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)';
                 }
             }
+            
+            // Kiểm tra click bên ngoài thanh khám phá tính năng riêng lẻ
+            if (!featuresIndividualBar.contains(event.target) && !individualDropdown.contains(event.target)) {
+                individualDropdown.classList.remove('active');
+                featuresIndividualBar.classList.remove('active');
+                chevronIconIndividual.style.transform = 'rotate(0deg)';
+                individualDropdown.style.maxHeight = '0';
+                
+                if (!featuresIndividualBar.matches(':hover')) {
+                    featuresIndividualBar.style.transform = 'translateY(0)';
+                    featuresIndividualBar.style.boxShadow = '0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)';
+                }
+            }
         });
         
-        document.querySelectorAll('.feature-item').forEach(item => {
+        // Xử lý click cho các feature item
+        document.querySelectorAll('.feature-item, .individual-item').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.stopPropagation();
                 this.classList.add('clicked');
@@ -998,25 +1248,43 @@
             });
         });
         
+        // Đóng dropdown khi nhấn Escape
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && featuresDropdown.classList.contains('active')) {
-                featuresDropdown.classList.remove('active');
-                liquidGlassBar.classList.remove('active');
-                chevronIcon.style.transform = 'rotate(0deg)';
-                liquidGlassBar.style.transform = 'translateY(0)';
-                liquidGlassBar.style.boxShadow = '0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)';
-                featuresDropdown.style.maxHeight = '0';
+            if (e.key === 'Escape') {
+                if (featuresDropdown.classList.contains('active')) {
+                    featuresDropdown.classList.remove('active');
+                    liquidGlassBar.classList.remove('active');
+                    chevronIcon.style.transform = 'rotate(0deg)';
+                    liquidGlassBar.style.transform = 'translateY(0)';
+                    liquidGlassBar.style.boxShadow = '0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)';
+                    featuresDropdown.style.maxHeight = '0';
+                }
+                
+                if (individualDropdown.classList.contains('active')) {
+                    individualDropdown.classList.remove('active');
+                    featuresIndividualBar.classList.remove('active');
+                    chevronIconIndividual.style.transform = 'rotate(0deg)';
+                    featuresIndividualBar.style.transform = 'translateY(0)';
+                    featuresIndividualBar.style.boxShadow = '0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)';
+                    individualDropdown.style.maxHeight = '0';
+                }
             }
         });
         
+        // Cập nhật kích thước dropdown khi resize
         window.addEventListener('resize', function() {
             if (featuresDropdown.classList.contains('active')) {
-                setTimeout(updateDropdownHeight, 100);
+                setTimeout(() => updateDropdownHeight(featuresDropdown, '.features-grid'), 100);
+            }
+            if (individualDropdown.classList.contains('active')) {
+                setTimeout(() => updateDropdownHeight(individualDropdown, '.individual-grid'), 100);
             }
         });
         
+        // Xử lý đăng xuất
         document.getElementById('logoutBtn').addEventListener('click', logout);
         
+        // Khởi tạo
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthState();
         });
