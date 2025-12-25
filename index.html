@@ -136,113 +136,59 @@
                 position: relative;
             }
             
+            /* Thanh mở rộng với hình nền logo */
             .liquidGlass-wrapper {
                 position: relative;
                 display: flex;
-                justify-content: space-between;
+                justify-content: center;
                 align-items: center;
                 font-weight: 600;
                 overflow: hidden;
                 cursor: pointer;
                 box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
-                border-radius: 2rem;
+                border-radius: 12px;
                 padding: 1.2rem 2rem;
-                background: url('background.png') center center;
-                background-size: cover;
+                background: url('logtext.png') center center no-repeat;
+                background-size: contain;
+                background-color: #ffffff;
+                height: 120px;
                 z-index: 10;
+                border: 3px solid #ed7839;
             }
             
             .liquidGlass-wrapper:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 0, 0, 0.2);
             }
-
-            .liquidGlass-effect {
-                position: absolute;
-                z-index: 0;
-                inset: 0;
-                backdrop-filter: blur(20px);
-                background: rgba(255, 255, 255, 0.1);
-                overflow: hidden;
-                isolation: isolate;
-                border-radius: inherit;
-            }
-
-            .liquidGlass-tint {
-                z-index: 1;
-                position: absolute;
-                inset: 0;
-                background: rgba(255, 255, 255, 0.15);
-                border-radius: inherit;
-            }
-
-            .liquidGlass-shine {
-                position: absolute;
-                inset: 0;
-                z-index: 2;
-                overflow: hidden;
-                box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.5),
-                            inset -1px -1px 1px 1px rgba(255, 255, 255, 0.5);
-                border-radius: inherit;
-            }
-
-            .liquidGlass-text {
-                z-index: 3;
-                font-size: 1.4rem;
-                color: #ed7839;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                width: 100%;
-                text-shadow: 
-                    1px 1px 0 #fff,
-                    -1px -1px 0 #fff,
-                    1px -1px 0 #fff,
-                    -1px 1px 0 #fff,
-                    0 1px 0 #fff,
-                    1px 0 0 #fff,
-                    0 -1px 0 #fff,
-                    -1px 0 0 #fff;
-                -webkit-text-stroke: 0.5px #fff;
-                paint-order: stroke fill;
-            }
             
-            .liquidGlass-text i {
-                font-size: 1.2rem;
+            .liquidGlass-wrapper i {
+                position: absolute;
+                right: 20px;
+                font-size: 1.5rem;
                 transition: transform 0.3s ease;
                 color: #ed7839;
-                filter: none;
-                text-shadow: 
-                    1px 1px 0 #fff,
-                    -1px -1px 0 #fff,
-                    1px -1px 0 #fff,
-                    -1px 1px 0 #fff,
-                    0 1px 0 #fff,
-                    1px 0 0 #fff,
-                    0 -1px 0 #fff,
-                    -1px 0 0 #fff;
-                margin-left: 10px;
-                flex-shrink: 0;
             }
             
-            .liquidGlass-wrapper:hover .liquidGlass-text i {
+            .liquidGlass-wrapper:hover i {
                 transform: translateY(3px);
             }
             
+            /* Dropdown container */
             .features-dropdown {
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 width: 100%;
                 margin: 0 auto;
-                border-radius: 0 0 2rem 2rem;
-                background: url('background.png') center center;
-                background-size: cover;
+                border-radius: 0 0 12px 12px;
+                background: #ffffff;
                 position: relative;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
                 z-index: 9;
-                margin-top: -2px;
+                margin-top: -3px;
+                border: 3px solid #ed7839;
+                border-top: none;
             }
             
             .features-dropdown.active {
@@ -251,119 +197,86 @@
                 overflow: visible;
             }
             
-            .dropdown-container {
-                position: relative;
-                border-radius: 1.5rem;
-                padding: 2rem;
-                background: rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                box-shadow: inset 0 2px 10px rgba(255, 255, 255, 0.2),
-                            0 8px 32px rgba(0, 0, 0, 0.1);
-                min-height: auto;
-                height: auto;
-                display: block;
-            }
-            
-            .dropdown-container .liquidGlass-effect {
-                border-radius: 1.5rem;
-                backdrop-filter: blur(8px);
-            }
-            
             .features-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 1.5rem;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 2rem;
                 position: relative;
                 z-index: 3;
                 overflow: visible;
             }
             
+            /* Feature item giống 3 khối chính */
             .feature-item {
+                -webkit-tap-highlight-color: #0000;
+                width: 300px;
+                aspect-ratio: 4 / 3;
+                outline: 3px solid #ed7839;
+                background: #ffffff;
                 position: relative;
-                padding: 1.5rem;
-                border-radius: 1rem;
+                border-radius: 12px;
                 cursor: pointer;
-                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                background: rgba(255, 255, 255, 0.15);
-                backdrop-filter: blur(5px);
-                -webkit-backdrop-filter: blur(5px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
+                transition-property: translate, scale, background-color, outline-color;
+                transition-duration: 0.12s, 0.12s, 0.5s, 0.5s;
+                transition-timing-function: cubic-bezier(.645, .045, .355, 1);
+                box-shadow: 0 4px 12px rgba(237, 120, 57, 0.2);
+            }
+            
+            .feature-item > div {
+                clip-path: inset(0 round 12px);
                 overflow: hidden;
-                min-height: 120px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
+                align-content: center;
+                display: grid;
+                place-items: center;
+                gap: 0.5rem;
+                position: absolute;
+                inset: 0;
+                border-radius: 12px;
+                overflow: hidden;
+                padding: 1rem;
             }
             
-            .feature-item .liquidGlass-effect {
-                opacity: 0;
-                transition: opacity 0.3s ease;
-                backdrop-filter: blur(3px);
+            .feature-item:active {
+                translate: 0 1px;
+                scale: 0.99;
             }
             
-            .feature-item:hover .liquidGlass-effect {
-                opacity: 0.3;
+            .feature-item::after {
+                content: '';
+                position: absolute;
+                pointer-events: none;
+                inset: 0px;
+                border-radius: inherit;
+                border: calc(var(--border-width) * 1px) solid #0000;
+                z-index: 2;
+                clip-path: inset(0 round 12px);
+                transform: translateZ(0);
             }
             
-            .feature-item .liquidGlass-tint {
-                background: rgba(255, 255, 255, 0.05);
-            }
-            
-            .feature-item .liquidGlass-shine {
-                box-shadow: inset 1px 1px 0.5px 0 rgba(255, 255, 255, 0.3),
-                            inset -0.5px -0.5px 0.5px 0.5px rgba(255, 255, 255, 0.3);
-            }
-            
-            .feature-item:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2),
-                            inset 0 2px 5px rgba(255, 255, 255, 0.3);
-                background: rgba(255, 255, 255, 0.25);
+            .feature-item img {
+                width: 80px;
+                user-select: none;
+                z-index: 2;
+                position: relative;
+                filter: none !important;
             }
             
             .feature-item h3 {
-                margin: 0 0 0.8rem 0;
-                color: #ed7839;
+                z-index: 4;
+                position: relative;
                 font-size: 1.1rem;
-                display: flex;
-                align-items: center;
-                gap: 0.8rem;
-                text-shadow: 
-                    0.5px 0.5px 0 #fff,
-                    -0.5px -0.5px 0 #fff,
-                    0.5px -0.5px 0 #fff,
-                    -0.5px 0.5px 0 #fff,
-                    0 0.5px 0 #fff,
-                    0.5px 0 0 #fff,
-                    0 -0.5px 0 #fff,
-                    -0.5px 0 0 #fff;
-                -webkit-text-stroke: 0.3px #fff;
-                paint-order: stroke fill;
-            }
-            
-            .feature-item h3 i {
-                color: #ed7839;
-                font-size: 1.3rem;
-                filter: none;
-                text-shadow: 
-                    0.5px 0.5px 0 #fff,
-                    -0.5px -0.5px 0 #fff,
-                    0.5px -0.5px 0 #fff,
-                    -0.5px 0.5px 0 #fff,
-                    0 0.5px 0 #fff,
-                    0.5px 0 0 #fff,
-                    0 -0.5px 0 #fff,
-                    -0.5px 0 0 #fff;
-            }
-            
-            .feature-item p {
                 margin: 0;
-                color: #ed7839;
-                font-size: 0.9rem;
-                line-height: 1.5;
-                font-weight: 500;
+                user-select: none;
+                font-weight: 600;
+                color: #000000;
+                text-align: center;
+                line-height: 1.4;
+            }
+            
+            .feature-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(237, 120, 57, 0.3);
             }
             
             .app-footer {
@@ -452,29 +365,21 @@
                 }
                 
                 .liquidGlass-wrapper {
-                    padding: 1rem 1.5rem;
-                    border-radius: 2rem;
-                }
-                
-                .liquidGlass-text {
-                    font-size: 1.2rem;
+                    padding: 1rem;
+                    height: 100px;
                 }
                 
                 .features-dropdown.active {
                     padding: 1.5rem;
                 }
                 
-                .dropdown-container {
-                    padding: 1.5rem;
-                }
-                
                 .features-grid {
-                    grid-template-columns: 1fr;
+                    gap: 1.5rem;
                 }
                 
                 .feature-item {
-                    padding: 1.2rem;
-                    min-height: 110px;
+                    width: 100%;
+                    max-width: 300px;
                 }
                 
                 .app-footer {
@@ -512,33 +417,20 @@
                     font-size: 1.1rem;
                 }
                 
-                .liquidGlass-text {
-                    font-size: 1rem;
-                }
-                
-                .liquidGlass-text i {
-                    font-size: 1rem;
+                .liquidGlass-wrapper {
+                    height: 80px;
                 }
                 
                 .features-dropdown.active {
                     padding: 1rem;
                 }
                 
-                .dropdown-container {
-                    padding: 1rem;
-                }
-                
                 .feature-item {
-                    min-height: 100px;
-                    padding: 1rem;
+                    max-width: 100%;
                 }
                 
                 .feature-item h3 {
                     font-size: 1rem;
-                }
-                
-                .feature-item p {
-                    font-size: 0.85rem;
                 }
                 
                 .logout-btn {
@@ -556,10 +448,6 @@
                 .liquid-glass-section {
                     max-width: 900px;
                 }
-                
-                .features-grid {
-                    grid-template-columns: repeat(3, 1fr);
-                }
             }
             
             @keyframes bounce {
@@ -574,8 +462,9 @@
                 }
             }
             
-            .liquidGlass-wrapper.active .liquidGlass-text i {
+            .liquidGlass-wrapper.active i {
                 animation: bounce 0.5s ease;
+                transform: rotate(180deg);
             }
         }
         
@@ -786,43 +675,30 @@
         </main>
         
         <div class="liquid-glass-section">
+            <!-- Thanh mở rộng với hình nền logo -->
             <div class="liquidGlass-wrapper" id="liquidGlassBar">
-                <div class="liquidGlass-effect"></div>
-                <div class="liquidGlass-tint"></div>
-                <div class="liquidGlass-shine"></div>
-                <div class="liquidGlass-text">
-                    <span>Tham gia và quản lý bài thi</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
+                <i class="fas fa-chevron-down"></i>
             </div>
             
+            <!-- Dropdown với các khối giống 3 khối chính -->
             <div class="features-dropdown" id="featuresDropdown">
-                <div class="dropdown-container">
-                    <div class="liquidGlass-effect"></div>
-                    <div class="liquidGlass-tint"></div>
-                    <div class="liquidGlass-shine"></div>
-                    
-                    <div class="features-grid">
-                        <div class="feature-item" onclick="navigateTo('taode.html')">
-                            <div class="liquidGlass-effect"></div>
-                            <div class="liquidGlass-tint"></div>
-                            <div class="liquidGlass-shine"></div>
-                            <h3><i class="fas fa-book"></i> Tạo đề thi văn học</h3>
-                            <p>Tạo đề thi văn học trực tuyến tùy chỉnh một cách dễ dàng</p>
+                <div class="features-grid">
+                    <div class="feature-item" onclick="navigateTo('taode.html')">
+                        <div>
+                            <img src="necon1.png" alt="Tạo đề thi văn học" />
+                            <h3>Tạo đề thi văn học</h3>
                         </div>
-                        <div class="feature-item" onclick="navigateTo('take_exam.html')">
-                            <div class="liquidGlass-effect"></div>
-                            <div class="liquidGlass-tint"></div>
-                            <div class="liquidGlass-shine"></div>
-                            <h3><i class="fas fa-question-circle"></i> Tham gia thi văn học</h3>
-                            <p>Tham gia thi các đề thi văn học</p>
+                    </div>
+                    <div class="feature-item" onclick="navigateTo('take_exam.html')">
+                        <div>
+                            <img src="necon2.png" alt="Tham gia thi văn học" />
+                            <h3>Tham gia thi văn học</h3>
                         </div>
-                        <div class="feature-item" onclick="navigateTo('quanly.html')">
-                            <div class="liquidGlass-effect"></div>
-                            <div class="liquidGlass-tint"></div>
-                            <div class="liquidGlass-shine"></div>
-                            <h3><i class="fas fa-font"></i> Quản lý đề thi</h3>
-                            <p>Quản lý và chấm điểm các bài thi, đề thi</p>
+                    </div>
+                    <div class="feature-item" onclick="navigateTo('quanly.html')">
+                        <div>
+                            <img src="necon3.png" alt="Quản lý đề thi" />
+                            <h3>Quản lý đề thi</h3>
                         </div>
                     </div>
                 </div>
@@ -1004,15 +880,13 @@
 
         const liquidGlassBar = document.getElementById('liquidGlassBar');
         const featuresDropdown = document.getElementById('featuresDropdown');
-        const chevronIcon = liquidGlassBar.querySelector('.fa-chevron-down');
+        const chevronIcon = liquidGlassBar.querySelector('i');
         
         function updateDropdownHeight() {
             if (featuresDropdown.classList.contains('active')) {
-                const container = featuresDropdown.querySelector('.dropdown-container');
-                const grid = container.querySelector('.features-grid');
-                const containerHeight = container.scrollHeight;
+                const grid = featuresDropdown.querySelector('.features-grid');
                 const gridHeight = grid.scrollHeight;
-                const totalHeight = Math.max(containerHeight, gridHeight) + 50;
+                const totalHeight = gridHeight + 80;
                 
                 featuresDropdown.style.maxHeight = totalHeight + 'px';
             }
@@ -1025,7 +899,7 @@
             
             if (featuresDropdown.classList.contains('active')) {
                 chevronIcon.style.transform = 'rotate(180deg)';
-                liquidGlassBar.style.borderRadius = '2rem 2rem 0 0';
+                liquidGlassBar.style.borderRadius = '12px 12px 0 0';
                 liquidGlassBar.style.transform = 'translateY(-5px)';
                 liquidGlassBar.style.boxShadow = '0 12px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 0, 0, 0.2)';
                 
@@ -1033,7 +907,7 @@
                 
                 document.querySelectorAll('.feature-item').forEach(item => {
                     item.addEventListener('mouseenter', function() {
-                        this.style.transform = 'translateY(-8px)';
+                        this.style.transform = 'translateY(-5px)';
                     });
                     
                     item.addEventListener('mouseleave', function() {
@@ -1044,7 +918,7 @@
                 });
             } else {
                 chevronIcon.style.transform = 'rotate(0deg)';
-                liquidGlassBar.style.borderRadius = '2rem';
+                liquidGlassBar.style.borderRadius = '12px';
                 if (!liquidGlassBar.matches(':hover')) {
                     liquidGlassBar.style.transform = 'translateY(0)';
                     liquidGlassBar.style.boxShadow = '0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)';
@@ -1072,7 +946,7 @@
                 featuresDropdown.classList.remove('active');
                 liquidGlassBar.classList.remove('active');
                 chevronIcon.style.transform = 'rotate(0deg)';
-                liquidGlassBar.style.borderRadius = '2rem';
+                liquidGlassBar.style.borderRadius = '12px';
                 featuresDropdown.style.maxHeight = '0';
                 
                 if (!liquidGlassBar.matches(':hover')) {
@@ -1086,10 +960,10 @@
             item.addEventListener('click', function(e) {
                 e.stopPropagation();
                 this.classList.add('clicked');
-                this.style.transform = 'translateY(-8px) scale(0.98)';
+                this.style.transform = 'translateY(-5px) scale(0.98)';
                 
                 setTimeout(() => {
-                    this.style.transform = 'translateY(-8px) scale(1)';
+                    this.style.transform = 'translateY(-5px) scale(1)';
                 }, 150);
                 
                 setTimeout(() => {
@@ -1103,7 +977,7 @@
                 featuresDropdown.classList.remove('active');
                 liquidGlassBar.classList.remove('active');
                 chevronIcon.style.transform = 'rotate(0deg)';
-                liquidGlassBar.style.borderRadius = '2rem';
+                liquidGlassBar.style.borderRadius = '12px';
                 liquidGlassBar.style.transform = 'translateY(0)';
                 liquidGlassBar.style.boxShadow = '0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)';
                 featuresDropdown.style.maxHeight = '0';
