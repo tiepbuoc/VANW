@@ -66,37 +66,47 @@
                 justify-content: center;
             }
             
+            /* Sửa article thành hình vuông và bỏ chữ */
             article {
                 -webkit-tap-highlight-color: #0000;
-                width: 300px;
-                aspect-ratio: 4 / 3;
+                width: 280px; /* Đảm bảo hình vuông */
+                height: 280px; /* Hình vuông */
                 outline: 3px solid #ed7839;
                 background: #ffffff;
                 position: relative;
                 border-radius: 12px;
                 cursor: pointer;
-                transition-property: translate, scale, background-color, outline-color;
-                transition-duration: 0.12s, 0.12s, 0.5s, 0.5s;
-                transition-timing-function: cubic-bezier(.645, .045, .355, 1);
+                transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                          box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                          outline-color 0.3s ease;
                 box-shadow: 0 4px 12px rgba(237, 120, 57, 0.2);
+                overflow: hidden;
             }
             
             article > div {
                 clip-path: inset(0 round 12px);
                 overflow: hidden;
-                align-content: center;
                 display: grid;
                 place-items: center;
-                gap: 0.5rem;
                 position: absolute;
                 inset: 0;
                 border-radius: 12px;
                 overflow: hidden;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+            
+            /* Hiệu ứng nâng lên khi hover */
+            article:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(237, 120, 57, 0.3);
+                outline-color: #ff8c42;
             }
             
             article:active {
-                translate: 0 1px;
-                scale: 0.99;
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(237, 120, 57, 0.25);
             }
             
             article::after {
@@ -111,22 +121,13 @@
                 transform: translateZ(0);
             }
             
+            /* Bỏ hình ảnh bên trong, thay vào đó là background image */
             article img {
-                width: 100px;
-                user-select: none;
-                z-index: 2;
-                position: relative;
-                filter: none !important;
+                display: none; /* Ẩn ảnh cũ */
             }
             
             article h2 {
-                z-index: 4;
-                position: relative;
-                font-size: 1.2rem;
-                margin: 0;
-                user-select: none;
-                font-weight: 600;
-                color: #000000;
+                display: none; /* Ẩn chữ */
             }
             
             .liquid-glass-section {
@@ -208,20 +209,21 @@
                 padding: 1rem;
             }
             
-            /* Feature item - nhỏ hơn 2/3, hình vuông, chỉ có icon */
+            /* Feature item - nhỏ hơn, hình vuông, chỉ có background image */
             .feature-item {
                 -webkit-tap-highlight-color: #0000;
-                width: 200px; /* Giảm 2/3 từ 300px */
+                width: 200px;
                 height: 200px; /* Hình vuông */
                 outline: 3px solid #ed7839;
                 background: #ffffff;
                 position: relative;
                 border-radius: 12px;
                 cursor: pointer;
-                transition-property: translate, scale, background-color, outline-color;
-                transition-duration: 0.12s, 0.12s, 0.5s, 0.5s;
-                transition-timing-function: cubic-bezier(.645, .045, .355, 1);
+                transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                          box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                          outline-color 0.3s ease;
                 box-shadow: 0 4px 12px rgba(237, 120, 57, 0.2);
+                overflow: hidden;
             }
             
             .feature-item > div {
@@ -234,12 +236,20 @@
                 inset: 0;
                 border-radius: 12px;
                 overflow: hidden;
-                padding: 1rem;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+            
+            .feature-item:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 25px rgba(237, 120, 57, 0.3);
+                outline-color: #ff8c42;
             }
             
             .feature-item:active {
-                translate: 0 1px;
-                scale: 0.99;
+                transform: translateY(-4px);
+                box-shadow: 0 6px 18px rgba(237, 120, 57, 0.25);
             }
             
             .feature-item::after {
@@ -254,17 +264,9 @@
                 transform: translateZ(0);
             }
             
+            /* Ẩn ảnh bên trong, sử dụng background image thay thế */
             .feature-item img {
-                width: 80px; /* Giữ nguyên tỉ lệ */
-                user-select: none;
-                z-index: 2;
-                position: relative;
-                filter: none !important;
-            }
-            
-            .feature-item:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 20px rgba(237, 120, 57, 0.3);
+                display: none; /* Ẩn ảnh cũ */
             }
             
             .app-footer {
@@ -344,8 +346,8 @@
                 }
                 
                 article {
-                    width: 100%;
-                    max-width: 300px;
+                    width: 250px;
+                    height: 250px;
                 }
                 
                 .liquid-glass-section {
@@ -369,10 +371,6 @@
                 .feature-item {
                     width: 160px;
                     height: 160px;
-                }
-                
-                .feature-item img {
-                    width: 60px;
                 }
                 
                 .app-footer {
@@ -403,11 +401,8 @@
                 }
                 
                 article {
-                    max-width: 100%;
-                }
-                
-                article h2 {
-                    font-size: 1.1rem;
+                    width: 200px;
+                    height: 200px;
                 }
                 
                 .liquidGlass-wrapper {
@@ -421,10 +416,6 @@
                 .feature-item {
                     width: 140px;
                     height: 140px;
-                }
-                
-                .feature-item img {
-                    width: 50px;
                 }
                 
                 .logout-btn {
@@ -441,6 +432,11 @@
                 
                 .liquid-glass-section {
                     max-width: 900px;
+                }
+                
+                article {
+                    width: 300px;
+                    height: 300px;
                 }
             }
             
@@ -648,23 +644,15 @@
         </header>
         
         <main>
+            <!-- 3 khối chính với background image là necon1, necon2, necon3 -->
             <article onclick="navigateTo('khampha.html')">
-                <div>
-                    <img src="necon1.png" alt="Khám phá văn học" />
-                    <h2>Khám phá văn học</h2>
-                </div>
+                <div style="background-image: url('necon1.png');"></div>
             </article>
             <article onclick="navigateTo('vangv.html')">
-                <div>
-                    <img src="necon2.png" alt="Hỗ trợ giảng dạy" />
-                    <h2>Hỗ trợ giảng dạy</h2>
-                </div>
+                <div style="background-image: url('necon2.png');"></div>
             </article>
             <article onclick="navigateTo('bieucam.html')">
-                <div>
-                    <img src="necon3.png" alt="Đánh giá biểu cảm" />
-                    <h2>Đánh giá biểu cảm</h2>
-                </div>
+                <div style="background-image: url('necon3.png');"></div>
             </article>
         </main>
         
@@ -677,20 +665,15 @@
             <!-- Dropdown với khối lớn bao quanh 3 khối nhỏ -->
             <div class="features-dropdown" id="featuresDropdown">
                 <div class="features-grid">
+                    <!-- 3 khối thi thử với background image là necon4, necon5, necon6 -->
                     <div class="feature-item" onclick="navigateTo('taode.html')">
-                        <div>
-                            <img src="necon1.png" alt="Tạo đề thi văn học" />
-                        </div>
+                        <div style="background-image: url('necon4.png');"></div>
                     </div>
                     <div class="feature-item" onclick="navigateTo('take_exam.html')">
-                        <div>
-                            <img src="necon2.png" alt="Tham gia thi văn học" />
-                        </div>
+                        <div style="background-image: url('necon5.png');"></div>
                     </div>
                     <div class="feature-item" onclick="navigateTo('quanly.html')">
-                        <div>
-                            <img src="necon3.png" alt="Quản lý đề thi" />
-                        </div>
+                        <div style="background-image: url('necon6.png');"></div>
                     </div>
                 </div>
             </div>
@@ -897,7 +880,7 @@
                 
                 document.querySelectorAll('.feature-item').forEach(item => {
                     item.addEventListener('mouseenter', function() {
-                        this.style.transform = 'translateY(-5px)';
+                        this.style.transform = 'translateY(-8px)';
                     });
                     
                     item.addEventListener('mouseleave', function() {
@@ -948,10 +931,37 @@
             item.addEventListener('click', function(e) {
                 e.stopPropagation();
                 this.classList.add('clicked');
-                this.style.transform = 'translateY(-5px) scale(0.98)';
+                this.style.transform = 'translateY(-8px) scale(0.98)';
                 
                 setTimeout(() => {
-                    this.style.transform = 'translateY(-5px) scale(1)';
+                    this.style.transform = 'translateY(-8px) scale(1)';
+                }, 150);
+                
+                setTimeout(() => {
+                    this.classList.remove('clicked');
+                }, 300);
+            });
+        });
+        
+        // Thêm hiệu ứng hover cho 3 khối chính
+        document.querySelectorAll('article').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('clicked')) {
+                    this.style.transform = 'translateY(0)';
+                }
+            });
+            
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.add('clicked');
+                this.style.transform = 'translateY(-10px) scale(0.98)';
+                
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-10px) scale(1)';
                 }, 150);
                 
                 setTimeout(() => {
@@ -985,5 +995,3 @@
     </script>
 </body>
 </html>
-
-
