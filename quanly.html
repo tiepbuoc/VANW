@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -75,6 +74,9 @@ body {
     padding: 2rem;
     overflow-x: hidden;
     min-height: 100vh;
+    align-content: center;
+    display: grid;
+    place-items: center;
 }
 
 body::before {
@@ -126,7 +128,9 @@ body::before {
 .app-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding-top: 60px;
+    padding-top: 20px;
+    width: 100%;
+    position: relative;
 }
 
 .page-title {
@@ -148,23 +152,27 @@ body::before {
 }
 
 .tab-btn {
+    -webkit-tap-highlight-color: #0000;
     padding: 12px 24px;
     background: var(--card-bg);
-    border: 2px solid var(--card-outline);
-    border-radius: 8px;
+    border: 3px solid var(--primary-color);
+    border-radius: 12px;
     color: var(--text-primary);
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
     white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(237, 120, 57, 0.2);
 }
 
 .tab-btn:hover {
     background: rgba(227, 124, 45, 0.1);
     border-color: var(--primary-color);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(237, 120, 57, 0.3);
 }
 
 .tab-btn.active {
@@ -192,7 +200,7 @@ body::before {
     border-radius: 15px;
     padding: 1.5rem;
     box-shadow: var(--shadow);
-    border: 2px solid var(--card-outline);
+    border: 3px solid var(--primary-color);
     margin-bottom: 1.5rem;
 }
 
@@ -219,30 +227,35 @@ body::before {
 }
 
 .stat-card {
+    -webkit-tap-highlight-color: #0000;
     background: var(--card-bg);
     border-radius: 12px;
     padding: 1.5rem;
     text-align: center;
-    border: 2px solid var(--card-outline);
-    transition: all 0.3s ease;
+    border: 3px solid var(--primary-color);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 12px rgba(237, 120, 57, 0.2);
+    cursor: pointer;
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    border-color: var(--primary-color);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(237, 120, 57, 0.3);
+    border-color: #ff8c42;
 }
 
 .stat-icon {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 1rem;
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: white;
+    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .stat-icon.pending {
@@ -303,7 +316,7 @@ body::before {
     width: 100%;
     padding: 0.75rem;
     border-radius: 8px;
-    border: 2px solid var(--card-outline);
+    border: 3px solid var(--primary-color);
     background: var(--card-bg);
     color: var(--text-primary);
     font-size: 1rem;
@@ -311,6 +324,8 @@ body::before {
     cursor: pointer;
     height: 44px;
     box-sizing: border-box;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(237, 120, 57, 0.1);
 }
 
 .filter-select:focus {
@@ -332,7 +347,7 @@ body::before {
     width: 100%;
     padding: 0.75rem 1rem 0.75rem 3rem;
     border-radius: 8px;
-    border: 2px solid var(--card-outline);
+    border: 3px solid var(--primary-color);
     background: var(--card-bg);
     color: var(--text-primary);
     font-size: 1rem;
@@ -340,6 +355,8 @@ body::before {
     height: 44px;
     box-sizing: border-box;
     line-height: 1.5;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(237, 120, 57, 0.1);
 }
 
 .search-input:focus {
@@ -383,15 +400,18 @@ body::before {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--primary-color);
 }
 
 .exams-table th {
-    background: rgba(227, 124, 45, 0.1);
+    background: rgba(227, 124, 45, 0.2);
     color: var(--primary-color);
     font-weight: 600;
     text-align: left;
     padding: 1rem;
-    border-bottom: 2px solid var(--card-outline);
+    border-bottom: 2px solid var(--primary-color);
 }
 
 .exams-table td {
@@ -409,35 +429,37 @@ body::before {
     font-weight: 600;
     color: var(--primary-color);
     background: rgba(227, 124, 45, 0.1);
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
     display: inline-block;
+    border: 1px solid rgba(227, 124, 45, 0.3);
 }
 
 .status-badge {
     display: inline-block;
-    padding: 4px 12px;
+    padding: 6px 15px;
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 600;
+    border: 2px solid;
 }
 
 .status-pending {
     background: rgba(255, 152, 0, 0.1);
     color: var(--warning-color);
-    border: 1px solid rgba(255, 152, 0, 0.3);
+    border-color: rgba(255, 152, 0, 0.3);
 }
 
 .status-graded {
     background: rgba(76, 175, 80, 0.1);
     color: var(--success-color);
-    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-color: rgba(76, 175, 80, 0.3);
 }
 
 .status-submitted {
     background: rgba(33, 150, 243, 0.1);
     color: var(--info-color);
-    border: 1px solid rgba(33, 150, 243, 0.3);
+    border-color: rgba(33, 150, 243, 0.3);
 }
 
 .action-buttons {
@@ -447,39 +469,41 @@ body::before {
 }
 
 .action-btn {
-    padding: 6px 12px;
-    border-radius: 6px;
+    -webkit-tap-highlight-color: #0000;
+    padding: 8px 15px;
+    border-radius: 8px;
     border: none;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 .view-btn {
     background: rgba(33, 150, 243, 0.1);
     color: var(--info-color);
-    border: 1px solid rgba(33, 150, 243, 0.3);
+    border: 2px solid rgba(33, 150, 243, 0.3);
 }
 
 .grade-btn {
     background: rgba(76, 175, 80, 0.1);
     color: var(--success-color);
-    border: 1px solid rgba(76, 175, 80, 0.3);
+    border: 2px solid rgba(76, 175, 80, 0.3);
 }
 
 .delete-btn {
     background: rgba(244, 67, 54, 0.1);
     color: var(--error-color);
-    border: 1px solid rgba(244, 67, 54, 0.3);
-}
-
-.action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(244, 67, 54, 0.3);
 }
 
 .grading-container {
@@ -493,12 +517,14 @@ body::before {
     padding: 2rem;
     border-radius: 15px;
     margin-bottom: 2rem;
-    border: 3px solid var(--accent-color);
+    border: 4px solid var(--accent-color);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .grading-header h2 {
     margin: 0 0 0.5rem 0;
     font-size: 1.8rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .student-info {
@@ -512,6 +538,10 @@ body::before {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 15px;
+    border-radius: 25px;
+    backdrop-filter: blur(5px);
 }
 
 .grading-content {
@@ -519,7 +549,7 @@ body::before {
     border-radius: 15px;
     padding: 2rem;
     box-shadow: var(--shadow);
-    border: 3px solid var(--card-outline);
+    border: 3px solid var(--primary-color);
     margin-bottom: 2rem;
 }
 
@@ -528,7 +558,12 @@ body::before {
     padding: 1.5rem;
     background: rgba(0, 0, 0, 0.02);
     border-radius: 10px;
-    border-left: 4px solid var(--primary-color);
+    border-left: 5px solid var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.grading-question:hover {
+    background: rgba(227, 124, 45, 0.05);
 }
 
 .question-header {
@@ -548,16 +583,17 @@ body::before {
 .question-points {
     background: var(--primary-color);
     color: white;
-    padding: 4px 12px;
-    border-radius: 20px;
+    padding: 8px 20px;
+    border-radius: 25px;
     font-size: 0.9rem;
     font-weight: 600;
     margin-left: 1rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
 .student-answer {
     background: var(--card-bg);
-    border: 2px solid var(--card-outline);
+    border: 3px solid var(--card-outline);
     border-radius: 8px;
     padding: 1rem;
     margin: 1rem 0;
@@ -565,6 +601,7 @@ body::before {
     white-space: pre-wrap;
     max-height: 300px;
     overflow-y: auto;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .grading-controls {
@@ -579,11 +616,13 @@ body::before {
     width: 100px;
     padding: 0.5rem;
     border-radius: 8px;
-    border: 2px solid var(--card-outline);
+    border: 3px solid var(--primary-color);
     background: var(--card-bg);
     color: var(--text-primary);
     font-size: 1rem;
     text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(237, 120, 57, 0.1);
 }
 
 .score-input:focus {
@@ -600,18 +639,24 @@ body::before {
     background: linear-gradient(to right, var(--error-color), var(--warning-color), var(--success-color));
     border-radius: 4px;
     outline: none;
+    border: 2px solid var(--card-outline);
 }
 
 .score-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: var(--primary-color);
     cursor: pointer;
     border: 3px solid white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.score-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
 }
 
 .feedback-textarea {
@@ -619,7 +664,7 @@ body::before {
     min-height: 100px;
     padding: 1rem;
     border-radius: 8px;
-    border: 2px solid var(--card-outline);
+    border: 3px solid var(--primary-color);
     background: var(--card-bg);
     color: var(--text-primary);
     font-size: 1rem;
@@ -627,6 +672,8 @@ body::before {
     line-height: 1.6;
     resize: vertical;
     margin-top: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(237, 120, 57, 0.1);
 }
 
 .feedback-textarea:focus {
@@ -636,11 +683,12 @@ body::before {
 }
 
 .grading-summary {
-    background: rgba(227, 124, 45, 0.05);
+    background: rgba(227, 124, 45, 0.1);
     border-radius: 10px;
     padding: 1.5rem;
     margin-top: 2rem;
-    border: 2px solid var(--primary-color);
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .summary-header {
@@ -651,46 +699,50 @@ body::before {
 }
 
 .total-score {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: var(--primary-color);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .grading-actions {
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 1.5rem;
     margin-top: 2rem;
     flex-wrap: wrap;
 }
 
 .grading-action-btn {
-    padding: 12px 24px;
-    border-radius: 8px;
+    -webkit-tap-highlight-color: #0000;
+    padding: 14px 28px;
+    border-radius: 12px;
     border: none;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.grading-action-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
 .save-btn {
     background: linear-gradient(135deg, #4CAF50, #45a049);
     color: white;
+    border: 3px solid #45a049;
 }
 
 .cancel-btn {
     background: var(--card-bg);
     color: var(--text-primary);
-    border: 2px solid var(--card-outline);
-}
-
-.grading-action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 3px solid var(--primary-color);
 }
 
 .modal {
@@ -705,6 +757,7 @@ body::before {
     align-items: center;
     justify-content: center;
     animation: fadeIn 0.3s ease;
+    backdrop-filter: blur(5px);
 }
 
 .modal.active {
@@ -719,35 +772,43 @@ body::before {
     max-height: 90vh;
     display: flex;
     flex-direction: column;
-    border: 3px solid var(--primary-color);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 4px solid var(--primary-color);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
 }
 
 .modal-header {
     padding: 1.5rem;
-    border-bottom: 2px solid var(--card-outline);
+    border-bottom: 2px solid var(--primary-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: rgba(227, 124, 45, 0.1);
 }
 
 .modal-header h3 {
     color: var(--primary-color);
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
 }
 
 .close-modal {
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: var(--text-secondary);
     cursor: pointer;
     transition: color 0.2s;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .close-modal:hover {
     color: var(--primary-color);
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .modal-body {
@@ -758,38 +819,40 @@ body::before {
 
 .modal-footer {
     padding: 1.5rem;
-    border-top: 2px solid var(--card-outline);
+    border-top: 2px solid var(--primary-color);
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
+    background: rgba(227, 124, 45, 0.05);
 }
 
 .exam-type-badge {
     display: inline-block;
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
     font-weight: 600;
     margin-left: 8px;
     vertical-align: middle;
+    border: 2px solid;
 }
 
 .exam-type-owned {
     background: rgba(33, 150, 243, 0.1);
     color: var(--info-color);
-    border: 1px solid rgba(33, 150, 243, 0.3);
+    border-color: rgba(33, 150, 243, 0.3);
 }
 
 .exam-type-public {
     background: rgba(76, 175, 80, 0.1);
     color: var(--success-color);
-    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-color: rgba(76, 175, 80, 0.3);
 }
 
 .exam-type-shared {
     background: rgba(255, 152, 0, 0.1);
     color: var(--warning-color);
-    border: 1px solid rgba(255, 152, 0, 0.3);
+    border-color: rgba(255, 152, 0, 0.3);
 }
 
 .empty-state {
@@ -799,9 +862,10 @@ body::before {
 }
 
 .empty-state i {
-    font-size: 3rem;
-    color: var(--border-color);
+    font-size: 4rem;
+    color: var(--primary-color);
     margin-bottom: 1rem;
+    opacity: 0.5;
 }
 
 .notification {
@@ -812,15 +876,16 @@ body::before {
     color: white;
     padding: 16px 24px;
     border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     z-index: 10000;
     animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), fadeOut 0.4s ease 3.6s;
     animation-fill-mode: forwards;
     max-width: 400px;
-    border: 2px solid rgba(255,255,255,0.3);
+    border: 3px solid rgba(255,255,255,0.3);
     display: flex;
     align-items: center;
     gap: 12px;
+    backdrop-filter: blur(10px);
 }
 
 .notification.error {
@@ -879,7 +944,7 @@ body::before {
     }
     
     .app-container {
-        padding-top: 40px;
+        padding-top: 10px;
     }
     
     .tab-navigation {
@@ -984,6 +1049,85 @@ body::before {
         align-self: flex-start;
     }
 }
+
+/* Styles from index */
+article {
+    -webkit-tap-highlight-color: #0000;
+    width: 280px;
+    height: 280px;
+    outline: 3px solid #ed7839;
+    background: #ffffff;
+    position: relative;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              outline-color 0.3s ease;
+    box-shadow: 0 4px 12px rgba(237, 120, 57, 0.2);
+    overflow: hidden;
+}
+
+article > div {
+    clip-path: inset(0 round 12px);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+/* Add necon style for consistency */
+.necon-container {
+    width: 70%;
+    height: 70%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: transform 0.3s ease;
+}
+
+/* Add hover effects similar to index */
+.stat-card:hover .stat-icon {
+    transform: scale(1.1);
+}
+
+.tab-btn i, .action-btn i, .grading-action-btn i {
+    transition: transform 0.3s ease;
+}
+
+.tab-btn:hover i, .action-btn:hover i, .grading-action-btn:hover i {
+    transform: translateY(-2px);
+}
+
+/* Add back button */
+.back-button {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(237, 120, 57, 0.3);
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background: #d46a2e;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(237, 120, 57, 0.4);
+}
     </style>
 </head>
 <body>
@@ -991,26 +1135,22 @@ body::before {
         <img src="logo.png" alt="Website Icon" />
     </a>
     
-    <div class="user-info" id="userInfo" style="display: none;">
-        <span id="userName">Người dùng</span>
-        <span class="user-role" id="userRole">Giáo viên</span>
-        <button class="logout-btn" id="logoutBtn" title="Đăng xuất">
-            <i class="fas fa-sign-out-alt"></i>
-        </button>
-    </div>
+    <button class="back-button" onclick="window.location.href='index.html'">
+        <i class="fas fa-arrow-left"></i> Quay lại
+    </button>
     
     <div class="app-container">
         <h1 class="page-title">QUẢN LÝ & CHẤM ĐIỂM BÀI THI</h1>
         
         <div class="tab-navigation">
             <button class="tab-btn active" data-tab="dashboard">
-                <i class="fas fa-tachometer-alt mr-2"></i> Tổng quan
+                <i class="fas fa-tachometer-alt"></i> Tổng quan
             </button>
             <button class="tab-btn" data-tab="exams">
-                <i class="fas fa-file-alt mr-2"></i> Quản lý đề thi
+                <i class="fas fa-file-alt"></i> Đề thi của tôi
             </button>
             <button class="tab-btn" data-tab="grading">
-                <i class="fas fa-graduation-cap mr-2"></i> Chấm điểm
+                <i class="fas fa-graduation-cap"></i> Bài thi cần chấm
             </button>
         </div>
         
@@ -1065,14 +1205,8 @@ body::before {
         <div class="tab-content" id="exams-tab">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="fas fa-list-alt mr-2"></i> Danh sách đề thi</h3>
+                    <h3><i class="fas fa-list-alt"></i> Danh sách đề thi của tôi</h3>
                     <div class="action-buttons">
-                        <button class="action-btn view-btn" id="showAllExamsBtn">
-                            <i class="fas fa-globe"></i> Tất cả đề thi
-                        </button>
-                        <button class="action-btn view-btn" id="showMyExamsBtn">
-                            <i class="fas fa-user"></i> Đề thi của tôi
-                        </button>
                         <button class="action-btn view-btn" id="refreshExamsBtn">
                             <i class="fas fa-sync-alt"></i> Làm mới
                         </button>
@@ -1080,34 +1214,6 @@ body::before {
                 </div>
                 
                 <div class="filter-controls">
-                    <div class="filter-group">
-                        <label class="filter-label">Loại đề thi:</label>
-                        <select class="filter-select" id="examTypeFilter">
-                            <option value="all">Tất cả</option>
-                            <option value="owned">Đề thi của tôi</option>
-                            <option value="public">Đề thi công khai</option>
-                            <option value="shared">Được chia sẻ với tôi</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label class="filter-label">Trạng thái:</label>
-                        <select class="filter-select" id="statusFilter">
-                            <option value="all">Tất cả</option>
-                            <option value="active">Đang hoạt động</option>
-                            <option value="archived">Đã lưu trữ</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label class="filter-label">Sắp xếp:</label>
-                        <select class="filter-select" id="sortFilter">
-                            <option value="newest">Mới nhất</option>
-                            <option value="oldest">Cũ nhất</option>
-                            <option value="name">Tên A-Z</option>
-                        </select>
-                    </div>
-                    
                     <div class="search-box">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" class="search-input" id="examSearch" placeholder="Tìm kiếm đề thi...">
@@ -1117,7 +1223,7 @@ body::before {
                 <div id="examsTableContainer">
                     <div class="empty-state">
                         <i class="fas fa-file-alt"></i>
-                        <p>Chưa có đề thi nào</p>
+                        <p>Bạn chưa tạo đề thi nào</p>
                     </div>
                 </div>
             </div>
@@ -1126,20 +1232,12 @@ body::before {
         <div class="tab-content" id="grading-tab">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="fas fa-graduation-cap mr-2"></i> Danh sách bài thi cần chấm</h3>
-                    <div class="action-buttons">
-                        <button class="action-btn view-btn" id="showAllAttemptsBtn">
-                            <i class="fas fa-globe"></i> Tất cả bài làm
-                        </button>
-                        <button class="action-btn view-btn" id="showMyExamsAttemptsBtn">
-                            <i class="fas fa-user"></i> Bài làm từ đề thi của tôi
-                        </button>
-                    </div>
+                    <h3><i class="fas fa-graduation-cap"></i> Bài thi từ đề thi của tôi</h3>
                 </div>
                 
                 <div class="filter-controls">
                     <div class="filter-group">
-                        <label class="filter-label">Lọc theo:</label>
+                        <label class="filter-label">Trạng thái:</label>
                         <select class="filter-select" id="gradingFilter">
                             <option value="pending">Chờ chấm</option>
                             <option value="graded">Đã chấm</option>
@@ -1265,8 +1363,8 @@ body::before {
         let gradingScores = [];
         let allAttempts = [];
         let allExams = [];
-        let examTypeFilter = 'all';
-        let attemptsFilter = 'all';
+        let myExams = [];
+        let myAttempts = [];
 
         function markdownToHtml(text) {
             if (!text) return '';
@@ -1363,17 +1461,13 @@ body::before {
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     const userData = userDoc.data();
                     
-                    loadDashboardStats();
-                    loadAllExams();
-                    loadAllAttempts();
+                    loadMyExams();
+                    loadMyAttempts();
                     
                 } else {
                     window.location.href = 'login.html';
                 }
             });
-        }
-
-        function setupLogout() {
         }
 
         function setupTabs() {
@@ -1393,30 +1487,34 @@ body::before {
             });
         }
 
-        async function loadAllExams() {
+        async function loadMyExams() {
             try {
-                const examsSnapshot = await db.collection('exams').get();
+                const examsSnapshot = await db.collection('exams')
+                    .where('createdBy', '==', currentUser.uid)
+                    .get();
                 
-                allExams = [];
+                myExams = [];
                 examsSnapshot.forEach(doc => {
-                    allExams.push({
+                    myExams.push({
                         id: doc.id,
                         ...doc.data()
                     });
                 });
                 
-                console.log(`Đã tải ${allExams.length} đề thi từ database`);
+                console.log(`Đã tải ${myExams.length} đề thi của tôi`);
                 
                 updateExamsTable();
+                loadDashboardStats();
                 
             } catch (error) {
-                console.error('Lỗi tải tất cả đề thi:', error);
+                console.error('Lỗi tải đề thi của tôi:', error);
                 showNotification('Không thể tải danh sách đề thi', 'error');
             }
         }
 
-        async function loadAllAttempts() {
+        async function loadMyAttempts() {
             try {
+                // First get all attempts
                 const attemptsSnapshot = await db.collection('attempts').get();
                 
                 allAttempts = [];
@@ -1427,28 +1525,31 @@ body::before {
                     });
                 });
                 
-                console.log(`Đã tải ${allAttempts.length} bài làm từ database`);
+                // Filter attempts that belong to my exams
+                const myExamIds = myExams.map(exam => exam.id);
+                myAttempts = allAttempts.filter(attempt => 
+                    myExamIds.includes(attempt.examId)
+                );
+                
+                console.log(`Đã tải ${myAttempts.length} bài làm từ đề thi của tôi`);
                 
                 updateGradingTable();
+                loadDashboardStats();
                 
             } catch (error) {
-                console.error('Lỗi tải tất cả attempts:', error);
+                console.error('Lỗi tải bài làm của tôi:', error);
                 showNotification('Không thể tải danh sách bài làm', 'error');
             }
         }
 
         async function loadDashboardStats() {
             try {
-                if (allAttempts.length === 0) {
-                    await loadAllAttempts();
-                }
+                const pendingCount = myAttempts.filter(a => a.status === 'submitted').length;
+                const gradedCount = myAttempts.filter(a => a.status === 'graded').length;
                 
-                const pendingCount = allAttempts.filter(a => a.status === 'submitted').length;
-                const gradedCount = allAttempts.filter(a => a.status === 'graded').length;
+                const uniqueStudents = [...new Set(myAttempts.map(a => a.userId))].length;
                 
-                const uniqueStudents = [...new Set(allAttempts.map(a => a.userId))].length;
-                
-                const totalExams = allExams.length;
+                const totalExams = myExams.length;
                 
                 document.getElementById('pendingCount').textContent = pendingCount;
                 document.getElementById('gradedCount').textContent = gradedCount;
@@ -1466,7 +1567,7 @@ body::before {
             try {
                 const recentActivity = document.getElementById('recentActivity');
                 
-                const recentAttempts = [...allAttempts]
+                const recentAttempts = [...myAttempts]
                     .sort((a, b) => new Date(b.completedAt || b.startedAt) - new Date(a.completedAt || a.startedAt))
                     .slice(0, 5);
                 
@@ -1491,11 +1592,11 @@ body::before {
                         `<span class="status-badge status-graded">Đã chấm</span>` :
                         `<span class="status-badge status-submitted">Đã nộp</span>`;
                     
-                    const exam = allExams.find(e => e.id === attempt.examId);
+                    const exam = myExams.find(e => e.id === attempt.examId);
                     const examTitle = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
                     
                     activityHTML += `
-                        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 8px;">
+                        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 8px; border: 2px solid rgba(227, 124, 45, 0.1);">
                             <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(227, 124, 45, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
                                 <i class="fas fa-user"></i>
                             </div>
@@ -1540,25 +1641,23 @@ body::before {
         function updateExamsTable() {
             const examsTableContainer = document.getElementById('examsTableContainer');
             
-            if (allExams.length === 0) {
+            if (myExams.length === 0) {
                 examsTableContainer.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-file-alt"></i>
-                        <p>Chưa có đề thi nào trong hệ thống</p>
+                        <p>Bạn chưa tạo đề thi nào</p>
                     </div>
                 `;
                 return;
             }
             
-            let filteredExams = allExams;
+            let filteredExams = myExams;
+            const searchValue = document.getElementById('examSearch').value.toLowerCase();
             
-            if (examTypeFilter === 'owned') {
-                filteredExams = allExams.filter(exam => exam.createdBy === currentUser.uid);
-            } else if (examTypeFilter === 'public') {
-                filteredExams = allExams.filter(exam => exam.visibility === 'public' && exam.createdBy !== currentUser.uid);
-            } else if (examTypeFilter === 'shared') {
-                filteredExams = allExams.filter(exam => 
-                    exam.sharedWith && exam.sharedWith.includes(currentUser.uid) && exam.createdBy !== currentUser.uid
+            if (searchValue) {
+                filteredExams = myExams.filter(exam => 
+                    exam.title?.toLowerCase().includes(searchValue) || 
+                    exam.id?.toLowerCase().includes(searchValue)
                 );
             }
             
@@ -1578,23 +1677,21 @@ body::before {
                         <tr>
                             <th>Mã đề</th>
                             <th>Tên đề thi</th>
-                            <th>Người tạo</th>
                             <th>Thời gian</th>
                             <th>Độ khó</th>
                             <th>Khối lớp</th>
                             <th>Ngày tạo</th>
                             <th>Số bài làm</th>
-                            <th>Loại</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
             
-            filteredExams.forEach(async (exam) => {
+            filteredExams.forEach((exam) => {
                 const examId = exam.id;
                 
-                const attemptsCount = allAttempts.filter(a => a.examId === examId).length;
+                const attemptsCount = myAttempts.filter(a => a.examId === examId).length;
                 
                 const createdAt = exam.createdAt ? 
                     new Date(exam.createdAt).toLocaleDateString('vi-VN') : 
@@ -1603,43 +1700,18 @@ body::before {
                 const difficulty = exam.difficulty === 'easy' ? 'Dễ' : 
                                  exam.difficulty === 'medium' ? 'Trung bình' : 'Khó';
                 
-                let examType = 'public';
-                let examTypeClass = 'exam-type-public';
-                let examTypeText = 'Công khai';
-                
-                if (exam.createdBy === currentUser.uid) {
-                    examType = 'owned';
-                    examTypeClass = 'exam-type-owned';
-                    examTypeText = 'Của tôi';
-                } else if (exam.visibility === 'private' && exam.sharedWith && exam.sharedWith.includes(currentUser.uid)) {
-                    examType = 'shared';
-                    examTypeClass = 'exam-type-shared';
-                    examTypeText = 'Chia sẻ';
-                }
-                
-                let creatorName = 'Không xác định';
-                if (exam.createdBy === currentUser.uid) {
-                    creatorName = 'Tôi';
-                } else if (exam.creatorName) {
-                    creatorName = exam.creatorName;
-                } else if (exam.createdBy) {
-                    creatorName = 'Người dùng khác';
-                }
-                
                 tableHTML += `
                     <tr>
                         <td><span class="exam-code">${examId}</span></td>
                         <td>${exam.title || 'Đề thi Ngữ Văn'}</td>
-                        <td>${creatorName}</td>
                         <td>${exam.examTime || 90} phút</td>
                         <td>${difficulty}</td>
                         <td>${exam.grade || '12'}</td>
                         <td>${createdAt}</td>
                         <td>${attemptsCount}</td>
-                        <td><span class="exam-type-badge ${examTypeClass}">${examTypeText}</span></td>
                         <td>
                             <div class="action-buttons">
-                                <button class="action-btn view-btn view-exam-btn" data-exam="${examId}" data-type="${examType}">
+                                <button class="action-btn view-btn view-exam-btn" data-exam="${examId}">
                                     <i class="fas fa-eye"></i> Xem
                                 </button>
                                 ${attemptsCount > 0 ? `
@@ -1663,8 +1735,7 @@ body::before {
             document.querySelectorAll('.view-exam-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const examId = btn.dataset.exam;
-                    const examType = btn.dataset.type;
-                    showExamDetails(examId, examType);
+                    showExamDetails(examId);
                 });
             });
             
@@ -1673,15 +1744,14 @@ body::before {
                     const examId = btn.dataset.exam;
                     document.querySelector('[data-tab="grading"]').click();
                     document.getElementById('gradingSearch').value = examId;
-                    attemptsFilter = 'all';
                     updateGradingTable();
                 });
             });
         }
 
-        async function showExamDetails(examId, examType) {
+        async function showExamDetails(examId) {
             try {
-                const exam = allExams.find(e => e.id === examId);
+                const exam = myExams.find(e => e.id === examId);
                 
                 if (!exam) {
                     showNotification('Không tìm thấy đề thi', 'error');
@@ -1697,24 +1767,13 @@ body::before {
                 const questionCount = exam.blocks?.filter(b => b.type === 'question').length || 0;
                 const totalPoints = exam.blocks?.reduce((sum, block) => sum + (block.points || 0), 0) || 0;
                 
-                const attemptsCount = allAttempts.filter(a => a.examId === examId).length;
-                
-                let examTypeText = 'Công khai';
-                let examTypeClass = 'exam-type-public';
-                
-                if (examType === 'owned') {
-                    examTypeText = 'Đề thi của tôi';
-                    examTypeClass = 'exam-type-owned';
-                } else if (examType === 'shared') {
-                    examTypeText = 'Được chia sẻ với tôi';
-                    examTypeClass = 'exam-type-shared';
-                }
+                const attemptsCount = myAttempts.filter(a => a.examId === examId).length;
                 
                 content.innerHTML = `
                     <div style="margin-bottom: 1.5rem;">
                         <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">
                             ${exam.title || 'Đề thi Ngữ Văn'}
-                            <span class="exam-type-badge ${examTypeClass}">${examTypeText}</span>
+                            <span class="exam-type-badge exam-type-owned">Đề thi của tôi</span>
                         </h4>
                         <p style="color: var(--text-secondary);">${exam.description || 'Không có mô tả'}</p>
                     </div>
@@ -1743,7 +1802,7 @@ body::before {
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                             <div>
                                 <span style="color: var(--text-secondary);">Người tạo:</span>
-                                <span style="font-weight: 500; margin-left: 0.5rem;">${exam.creatorName || (exam.createdBy === currentUser.uid ? 'Tôi' : 'Người dùng khác')}</span>
+                                <span style="font-weight: 500; margin-left: 0.5rem;">Tôi</span>
                             </div>
                             <div>
                                 <span style="color: var(--text-secondary);">Thời gian:</span>
@@ -1761,10 +1820,6 @@ body::before {
                                 <span style="color: var(--text-secondary);">Ngày tạo:</span>
                                 <span style="font-weight: 500; margin-left: 0.5rem;">${exam.createdAt ? new Date(exam.createdAt).toLocaleDateString('vi-VN') : 'Không rõ'}</span>
                             </div>
-                            <div>
-                                <span style="color: var(--text-secondary);">Trạng thái:</span>
-                                <span style="font-weight: 500; margin-left: 0.5rem;">${exam.status || 'active' === 'active' ? 'Đang hoạt động' : 'Đã lưu trữ'}</span>
-                            </div>
                         </div>
                     </div>
                     
@@ -1777,7 +1832,7 @@ body::before {
                     
                     <div>
                         <h5 style="color: var(--text-primary); margin-bottom: 0.5rem;">Xem trước đề thi</h5>
-                        <div style="max-height: 300px; overflow-y: auto; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 8px; border: 1px solid var(--card-outline);">
+                        <div style="max-height: 300px; overflow-y: auto; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 8px; border: 2px solid var(--primary-color);">
                             ${exam.blocks?.slice(0, 2).map(block => {
                                 if (block.type === 'text') {
                                     return `<div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(0,0,0,0.1);">
@@ -1803,21 +1858,16 @@ body::before {
                     modal.classList.remove('active');
                     document.querySelector('[data-tab="grading"]').click();
                     document.getElementById('gradingSearch').value = examId;
-                    attemptsFilter = 'all';
                     updateGradingTable();
                 };
                 
                 const deleteBtn = document.getElementById('deleteExamBtn');
-                if (examType === 'owned') {
-                    deleteBtn.style.display = 'block';
-                    deleteBtn.onclick = () => {
-                        if (confirm(`Bạn có chắc chắn muốn xóa đề thi "${examId}"? Hành động này không thể hoàn tả.`)) {
-                            deleteExam(examId);
-                        }
-                    };
-                } else {
-                    deleteBtn.style.display = 'none';
-                }
+                deleteBtn.style.display = 'block';
+                deleteBtn.onclick = () => {
+                    if (confirm(`Bạn có chắc chắn muốn xóa đề thi "${exam.title}"? Hành động này không thể hoàn tả.`)) {
+                        deleteExam(examId);
+                    }
+                };
                 
                 modal.classList.add('active');
                 
@@ -1829,7 +1879,7 @@ body::before {
 
         async function deleteExam(examId) {
             try {
-                const attemptsCount = allAttempts.filter(a => a.examId === examId).length;
+                const attemptsCount = myAttempts.filter(a => a.examId === examId).length;
                 
                 if (attemptsCount > 0) {
                     showNotification('Không thể xóa đề thi đã có bài làm', 'error');
@@ -1841,7 +1891,7 @@ body::before {
                 showNotification('Đã xóa đề thi thành công', 'success');
                 document.getElementById('examDetailsModal').classList.remove('active');
                 
-                allExams = allExams.filter(exam => exam.id !== examId);
+                myExams = myExams.filter(exam => exam.id !== examId);
                 updateExamsTable();
                 loadDashboardStats();
                 
@@ -1854,7 +1904,7 @@ body::before {
         function updateGradingTable() {
             const gradingTableContainer = document.getElementById('gradingTableContainer');
             
-            if (allAttempts.length === 0) {
+            if (myAttempts.length === 0) {
                 gradingTableContainer.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-clipboard-check"></i>
@@ -1864,16 +1914,22 @@ body::before {
                 return;
             }
             
-            let filteredAttempts = allAttempts;
+            let filteredAttempts = myAttempts;
+            const filterValue = document.getElementById('gradingFilter').value;
+            const searchValue = document.getElementById('gradingSearch').value.toLowerCase();
             
-            if (attemptsFilter === 'my_exams') {
-                const myExamIds = allExams
-                    .filter(exam => exam.createdBy === currentUser.uid)
-                    .map(exam => exam.id);
-                
-                filteredAttempts = allAttempts.filter(attempt => 
-                    myExamIds.includes(attempt.examId)
-                );
+            if (filterValue === 'pending') {
+                filteredAttempts = myAttempts.filter(attempt => attempt.status === 'submitted');
+            } else if (filterValue === 'graded') {
+                filteredAttempts = myAttempts.filter(attempt => attempt.status === 'graded');
+            }
+            
+            if (searchValue) {
+                filteredAttempts = filteredAttempts.filter(attempt => {
+                    const studentName = attempt.userName?.toLowerCase() || '';
+                    const examId = attempt.examId?.toLowerCase() || '';
+                    return studentName.includes(searchValue) || examId.includes(searchValue);
+                });
             }
             
             if (filteredAttempts.length === 0) {
@@ -1893,7 +1949,6 @@ body::before {
                             <th>Học sinh</th>
                             <th>Mã đề</th>
                             <th>Tên đề thi</th>
-                            <th>Người tạo đề</th>
                             <th>Ngày nộp</th>
                             <th>Trạng thái</th>
                             <th>Điểm</th>
@@ -1922,9 +1977,8 @@ body::before {
                     `${attempt.score?.toFixed(1) || 0}/${attempt.totalPoints?.toFixed(1) || 10}` : 
                     'Chưa chấm';
                 
-                const exam = allExams.find(e => e.id === attempt.examId);
+                const exam = myExams.find(e => e.id === attempt.examId);
                 const examTitle = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
-                const examCreator = exam?.creatorName || (exam?.createdBy === currentUser.uid ? 'Tôi' : 'Người dùng khác');
                 
                 tableHTML += `
                     <tr>
@@ -1941,7 +1995,6 @@ body::before {
                         </td>
                         <td><span class="exam-code">${attempt.examId}</span></td>
                         <td>${examTitle}</td>
-                        <td>${examCreator}</td>
                         <td>${submitDate}</td>
                         <td><span class="status-badge ${statusClass}">${status}</span></td>
                         <td>${scoreDisplay}</td>
@@ -1985,14 +2038,14 @@ body::before {
 
         async function viewGradedAttempt(attemptId) {
             try {
-                const attempt = allAttempts.find(a => a.id === attemptId);
+                const attempt = myAttempts.find(a => a.id === attemptId);
                 
                 if (!attempt) {
                     showNotification('Không tìm thấy bài làm', 'error');
                     return;
                 }
                 
-                const exam = allExams.find(e => e.id === attempt.examId);
+                const exam = myExams.find(e => e.id === attempt.examId);
                 currentExamForGrading = exam;
                 
                 document.getElementById('gradingExamTitle').textContent = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
@@ -2026,7 +2079,7 @@ body::before {
 
         async function startGrading(attemptId) {
             try {
-                const attempt = allAttempts.find(a => a.id === attemptId);
+                const attempt = myAttempts.find(a => a.id === attemptId);
                 
                 if (!attempt) {
                     showNotification('Không tìm thấy bài làm', 'error');
@@ -2035,13 +2088,8 @@ body::before {
                 
                 currentGradingAttempt = attemptId;
                 
-                const exam = allExams.find(e => e.id === attempt.examId);
+                const exam = myExams.find(e => e.id === attempt.examId);
                 currentExamForGrading = exam;
-                
-                if (exam && exam.createdBy !== currentUser.uid && exam.visibility === 'private') {
-                    showNotification('Bạn không có quyền chấm điểm đề thi này', 'error');
-                    return;
-                }
                 
                 document.getElementById('gradingExamTitle').textContent = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
                 document.getElementById('gradingExamCode').textContent = `Mã đề: ${attempt.examId}`;
@@ -2223,15 +2271,15 @@ body::before {
                     feedback: overallFeedback,
                     gradedAt: new Date().toISOString(),
                     gradedBy: currentUser.uid,
-                    gradedByName: 'Giáo viên'
+                    gradedByName: currentUser.displayName || 'Giáo viên'
                 });
                 
                 showNotification('Đã lưu điểm thành công', 'success');
                 
-                const attemptIndex = allAttempts.findIndex(a => a.id === currentGradingAttempt);
+                const attemptIndex = myAttempts.findIndex(a => a.id === currentGradingAttempt);
                 if (attemptIndex !== -1) {
-                    allAttempts[attemptIndex] = {
-                        ...allAttempts[attemptIndex],
+                    myAttempts[attemptIndex] = {
+                        ...myAttempts[attemptIndex],
                         status: 'graded',
                         score: totalScore,
                         totalPoints: totalMaxScore,
@@ -2239,7 +2287,7 @@ body::before {
                         feedback: overallFeedback,
                         gradedAt: new Date().toISOString(),
                         gradedBy: currentUser.uid,
-                        gradedByName: 'Giáo viên'
+                        gradedByName: currentUser.displayName || 'Giáo viên'
                     };
                 }
                 
@@ -2267,126 +2315,18 @@ body::before {
             document.querySelector('[data-tab="grading"]').click();
         }
 
-        function filterGradingList() {
-            const filterValue = document.getElementById('gradingFilter').value;
-            const searchValue = document.getElementById('gradingSearch').value.toLowerCase();
-            
-            const rows = document.querySelectorAll('#gradingTableContainer tbody tr');
-            
-            rows.forEach(row => {
-                const statusCell = row.querySelector('.status-badge');
-                const examCodeCell = row.querySelector('.exam-code');
-                const studentNameCell = row.querySelector('td:nth-child(1) div div:first-child');
-                
-                let shouldShow = true;
-                
-                if (filterValue === 'pending') {
-                    shouldShow = statusCell?.textContent === 'Chờ chấm';
-                } else if (filterValue === 'graded') {
-                    shouldShow = statusCell?.textContent === 'Đã chấm';
-                }
-                
-                if (shouldShow && searchValue) {
-                    const examCode = examCodeCell?.textContent.toLowerCase() || '';
-                    const studentName = studentNameCell?.textContent.toLowerCase() || '';
-                    
-                    shouldShow = examCode.includes(searchValue) || studentName.includes(searchValue);
-                }
-                
-                row.style.display = shouldShow ? '' : 'none';
-            });
-        }
-
-        function filterExamsList() {
-            const statusValue = document.getElementById('statusFilter').value;
-            const sortValue = document.getElementById('sortFilter').value;
-            const searchValue = document.getElementById('examSearch').value.toLowerCase();
-            
-            const rows = document.querySelectorAll('#examsTableContainer tbody tr');
-            const rowsArray = Array.from(rows);
-            
-            let filteredRows = rowsArray.filter(row => {
-                const examCodeCell = row.querySelector('.exam-code');
-                const examNameCell = row.querySelector('td:nth-child(2)');
-                
-                let shouldShow = true;
-                
-                if (searchValue) {
-                    const examCode = examCodeCell?.textContent.toLowerCase() || '';
-                    const examName = examNameCell?.textContent.toLowerCase() || '';
-                    
-                    shouldShow = examCode.includes(searchValue) || examName.includes(searchValue);
-                }
-                
-                row.style.display = shouldShow ? '' : 'none';
-                return shouldShow;
-            });
-            
-            filteredRows.sort((a, b) => {
-                if (sortValue === 'newest') {
-                    const dateA = new Date(a.querySelector('td:nth-child(7)').textContent);
-                    const dateB = new Date(b.querySelector('td:nth-child(7)').textContent);
-                    return dateB - dateA;
-                } else if (sortValue === 'oldest') {
-                    const dateA = new Date(a.querySelector('td:nth-child(7)').textContent);
-                    const dateB = new Date(b.querySelector('td:nth-child(7)').textContent);
-                    return dateA - dateB;
-                } else if (sortValue === 'name') {
-                    const nameA = a.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                    const nameB = b.querySelector('td:nth-child(2)').textContent.toLowerCase();
-                    return nameA.localeCompare(nameB);
-                }
-                return 0;
-            });
-            
-            const tbody = document.querySelector('#examsTableContainer tbody');
-            filteredRows.forEach(row => {
-                tbody.appendChild(row);
-            });
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             checkAuth();
             
             setupTabs();
             
-            document.getElementById('examTypeFilter').addEventListener('change', function() {
-                examTypeFilter = this.value;
-                updateExamsTable();
-            });
-            
-            document.getElementById('statusFilter').addEventListener('change', filterExamsList);
-            document.getElementById('sortFilter').addEventListener('change', filterExamsList);
-            document.getElementById('examSearch').addEventListener('input', filterExamsList);
-            document.getElementById('gradingFilter').addEventListener('change', filterGradingList);
-            document.getElementById('gradingSearch').addEventListener('input', filterGradingList);
-            
-            document.getElementById('showAllExamsBtn').addEventListener('click', () => {
-                examTypeFilter = 'all';
-                document.getElementById('examTypeFilter').value = 'all';
-                updateExamsTable();
-            });
-            
-            document.getElementById('showMyExamsBtn').addEventListener('click', () => {
-                examTypeFilter = 'owned';
-                document.getElementById('examTypeFilter').value = 'owned';
-                updateExamsTable();
-            });
+            document.getElementById('gradingFilter').addEventListener('change', updateGradingTable);
+            document.getElementById('gradingSearch').addEventListener('input', updateGradingTable);
+            document.getElementById('examSearch').addEventListener('input', updateExamsTable);
             
             document.getElementById('refreshExamsBtn').addEventListener('click', () => {
-                loadAllExams();
-                loadAllAttempts();
+                loadMyExams();
                 showNotification('Đã làm mới dữ liệu', 'success');
-            });
-            
-            document.getElementById('showAllAttemptsBtn').addEventListener('click', () => {
-                attemptsFilter = 'all';
-                updateGradingTable();
-            });
-            
-            document.getElementById('showMyExamsAttemptsBtn').addEventListener('click', () => {
-                attemptsFilter = 'my_exams';
-                updateGradingTable();
             });
             
             document.getElementById('cancelGradingBtn').addEventListener('click', cancelGrading);
@@ -2411,4 +2351,3 @@ body::before {
     </script>
 </body>
 </html>
-```
