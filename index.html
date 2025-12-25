@@ -66,10 +66,10 @@
                 justify-content: center;
             }
             
-            /* Sửa article thành hình vuông và bỏ chữ */
+            /* Sửa article thành hình vuông */
             article {
                 -webkit-tap-highlight-color: #0000;
-                width: 280px; /* Đảm bảo hình vuông */
+                width: 280px; /* Hình vuông */
                 height: 280px; /* Hình vuông */
                 outline: 3px solid #ed7839;
                 background: #ffffff;
@@ -86,15 +86,24 @@
             article > div {
                 clip-path: inset(0 round 12px);
                 overflow: hidden;
-                display: grid;
-                place-items: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 position: absolute;
                 inset: 0;
                 border-radius: 12px;
                 overflow: hidden;
-                background-size: cover;
+                background-color: #ffffff; /* Nền trắng cho khối */
+            }
+            
+            /* Container cho necon chỉ chiếm 70% diện tích */
+            .necon-container {
+                width: 70%; /* Chiếm 70% chiều rộng */
+                height: 70%; /* Chiếm 70% chiều cao */
+                background-size: contain; /* Giữ nguyên tỉ lệ ảnh */
                 background-position: center;
                 background-repeat: no-repeat;
+                transition: transform 0.3s ease;
             }
             
             /* Hiệu ứng nâng lên khi hover */
@@ -102,6 +111,10 @@
                 transform: translateY(-10px);
                 box-shadow: 0 15px 30px rgba(237, 120, 57, 0.3);
                 outline-color: #ff8c42;
+            }
+            
+            article:hover .necon-container {
+                transform: scale(1.05); /* Phóng nhẹ necon khi hover */
             }
             
             article:active {
@@ -119,15 +132,6 @@
                 z-index: 2;
                 clip-path: inset(0 round 12px);
                 transform: translateZ(0);
-            }
-            
-            /* Bỏ hình ảnh bên trong, thay vào đó là background image */
-            article img {
-                display: none; /* Ẩn ảnh cũ */
-            }
-            
-            article h2 {
-                display: none; /* Ẩn chữ */
             }
             
             .liquid-glass-section {
@@ -209,7 +213,7 @@
                 padding: 1rem;
             }
             
-            /* Feature item - nhỏ hơn, hình vuông, chỉ có background image */
+            /* Feature item - hình vuông */
             .feature-item {
                 -webkit-tap-highlight-color: #0000;
                 width: 200px;
@@ -229,22 +233,34 @@
             .feature-item > div {
                 clip-path: inset(0 round 12px);
                 overflow: hidden;
-                align-content: center;
-                display: grid;
-                place-items: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 position: absolute;
                 inset: 0;
                 border-radius: 12px;
                 overflow: hidden;
-                background-size: cover;
+                background-color: #ffffff; /* Nền trắng cho khối */
+            }
+            
+            /* Container cho necon trong feature item chỉ chiếm 70% diện tích */
+            .feature-necon-container {
+                width: 70%; /* Chiếm 70% chiều rộng */
+                height: 70%; /* Chiếm 70% chiều cao */
+                background-size: contain; /* Giữ nguyên tỉ lệ ảnh */
                 background-position: center;
                 background-repeat: no-repeat;
+                transition: transform 0.3s ease;
             }
             
             .feature-item:hover {
                 transform: translateY(-8px);
                 box-shadow: 0 12px 25px rgba(237, 120, 57, 0.3);
                 outline-color: #ff8c42;
+            }
+            
+            .feature-item:hover .feature-necon-container {
+                transform: scale(1.05); /* Phóng nhẹ necon khi hover */
             }
             
             .feature-item:active {
@@ -262,11 +278,6 @@
                 z-index: 2;
                 clip-path: inset(0 round 12px);
                 transform: translateZ(0);
-            }
-            
-            /* Ẩn ảnh bên trong, sử dụng background image thay thế */
-            .feature-item img {
-                display: none; /* Ẩn ảnh cũ */
             }
             
             .app-footer {
@@ -437,6 +448,11 @@
                 article {
                     width: 300px;
                     height: 300px;
+                }
+                
+                .feature-item {
+                    width: 220px;
+                    height: 220px;
                 }
             }
             
@@ -644,15 +660,21 @@
         </header>
         
         <main>
-            <!-- 3 khối chính với background image là necon1, necon2, necon3 -->
+            <!-- 3 khối chính với necon chiếm 70% diện tích ở trung tâm -->
             <article onclick="navigateTo('khampha.html')">
-                <div style="background-image: url('necon1.png');"></div>
+                <div>
+                    <div class="necon-container" style="background-image: url('necon1.png');"></div>
+                </div>
             </article>
             <article onclick="navigateTo('vangv.html')">
-                <div style="background-image: url('necon2.png');"></div>
+                <div>
+                    <div class="necon-container" style="background-image: url('necon2.png');"></div>
+                </div>
             </article>
             <article onclick="navigateTo('bieucam.html')">
-                <div style="background-image: url('necon3.png');"></div>
+                <div>
+                    <div class="necon-container" style="background-image: url('necon3.png');"></div>
+                </div>
             </article>
         </main>
         
@@ -665,15 +687,21 @@
             <!-- Dropdown với khối lớn bao quanh 3 khối nhỏ -->
             <div class="features-dropdown" id="featuresDropdown">
                 <div class="features-grid">
-                    <!-- 3 khối thi thử với background image là necon4, necon5, necon6 -->
+                    <!-- 3 khối thi thử với necon chiếm 70% diện tích ở trung tâm -->
                     <div class="feature-item" onclick="navigateTo('taode.html')">
-                        <div style="background-image: url('necon4.png');"></div>
+                        <div>
+                            <div class="feature-necon-container" style="background-image: url('necon4.png');"></div>
+                        </div>
                     </div>
                     <div class="feature-item" onclick="navigateTo('take_exam.html')">
-                        <div style="background-image: url('necon5.png');"></div>
+                        <div>
+                            <div class="feature-necon-container" style="background-image: url('necon5.png');"></div>
+                        </div>
                     </div>
                     <div class="feature-item" onclick="navigateTo('quanly.html')">
-                        <div style="background-image: url('necon6.png');"></div>
+                        <div>
+                            <div class="feature-necon-container" style="background-image: url('necon6.png');"></div>
+                        </div>
                     </div>
                 </div>
             </div>
