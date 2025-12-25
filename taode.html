@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Bài Thi Văn Học - VANW</title>
+    <title>Tạo Đề Thi Văn Học - VANW</title>
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
@@ -248,76 +248,17 @@
                 border: 2px solid var(--card-outline);
             }
             
-            .exam-card h2 {
-                color: var(--primary-color);
+            .header-image {
+                text-align: center;
                 margin-bottom: 1.5rem;
-                font-size: 2rem;
-                text-align: center;
-                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
             }
             
-            .mode-selection {
-                margin-bottom: 2rem;
+            .header-image img {
+                max-width: 80%;
+                height: auto;
             }
             
-            .mode-buttons {
-                display: flex;
-                gap: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .mode-btn {
-                flex: 1;
-                min-width: 250px;
-                padding: 1.5rem;
-                background: var(--card-bg);
-                border: 2px solid var(--card-outline);
-                border-radius: 12px;
-                color: var(--text-primary);
-                font-size: 1rem;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 10px;
-            }
-            
-            .mode-btn i {
-                font-size: 2rem;
-                color: var(--text-secondary);
-                transition: color 0.3s ease;
-            }
-            
-            .mode-btn span {
-                text-align: center;
-                line-height: 1.4;
-            }
-            
-            .mode-btn:hover {
-                background: rgba(227, 124, 45, 0.1);
-                border-color: var(--primary-color);
-                transform: translateY(-3px);
-                box-shadow: var(--shadow);
-            }
-            
-            .mode-btn:hover i {
-                color: var(--primary-color);
-            }
-            
-            .mode-btn.active {
-                background: var(--gradient);
-                color: white;
-                border-color: var(--primary-color);
-            }
-            
-            .mode-btn.active i {
-                color: white;
-            }
-            
-            .input-area, .text-gen-area {
+            .input-area {
                 margin-bottom: 2rem;
                 position: relative;
             }
@@ -354,83 +295,6 @@
                 padding: 2px 8px;
                 border-radius: 10px;
                 border: 1px solid var(--card-outline);
-            }
-            
-            .text-gen-area .gen-options {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 1.5rem;
-                margin-bottom: 2rem;
-                padding: 1.5rem;
-                background: rgba(227, 124, 45, 0.05);
-                border-radius: 12px;
-                border: 2px solid var(--card-outline);
-            }
-            
-            .option-group {
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .option-label {
-                font-weight: 600;
-                color: var(--primary-color);
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                font-size: 0.95rem;
-            }
-            
-            .option-group select,
-            .option-group input {
-                padding: 0.85rem;
-                border-radius: 8px;
-                border: 2px solid var(--card-outline);
-                background-color: var(--card-bg);
-                color: var(--text-primary);
-                font-size: 0.95rem;
-                transition: all 0.3s ease;
-                font-family: inherit;
-            }
-            
-            .option-group select:focus,
-            .option-group input:focus {
-                outline: none;
-                border-color: var(--primary-color);
-                box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
-            }
-            
-            .range-slider {
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .range-label {
-                font-size: 0.9rem;
-                color: var(--text-primary);
-                font-weight: 500;
-            }
-            
-            .range-slider input[type="range"] {
-                width: 100%;
-                height: 8px;
-                -webkit-appearance: none;
-                background: linear-gradient(to right, var(--primary-color) 0%, var(--primary-color) 40%, var(--border-color) 40%, var(--border-color) 100%);
-                border-radius: 4px;
-                outline: none;
-            }
-            
-            .range-slider input[type="range"]::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                background: var(--primary-color);
-                cursor: pointer;
-                border: 3px solid white;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             }
             
             .action-buttons {
@@ -494,8 +358,58 @@
                 width: 0%;
             }
             
-            .settings-btn {
+            .random-btn {
                 flex: 1;
+                background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+                color: white;
+                padding: 1rem 1.5rem;
+                border: none;
+                border-radius: 30px;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                position: relative;
+                overflow: hidden;
+                z-index: 1;
+            }
+            
+            .random-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.2);
+                transition: all 0.5s;
+                z-index: -1;
+            }
+            
+            .random-btn:hover::before {
+                width: 100%;
+            }
+            
+            .random-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+                opacity: 0.95;
+            }
+            
+            .random-btn:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+                opacity: 0.7;
+            }
+            
+            .settings-btn {
+                flex: 0.5;
                 background: var(--card-bg);
                 color: var(--text-primary);
                 padding: 1rem;
@@ -1337,10 +1251,6 @@
                 .options-grid {
                     grid-template-columns: 1fr;
                 }
-                
-                .text-gen-area .gen-options {
-                    grid-template-columns: 1fr;
-                }
             }
             
             @media (max-width: 768px) {
@@ -1352,16 +1262,12 @@
                     padding: 1.8rem;
                 }
                 
-                .mode-buttons {
-                    flex-direction: column;
-                }
-                
-                .mode-btn {
-                    min-width: 100%;
-                }
-                
                 .action-buttons {
                     flex-direction: column;
+                }
+                
+                .generate-btn, .random-btn, .settings-btn {
+                    width: 100%;
                 }
                 
                 .app-container {
@@ -1448,8 +1354,8 @@
                     grid-template-columns: 1fr;
                 }
                 
-                .exam-card h2 {
-                    font-size: 1.6rem;
+                .header-image img {
+                    max-width: 100%;
                 }
                 
                 .modal-content {
@@ -1475,19 +1381,8 @@
         <main>
             <div class="exam-tool">
                 <div class="exam-card">
-                    <h2>HỆ THỐNG TẠO BÀI THI VĂN HỌC</h2>
-                    
-                    <div class="mode-selection">
-                        <div class="mode-buttons">
-                            <button class="mode-btn active" data-mode="from-text">
-                                <i class="fas fa-file-alt"></i>
-                                <span>Từ văn bản có sẵn</span>
-                            </button>
-                            <button class="mode-btn" data-mode="generate-text">
-                                <i class="fas fa-magic"></i>
-                                <span>Tạo văn bản mẫu từ tác phẩm thật</span>
-                            </button>
-                        </div>
+                    <div class="header-image">
+                        <img src="htext1.png" alt="HỆ THỐNG TẠO BÀI THI VĂN HỌC">
                     </div>
                     
                     <div class="input-area" id="existingTextArea">
@@ -1495,60 +1390,12 @@
                         <div class="word-count" id="wordCount">0 từ</div>
                     </div>
                     
-                    <div class="text-gen-area" id="textGenArea" style="display: none;">
-                        <div class="gen-options">
-                            <div class="option-group">
-                                <label class="option-label">
-                                    <i class="fas fa-book"></i> Chọn tác phẩm thật
-                                </label>
-                                <select id="realWork">
-                                    <option value="random">Tác phẩm ngẫu nhiên</option>
-                                    <option value="tho">Tác phẩm thơ</option>
-                                    <option value="truyen">Tác phẩm truyện</option>
-                                    <option value="tieu_thuyet">Tác phẩm tiểu thuyet</option>
-                                    <option value="ky">Tác phẩm ký</option>
-                                </select>
-                            </div>
-                            
-                            <div class="option-group">
-                                <label class="option-label">
-                                    <i class="fas fa-user"></i> Chọn tác giả
-                                </label>
-                                <select id="authorSelect">
-                                    <option value="random">Tác giả ngẫu nhiên</option>
-                                    <option value="xuan_dieu">Xuân Diệu</option>
-                                    <option value="nam_cao">Nam Cao</option>
-                                    <option value="thach_lam">Thạch Lam</option>
-                                    <option value="to_hoai">Tô Hoài</option>
-                                    <option value="nguyen_tuan">Nguyễn Tuân</option>
-                                    <option value="nguyen_khuyen">Nguyễn Khuyến</option>
-                                    <option value="ho_xuan_huong">Hồ Xuân Hương</option>
-                                    <option value="nguyen_du">Nguyễn Du</option>
-                                    <option value="han_mac_tu">Hàn Mặc Tử</option>
-                                    <option value="xuan_quynh">Xuân Quỳnh</option>
-                                </select>
-                            </div>
-                            
-                            <div class="option-group">
-                                <label class="option-label">
-                                    <i class="fas fa-palette"></i> Phong cách văn bản
-                                </label>
-                                <select id="textStyle">
-                                    <option value="original">Nguyên bản</option>
-                                    <option value="excerpt">Trích đoạn tiêu biểu</option>
-                                    <option value="analysis">Văn bản kèm phân tích</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <button id="generateTextBtn" class="generate-btn">
-                            <i class="fas fa-wand-magic-sparkles mr-2"></i> Tạo văn bản từ tác phẩm thật
-                        </button>
-                    </div>
-                    
                     <div class="action-buttons">
                         <button id="generateExamBtn" class="generate-btn">
-                            <i class="fas fa-file-alt mr-2"></i> Tạo Bài Thi
+                            <i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi Từ Văn Bản
+                        </button>
+                        <button id="generateRandomExamBtn" class="random-btn">
+                            <i class="fas fa-dice mr-2"></i> Tạo Đề Thi Ngẫu Nhiên
                         </button>
                         <button id="settingsBtn" class="settings-btn">
                             <i class="fas fa-cog"></i>
@@ -1622,6 +1469,36 @@
                             </div>
                             
                             <div class="option-card">
+                                <h3><i class="fas fa-random"></i> Tạo đề thi ngẫu nhiên</h3>
+                                <div class="select-container">
+                                    <label class="block-label">Chọn tác giả</label>
+                                    <select id="randomAuthor">
+                                        <option value="random" selected>Tác giả ngẫu nhiên</option>
+                                        <option value="xuan_dieu">Xuân Diệu</option>
+                                        <option value="nam_cao">Nam Cao</option>
+                                        <option value="thach_lam">Thạch Lam</option>
+                                        <option value="to_hoai">Tô Hoài</option>
+                                        <option value="nguyen_tuan">Nguyễn Tuân</option>
+                                        <option value="nguyen_khuyen">Nguyễn Khuyến</option>
+                                        <option value="ho_xuan_huong">Hồ Xuân Hương</option>
+                                        <option value="nguyen_du">Nguyễn Du</option>
+                                        <option value="han_mac_tu">Hàn Mặc Tử</option>
+                                        <option value="xuan_quynh">Xuân Quỳnh</option>
+                                    </select>
+                                </div>
+                                <div class="select-container mt-3">
+                                    <label class="block-label">Thể loại ưu tiên</label>
+                                    <select id="randomGenre">
+                                        <option value="any" selected>Bất kỳ thể loại</option>
+                                        <option value="tho">Thơ</option>
+                                        <option value="truyen">Truyện ngắn</option>
+                                        <option value="tieu_thuyet">Tiểu thuyết</option>
+                                        <option value="ky">Ký</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="option-card">
                                 <h3><i class="fas fa-sticky-note"></i> Ghi chú cho đề thi</h3>
                                 <textarea id="examNotes" placeholder="Nhập ghi chú cho đề thi... (Ví dụ: Phân bổ thời gian, trọng tâm kiến thức, tiêu chí chấm điểm...)" rows="5"></textarea>
                             </div>
@@ -1686,25 +1563,6 @@
                 </button>
                 <button class="modal-btn secondary-btn" id="cancelEditBtn">
                     <i class="fas fa-times mr-2"></i> Hủy
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="textPreviewModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-book mr-2"></i> VĂN BẢN MẪU ĐÃ TẠO</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body" id="textPreviewContent">
-            </div>
-            <div class="modal-footer">
-                <button class="modal-btn" id="useTextBtn">
-                    <i class="fas fa-check mr-2"></i> Sử dụng văn bản này
-                </button>
-                <button class="modal-btn secondary-btn" id="closeTextPreviewBtn">
-                    <i class="fas fa-times mr-2"></i> Đóng
                 </button>
             </div>
         </div>
@@ -1804,8 +1662,6 @@
         };
 
         let richTextEditors = [];
-        let currentMode = 'from-text';
-        let generatedText = '';
         let currentRealWorkInfo = null;
 
         window.addEventListener('error', function(e) {
@@ -2121,18 +1977,64 @@
             }
         }
 
-        async function generateRealTextSample() {
-            const workType = document.getElementById('realWork').value;
-            const author = document.getElementById('authorSelect').value;
-            const style = document.getElementById('textStyle').value;
+        async function generateRandomTextSample() {
+            const author = document.getElementById('randomAuthor').value;
+            const genre = document.getElementById('randomGenre').value;
             
             let prompt = '';
             
-            if (workType === 'random') {
+            if (author !== 'random') {
+                const authorMap = {
+                    'xuan_dieu': 'Xuân Diệu',
+                    'nam_cao': 'Nam Cao',
+                    'thach_lam': 'Thạch Lam',
+                    'to_hoai': 'Tô Hoài',
+                    'nguyen_tuan': 'Nguyễn Tuân',
+                    'nguyen_khuyen': 'Nguyễn Khuyến',
+                    'ho_xuan_huong': 'Hồ Xuân Hương',
+                    'nguyen_du': 'Nguyễn Du',
+                    'han_mac_tu': 'Hàn Mặc Tử',
+                    'xuan_quynh': 'Xuân Quỳnh'
+                };
+                
+                const authorName = authorMap[author] || 'Tác giả';
+                const genreName = genre === 'any' ? '' : `thuộc thể loại ${genre}`;
+                
                 prompt = `
-                    Hãy cung cấp một đoạn trích từ TÁC PHẨM VĂN HỌC CÓ THẬT trong chương trình Ngữ Văn Việt Nam.
+                    Hãy cung cấp một đoạn trích từ TÁC PHẨM VĂN HỌC CÓ THẬT trong chương trình Ngữ Văn Việt Nam của tác giả ${authorName} ${genreName}.
                     
-                    YÊU CẦU:
+                    YÊU CẦU QUAN TRỌNG:
+                    1. PHẢI là tác phẩm có thật, không tự sáng tác
+                    2. Ghi rõ: Tên tác phẩm, tác giả, thể loại
+                    3. Chọn đoạn trích tiêu biểu, có giá trị văn học
+                    4. Giữ nguyên định dạng gốc (xuống dòng cho thơ, đoạn văn cho văn xuôi)
+                    5. Độ dài khoảng 300-500 từ
+                    6. Phù hợp làm đề thi học sinh
+                    
+                    Định dạng trả về:
+                    TÁC PHẨM: [Tên tác phẩm]
+                    TÁC GIẢ: ${authorName}
+                    THỂ LOẠI: [Thể loại]
+                    
+                    [Nội dung đoạn trích]
+                    
+                    Lưu ý: KHÔNG thêm bình luận hay giải thích gì thêm
+                `;
+            } else {
+                const genreMap = {
+                    'any': 'văn học',
+                    'tho': 'thơ',
+                    'truyen': 'truyện ngắn',
+                    'tieu_thuyet': 'tiểu thuyết',
+                    'ky': 'ký'
+                };
+                
+                const genreName = genreMap[genre] || 'văn học';
+                
+                prompt = `
+                    Hãy cung cấp một đoạn trích từ TÁC PHẨM VĂN HỌC CÓ THẬT trong chương trình Ngữ Văn Việt Nam thuộc thể loại ${genreName}.
+                    
+                    YÊU CẦU QUAN TRỌNG:
                     1. PHẢI là tác phẩm có thật, không tự sáng tác
                     2. Ghi rõ: Tên tác phẩm, tác giả, thể loại
                     3. Chọn đoạn trích tiêu biểu, có giá trị văn học
@@ -2149,72 +2051,10 @@
                     
                     Lưu ý: KHÔNG thêm bình luận hay giải thích gì thêm
                 `;
-            } else if (author !== 'random') {
-                const authorMap = {
-                    'xuan_dieu': 'Xuân Diệu',
-                    'nam_cao': 'Nam Cao',
-                    'thach_lam': 'Thạch Lam',
-                    'to_hoai': 'Tô Hoài',
-                    'nguyen_tuan': 'Nguyễn Tuân',
-                    'nguyen_khuyen': 'Nguyễn Khuyến',
-                    'ho_xuan_huong': 'Hồ Xuân Hương',
-                    'nguyen_du': 'Nguyễn Du',
-                    'han_mac_tu': 'Hàn Mặc Tử',
-                    'xuan_quynh': 'Xuân Quỳnh'
-                };
-                
-                const authorName = authorMap[author] || 'Tác giả';
-                
-                prompt = `
-                    Hãy cung cấp một đoạn trích từ TÁC PHẨM CÓ THẬT của tác giả ${authorName}.
-                    
-                    YÊU CẦU:
-                    1. PHẢI là tác phẩm thật của ${authorName}
-                    2. Ghi rõ: Tên tác phẩm, thể loại
-                    3. Chọn đoạn trích tiêu biểu, nổi tiếng
-                    4. Giữ nguyên định dạng gốc
-                    5. Độ dài phù hợp làm đề thi
-                    6. ${style === 'analysis' ? 'Kèm theo phân tích ngắn gọn về đoạn trích' : 'Chỉ cung cấp đoạn trích'}
-                    
-                    Định dạng trả về:
-                    TÁC PHẨM: [Tên tác phẩm]
-                    TÁC GIẢ: ${authorName}
-                    THỂ LOẠI: [Thể loại]
-                    
-                    [Nội dung đoạn trích]
-                    ${style === 'analysis' ? '\nPHÂN TÍCH:\n[Nội dung phân tích]' : ''}
-                `;
-            } else {
-                const workTypeMap = {
-                    'tho': 'thơ',
-                    'truyen': 'truyện ngắn',
-                    'tieu_thuyet': 'tiểu thuyết',
-                    'ky': 'ký'
-                };
-                
-                const typeName = workTypeMap[workType] || 'tác phẩm văn học';
-                
-                prompt = `
-                    Hãy cung cấp một đoạn trích từ TÁC PHẨM ${typeName.toUpperCase()} CÓ THẬT trong chương trình Ngữ Văn.
-                    
-                    YÊU CẦU:
-                    1. PHẢI là tác phẩm thật, thuộc thể loại ${typeName}
-                    2. Ghi rõ: Tên tác phẩm, tác giả
-                    3. Chọn đoạn trích tiêu biểu
-                    4. Giữ nguyên định dạng (quan trọng với thơ)
-                    5. Phù hợp làm tư liệu ra đề thi
-                    
-                    Định dạng trả về:
-                    TÁC PHẨM: [Tên tác phẩm]
-                    TÁC GIẢ: [Tên tác giả]
-                    THỂ LOẠI: ${typeName}
-                    
-                    [Nội dung đoạn trích]
-                `;
             }
             
             try {
-                addProgressItem('Đang tải tác phẩm thật...');
+                addProgressItem('Đang tải tác phẩm ngẫu nhiên...');
                 
                 const result = await fetchGemini(prompt);
                 completeProgressItem(0);
@@ -2240,9 +2080,7 @@
                     } else if (line.trim() === '' && workInfo.title && !contentStarted) {
                         contentStarted = true;
                     } else if (contentStarted) {
-                        if (!line.startsWith('PHÂN TÍCH:')) {
-                            contentLines.push(line);
-                        }
+                        contentLines.push(line);
                     }
                 }
                 
@@ -2256,7 +2094,7 @@
                 
                 return workInfo.content;
             } catch (error) {
-                console.error('Lỗi khi tạo văn bản mẫu:', error);
+                console.error('Lỗi khi tạo văn bản ngẫu nhiên:', error);
                 errorProgressItem(0);
                 
                 currentRealWorkInfo = {
@@ -2270,107 +2108,108 @@
             }
         }
 
-        function showGeneratedText(text) {
-            generatedText = text;
-            
-            const modal = document.getElementById('textPreviewModal');
-            const modalContent = document.getElementById('textPreviewContent');
-            
-            const wordCount = countWords(text);
-            
-            const previewHTML = `
-                <div class="text-preview">
-                    <h3>TÁC PHẨM: ${currentRealWorkInfo?.title || 'Tác phẩm văn học'}</h3>
-                    
-                    <div class="text-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-user"></i>
-                            <span>Tác giả: ${currentRealWorkInfo?.author || 'Không xác định'}</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-book"></i>
-                            <span>Thể loại: ${currentRealWorkInfo?.genre || 'Văn học'}</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-ruler"></i>
-                            <span>Độ dài: ${wordCount} từ</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-check-circle text-green-600"></i>
-                            <span class="text-green-600 font-semibold">Tác phẩm có thật</span>
-                        </div>
-                    </div>
-                    
-                    <div class="text-content">
-                        ${text}
-                    </div>
-                    
-                    <div style="margin-top: 1rem; padding: 1rem; background: rgba(76, 175, 80, 0.1); border-radius: 8px; border-left: 4px solid #4CAF50;">
-                        <p style="margin: 0; font-size: 0.9rem; color: #2E7D32;">
-                            <i class="fas fa-check-double"></i> 
-                            <strong>Đã xác minh:</strong> Đây là tác phẩm văn học có thật trong chương trình học.
-                        </p>
-                    </div>
-                </div>
-            `;
-            
-            modalContent.innerHTML = previewHTML;
-            modal.classList.add('active');
-        }
+        async function generateRandomExam() {
+            const generateRandomBtn = document.getElementById('generateRandomExamBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const examResult = document.getElementById('examResult');
 
-        function useGeneratedText() {
-            const inputText = document.getElementById('inputText');
-            if (inputText && generatedText) {
-                inputText.value = generatedText;
+            generateRandomBtn.disabled = true;
+            generateRandomBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Đang tạo đề thi ngẫu nhiên...';
+            progressContainer.style.display = 'block';
+            examResult.style.display = 'none';
+            
+            generationProgress = {
+                total: 0,
+                completed: 0,
+                items: []
+            };
+            
+            examResult.innerHTML = '';
+
+            try {
+                examSettings = {
+                    time: parseInt(document.getElementById('examTimeSlider').value),
+                    difficulty: document.getElementById('difficulty').value,
+                    grade: document.getElementById('grade').value,
+                    hasReading: document.getElementById('readingToggle').checked,
+                    hasEssay: document.getElementById('essayToggle').checked,
+                    hasPractice: document.getElementById('practiceToggle').checked,
+                    questionCount: parseInt(document.getElementById('questionCount').value)
+                };
                 
-                const wordCount = countWords(generatedText);
-                document.getElementById('wordCount').textContent = `${wordCount} từ`;
+                const examNotes = document.getElementById('examNotes').value;
+
+                addProgressItem('Đang chọn tác phẩm ngẫu nhiên');
+                addProgressItem('Thực hiện tự kiểm chứng tác phẩm', 'verification');
+                addProgressItem('Tạo câu hỏi đề thi');
+                addProgressItem('Hoàn thiện cấu trúc đề');
+
+                const randomText = await generateRandomTextSample();
+                completeProgressItem(0);
+
+                markAsVerification(1);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                completeProgressItem(1);
+
+                const examData = await generateExamWithGemini(randomText, currentRealWorkInfo);
+                completeProgressItem(2);
+
+                showExamResult(examData, examNotes);
+                completeProgressItem(3);
+
+                examResult.style.display = 'block';
+                showNotification('Tạo đề thi ngẫu nhiên thành công từ tác phẩm thật!', 'success');
+
+            } catch (error) {
+                console.error('Lỗi khi tạo đề thi ngẫu nhiên:', error);
                 
-                if (wordCount < 100) {
-                    document.getElementById('wordCount').style.color = '#ef4444';
-                    document.getElementById('wordCount').style.fontWeight = '600';
+                let errorMessage = 'Đã xảy ra lỗi khi tạo đề thi ngẫu nhiên. ';
+                if (error.message.includes('timeout')) {
+                    errorMessage += 'Yêu cầu mất quá nhiều thời gian. Vui lòng thử lại.';
+                } else if (error.message.includes('Failed after')) {
+                    errorMessage += 'Không thể kết nối đến AI. Vui lòng kiểm tra kết nối internet và thử lại.';
                 } else {
-                    document.getElementById('wordCount').style.color = 'var(--text-secondary)';
-                    document.getElementById('wordCount').style.fontWeight = 'normal';
+                    errorMessage += error.message;
                 }
                 
-                switchMode('from-text');
+                examResult.innerHTML = `
+                    <div class="exam-info" style="background: rgba(239, 68, 68, 0.1); border-color: #ef4444;">
+                        <h3 style="color: #ef4444;"><i class="fas fa-exclamation-triangle"></i> Lỗi khi tạo đề thi ngẫu nhiên</h3>
+                        <p>${errorMessage}</p>
+                        <p><strong>Gợi ý:</strong></p>
+                        <ul>
+                            <li>Kiểm tra kết nối internet</li>
+                            <li>Thử lại với tác giả khác</li>
+                            <li>Thử lại sau vài phút</li>
+                        </ul>
+                    </div>
+                `;
                 
-                const modal = document.getElementById('textPreviewModal');
-                modal.classList.remove('active');
+                examResult.style.display = 'block';
+                showNotification(errorMessage, 'error');
                 
-                showNotification('Đã sử dụng tác phẩm thật!', 'success');
+                if (generationProgress.items.length > 0) {
+                    const lastIndex = generationProgress.items.length - 1;
+                    errorProgressItem(lastIndex);
+                }
+            } finally {
+                generateRandomBtn.disabled = false;
+                generateRandomBtn.innerHTML = '<i class="fas fa-dice mr-2"></i> Tạo Đề Thi Ngẫu Nhiên';
             }
         }
 
         async function generateExam() {
-            let text = '';
-            let workInfo = null;
+            const text = document.getElementById('inputText').value.trim();
             
-            if (currentMode === 'from-text') {
-                text = document.getElementById('inputText').value.trim();
-                
-                if (!text) {
-                    showNotification('Vui lòng nhập nội dung văn bản!', 'error');
-                    return;
-                }
-                
-                const wordCount = countWords(text);
-                if (wordCount < 20) {
-                    showNotification(`Văn bản quá ngắn (${wordCount} từ)! Vui lòng nhập ít nhất 20 từ.`, 'error');
-                    return;
-                }
-                
-                if (currentRealWorkInfo) {
-                    workInfo = currentRealWorkInfo;
-                }
-            } else if (currentMode === 'generate-text') {
-                if (!generatedText) {
-                    showNotification('Vui lòng tạo văn bản từ tác phẩm thật trước!', 'error');
-                    return;
-                }
-                text = generatedText;
-                workInfo = currentRealWorkInfo;
+            if (!text) {
+                showNotification('Vui lòng nhập nội dung văn bản!', 'error');
+                return;
+            }
+            
+            const wordCount = countWords(text);
+            if (wordCount < 20) {
+                showNotification(`Văn bản quá ngắn (${wordCount} từ)! Vui lòng nhập ít nhất 20 từ.`, 'error');
+                return;
             }
             
             const generateBtn = document.getElementById('generateExamBtn');
@@ -2415,9 +2254,9 @@
 
                 markAsVerification(1);
                 
-                if (workInfo) {
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                } else {
+                let workInfo = currentRealWorkInfo;
+                
+                if (!workInfo) {
                     const verificationPrompt = `
                         Văn bản sau có phải là tác phẩm văn học có thật trong chương trình Ngữ Văn Việt Nam không?
                         Trả lời ngắn gọn: CÓ hoặc KHÔNG
@@ -2485,7 +2324,7 @@
                 }
             } finally {
                 generateBtn.disabled = false;
-                generateBtn.innerHTML = '<i class="fas fa-file-alt mr-2"></i> Tạo Bài Thi';
+                generateBtn.innerHTML = '<i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi Từ Văn Bản';
             }
         }
 
@@ -2674,9 +2513,7 @@
                 const examData = {
                     examId: currentExamCode,
                     title: "Đề thi Ngữ Văn",
-                    literaryText: currentMode === 'from-text' ? 
-                        document.getElementById('inputText').value.substring(0, 500) : 
-                        generatedText.substring(0, 500),
+                    literaryText: document.getElementById('inputText').value.substring(0, 500),
                     examTime: examSettings.time,
                     difficulty: examSettings.difficulty,
                     grade: examSettings.grade,
@@ -2686,7 +2523,6 @@
                     updatedAt: new Date().toISOString(),
                     totalPoints: totalPoints,
                     source: "VANW Exam Tool",
-                    mode: currentMode,
                     status: "active",
                     isRealWork: !!currentRealWorkInfo,
                     workInfo: currentRealWorkInfo || null
@@ -3337,30 +3173,6 @@
             }, 4000);
         }
 
-        function switchMode(mode) {
-            currentMode = mode;
-            
-            const modeBtns = document.querySelectorAll('.mode-btn');
-            const existingTextArea = document.getElementById('existingTextArea');
-            const textGenArea = document.getElementById('textGenArea');
-            
-            modeBtns.forEach(btn => {
-                if (btn.dataset.mode === mode) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-            
-            if (mode === 'from-text') {
-                existingTextArea.style.display = 'block';
-                textGenArea.style.display = 'none';
-            } else if (mode === 'generate-text') {
-                existingTextArea.style.display = 'none';
-                textGenArea.style.display = 'block';
-            }
-        }
-
         function setupExamSlider() {
             const slider = document.getElementById('examTimeSlider');
             const valueDisplay = document.getElementById('examTimeValue');
@@ -3427,14 +3239,11 @@
         function setupModal() {
             const previewModal = document.getElementById('previewModal');
             const editModal = document.getElementById('editExamModal');
-            const textPreviewModal = document.getElementById('textPreviewModal');
             const closeButtons = document.querySelectorAll('.close-modal');
             const closePreviewBtn = document.getElementById('closePreviewBtn');
             const printPreviewBtn = document.getElementById('printPreviewBtn');
             const cancelEditBtn = document.getElementById('cancelEditBtn');
             const saveEditedExamBtn = document.getElementById('saveEditedExamBtn');
-            const closeTextPreviewBtn = document.getElementById('closeTextPreviewBtn');
-            const useTextBtn = document.getElementById('useTextBtn');
             
             closeButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -3461,18 +3270,6 @@
                 saveEditedExamBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     saveEditedExam();
-                });
-            }
-            
-            if (closeTextPreviewBtn) {
-                closeTextPreviewBtn.addEventListener('click', function() {
-                    textPreviewModal.classList.remove('active');
-                });
-            }
-            
-            if (useTextBtn) {
-                useTextBtn.addEventListener('click', function() {
-                    useGeneratedText();
                 });
             }
             
@@ -3596,7 +3393,7 @@
                 });
             }
             
-            [previewModal, editModal, textPreviewModal].forEach(modal => {
+            [previewModal, editModal].forEach(modal => {
                 modal.addEventListener('click', function(e) {
                     if (e.target === modal) {
                         modal.classList.remove('active');
@@ -3656,34 +3453,9 @@
                 generateExamBtn.addEventListener('click', generateExam);
             }
             
-            const generateTextBtn = document.getElementById('generateTextBtn');
-            if (generateTextBtn) {
-                generateTextBtn.addEventListener('click', async function() {
-                    const btn = this;
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Đang tải tác phẩm...';
-                    
-                    generationProgress = {
-                        total: 0,
-                        completed: 0,
-                        items: []
-                    };
-                    
-                    const progressContainer = document.getElementById('progressContainer');
-                    progressContainer.style.display = 'block';
-                    
-                    try {
-                        const text = await generateRealTextSample();
-                        showGeneratedText(text);
-                    } catch (error) {
-                        console.error('Lỗi khi tạo văn bản từ tác phẩm thật:', error);
-                        showNotification('Đã xảy ra lỗi khi tải tác phẩm thật!', 'error');
-                    } finally {
-                        btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-wand-magic-sparkles mr-2"></i> Tạo văn bản từ tác phẩm thật';
-                        progressContainer.style.display = 'none';
-                    }
-                });
+            const generateRandomExamBtn = document.getElementById('generateRandomExamBtn');
+            if (generateRandomExamBtn) {
+                generateRandomExamBtn.addEventListener('click', generateRandomExam);
             }
             
             const inputText = document.getElementById('inputText');
@@ -3691,9 +3463,7 @@
                 inputText.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && e.ctrlKey) {
                         e.preventDefault();
-                        if (currentMode === 'from-text') {
-                            generateExam();
-                        }
+                        generateExam();
                     }
                 });
             }
@@ -3718,14 +3488,6 @@
                     }
                 });
             }
-            
-            const modeBtns = document.querySelectorAll('.mode-btn');
-            modeBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const mode = this.dataset.mode;
-                    switchMode(mode);
-                });
-            });
             
             setupExamSlider();
             setupWordCounter();
