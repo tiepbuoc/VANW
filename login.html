@@ -95,7 +95,12 @@
             z-index: -1;
             opacity: 0.8;
         }
-
+        .title-logo {
+            display: block;
+            margin: 0 auto;
+            max-height: 90px; /* Điều chỉnh theo kích thước hình */
+            width: auto;
+        }
         .web-icon {
             position: fixed;
             top: 1rem;
@@ -475,7 +480,9 @@
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
-                <h2>VANW</h2>
+                <h2 class="logo-title">
+                    <img src="text.png" alt="VANW" class="title-logo" style="max-width: 100%; height: auto;">
+                </h2>
             </div>
             
             <div class="auth-tabs">
@@ -1009,3 +1016,4 @@
     </script>
 </body>
 </html>
+
