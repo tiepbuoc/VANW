@@ -157,7 +157,7 @@
     .title-logo {
         display: block;
         margin: 0 auto;
-        max-height: 60px; /* Điều chỉnh theo kích thước hình */
+        max-height: 120px; /* Điều chỉnh theo kích thước hình */
         width: auto;
     }
     
