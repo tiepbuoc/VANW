@@ -154,6 +154,13 @@
         object-fit: contain;
     }
 
+    .title-logo {
+        display: block;
+        margin: 0 auto;
+        max-height: 60px; /* Điều chỉnh theo kích thước hình */
+        width: auto;
+    }
+    
     .sr-only {
         position: absolute;
         width: 1px;
@@ -1905,3 +1912,4 @@
         }
     }
 }
+
