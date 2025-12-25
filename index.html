@@ -136,7 +136,7 @@
                 position: relative;
             }
             
-            /* Thanh mở rộng với hình nền logo - nhỏ và dài hơn */
+            /* Thanh mở rộng với hình nền logo - Nhỏ và dài ra */
             .liquidGlass-wrapper {
                 position: relative;
                 display: flex;
@@ -147,17 +147,15 @@
                 cursor: pointer;
                 box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
-                border-radius: 12px;
-                padding: 0.5rem 2rem;
+                border-radius: 0;
+                padding: 0.8rem 1.5rem;
                 background: url('logtext.png') center center no-repeat;
                 background-size: contain;
                 background-color: #ffffff;
-                height: 70px; /* Giảm chiều cao */
-                width: 100%; /* Chiều rộng giữ nguyên */
-                max-width: 600px; /* Giới hạn chiều rộng tối đa */
-                margin: 0 auto; /* Căn giữa */
+                height: 60px;
                 z-index: 10;
-                border: 3px solid #ed7839;
+                border: none;
+                min-height: 60px;
             }
             
             .liquidGlass-wrapper:hover {
@@ -167,8 +165,8 @@
             
             .liquidGlass-wrapper i {
                 position: absolute;
-                right: 20px;
-                font-size: 1.2rem; /* Giảm kích thước icon */
+                right: 15px;
+                font-size: 1.2rem;
                 transition: transform 0.3s ease;
                 color: #ed7839;
             }
@@ -177,28 +175,27 @@
                 transform: translateY(3px);
             }
             
-            /* Dropdown container */
+            /* Dropdown container với khối lớn bao quanh */
             .features-dropdown {
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 width: 100%;
-                max-width: 600px; /* Cùng chiều rộng với thanh */
                 margin: 0 auto;
-                border-radius: 0 0 12px 12px;
-                background: #ffffff;
                 position: relative;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
                 z-index: 9;
-                margin-top: -3px;
-                border: 3px solid #ed7839;
-                border-top: none;
+                margin-top: -1px;
             }
             
             .features-dropdown.active {
                 max-height: 1000px;
-                padding: 1.5rem;
+                padding: 20px;
                 overflow: visible;
+                background: #ffffff;
+                border: 3px solid #ed7839;
+                border-top: none;
+                border-radius: 0 0 12px 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             }
             
             .features-grid {
@@ -209,12 +206,13 @@
                 position: relative;
                 z-index: 3;
                 overflow: visible;
+                padding: 1rem;
             }
             
-            /* Feature item - kích thước 2/3 và hình vuông */
+            /* Feature item - nhỏ hơn 2/3, hình vuông, chỉ có icon */
             .feature-item {
                 -webkit-tap-highlight-color: #0000;
-                width: 200px; /* 2/3 của 300px */
+                width: 200px; /* Giảm 2/3 từ 300px */
                 height: 200px; /* Hình vuông */
                 outline: 3px solid #ed7839;
                 background: #ffffff;
@@ -258,16 +256,11 @@
             }
             
             .feature-item img {
-                width: 80px; /* Giảm kích thước ảnh */
+                width: 80px; /* Giữ nguyên tỉ lệ */
                 user-select: none;
                 z-index: 2;
                 position: relative;
                 filter: none !important;
-            }
-            
-            /* Ẩn chữ, chỉ hiển thị ảnh */
-            .feature-item h3 {
-                display: none; /* Ẩn chữ */
             }
             
             .feature-item:hover {
@@ -361,22 +354,22 @@
                 }
                 
                 .liquidGlass-wrapper {
-                    padding: 0.5rem 1rem;
-                    height: 60px;
-                    max-width: 90%;
+                    height: 50px;
+                    padding: 0.6rem 1.2rem;
                 }
                 
                 .features-dropdown.active {
-                    padding: 1rem;
+                    padding: 15px;
                 }
                 
                 .features-grid {
                     gap: 1rem;
+                    padding: 0.5rem;
                 }
                 
                 .feature-item {
-                    width: 150px;
-                    height: 150px;
+                    width: 160px;
+                    height: 160px;
                 }
                 
                 .feature-item img {
@@ -419,17 +412,16 @@
                 }
                 
                 .liquidGlass-wrapper {
-                    height: 50px;
-                    max-width: 95%;
+                    height: 45px;
                 }
                 
                 .features-dropdown.active {
-                    padding: 0.8rem;
+                    padding: 10px;
                 }
                 
                 .feature-item {
-                    width: 120px;
-                    height: 120px;
+                    width: 140px;
+                    height: 140px;
                 }
                 
                 .feature-item img {
@@ -449,16 +441,7 @@
                 }
                 
                 .liquid-glass-section {
-                    max-width: 600px; /* Giữ nguyên chiều rộng */
-                }
-                
-                .feature-item {
-                    width: 180px;
-                    height: 180px;
-                }
-                
-                .feature-item img {
-                    width: 70px;
+                    max-width: 900px;
                 }
             }
             
@@ -687,12 +670,12 @@
         </main>
         
         <div class="liquid-glass-section">
-            <!-- Thanh mở rộng với hình nền logo - nhỏ và dài hơn -->
+            <!-- Thanh mở rộng với hình nền logo - nhỏ và dài -->
             <div class="liquidGlass-wrapper" id="liquidGlassBar">
                 <i class="fas fa-chevron-down"></i>
             </div>
             
-            <!-- Dropdown với các khối hình vuông 2/3 kích thước, chỉ có ảnh -->
+            <!-- Dropdown với khối lớn bao quanh 3 khối nhỏ -->
             <div class="features-dropdown" id="featuresDropdown">
                 <div class="features-grid">
                     <div class="feature-item" onclick="navigateTo('taode.html')">
@@ -895,7 +878,7 @@
             if (featuresDropdown.classList.contains('active')) {
                 const grid = featuresDropdown.querySelector('.features-grid');
                 const gridHeight = grid.scrollHeight;
-                const totalHeight = gridHeight + 60; // Giảm padding
+                const totalHeight = gridHeight + 80;
                 
                 featuresDropdown.style.maxHeight = totalHeight + 'px';
             }
@@ -908,7 +891,6 @@
             
             if (featuresDropdown.classList.contains('active')) {
                 chevronIcon.style.transform = 'rotate(180deg)';
-                liquidGlassBar.style.borderRadius = '12px 12px 0 0';
                 liquidGlassBar.style.transform = 'translateY(-5px)';
                 liquidGlassBar.style.boxShadow = '0 12px 20px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 0, 0, 0.2)';
                 
@@ -927,7 +909,6 @@
                 });
             } else {
                 chevronIcon.style.transform = 'rotate(0deg)';
-                liquidGlassBar.style.borderRadius = '12px';
                 if (!liquidGlassBar.matches(':hover')) {
                     liquidGlassBar.style.transform = 'translateY(0)';
                     liquidGlassBar.style.boxShadow = '0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)';
@@ -955,7 +936,6 @@
                 featuresDropdown.classList.remove('active');
                 liquidGlassBar.classList.remove('active');
                 chevronIcon.style.transform = 'rotate(0deg)';
-                liquidGlassBar.style.borderRadius = '12px';
                 featuresDropdown.style.maxHeight = '0';
                 
                 if (!liquidGlassBar.matches(':hover')) {
@@ -986,7 +966,6 @@
                 featuresDropdown.classList.remove('active');
                 liquidGlassBar.classList.remove('active');
                 chevronIcon.style.transform = 'rotate(0deg)';
-                liquidGlassBar.style.borderRadius = '12px';
                 liquidGlassBar.style.transform = 'translateY(0)';
                 liquidGlassBar.style.boxShadow = '0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)';
                 featuresDropdown.style.maxHeight = '0';
