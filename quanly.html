@@ -148,7 +148,9 @@ body::before {
     margin-bottom: 2rem;
     padding-bottom: 1rem;
     overflow-x: auto;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    width: 100%;
 }
 
 .tab-btn {
@@ -166,6 +168,7 @@ body::before {
     align-items: center;
     white-space: nowrap;
     box-shadow: 0 4px 12px rgba(237, 120, 57, 0.2);
+    flex-shrink: 0;
 }
 
 .tab-btn:hover {
@@ -948,14 +951,21 @@ body::before {
     }
     
     .tab-navigation {
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 0.5rem;
     }
     
     .tab-btn {
-        width: 100%;
-        max-width: 300px;
+        width: auto;
+        max-width: none;
+        padding: 10px 15px;
+        font-size: 0.9rem;
         justify-content: center;
+        flex-shrink: 0;
     }
     
     .filter-controls {
@@ -1048,6 +1058,15 @@ body::before {
     .question-points {
         align-self: flex-start;
     }
+    
+    .tab-navigation {
+        gap: 0.25rem;
+    }
+    
+    .tab-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
 }
 
 /* Styles from index */
@@ -1102,32 +1121,6 @@ article > div {
 .tab-btn:hover i, .action-btn:hover i, .grading-action-btn:hover i {
     transform: translateY(-2px);
 }
-
-/* Add back button */
-.back-button {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    z-index: 100;
-    box-shadow: 0 4px 12px rgba(237, 120, 57, 0.3);
-    transition: all 0.3s ease;
-}
-
-.back-button:hover {
-    background: #d46a2e;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(237, 120, 57, 0.4);
-}
     </style>
 </head>
 <body>
@@ -1135,22 +1128,18 @@ article > div {
         <img src="logo.png" alt="Website Icon" />
     </a>
     
-    <button class="back-button" onclick="window.location.href='index.html'">
-        <i class="fas fa-arrow-left"></i> Quay lại
-    </button>
-    
     <div class="app-container">
         <h1 class="page-title">QUẢN LÝ & CHẤM ĐIỂM BÀI THI</h1>
         
         <div class="tab-navigation">
             <button class="tab-btn active" data-tab="dashboard">
-                <i class="fas fa-tachometer-alt"></i> Tổng quan
+                Tổng quan
             </button>
             <button class="tab-btn" data-tab="exams">
-                <i class="fas fa-file-alt"></i> Đề thi của tôi
+                Đề thi
             </button>
             <button class="tab-btn" data-tab="grading">
-                <i class="fas fa-graduation-cap"></i> Bài thi cần chấm
+                Bài thi
             </button>
         </div>
         
@@ -1191,7 +1180,7 @@ article > div {
             
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="fas fa-chart-line mr-2"></i> Hoạt động gần đây</h3>
+                    <h3>Hoạt động gần đây</h3>
                 </div>
                 <div id="recentActivity">
                     <div class="empty-state">
@@ -1205,7 +1194,7 @@ article > div {
         <div class="tab-content" id="exams-tab">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="fas fa-list-alt"></i> Danh sách đề thi của tôi</h3>
+                    <h3>Danh sách đề thi của tôi</h3>
                     <div class="action-buttons">
                         <button class="action-btn view-btn" id="refreshExamsBtn">
                             <i class="fas fa-sync-alt"></i> Làm mới
@@ -1232,7 +1221,7 @@ article > div {
         <div class="tab-content" id="grading-tab">
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="fas fa-graduation-cap"></i> Bài thi từ đề thi của tôi</h3>
+                    <h3>Bài thi từ đề thi của tôi</h3>
                 </div>
                 
                 <div class="filter-controls">
