@@ -136,7 +136,7 @@
                 position: relative;
             }
             
-            /* Thanh mở rộng với hình nền logo - nhỏ và dài hơn */
+            /* Thanh mở rộng với hình nền logo - Nhỏ và dài ra */
             .liquidGlass-wrapper {
                 position: relative;
                 display: flex;
@@ -147,18 +147,15 @@
                 cursor: pointer;
                 box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
-                border-radius: 8px; /* Bỏ bo viền */
-                padding: 0.8rem 1.5rem; /* Giảm padding để nhỏ hơn */
+                border-radius: 0;
+                padding: 0.8rem 1.5rem;
                 background: url('logtext.png') center center no-repeat;
                 background-size: contain;
                 background-color: #ffffff;
-                height: 80px; /* Giảm chiều cao */
-                width: 600px; /* Tăng chiều rộng */
-                max-width: 90%;
-                margin: 0 auto;
+                height: 60px;
                 z-index: 10;
-                border: none; /* Bỏ viền */
-                outline: none;
+                border: none;
+                min-height: 60px;
             }
             
             .liquidGlass-wrapper:hover {
@@ -168,8 +165,8 @@
             
             .liquidGlass-wrapper i {
                 position: absolute;
-                right: 20px;
-                font-size: 1.3rem; /* Giảm kích thước icon */
+                right: 15px;
+                font-size: 1.2rem;
                 transition: transform 0.3s ease;
                 color: #ed7839;
             }
@@ -178,46 +175,45 @@
                 transform: translateY(3px);
             }
             
-            /* Dropdown container - khối lớn bao quanh 3 khối nhỏ */
+            /* Dropdown container với khối lớn bao quanh */
             .features-dropdown {
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
                 width: 100%;
-                max-width: 800px;
                 margin: 0 auto;
-                border-radius: 8px;
-                background: #ffffff;
                 position: relative;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
                 z-index: 9;
-                margin-top: 8px;
-                border: 3px solid #ed7839; /* Viền cam cho khối lớn */
-                padding: 20px; /* Padding cho khối lớn */
-                box-sizing: border-box;
+                margin-top: -1px;
             }
             
             .features-dropdown.active {
-                max-height: 500px;
+                max-height: 1000px;
+                padding: 20px;
                 overflow: visible;
+                background: #ffffff;
+                border: 3px solid #ed7839;
+                border-top: none;
+                border-radius: 0 0 12px 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             }
             
             .features-grid {
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
-                gap: 20px;
+                gap: 1.5rem;
                 position: relative;
                 z-index: 3;
                 overflow: visible;
-                padding: 10px;
+                padding: 1rem;
             }
             
-            /* Feature item - khối vuông chỉ có icon, kích thước 2/3 */
+            /* Feature item - nhỏ hơn 2/3, hình vuông, chỉ có icon */
             .feature-item {
                 -webkit-tap-highlight-color: #0000;
-                width: 180px; /* Giảm còn 2/3 so với 300px */
-                height: 180px; /* Chiều cao bằng chiều rộng để thành hình vuông */
+                width: 200px; /* Giảm 2/3 từ 300px */
+                height: 200px; /* Hình vuông */
                 outline: 3px solid #ed7839;
                 background: #ffffff;
                 position: relative;
@@ -227,22 +223,19 @@
                 transition-duration: 0.12s, 0.12s, 0.5s, 0.5s;
                 transition-timing-function: cubic-bezier(.645, .045, .355, 1);
                 box-shadow: 0 4px 12px rgba(237, 120, 57, 0.2);
-                display: flex;
-                justify-content: center;
-                align-items: center;
             }
             
             .feature-item > div {
                 clip-path: inset(0 round 12px);
                 overflow: hidden;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                align-content: center;
+                display: grid;
+                place-items: center;
                 position: absolute;
                 inset: 0;
                 border-radius: 12px;
                 overflow: hidden;
-                padding: 0; /* Bỏ padding */
+                padding: 1rem;
             }
             
             .feature-item:active {
@@ -263,18 +256,11 @@
             }
             
             .feature-item img {
-                width: 80px; /* Giảm kích thước ảnh */
-                height: 80px;
+                width: 80px; /* Giữ nguyên tỉ lệ */
                 user-select: none;
                 z-index: 2;
                 position: relative;
                 filter: none !important;
-                object-fit: contain;
-            }
-            
-            /* Ẩn chữ của feature item */
-            .feature-item h3 {
-                display: none; /* Ẩn chữ đi */
             }
             
             .feature-item:hover {
@@ -368,19 +354,8 @@
                 }
                 
                 .liquidGlass-wrapper {
-                    padding: 0.6rem 1rem;
-                    height: 70px;
-                    width: 90%;
-                }
-                
-                .liquidGlass-wrapper i {
-                    right: 15px;
-                    font-size: 1.2rem;
-                }
-                
-                .features-dropdown {
-                    width: 90%;
-                    padding: 15px;
+                    height: 50px;
+                    padding: 0.6rem 1.2rem;
                 }
                 
                 .features-dropdown.active {
@@ -388,18 +363,17 @@
                 }
                 
                 .features-grid {
-                    gap: 15px;
-                    padding: 8px;
+                    gap: 1rem;
+                    padding: 0.5rem;
                 }
                 
                 .feature-item {
-                    width: 150px;
-                    height: 150px;
+                    width: 160px;
+                    height: 160px;
                 }
                 
                 .feature-item img {
-                    width: 70px;
-                    height: 70px;
+                    width: 60px;
                 }
                 
                 .app-footer {
@@ -438,31 +412,20 @@
                 }
                 
                 .liquidGlass-wrapper {
-                    height: 60px;
-                    width: 95%;
-                }
-                
-                .features-dropdown {
-                    width: 95%;
-                    padding: 10px;
+                    height: 45px;
                 }
                 
                 .features-dropdown.active {
                     padding: 10px;
                 }
                 
-                .features-grid {
-                    gap: 10px;
-                }
-                
                 .feature-item {
-                    width: 120px;
-                    height: 120px;
+                    width: 140px;
+                    height: 140px;
                 }
                 
                 .feature-item img {
-                    width: 60px;
-                    height: 60px;
+                    width: 50px;
                 }
                 
                 .logout-btn {
@@ -478,15 +441,6 @@
                 }
                 
                 .liquid-glass-section {
-                    max-width: 900px;
-                }
-                
-                .liquidGlass-wrapper {
-                    width: 700px;
-                    height: 90px;
-                }
-                
-                .features-dropdown {
                     max-width: 900px;
                 }
             }
@@ -721,7 +675,7 @@
                 <i class="fas fa-chevron-down"></i>
             </div>
             
-            <!-- Dropdown với khối lớn bao quanh 3 khối vuông nhỏ -->
+            <!-- Dropdown với khối lớn bao quanh 3 khối nhỏ -->
             <div class="features-dropdown" id="featuresDropdown">
                 <div class="features-grid">
                     <div class="feature-item" onclick="navigateTo('taode.html')">
@@ -924,7 +878,7 @@
             if (featuresDropdown.classList.contains('active')) {
                 const grid = featuresDropdown.querySelector('.features-grid');
                 const gridHeight = grid.scrollHeight;
-                const totalHeight = gridHeight + 40; // Thêm padding
+                const totalHeight = gridHeight + 80;
                 
                 featuresDropdown.style.maxHeight = totalHeight + 'px';
             }
