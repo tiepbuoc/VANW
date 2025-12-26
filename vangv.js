@@ -1,6 +1,6 @@
 
 const REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
-const GEMINI_API_KEY = "AIzaSyDq_sSF2kgHzuDgYNpQef6EDrk8MsP0vlM";
+const GEMINI_API_KEY = "AIzaSyBeZCgLLcFQzRq0Y6A8GN5Y4FRQ_NZJBzQ";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBLZpLQKl0x-kMez2v5NURU5qSthT_6qYI",
@@ -2567,4 +2567,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+
 
