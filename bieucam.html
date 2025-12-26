@@ -1,280 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VANW - Tính năng đang phát triển</title>
+    <title>Phân Tích Biểu Cảm | VANW</title>
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://unpkg.com/normalize.css') layer(normalize);
-        
+
         @layer normalize, base, demo;
-        
-        @layer demo {
-            body {
-                align-content: center;
-                gap: 2rem;
-                margin: 0;
-                padding: 2rem;
-                min-height: 100vh;
-                display: grid;
-                place-items: center;
-                background-color: #f5f5f5;
-                color: #000000;
-                transition: background-color 0.5s ease, color 0.5s ease;
-            }
-            
-            .app-container {
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 2rem;
-                width: 100%;
-                position: relative;
-                min-height: 80vh;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .app-header {
-                text-align: center;
-                margin-bottom: 3rem;
-            }
-            
-            .app-header img {
-                max-width: 300px;
-                height: auto;
-                margin-bottom: 0.3rem;
-                margin-top: 60px;
-                filter: invert(0);
-            }
-            
-            .error-container {
-                width: 100%;
-                max-width: 700px;
-                margin: 2rem auto;
-                padding: 3rem 2rem;
-                text-align: center;
-                background: rgba(255, 255, 255, 0.95);
-                border-radius: 20px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1),
-                            0 0 0 3px rgba(237, 120, 57, 0.3);
-                border: 1px solid rgba(237, 120, 57, 0.2);
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .error-container::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 5px;
-                background: linear-gradient(90deg, #ed7839, #ff9a5a);
-            }
-            
-            .error-title {
-                font-size: 2rem;
-                color: #ed7839;
-                margin-bottom: 1.5rem;
-                font-weight: 700;
-                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-            }
-            
-            .error-message {
-                font-size: 1.2rem;
-                color: #666;
-                line-height: 1.6;
-                margin-bottom: 2rem;
-                max-width: 600px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            
-            .contact-info {
-                background: rgba(237, 120, 57, 0.1);
-                border-radius: 15px;
-                padding: 1.5rem;
-                margin: 2rem 0;
-                border-left: 4px solid #ed7839;
-            }
-            
-            .contact-title {
-                font-size: 1.3rem;
-                color: #ed7839;
-                margin-bottom: 1rem;
-                font-weight: 600;
-            }
-            
-            .contact-list {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .contact-item {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                padding: 0.8rem;
-                background: white;
-                border-radius: 10px;
-                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-                transition: transform 0.3s ease;
-            }
-            
-            .contact-item:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            }
-            
-            .contact-item i {
-                color: #ed7839;
-                font-size: 1.2rem;
-                width: 30px;
-            }
-            
-            .contact-item a {
-                color: #333;
-                text-decoration: none;
-                font-weight: 500;
-                transition: color 0.3s ease;
-            }
-            
-            .contact-item a:hover {
-                color: #ed7839;
-                text-decoration: underline;
-            }
-            
-            .app-footer {
-                text-align: center;
-                margin-top: 3rem;
-                padding-top: 2rem;
-                border-top: 1px solid #eeeeee;
-                color: #666666;
-                position: relative;
-                width: 100%;
-            }
-            
-            .footer-links a {
-                color: #000000;
-                text-decoration: none;
-                font-weight: 600;
-            }
-            
-            .footer-links a:hover {
-                text-decoration: underline;
-            }
-            
-            @media (max-width: 768px) {
-                body {
-                    padding: 1rem;
-                }
-                
-                .app-container {
-                    padding: 1rem;
-                }
-                
-                .app-header img {
-                    max-width: 200px;
-                    margin-top: 30px;
-                }
-                
-                .error-container {
-                    padding: 2rem 1.5rem;
-                    margin: 1rem auto;
-                }
-                
-                .error-title {
-                    font-size: 1.7rem;
-                }
-                
-                .error-message {
-                    font-size: 1.1rem;
-                }
-                
-                .contact-info {
-                    padding: 1.2rem;
-                }
-                
-                .contact-title {
-                    font-size: 1.1rem;
-                }
-                
-                .contact-item {
-                    padding: 0.6rem;
-                }
-                
-                .app-footer {
-                    margin-top: 2rem;
-                    padding-top: 1.5rem;
-                }
-            }
-            
-            @media (max-width: 480px) {
-                body {
-                    padding: 0.5rem;
-                }
-                
-                .app-container {
-                    padding: 0.5rem;
-                }
-                
-                .app-header img {
-                    max-width: 150px;
-                }
-                
-                .error-container {
-                    padding: 1.5rem 1rem;
-                }
-                
-                .error-title {
-                    font-size: 1.4rem;
-                }
-                
-                .error-message {
-                    font-size: 1rem;
-                }
-                
-                .contact-item {
-                    flex-direction: column;
-                    text-align: center;
-                    gap: 5px;
-                }
-                
-                .contact-item i {
-                    margin-bottom: 5px;
-                }
-            }
-            
-            @media (min-width: 1200px) {
-                .app-header img {
-                    margin-top: 30px;
-                    max-width: 400px;
-                }
-                
-                .error-container {
-                    max-width: 800px;
-                    padding: 4rem 3rem;
-                }
-                
-                .error-title {
-                    font-size: 2.5rem;
-                }
-                
-                .error-message {
-                    font-size: 1.3rem;
-                }
-            }
-        }
-        
+
         @layer base {
             :root {
                 --font-size-min: 16;
@@ -283,27 +20,32 @@
                 --font-ratio-max: 1.33;
                 --font-width-min: 375;
                 --font-width-max: 1500;
+                
+                --bg-color: #f5f5f5;
+                --card-bg: #ffffff;
+                --card-outline: #b0b0b0;
+                --text-primary: #000000;
+                --text-secondary: #666666;
+                --border-color: #c0c0c0;
+                --button-bg: rgba(0, 0, 0, 0.08);
+                --grid-color: #a0a0a0;
+                --gradient: linear-gradient(135deg, #e37c2d, #f5a742, #f8c34d, #fad859);
+                --primary-color: #e37c2d;
+                --accent-color: #fad859;
+                --shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+                --scrollbar-track: #f0f0f0;
+                --scrollbar-thumb: #c0c0c0;
+                --scrollbar-thumb-hover: #a0a0a0;
+                --verification-color: #4CAF50;
+                --verification-bg: rgba(76, 175, 80, 0.1);
+                --success-color: #4CAF50;
+                --warning-color: #ff9800;
+                --error-color: #f44336;
+                --info-color: #2196F3;
             }
 
-            :where(.fluid) {
-                --fluid-min: calc(
-                    var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
-                );
-                --fluid-max: calc(
-                    var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
-                );
-                --fluid-preferred: calc(
-                    (var(--fluid-max) - var(--fluid-min)) /
-                        (var(--font-width-max) - var(--font-width-min))
-                );
-                --fluid-type: clamp(
-                    (var(--fluid-min) / 16) * 1rem,
-                    ((var(--fluid-min) / 16) * 1rem) -
-                        (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
-                        (var(--fluid-preferred) * var(--variable-unit, 100vi)),
-                    (var(--fluid-max) / 16) * 1rem
-                );
-                font-size: var(--fluid-type);
+            html {
+                color-scheme: light;
             }
 
             *,
@@ -312,18 +54,48 @@
                 box-sizing: border-box;
             }
 
+            ::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: var(--scrollbar-track);
+                border-radius: 5px;
+                border: 1px solid var(--card-outline);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: var(--scrollbar-thumb);
+                border-radius: 5px;
+                border: 1px solid var(--card-outline);
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--scrollbar-thumb-hover);
+            }
+
+            * {
+                scrollbar-width: thin;
+                scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+            }
+
             body {
+                background: var(--bg-color);
                 display: grid;
                 place-items: center;
                 min-height: 100vh;
                 font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
                     Helvetica, Arial, sans-serif, system-ui;
                 line-height: 1.5;
+                color: var(--text-primary);
+                padding: 2rem;
+                margin: 0;
             }
 
             body::before {
                 --size: 45px;
-                --line: #cccccc;
+                --line: var(--grid-color);
                 content: '';
                 height: 100vh;
                 width: 100vw;
@@ -356,14 +128,15 @@
                 transition: opacity 0.2s;
             }
 
+            .web-icon:hover {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+
             .web-icon img {
                 width: 100%;
                 height: 100%;
                 object-fit: contain;
-            }
-
-            :where(.x-link, .web-icon):is(:hover, :focus-visible) {
-                opacity: 1;
             }
 
             .sr-only {
@@ -377,6 +150,611 @@
                 white-space: nowrap;
                 border-width: 0;
             }
+            
+            .mr-2 {
+                margin-right: 0.5rem;
+            }
+            
+            .text-red-500 {
+                color: var(--error-color);
+            }
+            
+            .w-full {
+                width: 100%;
+            }
+            
+            .border {
+                border: 1px solid var(--card-outline);
+            }
+            
+            .rounded-lg {
+                border-radius: 8px;
+            }
+            
+            .p-2 {
+                padding: 0.5rem;
+            }
+            
+            .mt-1 {
+                margin-top: 0.25rem;
+            }
+            
+            .mt-3 {
+                margin-top: 0.75rem;
+            }
+            
+            .mb-2 {
+                margin-bottom: 0.5rem;
+            }
+            
+            .mb-3 {
+                margin-bottom: 0.75rem;
+            }
+            
+            .text-green-600 {
+                color: var(--success-color);
+            }
+            
+            .font-semibold {
+                font-weight: 600;
+            }
+            
+            .text-center {
+                text-align: center;
+            }
+        }
+
+        @layer demo {
+            body {
+                align-content: center;
+                gap: 2rem;
+                margin: 0;
+                padding: 2rem;
+                min-height: 100vh;
+                display: grid;
+                place-items: center;
+            }
+
+            .app-container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 2rem;
+                width: 100%;
+                padding-top: 40px;
+            }
+            
+            main {
+                touch-action: none;
+                padding-block: 2rem;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                align-items: center;
+            }
+            
+            .analysis-tool {
+                padding: 0 0;
+                background-color: transparent;
+                width: 100%;
+            }
+            
+            .analysis-card {
+                background: var(--card-bg);
+                border-radius: 20px;
+                padding: 2.5rem;
+                box-shadow: var(--shadow);
+                transition: all 0.4s ease;
+                margin-bottom: 2rem;
+                width: 100%;
+                margin: 0 auto;
+                border: 2px solid var(--card-outline);
+            }
+            
+            .header-image {
+                text-align: center;
+                margin-bottom: 1.5rem;
+            }
+            
+            .header-image img {
+                max-width: 80%;
+                height: auto;
+            }
+            
+            .main-section {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+                margin-bottom: 30px;
+            }
+            
+            @media (max-width: 992px) {
+                .main-section {
+                    grid-template-columns: 1fr;
+                }
+            }
+            
+            .input-panel, .analysis-panel {
+                background: var(--card-bg);
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: var(--shadow);
+                border: 2px solid var(--card-outline);
+            }
+            
+            .panel-title {
+                color: var(--primary-color);
+                margin-bottom: 1.5rem;
+                font-size: 1.5rem;
+                padding-bottom: 10px;
+                border-bottom: 2px solid rgba(227, 124, 45, 0.3);
+            }
+            
+            .input-area {
+                margin-bottom: 2rem;
+                position: relative;
+            }
+            
+            textarea {
+                width: 100%;
+                min-height: 200px;
+                padding: 1.5rem;
+                border-radius: 12px;
+                border: 2px solid var(--card-outline);
+                background-color: var(--card-bg);
+                color: var(--text-primary);
+                font-size: 1rem;
+                resize: vertical;
+                transition: all 0.3s ease;
+                font-family: inherit;
+                line-height: 1.6;
+                white-space: pre-wrap;
+            }
+            
+            textarea:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
+            }
+            
+            .word-count {
+                position: absolute;
+                bottom: 10px;
+                right: 15px;
+                font-size: 0.85rem;
+                color: var(--text-secondary);
+                background: rgba(255, 255, 255, 0.9);
+                padding: 2px 8px;
+                border-radius: 10px;
+                border: 1px solid var(--card-outline);
+            }
+            
+            .action-buttons {
+                display: flex;
+                gap: 1rem;
+                margin-bottom: 2rem;
+            }
+            
+            .record-btn, .analyze-btn {
+                flex: 1;
+                padding: 1rem 2rem;
+                border: none;
+                border-radius: 30px;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                position: relative;
+                overflow: hidden;
+                z-index: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .record-btn {
+                background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+                color: white;
+            }
+            
+            .record-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.2);
+                transition: all 0.5s;
+                z-index: -1;
+            }
+            
+            .record-btn:hover::before {
+                width: 100%;
+            }
+            
+            .record-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+                opacity: 0.95;
+            }
+            
+            .record-btn.recording {
+                background: linear-gradient(135deg, #f44336, #d32f2f);
+                color: white;
+                animation: pulse 1.5s infinite;
+            }
+            
+            .analyze-btn {
+                background: var(--gradient);
+                color: white;
+            }
+            
+            .analyze-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.2);
+                transition: all 0.5s;
+                z-index: -1;
+            }
+            
+            .analyze-btn:hover::before {
+                width: 100%;
+            }
+            
+            .analyze-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+                border-color: var(--accent-color);
+            }
+            
+            .analyze-btn:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+                border-color: #999;
+                opacity: 0.7;
+            }
+            
+            .analyze-btn:disabled:hover::before {
+                width: 0%;
+            }
+            
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+            
+            .status-message {
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                font-weight: 500;
+                text-align: center;
+                border: 1px solid transparent;
+            }
+            
+            .status-message.info {
+                background: rgba(33, 150, 243, 0.1);
+                color: var(--info-color);
+                border-color: rgba(33, 150, 243, 0.3);
+            }
+            
+            .status-message.success {
+                background: rgba(76, 175, 80, 0.1);
+                color: var(--success-color);
+                border-color: rgba(76, 175, 80, 0.3);
+            }
+            
+            .status-message.error {
+                background: rgba(244, 67, 54, 0.1);
+                color: var(--error-color);
+                border-color: rgba(244, 67, 54, 0.3);
+            }
+            
+            .status-message.warning {
+                background: rgba(255, 152, 0, 0.1);
+                color: var(--warning-color);
+                border-color: rgba(255, 152, 0, 0.3);
+            }
+            
+            .results-section {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+                margin-bottom: 30px;
+            }
+            
+            @media (max-width: 992px) {
+                .results-section {
+                    grid-template-columns: 1fr;
+                }
+            }
+            
+            .score-results, .word-analysis {
+                background: var(--card-bg);
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: var(--shadow);
+                border: 2px solid var(--card-outline);
+            }
+            
+            .score-display {
+                text-align: center;
+                margin: 20px 0;
+            }
+            
+            .score-value {
+                font-size: 4.5rem;
+                font-weight: bold;
+                color: var(--text-primary);
+                line-height: 1;
+            }
+            
+            .score-comment {
+                font-size: 1.2rem;
+                color: var(--text-secondary);
+                margin-top: 15px;
+                padding: 15px;
+                background: rgba(227, 124, 45, 0.05);
+                border-radius: 10px;
+                border-left: 4px solid var(--primary-color);
+            }
+            
+            .word-analysis-content {
+                max-height: 400px;
+                overflow-y: auto;
+                padding-right: 10px;
+            }
+            
+            .word-analysis-content::-webkit-scrollbar {
+                width: 8px;
+            }
+            
+            .word-analysis-content::-webkit-scrollbar-track {
+                background: var(--scrollbar-track);
+                border-radius: 4px;
+            }
+            
+            .word-analysis-content::-webkit-scrollbar-thumb {
+                background: var(--primary-color);
+                border-radius: 4px;
+            }
+            
+            .word-card {
+                background: rgba(227, 124, 45, 0.05);
+                border-radius: 10px;
+                padding: 15px;
+                margin-bottom: 15px;
+                border-left: 4px solid var(--primary-color);
+                border: 1px solid rgba(227, 124, 45, 0.2);
+            }
+            
+            .word-card h4 {
+                margin-bottom: 8px;
+                color: var(--text-primary);
+                font-size: 1.1rem;
+            }
+            
+            .word-card .found-level {
+                display: inline-block;
+                padding: 3px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+                margin-left: 8px;
+            }
+            
+            .level-1 { background: var(--success-color); color: white; }
+            .level-2 { background: var(--info-color); color: white; }
+            .level-3 { background: #8b5cf6; color: white; }
+            
+            .word-card .details {
+                font-size: 14px;
+                color: var(--text-secondary);
+                margin-top: 8px;
+            }
+            
+            .loading {
+                text-align: center;
+                padding: 30px;
+                color: var(--text-secondary);
+            }
+            
+            .loading::after {
+                content: '';
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 3px solid rgba(227, 124, 45, 0.2);
+                border-top: 3px solid var(--primary-color);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin-left: 10px;
+            }
+            
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            .analysis-info {
+                background: rgba(227, 124, 45, 0.05);
+                border-radius: 10px;
+                padding: 15px;
+                margin-bottom: 20px;
+                border-left: 4px solid var(--primary-color);
+                border: 1px solid rgba(227, 124, 45, 0.2);
+            }
+            
+            .analysis-info h4 {
+                color: var(--primary-color);
+                margin-bottom: 10px;
+            }
+            
+            .analysis-info ul {
+                padding-left: 20px;
+                color: var(--text-secondary);
+            }
+            
+            .analysis-info li {
+                margin-bottom: 5px;
+            }
+            
+            .stats-display {
+                margin-top: 1rem;
+            }
+            
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+                margin-top: 1rem;
+            }
+            
+            .stat-card {
+                background: rgba(227, 124, 45, 0.05);
+                border-radius: 10px;
+                padding: 1rem;
+                text-align: center;
+                border: 1px solid rgba(227, 124, 45, 0.2);
+            }
+            
+            .stat-value {
+                font-size: 1.8rem;
+                font-weight: bold;
+                color: var(--primary-color);
+                margin-bottom: 0.5rem;
+            }
+            
+            .stat-label {
+                font-size: 0.9rem;
+                color: var(--text-secondary);
+            }
+            
+            .progress-container {
+                margin-top: 2rem;
+                background-color: var(--card-bg);
+                border-radius: 15px;
+                padding: 1.8rem;
+                box-shadow: var(--shadow);
+                border: 2px solid var(--card-outline);
+                display: none;
+            }
+            
+            .progress-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.2rem;
+            }
+            
+            .progress-title {
+                font-weight: 700;
+                color: var(--primary-color);
+                font-size: 1.3rem;
+            }
+            
+            .progress-status {
+                font-size: 1rem;
+                color: var(--text-primary);
+                font-weight: 500;
+            }
+            
+            .progress-bar {
+                height: 12px;
+                background-color: #e0e0e0;
+                border-radius: 6px;
+                overflow: hidden;
+                margin-bottom: 1.2rem;
+                border: 2px solid #ccc;
+            }
+            
+            .progress-fill {
+                height: 100%;
+                background: var(--gradient);
+                border-radius: 6px;
+                transition: width 0.4s ease;
+            }
+            
+            .app-footer {
+                text-align: center;
+                margin-top: 3rem;
+                padding-top: 2rem;
+                border-top: 2px solid var(--border-color);
+                color: var(--text-secondary);
+            }
+            
+            .app-footer a {
+                color: var(--primary-color);
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+            
+            .app-footer a:hover {
+                text-decoration: underline;
+                color: var(--accent-color);
+            }
+            
+            @media (max-width: 768px) {
+                body {
+                    padding: 1rem;
+                }
+                
+                .analysis-card {
+                    padding: 1.8rem;
+                }
+                
+                .input-panel, .analysis-panel,
+                .score-results, .word-analysis {
+                    padding: 1.5rem;
+                }
+                
+                .action-buttons {
+                    flex-direction: column;
+                }
+                
+                .record-btn, .analyze-btn {
+                    width: 100%;
+                }
+                
+                .app-container {
+                    padding: 1rem;
+                    padding-top: 20px;
+                }
+                
+                main {
+                    gap: 1.5rem;
+                    padding-block: 1rem;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                body {
+                    padding: 0.5rem;
+                }
+                
+                .app-container {
+                    padding: 0.5rem;
+                    padding-top: 15px;
+                }
+                
+                .analysis-card {
+                    padding: 1.5rem;
+                }
+                
+                .score-value {
+                    font-size: 3.5rem;
+                }
+            }
         }
     </style>
 </head>
@@ -386,49 +764,710 @@
     </a>
     
     <div class="app-container">
-        <header class="app-header">
-            <img src="error.png" alt="VANW" />
-        </header>
-        
-        <div class="error-container">
-            <h1 class="error-title">KHÔNG ĐỦ QUYỀN HẠN</h1>
-            
-            <div class="error-message">
-                <p>Xin lỗi, tính năng này hiện chỉ cho phép truy cập nội bộ bởi các nhà phát triển.</p>
+        <main>
+            <div class="analysis-tool">
+                <div class="analysis-card">
+                    <div class="header-image">
+                        <img src="htext1.png" alt="PHÂN TÍCH BIỂU CẢM | VANW">
+                    </div>
+                    
+                    <div class="main-section">
+                        <div class="input-panel">
+                            <h2 class="panel-title">Nhập liệu văn bản</h2>
+                            
+                            
+                            <div class="input-area">
+                                <textarea id="textInput" placeholder="Nhập văn bản tiếng Việt cần phân tích... Ví dụ: Xin chào các bạn! Mình là Tuấn, rất vui được gặp mọi người hôm nay..."></textarea>
+                                <div class="word-count" id="wordCount">0 từ</div>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button class="record-btn" id="recordBtn">
+                                    <i class="fas fa-microphone mr-2"></i>
+                                    <span id="recordText">Bắt đầu thu âm</span>
+                                </button>
+                                <button class="analyze-btn" id="analyzeBtn">
+                                    <i class="fas fa-chart-bar mr-2"></i>
+                                    Phân Tích Toàn Bộ
+                                </button>
+                            </div>
+                            
+                            <div id="statusMessage" class="status-message"></div>
+                            
+                            <div class="stats-display" id="analysisStats">
+                                <!-- Stats sẽ được hiển thị ở đây -->
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-panel">
+                            <h2 class="panel-title">Thông tin phân tích</h2>
+                            <div id="loadingIndicator" class="loading" style="display: none;">
+                                <span>Đang phân tích từ vựng...</span>
+                            </div>
+                            <div id="analysisDetails">
+                                <!-- Thông tin phân tích sẽ được hiển thị ở đây -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-header">
+                            <div class="progress-title">Đang phân tích biểu cảm</div>
+                            <div class="progress-status" id="progressStatus">Đang xử lý...</div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="results-section">
+                        <div class="score-results">
+                            <h2 class="panel-title">Kết quả đánh giá phát âm</h2>
+                            <div id="scoreSection">
+                                <div class="loading">
+                                    <span>Đang chờ kết quả từ hệ thống...</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="word-analysis">
+                            <h2 class="panel-title">Phân tích từ vựng</h2>
+                            <div id="wordAnalysis" class="word-analysis-content">
+                                <div class="loading">
+                                    <span>Kết quả phân tích từ vựng sẽ hiển thị ở đây...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </main>
         
         <footer class="app-footer">
-            <div class="footer-links">
-                <p>Được tạo bởi <a href="https://www.facebook.com/hoangminhtuan.hmtuan" target="_blank">Hoàng Minh Tuấn</a> và <a href="https://www.facebook.com/chuong.truong.130409" target="_blank">Trương Viết Duy Chương</a></p>
-            </div>
+            <p>Được tạo bởi <a href="https://www.facebook.com/hoangminhtuan.hmtuan" target="_blank">Hoàng Minh Tuấn</a> và <a href="https://www.facebook.com/chuong.truong.130409" target="_blank">Trương Viết Duy Chương</a></p>
+            <p>Hệ thống Phân Tích Biểu Cảm | VANW</p>
         </footer>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const errorContainer = document.querySelector('.error-container');
-            errorContainer.style.opacity = '0';
-            errorContainer.style.transform = 'translateY(20px)';
+        // ========== CẤU HÌNH HỆ THỐNG ==========
+        // Cấu hình Supabase
+        const SUPABASE_URL = "https://pivoynefmvqhgazvqkat.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_mUVt3K5VKgcFloi97WK5Sw_DTu6SdG8";
+        const TABLE_NAME = "items";
+        
+        // Cấu hình Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyApPDeqgSyqFad6noRxdlZocBhNXj3GJ4k",
+            authDomain: "hmtuan002-faa7c.firebaseapp.com",
+            projectId: "hmtuan002-faa7c",
+            storageBucket: "hmtuan002-faa7c.firebasestorage.app",
+            messagingSenderId: "974600759602",
+            appId: "1:974600759602:web:a8d094429ddb75a17f0f2b",
+            measurementId: "G-16F7BSVKWZ"
+        };
+        
+        // Khởi tạo Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        // ========== BIẾN TOÀN CỤC ==========
+        let isRecording = false;
+        let pollingInterval = null;
+        let pollingTimeout = null;
+        let currentDataId = null;
+        let isAnalyzing = false;
+        
+        // ========== DOM ELEMENTS ==========
+        const recordBtn = document.getElementById('recordBtn');
+        const recordText = document.getElementById('recordText');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        const scoreSection = document.getElementById('scoreSection');
+        const wordAnalysis = document.getElementById('wordAnalysis');
+        const analysisStats = document.getElementById('analysisStats');
+        const analysisDetails = document.getElementById('analysisDetails');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressStatus = document.getElementById('progressStatus');
+        const wordCountElement = document.getElementById('wordCount');
+        const textInput = document.getElementById('textInput');
+        
+        // ========== HÀM TIỆN ÍCH ==========
+        // Đếm số từ
+        function countWords(text) {
+            return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+        }
+        
+        // Cập nhật số từ
+        function updateWordCount() {
+            const count = countWords(textInput.value);
+            wordCountElement.textContent = `${count} từ`;
+            
+            if (count < 10) {
+                wordCountElement.style.color = 'var(--error-color)';
+                wordCountElement.style.fontWeight = '600';
+            } else {
+                wordCountElement.style.color = 'var(--text-secondary)';
+                wordCountElement.style.fontWeight = 'normal';
+            }
+        }
+        
+        // Loại bỏ dấu câu và ký tự đặc biệt
+        function removePunctuation(text) {
+            return text
+                .replace(/[.,!?;:'"()\[\]{}\-\–\—]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+        
+        // Cập nhật trạng thái hệ thống
+        function updateStatus(message, type = 'info') {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`;
+        }
+        
+        // Hiển thị thống kê phân tích
+        function displayAnalysisStats(originalWords, cleanedWords) {
+            const wordCount = cleanedWords.length;
+            const charCount = cleanedWords.join(' ').length;
+            const uniqueWords = [...new Set(cleanedWords.map(word => word.toLowerCase()))].length;
+            
+            analysisStats.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${originalWords.length}</div>
+                        <div class="stat-label">Từ gốc</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${wordCount}</div>
+                        <div class="stat-label">Từ đã xử lý</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${charCount}</div>
+                        <div class="stat-label">Ký tự</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${uniqueWords}</div>
+                        <div class="stat-label">Từ khác nhau</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Cập nhật thanh tiến trình
+        function updateProgress(percent, message) {
+            progressFill.style.width = `${percent}%`;
+            progressStatus.textContent = message;
+            
+            if (percent >= 100) {
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                }, 1000);
+            }
+        }
+        
+        // Hiển thị thông báo
+        function showNotification(message, type = 'info') {
+            const oldNotification = document.querySelector('.notification');
+            if (oldNotification) {
+                oldNotification.remove();
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+            
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-${icon}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 30px;
+                right: 30px;
+                background: ${type === 'success' ? 'var(--success-color)' : type === 'error' ? 'var(--error-color)' : type === 'warning' ? 'var(--warning-color)' : 'var(--info-color)'};
+                color: white;
+                padding: 16px 24px;
+                border-radius: 12px;
+                box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+                z-index: 10000;
+                animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), fadeOut 0.4s ease 3.6s;
+                animation-fill-mode: forwards;
+                max-width: 400px;
+                border: 2px solid rgba(255,255,255,0.3);
+            `;
+            
+            document.body.appendChild(notification);
             
             setTimeout(() => {
-                errorContainer.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                errorContainer.style.opacity = '1';
-                errorContainer.style.transform = 'translateY(0)';
-            }, 100);
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 4000);
+        }
+        
+        // ========== PHÂN TÍCH TỪ VỰNG VỚI SUPABASE ==========
+        async function analyzeVocabulary(text) {
+            if (!text.trim()) {
+                wordAnalysis.innerHTML = '<div class="status-message error">Vui lòng nhập văn bản để phân tích</div>';
+                return { results: [], totalWords: 0, foundCount: 0 };
+            }
             
-            document.querySelectorAll('.contact-item').forEach(item => {
-                item.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-3px)';
-                    this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
-                });
+            analysisDetails.innerHTML = '<div class="loading"><span>Đang phân tích từ vựng...</span></div>';
+            wordAnalysis.innerHTML = '<div class="loading"><span>Đang phân tích từ vựng...</span></div>';
+            
+            // Loại bỏ dấu câu và chuẩn hóa văn bản
+            const cleanedText = removePunctuation(text);
+            const words = cleanedText.split(/\s+/).filter(word => word.length > 0);
+            
+            if (words.length === 0) {
+                wordAnalysis.innerHTML = '<div class="status-message error">Không tìm thấy từ nào sau khi xử lý</div>';
+                analysisDetails.innerHTML = '';
+                return { results: [], totalWords: 0, foundCount: 0 };
+            }
+            
+            displayAnalysisStats(text.split(/\s+/).filter(w => w.length > 0), words);
+            
+            let i = 0;
+            const results = [];
+            
+            // Hàm tìm cụm từ trong Supabase
+            async function findPhrase(phraseWords, length) {
+                const phrase = phraseWords.join(" ");
+                try {
+                    const res = await fetch(
+                        `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?name=ilike.${encodeURIComponent(phrase)}`,
+                        {
+                            headers: {
+                                "apikey": SUPABASE_ANON_KEY,
+                                "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+                                "Content-Type": "application/json"
+                            }
+                        }
+                    );
+                    
+                    const data = await res.json();
+                    return data.length > 0 ? { found: true, data: data[0], phrase, length } : { found: false, phrase, length };
+                } catch (err) {
+                    console.error(`Lỗi khi tìm cụm "${phrase}":`, err);
+                    return { found: false, phrase, length, error: true };
+                }
+            }
+            
+            // Phân tích từng cụm từ
+            let analyzedCount = 0;
+            const totalToAnalyze = words.length;
+            
+            while (i < words.length) {
+                let found = false;
+                let foundData = null;
+                let foundPhrase = "";
+                let foundLength = 0;
                 
-                item.addEventListener('mouseleave', function() {
-                    this.style.transform = '';
-                    this.style.boxShadow = '';
-                });
+                // Thử cụm 3 từ
+                if (i + 2 < words.length) {
+                    const phraseWords = [words[i], words[i + 1], words[i + 2]];
+                    const result = await findPhrase(phraseWords, 3);
+                    
+                    if (result.found && !result.error) {
+                        found = true;
+                        foundData = result.data;
+                        foundPhrase = result.phrase;
+                        foundLength = result.length;
+                        i += 3;
+                    }
+                }
+                
+                // Thử cụm 2 từ
+                if (!found && i + 1 < words.length) {
+                    const phraseWords = [words[i], words[i + 1]];
+                    const result = await findPhrase(phraseWords, 2);
+                    
+                    if (result.found && !result.error) {
+                        found = true;
+                        foundData = result.data;
+                        foundPhrase = result.phrase;
+                        foundLength = result.length;
+                        i += 2;
+                    }
+                }
+                
+                // Thử từ đơn
+                if (!found) {
+                    const phraseWords = [words[i]];
+                    const result = await findPhrase(phraseWords, 1);
+                    
+                    if (result.found && !result.error) {
+                        found = true;
+                        foundData = result.data;
+                        foundPhrase = result.phrase;
+                        foundLength = result.length;
+                        i += 1;
+                    }
+                }
+                
+                // Lưu kết quả
+                if (found) {
+                    results.push({
+                        phrase: foundPhrase,
+                        data: foundData,
+                        length: foundLength,
+                        position: i - foundLength
+                    });
+                } else {
+                    results.push({
+                        phrase: words[i],
+                        data: null,
+                        length: 0,
+                        position: i
+                    });
+                    i += 1;
+                }
+                
+                // Cập nhật tiến trình
+                analyzedCount++;
+                const percent = Math.round((analyzedCount / totalToAnalyze) * 100);
+                updateProgress(percent, `Đang phân tích từ vựng... ${percent}%`);
+            }
+            
+            // Hiển thị kết quả
+            displayVocabularyResults(results);
+            analysisDetails.innerHTML = '';
+            
+            return {
+                results,
+                totalWords: words.length,
+                foundCount: results.filter(r => r.data).length
+            };
+        }
+        
+        // Hiển thị kết quả phân tích từ vựng
+        function displayVocabularyResults(results) {
+            if (results.length === 0) {
+                wordAnalysis.innerHTML = '<div class="status-message error">Không tìm thấy kết quả nào</div>';
+                return;
+            }
+            
+            const foundCount = results.filter(r => r.data).length;
+            const notFoundCount = results.length - foundCount;
+            
+            let html = `
+                <div style="margin-bottom: 20px; padding: 15px; background: rgba(76, 175, 80, 0.1); border-radius: 8px; border-left: 4px solid var(--success-color);">
+                    <h4 style="margin: 0 0 10px 0; color: var(--success-color);">
+                        <i class="fas fa-chart-bar mr-2"></i> Kết quả phân tích
+                    </h4>
+                    <p style="margin: 0; font-size: 0.95rem;">
+                        <strong>Tìm thấy ${foundCount} cụm từ</strong> trong tổng số ${results.length} đơn vị
+                        <br><small>${notFoundCount} từ/cụm từ không có trong cơ sở dữ liệu</small>
+                    </p>
+                </div>
+            `;
+            
+            results.forEach((result, index) => {
+                if (result.data) {
+                    html += `
+                        <div class="word-card">
+                            <h4>
+                                <i class="fas fa-check-circle mr-2" style="color: var(--success-color);"></i>
+                                ${result.phrase}
+                                <span class="found-level level-${result.length}">Cụm ${result.length}</span>
+                            </h4>
+                            <div class="details">
+                                ${result.data.ct ? `<p><strong><i class="fas fa-comment mr-2"></i>CT:</strong> ${result.data.ct}</p>` : ''}
+                                ${result.data.dl && result.data.dl.length > 0 ? `<p><strong><i class="fas fa-list mr-2"></i>DL:</strong> ${result.data.dl.join(" - ")}</p>` : ''}
+                                ${result.data.ddd ? `<p><strong><i class="fas fa-info-circle mr-2"></i>DDD:</strong> ${result.data.ddd}</p>` : ''}
+                                ${result.data.pl && result.data.pl.length > 0 ? `<p><strong><i class="fas fa-tags mr-2"></i>PL:</strong> ${result.data.pl.join(" - ")}</p>` : ''}
+                                <p style="color: #888; font-size: 12px; margin-top: 5px;">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>Vị trí: ${result.position + 1}
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="word-card" style="border-left-color: #ccc; background: rgba(0, 0, 0, 0.02);">
+                            <h4>
+                                <i class="fas fa-exclamation-circle mr-2" style="color: #999;"></i>
+                                ${result.phrase}
+                                <span style="background: #999; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">
+                                    Không tìm thấy
+                                </span>
+                            </h4>
+                            <div class="details">
+                                <p style="color: #999; font-style: italic;">
+                                    <i class="fas fa-database mr-2"></i>Không có dữ liệu cho từ/cụm từ này trong cơ sở dữ liệu
+                                </p>
+                                <p style="color: #888; font-size: 12px; margin-top: 5px;">
+                                    <i class="fas fa-map-marker-alt mr-2"></i>Vị trí: ${result.position + 1}
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                }
             });
+            
+            wordAnalysis.innerHTML = html;
+        }
+        
+        // ========== LẤY ĐIỂM SỐ TỪ FIREBASE ==========
+        async function getScoreFromFirebase() {
+            scoreSection.innerHTML = '<div class="loading"><span>Đang chờ kết quả đánh giá phát âm...</span></div>';
+            
+            return new Promise((resolve) => {
+                let elapsedTime = 0;
+                const maxTime = 10000;
+                const interval = 250;
+                
+                pollingInterval = setInterval(async () => {
+                    elapsedTime += interval;
+                    
+                    try {
+                        const snapshot = await db.collection('scores')
+                            .orderBy('timestamp', 'desc')
+                            .limit(1)
+                            .get();
+                        
+                        if (!snapshot.empty) {
+                            const doc = snapshot.docs[0];
+                            const data = doc.data();
+                            currentDataId = doc.id;
+                            
+                            // Xóa dữ liệu sau khi lấy
+                            await db.collection('scores').doc(currentDataId).delete();
+                            
+                            clearInterval(pollingInterval);
+                            pollingInterval = null;
+                            
+                            displayScoreResults(data);
+                            resolve(data);
+                            return;
+                        }
+                        
+                        // Cập nhật trạng thái chờ
+                        if (elapsedTime % 1000 === 0) {
+                            scoreSection.innerHTML = `<div class="loading"><span>Đang chờ kết quả... (${elapsedTime/1000}s/10s)</span></div>`;
+                        }
+                        
+                        // Hết thời gian chờ
+                        if (elapsedTime >= maxTime) {
+                            clearInterval(pollingInterval);
+                            pollingInterval = null;
+                            
+                            scoreSection.innerHTML = `
+                                <div style="text-align: center; padding: 30px;">
+                                    <div style="color: var(--error-color); font-size: 48px; margin-bottom: 10px;">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <h3 style="color: var(--text-primary); margin-bottom: 10px;">Hết thời gian chờ</h3>
+                                    <p style="color: var(--text-secondary);">Không nhận được kết quả từ hệ thống đánh giá phát âm.</p>
+                                </div>
+                            `;
+                            resolve(null);
+                        }
+                        
+                    } catch (error) {
+                        console.error('Lỗi khi đọc dữ liệu:', error);
+                        clearInterval(pollingInterval);
+                        pollingInterval = null;
+                        
+                        scoreSection.innerHTML = `
+                            <div style="text-align: center; padding: 30px;">
+                                <div style="color: var(--error-color); font-size: 48px; margin-bottom: 10px;">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <h3 style="color: var(--text-primary); margin-bottom: 10px;">Lỗi kết nối</h3>
+                                <p style="color: var(--text-secondary);">Không thể kết nối đến hệ thống đánh giá.</p>
+                            </div>
+                        `;
+                        resolve(null);
+                    }
+                }, interval);
+            });
+        }
+        
+        // Hiển thị kết quả điểm số
+        function displayScoreResults(data) {
+            const score = data.score;
+            
+            let comment = '';
+            switch(score) {
+                case 10: comment = "Có vẻ bạn đã đọc sai văn bản"; break;
+                case 30: comment = "Bạn cần cải thiện phát âm và ngữ điệu"; break;
+                case 50: comment = "Mức độ trung bình, cần luyện tập thêm"; break;
+                case 70: comment = "Khá tốt, nhưng vẫn còn một số lỗi nhỏ"; break;
+                case 80: comment = "Tốt, phát âm rõ ràng và tự nhiên"; break;
+                case 90: comment = "Xuất sắc! Phát âm chuẩn và truyền cảm"; break;
+                default: comment = "Điểm số không xác định";
+            }
+            
+            let color = 'var(--primary-color)';
+            if (score >= 80) color = 'var(--success-color)';
+            else if (score >= 50) color = 'var(--warning-color)';
+            else color = 'var(--error-color)';
+            
+            scoreSection.innerHTML = `
+                <div class="score-display">
+                    <div class="score-value" style="color: ${color};">${score}</div>
+                    <div style="font-size: 1.2rem; color: var(--text-secondary); margin: 10px 0;">
+                        <i class="fas fa-star mr-2"></i>/ 100 điểm
+                    </div>
+                </div>
+                <div class="score-comment">
+                    <i class="fas fa-comment-dots mr-2"></i>${comment}
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: rgba(227, 124, 45, 0.05); border-radius: 10px; border-left: 4px solid var(--primary-color);">
+                    <p style="color: var(--primary-color); margin-bottom: 5px; font-weight: 600;">
+                        <i class="fas fa-chart-line mr-2"></i>Phân tích chi tiết:
+                    </p>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 5px;">
+                        Điểm số được tính dựa trên độ chính xác phát âm, ngữ điệu và tốc độ đọc.
+                    </p>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 5px;">
+                        <i class="fas fa-robot mr-2"></i>Kết quả từ hệ thống AI đánh giá phát âm.
+                    </p>
+                </div>
+            `;
+        }
+        
+        // ========== XỬ LÝ SỰ KIỆN ==========
+        // Mô phỏng thu âm
+        recordBtn.addEventListener('click', () => {
+            isRecording = !isRecording;
+            
+            if (isRecording) {
+                recordBtn.classList.add('recording');
+                recordText.textContent = 'Đang thu âm...';
+                recordBtn.innerHTML = '<i class="fas fa-microphone-alt mr-2"></i>Đang thu âm...';
+                updateStatus('Đang thu âm (giả lập)... Nhấn lại để dừng', 'info');
+            } else {
+                recordBtn.classList.remove('recording');
+                recordText.textContent = 'Bắt đầu thu âm';
+                recordBtn.innerHTML = '<i class="fas fa-microphone mr-2"></i>Bắt đầu thu âm';
+                updateStatus('Đã dừng thu âm', 'success');
+                setTimeout(() => updateStatus(''), 2000);
+            }
         });
+        
+        // Xử lý phân tích toàn bộ
+        analyzeBtn.addEventListener('click', async () => {
+            if (isAnalyzing) return;
+            
+            const textInputValue = document.getElementById('textInput').value;
+            
+            if (!textInputValue.trim() && !isRecording) {
+                updateStatus('Vui lòng nhập văn bản hoặc thu âm trước khi phân tích', 'error');
+                return;
+            }
+            
+            isAnalyzing = true;
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang phân tích...';
+            
+            // Hiển thị thanh tiến trình
+            progressContainer.style.display = 'block';
+            updateProgress(0, 'Bắt đầu phân tích...');
+            
+            // 1. Cập nhật trạng thái ban đầu
+            updateStatus('Bắt đầu phân tích toàn bộ hệ thống...', 'info');
+            updateProgress(10, 'Đang chuẩn bị dữ liệu...');
+            
+            // 2. Phân tích từ vựng (Supabase)
+            updateStatus('Đang phân tích từ vựng...', 'info');
+            updateProgress(30, 'Đang phân tích từ vựng...');
+            
+            const vocabularyResult = await analyzeVocabulary(textInputValue);
+            
+            // 3. Đồng thời lấy điểm số từ Firebase
+            updateStatus('Đang chờ kết quả đánh giá phát âm...', 'info');
+            updateProgress(70, 'Đang đánh giá phát âm...');
+            
+            const scorePromise = getScoreFromFirebase();
+            
+            // 4. Đợi cả hai hoàn thành
+            await Promise.all([vocabularyResult, scorePromise]);
+            
+            // 5. Hiển thị kết quả cuối cùng
+            updateProgress(100, 'Hoàn thành!');
+            updateStatus(`✅ Phân tích hoàn thành! Tìm thấy ${vocabularyResult.foundCount} cụm từ`, 'success');
+            
+            // Hiển thị thông báo thành công
+            showNotification(`Phân tích hoàn thành! Tìm thấy ${vocabularyResult.foundCount} cụm từ`, 'success');
+            
+            // 6. Reset trạng thái
+            setTimeout(() => {
+                isAnalyzing = false;
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = '<i class="fas fa-chart-bar mr-2"></i>Phân Tích Toàn Bộ';
+                updateStatus('');
+            }, 2000);
+        });
+        
+        // Thêm ví dụ mẫu
+        document.getElementById('textInput').value = "Xin chào các bạn! Mình là Tuấn, rất vui được gặp mọi người.";
+        updateWordCount();
+        
+        // Lắng nghe sự kiện input để cập nhật số từ
+        textInput.addEventListener('input', updateWordCount);
+        
+        // Cleanup khi đóng trang
+        window.addEventListener('beforeunload', () => {
+            if (pollingInterval) clearInterval(pollingInterval);
+            if (pollingTimeout) clearTimeout(pollingTimeout);
+        });
+        
+        // Thêm CSS cho animation thông báo
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%) translateY(-20px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0) translateY(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes fadeOut {
+                from {
+                    opacity: 1;
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(100%) translateY(-20px);
+                }
+            }
+            
+            .notification-content {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .notification-content i {
+                font-size: 1.3rem;
+            }
+            
+            .notification-content span {
+                font-size: 1rem;
+                font-weight: 500;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        console.log("Hệ thống Phân Tích Biểu Cảm | VANW đã sẵn sàng!");
     </script>
 </body>
 </html>
