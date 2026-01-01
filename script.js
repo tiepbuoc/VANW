@@ -300,9 +300,8 @@ closePopup.addEventListener('click', function() {
 // ==============================================
 // API CONFIGURATION
 // ==============================================
-
-const REVERSED_API_KEY = "AIzaSyDM-Z4WqZ1lQVy-r_uj7q04Zfr9kJlvHDA";
-const GEMINI_API_KEY = CHATBOT_REVERSED_API_KEY.split('').reverse().join('');
+ const REVERSED_API_KEY = "AIzaSyDM-Z4WqZ1lQVy-r_uj7q04Zfr9kJlvHDA";
+const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
 
 
 const GEMINI_CONFIG = {
@@ -1646,6 +1645,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     };
 });
+
 
 
 
