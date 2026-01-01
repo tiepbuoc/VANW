@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let db = null;
     
 const MAP_REVERSED_API_KEY = "AIzaSyDM-Z4WqZ1lQVy-r_uj7q04Zfr9kJlvHDA";
-const MAP_API_KEY = CHATBOT_REVERSED_API_KEY.split('').reverse().join('');
+const MAP_API_KEY = MAP_REVERSED_API_KEY.split('').reverse().join('');
 
 
     const countryNameMap = {
@@ -2131,5 +2131,6 @@ const MAP_API_KEY = CHATBOT_REVERSED_API_KEY.split('').reverse().join('');
     
     console.log('Map popup script đã được tải đầy đủ và ĐÃ SỬA TẤT CẢ LỖI');
 });
+
 
 
