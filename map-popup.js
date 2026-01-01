@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let userLocation = null;
     let db = null;
     
-const MAP_REVERSED_API_KEY = "AIzaSyDM-Z4WqZ1lQVy-r_uj7q04Zfr9kJlvHDA";
+const MAP_REVERSED_API_KEY = "ADHvlJk9rfZ40q7ju_r-yVQl1ZqW4Z-MDySzAI";
 const MAP_API_KEY = MAP_REVERSED_API_KEY.split('').reverse().join('');
 
 
@@ -2131,6 +2131,7 @@ const MAP_API_KEY = MAP_REVERSED_API_KEY.split('').reverse().join('');
     
     console.log('Map popup script đã được tải đầy đủ và ĐÃ SỬA TẤT CẢ LỖI');
 });
+
 
 
 
