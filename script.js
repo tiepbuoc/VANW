@@ -301,9 +301,9 @@ closePopup.addEventListener('click', function() {
 // API CONFIGURATION
 // ==============================================
 
-// API Key được lấy trực tiếp từ mã nguồn (không cần đọc file)
-const REVERSED_API_KEY = "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA";
-const GEMINI_API_KEY = "AIzaSyDq_sSF2kgHzuDgYNpQef6EDrk8MsP0vlM";
+const REVERSED_API_KEY = "AIzaSyDM-Z4WqZ1lQVy-r_uj7q04Zfr9kJlvHDA";
+const GEMINI_API_KEY = CHATBOT_REVERSED_API_KEY.split('').reverse().join('');
+
 
 const GEMINI_CONFIG = {
     apiKey: GEMINI_API_KEY,
@@ -1646,5 +1646,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     };
 });
+
 
 
