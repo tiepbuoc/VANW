@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý & Chấm điểm - VANW</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    :root {
+    --font-size-max: 20;
+    --font-ratio-min: 1.2;
+    --font-ratio-max: 1.33;
+    --font-width-min: 375;
+    --font-width-max: 1500;
+    
+    --bg-color: #f5f5f5;
+    --card-bg: #ffffff;
+    --card-outline: #b0b0b0;
+    --text-primary: #000000;
+    --text-secondary: #666666;
+    --border-color: #c0c0c0;
+    --grid-color: #a0a0a0;
+    --gradient: linear-gradient(135deg, #e37c2d, #f5a742, #f8c34d, #fad859);
+    --primary-color: #e37c2d;
+    --accent-color: #fad859;
+    --shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    --success-color: #4CAF50;
+    --error-color: #f44336;
+    --warning-color: #ff9800;
+    --info-color: #2196F3;
+}
+
+html {
+    color-scheme: light;
+}
+
+*, *:after, *:before {
+    box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 5px;
+    border: 1px solid #b0b0b0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-radius: 5px;
+    border: 1px solid #b0b0b0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #c0c0c0 #f0f0f0;
+}
+
+body {
+    background: var(--bg-color);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.5;
+    color: var(--text-primary);
+    margin: 0;
+    padding: 1.5rem;
+    overflow-x: hidden;
+    min-height: 100vh;
+    align-content: center;
+    display: grid;
+    place-items: center;
+}
+
+body::before {
+    --size: 45px;
+    --line: var(--grid-color);
+    content: '';
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    background: 
+        linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) calc(var(--size) * 0.36) 50% / var(--size) var(--size),
+        linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0% calc(var(--size) * 0.32) / var(--size) var(--size);
+    mask: linear-gradient(-20deg, transparent 50%, white);
+    top: 0;
+    transform-style: flat;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.8;
+}
+
+.web-icon {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: 48px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    z-index: 100;
+}
+
+.web-icon:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.web-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.user-info {
+    display: none !important;
+}
+
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 10px;
+    width: 100%;
+    position: relative;
+}
+
+.page-title {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-title img {
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.tab-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    width: 100%;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.tab-btn {
+    -webkit-tap-highlight-color: #0000;
+    padding: 12px 24px;
+    background: var(--card-bg);
+    border: 3px solid var(--primary-color);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    box-shadow: 0 3px 8px rgba(237, 120, 57, 0.2);
+    flex-shrink: 0;
+}
+
+.tab-btn:hover {
+    background: rgba(227, 124, 45, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 5px 12px rgba(237, 120, 57, 0.3);
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 10px rgba(227, 124, 45, 0.4);
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    border: 3px solid var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--card-outline);
+}
+
+.card-header h3 {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    -webkit-tap-highlight-color: #0000;
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 3px solid var(--primary-color);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 12px rgba(237, 120, 57, 0.2);
+    cursor: pointer;
+}
+
+.stat-card:hover {
+    box-shadow: 0 8px 20px rgba(237, 120, 57, 0.3);
+    border-color: #ff8c42;
+}
+
+.stat-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.8rem;
+    color: white;
+    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon.pending {
+    background: linear-gradient(135deg, var(--warning-color), #ffb74d);
+}
+
+.stat-icon.graded {
+    background: linear-gradient(135deg, var(--success-color), #66bb6a);
+}
+
+.stat-icon.total {
+    background: linear-gradient(135deg, var(--primary-color), #f5a742);
+}
+
+.stat-icon.exams {
+    background: linear-gradient(135deg, var(--info-color), #64b5f6);
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    min-height: 1.5rem;
+    line-height: 1.5;
+}
+
+.filter-select {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 3px solid var(--primary-color);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    height: 44px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(237, 120, 57, 0.1);
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
+}
+
+.search-box {
+    position: relative;
+    flex: 2;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    border-radius: 8px;
+    border: 3px solid var(--primary-color);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    height: 44px;
+    box-sizing: border-box;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(237, 120, 57, 0.1);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    z-index: 1;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.search-icon i {
+    display: block;
+    line-height: 1;
+}
+
+.exams-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--primary-color);
+}
+
+.exams-table th {
+    background: rgba(227, 124, 45, 0.2);
+    color: var(--primary-color);
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.exams-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    vertical-align: middle;
+}
+
+.exams-table tr:hover {
+    background: rgba(227, 124, 45, 0.05);
+}
+
+.exam-code {
+    font-family: monospace;
+    font-weight: 600;
+    color: var(--primary-color);
+    background: rgba(227, 124, 45, 0.1);
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-block;
+    border: 1px solid rgba(227, 124, 45, 0.3);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 2px solid;
+}
+
+.status-pending {
+    background: rgba(255, 152, 0, 0.1);
+    color: var(--warning-color);
+    border-color: rgba(255, 152, 0, 0.3);
+}
+
+.status-graded {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.status-submitted {
+    background: rgba(33, 150, 243, 0.1);
+    color: var(--info-color);
+    border-color: rgba(33, 150, 243, 0.3);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    -webkit-tap-highlight-color: #0000;
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn:hover {
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+}
+
+.view-btn {
+    background: rgba(33, 150, 243, 0.1);
+    color: var(--info-color);
+    border: 2px solid rgba(33, 150, 243, 0.3);
+}
+
+.grade-btn {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+    border: 2px solid rgba(76, 175, 80, 0.3);
+}
+
+.delete-btn {
+    background: rgba(244, 67, 54, 0.1);
+    color: var(--error-color);
+    border: 2px solid rgba(244, 67, 54, 0.3);
+}
+
+.grading-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.grading-header {
+    background: var(--gradient);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    border: 4px solid var(--accent-color);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.grading-header h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.8rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.student-info {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 15px;
+    border-radius: 25px;
+    backdrop-filter: blur(5px);
+}
+
+.grading-content {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    border: 3px solid var(--primary-color);
+    margin-bottom: 2rem;
+}
+
+.grading-question {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 10px;
+    border-left: 5px solid var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.grading-question:hover {
+    background: rgba(227, 124, 45, 0.05);
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.question-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.question-points {
+    background: var(--primary-color);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-left: 1rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.student-answer {
+    background: var(--card-bg);
+    border: 3px solid var(--card-outline);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.grading-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.score-input {
+    width: 100px;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 3px solid var(--primary-color);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(237, 120, 57, 0.1);
+}
+
+.score-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
+}
+
+.score-slider {
+    flex: 1;
+    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: linear-gradient(to right, var(--error-color), var(--warning-color), var(--success-color));
+    border-radius: 4px;
+    outline: none;
+    border: 2px solid var(--card-outline);
+}
+
+.score-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.score-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.feedback-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 3px solid var(--primary-color);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
+    line-height: 1.6;
+    resize: vertical;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(237, 120, 57, 0.1);
+}
+
+.feedback-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
+}
+
+.grading-summary {
+    background: rgba(227, 124, 45, 0.1);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.total-score {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.grading-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.grading-action-btn {
+    -webkit-tap-highlight-color: #0000;
+    padding: 14px 28px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.grading-action-btn:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.save-btn {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: 3px solid #45a049;
+}
+
+.cancel-btn {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border: 3px solid var(--primary-color);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    border: 4px solid var(--primary-color);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 2px solid var(--primary-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(227, 124, 45, 0.1);
+}
+
+.modal-header h3 {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.2s;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-modal:hover {
+    color: var(--primary-color);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-footer {
+    padding: 1.5rem;
+    border-top: 2px solid var(--primary-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    background: rgba(227, 124, 45, 0.05);
+}
+
+.exam-type-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 8px;
+    vertical-align: middle;
+    border: 2px solid;
+}
+
+.exam-type-owned {
+    background: rgba(33, 150, 243, 0.1);
+    color: var(--info-color);
+    border-color: rgba(33, 150, 243, 0.3);
+}
+
+.exam-type-public {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.exam-type-shared {
+    background: rgba(255, 152, 0, 0.1);
+    color: var(--warning-color);
+    border-color: rgba(255, 152, 0, 0.3);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.notification {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background: var(--success-color);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    z-index: 10000;
+    animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), fadeOut 0.4s ease 3.6s;
+    animation-fill-mode: forwards;
+    max-width: 400px;
+    border: 3px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.notification.error {
+    background: var(--error-color);
+}
+
+.notification.warning {
+    background: var(--warning-color);
+}
+
+.notification.info {
+    background: var(--info-color);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%) translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; transform: translateX(100%) translateY(-20px); }
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(227, 124, 45, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1024px) {
+    .exams-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    
+    .app-container {
+        padding-top: 5px;
+    }
+    
+    .page-title {
+        height: 50px;
+        margin-bottom: 1rem;
+    }
+    
+    .tab-navigation {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .tab-btn {
+        width: auto;
+        max-width: none;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group, .search-box {
+        min-width: 100%;
+        height: auto;
+    }
+    
+    .search-box {
+        height: auto;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .student-info {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .grading-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .score-input {
+        width: 100%;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 0.5rem;
+    }
+    
+    .notification {
+        top: 20px;
+        right: 20px;
+        left: 20px;
+        max-width: none;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 0.5rem;
+    }
+    
+    .page-title {
+        height: 40px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .grading-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .grading-header {
+        padding: 1.5rem;
+    }
+    
+    .grading-content {
+        padding: 1.5rem;
+    }
+    
+    .question-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .question-points {
+        align-self: flex-start;
+    }
+    
+    .tab-navigation {
+        gap: 0.25rem;
+    }
+    
+    .tab-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Cải thiện hiển thị nội dung */
+.markdown-content {
+    line-height: 1.6;
+}
+
+.markdown-content h1, .markdown-content h2, .markdown-content h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.markdown-content p {
+    margin-bottom: 0.5rem;
+}
+
+.markdown-content ul, .markdown-content ol {
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.markdown-content li {
+    margin-bottom: 0.25rem;
+}
+
+.markdown-content strong {
+    color: var(--primary-color);
+}
+    </style>
+</head>
+<body>
+    <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
+        <img src="logo.png" alt="Website Icon" />
+    </a>
+    
+    <div class="app-container">
+        <h1 class="page-title">
+            <img src="htext6.png" alt="QUẢN LÝ & CHẤM ĐIỂM BÀI THI" />
+        </h1>
+        
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="dashboard">
+                <i class="fas fa-chart-bar"></i> Tổng quan
+            </button>
+            <button class="tab-btn" data-tab="exams">
+                <i class="fas fa-file-alt"></i> Đề thi
+            </button>
+            <button class="tab-btn" data-tab="grading">
+                <i class="fas fa-graduation-cap"></i> Bài thi
+            </button>
+        </div>
+        
+        <div class="tab-content active" id="dashboard-tab">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-number" id="pendingCount">0</div>
+                    <div class="stat-label">Bài thi chờ chấm</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon graded">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-number" id="gradedCount">0</div>
+                    <div class="stat-label">Bài thi đã chấm</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number" id="totalStudents">0</div>
+                    <div class="stat-label">Học sinh đã thi</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon exams">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-number" id="totalExams">0</div>
+                    <div class="stat-label">Đề thi đã tạo</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-history"></i> Hoạt động gần đây</h3>
+                </div>
+                <div id="recentActivity">
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <p>Chưa có hoạt động nào</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="exams-tab">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-file-alt"></i> Danh sách đề thi của tôi</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn view-btn" id="refreshExamsBtn">
+                            <i class="fas fa-sync-alt"></i> Làm mới
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="filter-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" id="examSearch" placeholder="Tìm kiếm đề thi...">
+                    </div>
+                </div>
+                
+                <div id="examsTableContainer">
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <p>Bạn chưa tạo đề thi nào</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="grading-tab">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-graduation-cap"></i> Bài thi từ đề thi của tôi</h3>
+                </div>
+                
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label class="filter-label">Trạng thái:</label>
+                        <select class="filter-select" id="gradingFilter">
+                            <option value="pending">Chờ chấm</option>
+                            <option value="graded">Đã chấm</option>
+                            <option value="all">Tất cả</option>
+                        </select>
+                    </div>
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" id="gradingSearch" placeholder="Tìm kiếm học sinh...">
+                    </div>
+                </div>
+                
+                <div id="gradingTableContainer">
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-check"></i>
+                        <p>Không có bài thi nào cần chấm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="gradingInterface" style="display: none;">
+            <div class="grading-container">
+                <div class="grading-header">
+                    <h2 id="gradingExamTitle">Chấm điểm bài thi</h2>
+                    <p id="gradingExamCode">Mã đề: ABC123</p>
+                    
+                    <div class="student-info">
+                        <div class="info-item">
+                            <i class="fas fa-user"></i>
+                            <span id="gradingStudentName">Nguyễn Văn A</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <span id="gradingStudentEmail">example@email.com</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-calendar"></i>
+                            <span id="gradingSubmitDate">01/01/2024</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grading-content" id="gradingContent">
+                </div>
+                
+                <div class="grading-summary">
+                    <div class="summary-header">
+                        <h3>Tổng kết điểm</h3>
+                        <div class="total-score" id="totalScore">0.0/10.0</div>
+                    </div>
+                    
+                    <div>
+                        <label class="filter-label">Nhận xét tổng thể:</label>
+                        <textarea class="feedback-textarea" id="overallFeedback" 
+                                  placeholder="Nhập nhận xét tổng thể cho bài làm của học sinh..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="grading-actions">
+                    <button class="grading-action-btn cancel-btn" id="cancelGradingBtn">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    <button class="grading-action-btn save-btn" id="saveGradingBtn">
+                        <i class="fas fa-save"></i> Lưu điểm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="examDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Chi tiết đề thi</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="examDetailsContent">
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn view-btn" id="viewAttemptsBtn">
+                    <i class="fas fa-users"></i> Xem bài làm
+                </button>
+                <button class="action-btn delete-btn" id="deleteExamBtn" style="display: none;">
+                    <i class="fas fa-trash"></i> Xóa đề thi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLZpLQKl0x-kMez2v5NURU5qSthT_6qYI",
+            authDomain: "loginnn-b1dc0.firebaseapp.com",
+            projectId: "loginnn-b1dc0",
+            storageBucket: "loginnn-b1dc0.firebasestorage.app",
+            messagingSenderId: "481800915428",
+            appId: "1:481800915428:web:b524925c25efb53e7b9ff1",
+            measurementId: "G-XF2ZBFBCR7"
+        };
+
+        let firebaseApp = null;
+        let auth = null;
+        let db = null;
+
+        try {
+            firebaseApp = firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.warn("Firebase initialization error:", error);
+        }
+
+        let currentUser = null;
+        let currentGradingAttempt = null;
+        let currentExamForGrading = null;
+        let gradingScores = [];
+        let allAttempts = [];
+        let allExams = [];
+        let myExams = [];
+        let myAttempts = [];
+
+        function markdownToHtml(text) {
+            if (!text) return '';
+            
+            let html = text;
+            
+            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            html = html.replace(/__(.*?)__/g, '<u>$1</u>');
+            
+            html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>\n?)+/g, function(match) {
+                return '<ul>' + match + '</ul>';
+            });
+            
+            html = html.replace(/^\d+\. (.*$)/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>\n?)+/g, function(match) {
+                return '<ol>' + match + '</ol>';
+            });
+            
+            const lines = html.split('\n');
+            html = '';
+            let inParagraph = false;
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                if (line === '') {
+                    if (inParagraph) {
+                        html += '</p>\n';
+                        inParagraph = false;
+                    }
+                } else if (line.startsWith('<')) {
+                    if (inParagraph) {
+                        html += '</p>\n';
+                        inParagraph = false;
+                    }
+                    html += line + '\n';
+                } else {
+                    if (!inParagraph) {
+                        html += '<p>';
+                        inParagraph = true;
+                    }
+                    html += line + ' ';
+                }
+            }
+            
+            if (inParagraph) {
+                html += '</p>';
+            }
+            
+            html = html.replace(/\\n/g, '<br>');
+            
+            return html;
+        }
+
+        function showNotification(message, type = 'info') {
+            const oldNotification = document.querySelector('.notification');
+            if (oldNotification) {
+                oldNotification.remove();
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+            
+            notification.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 4000);
+        }
+
+        function checkAuth() {
+            auth.onAuthStateChanged(async (user) => {
+                if (user && user.emailVerified) {
+                    currentUser = user;
+                    
+                    const userDoc = await db.collection('users').doc(user.uid).get();
+                    const userData = userDoc.data();
+                    
+                    loadMyExams();
+                    loadMyAttempts();
+                    
+                } else {
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+        function setupTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+        }
+
+        async function loadMyExams() {
+            try {
+                const examsSnapshot = await db.collection('exams')
+                    .where('createdBy', '==', currentUser.uid)
+                    .get();
+                
+                myExams = [];
+                examsSnapshot.forEach(doc => {
+                    myExams.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                console.log(`Đã tải ${myExams.length} đề thi của tôi`);
+                
+                updateExamsTable();
+                loadDashboardStats();
+                
+            } catch (error) {
+                console.error('Lỗi tải đề thi của tôi:', error);
+                showNotification('Không thể tải danh sách đề thi', 'error');
+            }
+        }
+
+        async function loadMyAttempts() {
+            try {
+                // First get all attempts
+                const attemptsSnapshot = await db.collection('attempts').get();
+                
+                allAttempts = [];
+                attemptsSnapshot.forEach(doc => {
+                    allAttempts.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                // Filter attempts that belong to my exams
+                const myExamIds = myExams.map(exam => exam.id);
+                myAttempts = allAttempts.filter(attempt => 
+                    myExamIds.includes(attempt.examId)
+                );
+                
+                console.log(`Đã tải ${myAttempts.length} bài làm từ đề thi của tôi`);
+                
+                updateGradingTable();
+                loadDashboardStats();
+                
+            } catch (error) {
+                console.error('Lỗi tải bài làm của tôi:', error);
+                showNotification('Không thể tải danh sách bài làm', 'error');
+            }
+        }
+
+        async function loadDashboardStats() {
+            try {
+                const pendingCount = myAttempts.filter(a => a.status === 'submitted').length;
+                const gradedCount = myAttempts.filter(a => a.status === 'graded').length;
+                
+                const uniqueStudents = [...new Set(myAttempts.map(a => a.userId))].length;
+                
+                const totalExams = myExams.length;
+                
+                document.getElementById('pendingCount').textContent = pendingCount;
+                document.getElementById('gradedCount').textContent = gradedCount;
+                document.getElementById('totalStudents').textContent = uniqueStudents;
+                document.getElementById('totalExams').textContent = totalExams;
+                
+                loadRecentActivity();
+                
+            } catch (error) {
+                console.error('Lỗi tải thống kê:', error);
+            }
+        }
+
+        async function loadRecentActivity() {
+            try {
+                const recentActivity = document.getElementById('recentActivity');
+                
+                const recentAttempts = [...myAttempts]
+                    .sort((a, b) => new Date(b.completedAt || b.startedAt) - new Date(a.completedAt || a.startedAt))
+                    .slice(0, 5);
+                
+                if (recentAttempts.length === 0) {
+                    recentActivity.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-history"></i>
+                            <p>Chưa có hoạt động nào</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let activityHTML = `
+                    <div style="display: grid; gap: 1rem;">
+                `;
+                
+                recentAttempts.forEach(attempt => {
+                    const date = new Date(attempt.completedAt || attempt.startedAt);
+                    const timeAgo = getTimeAgo(date);
+                    const statusBadge = attempt.status === 'graded' ? 
+                        `<span class="status-badge status-graded">Đã chấm</span>` :
+                        `<span class="status-badge status-submitted">Đã nộp</span>`;
+                    
+                    const exam = myExams.find(e => e.id === attempt.examId);
+                    const examTitle = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
+                    
+                    activityHTML += `
+                        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 8px; border: 2px solid rgba(227, 124, 45, 0.1);">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(227, 124, 45, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 500; color: var(--text-primary);">
+                                    ${attempt.userName || 'Học sinh'} đã ${attempt.status === 'graded' ? 'được chấm điểm' : 'nộp bài'} 
+                                    <span class="exam-code">${attempt.examId}</span>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                                    ${examTitle} • ${timeAgo}
+                                </div>
+                            </div>
+                            ${statusBadge}
+                        </div>
+                    `;
+                });
+                
+                activityHTML += `</div>`;
+                recentActivity.innerHTML = activityHTML;
+                
+            } catch (error) {
+                console.error('Lỗi tải hoạt động:', error);
+            }
+        }
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return 'Vừa xong';
+            if (minutes < 60) return `${minutes} phút trước`;
+            if (hours < 24) return `${hours} giờ trước`;
+            if (days < 7) return `${days} ngày trước`;
+            
+            return date.toLocaleDateString('vi-VN');
+        }
+
+        function updateExamsTable() {
+            const examsTableContainer = document.getElementById('examsTableContainer');
+            
+            if (myExams.length === 0) {
+                examsTableContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <p>Bạn chưa tạo đề thi nào</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let filteredExams = myExams;
+            const searchValue = document.getElementById('examSearch').value.toLowerCase();
+            
+            if (searchValue) {
+                filteredExams = myExams.filter(exam => 
+                    exam.title?.toLowerCase().includes(searchValue) || 
+                    exam.id?.toLowerCase().includes(searchValue)
+                );
+            }
+            
+            if (filteredExams.length === 0) {
+                examsTableContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <p>Không tìm thấy đề thi nào phù hợp</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let tableHTML = `
+                <table class="exams-table">
+                    <thead>
+                        <tr>
+                            <th>Mã đề</th>
+                            <th>Tên đề thi</th>
+                            <th>Thời gian</th>
+                            <th>Độ khó</th>
+                            <th>Khối lớp</th>
+                            <th>Ngày tạo</th>
+                            <th>Số bài làm</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            filteredExams.forEach((exam) => {
+                const examId = exam.id;
+                
+                const attemptsCount = myAttempts.filter(a => a.examId === examId).length;
+                
+                const createdAt = exam.createdAt ? 
+                    new Date(exam.createdAt).toLocaleDateString('vi-VN') : 
+                    'Không rõ';
+                
+                const difficulty = exam.difficulty === 'easy' ? 'Dễ' : 
+                                 exam.difficulty === 'medium' ? 'Trung bình' : 'Khó';
+                
+                tableHTML += `
+                    <tr>
+                        <td><span class="exam-code">${examId}</span></td>
+                        <td>${exam.title || 'Đề thi Ngữ Văn'}</td>
+                        <td>${exam.examTime || 90} phút</td>
+                        <td>${difficulty}</td>
+                        <td>${exam.grade || '12'}</td>
+                        <td>${createdAt}</td>
+                        <td>${attemptsCount}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn view-btn view-exam-btn" data-exam="${examId}">
+                                    <i class="fas fa-eye"></i> Xem
+                                </button>
+                                ${attemptsCount > 0 ? `
+                                <button class="action-btn grade-btn view-attempts-btn" data-exam="${examId}">
+                                    <i class="fas fa-graduation-cap"></i> Chấm
+                                </button>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            examsTableContainer.innerHTML = tableHTML;
+            
+            document.querySelectorAll('.view-exam-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const examId = btn.dataset.exam;
+                    showExamDetails(examId);
+                });
+            });
+            
+            document.querySelectorAll('.view-attempts-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const examId = btn.dataset.exam;
+                    document.querySelector('[data-tab="grading"]').click();
+                    document.getElementById('gradingSearch').value = examId;
+                    updateGradingTable();
+                });
+            });
+        }
+
+        async function showExamDetails(examId) {
+            try {
+                const exam = myExams.find(e => e.id === examId);
+                
+                if (!exam) {
+                    showNotification('Không tìm thấy đề thi', 'error');
+                    return;
+                }
+                
+                const modal = document.getElementById('examDetailsModal');
+                const content = document.getElementById('examDetailsContent');
+                
+                const difficulty = exam.difficulty === 'easy' ? 'Dễ' : 
+                                 exam.difficulty === 'medium' ? 'Trung bình' : 'Khó';
+                
+                const questionCount = exam.blocks?.filter(b => b.type === 'question').length || 0;
+                const totalPoints = exam.blocks?.reduce((sum, block) => sum + (block.points || 0), 0) || 0;
+                
+                const attemptsCount = myAttempts.filter(a => a.examId === examId).length;
+                
+                content.innerHTML = `
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                            ${exam.title || 'Đề thi Ngữ Văn'}
+                            <span class="exam-type-badge exam-type-owned">Đề thi của tôi</span>
+                        </h4>
+                        <p style="color: var(--text-secondary);">${exam.description || 'Không có mô tả'}</p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="padding: 1rem; background: rgba(227, 124, 45, 0.05); border-radius: 8px; border-left: 4px solid var(--primary-color);">
+                            <div style="font-size: 0.9rem; color: var(--text-secondary);">Mã đề</div>
+                            <div style="font-weight: 600; color: var(--primary-color);">${examId}</div>
+                        </div>
+                        <div style="padding: 1rem; background: rgba(227, 124, 45, 0.05); border-radius: 8px; border-left: 4px solid var(--accent-color);">
+                            <div style="font-size: 0.9rem; color: var(--text-secondary);">Số câu hỏi</div>
+                            <div style="font-weight: 600; color: var(--primary-color);">${questionCount}</div>
+                        </div>
+                        <div style="padding: 1rem; background: rgba(227, 124, 45, 0.05); border-radius: 8px; border-left: 4px solid var(--primary-color);">
+                            <div style="font-size: 0.9rem; color: var(--text-secondary);">Tổng điểm</div>
+                            <div style="font-weight: 600; color: var(--primary-color);">${totalPoints.toFixed(1)}</div>
+                        </div>
+                        <div style="padding: 1rem; background: rgba(227, 124, 45, 0.05); border-radius: 8px; border-left: 4px solid var(--accent-color);">
+                            <div style="font-size: 0.9rem; color: var(--text-secondary);">Số bài làm</div>
+                            <div style="font-weight: 600; color: var(--primary-color);">${attemptsCount}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <h5 style="color: var(--text-primary); margin-bottom: 0.5rem;">Thông tin chi tiết</h5>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                            <div>
+                                <span style="color: var(--text-secondary);">Người tạo:</span>
+                                <span style="font-weight: 500; margin-left: 0.5rem;">Tôi</span>
+                            </div>
+                            <div>
+                                <span style="color: var(--text-secondary);">Thời gian:</span>
+                                <span style="font-weight: 500; margin-left: 0.5rem;">${exam.examTime || 90} phút</span>
+                            </div>
+                            <div>
+                                <span style="color: var(--text-secondary);">Độ khó:</span>
+                                <span style="font-weight: 500; margin-left: 0.5rem;">${difficulty}</span>
+                            </div>
+                            <div>
+                                <span style="color: var(--text-secondary);">Khối lớp:</span>
+                                <span style="font-weight: 500; margin-left: 0.5rem;">${exam.grade || '12'}</span>
+                            </div>
+                            <div>
+                                <span style="color: var(--text-secondary);">Ngày tạo:</span>
+                                <span style="font-weight: 500; margin-left: 0.5rem;">${exam.createdAt ? new Date(exam.createdAt).toLocaleDateString('vi-VN') : 'Không rõ'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${exam.notes ? `
+                    <div style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(227, 124, 45, 0.05); border-radius: 8px;">
+                        <h5 style="color: var(--primary-color); margin-bottom: 0.5rem;">Ghi chú</h5>
+                        <p style="color: var(--text-secondary); margin: 0;">${exam.notes}</p>
+                    </div>
+                    ` : ''}
+                    
+                    <div>
+                        <h5 style="color: var(--text-primary); margin-bottom: 0.5rem;">Xem trước đề thi</h5>
+                        <div style="max-height: 300px; overflow-y: auto; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 8px; border: 2px solid var(--primary-color);">
+                            ${exam.blocks?.slice(0, 2).map(block => {
+                                if (block.type === 'text') {
+                                    return `<div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                                        <strong style="color: var(--primary-color);">${block.title || 'Phần văn bản'}</strong>
+                                        <div style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.9rem; max-height: 100px; overflow: hidden; text-overflow: ellipsis;">
+                                            ${block.content?.substring(0, 200)}${block.content?.length > 200 ? '...' : ''}
+                                        </div>
+                                    </div>`;
+                                } else {
+                                    return `<div style="margin-bottom: 1rem;">
+                                        <div style="color: var(--text-secondary); font-size: 0.9rem; max-height: 100px; overflow: hidden; text-overflow: ellipsis;">
+                                            <strong>Câu hỏi:</strong> ${block.content?.substring(0, 150)}${block.content?.length > 150 ? '...' : ''}
+                                        </div>
+                                    </div>`;
+                                }
+                            }).join('') || 'Không có nội dung'}
+                            ${(exam.blocks?.length || 0) > 2 ? `<div style="text-align: center; color: var(--text-secondary); font-style: italic;">... và ${(exam.blocks?.length || 0) - 2} phần khác</div>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('viewAttemptsBtn').onclick = () => {
+                    modal.classList.remove('active');
+                    document.querySelector('[data-tab="grading"]').click();
+                    document.getElementById('gradingSearch').value = examId;
+                    updateGradingTable();
+                };
+                
+                const deleteBtn = document.getElementById('deleteExamBtn');
+                deleteBtn.style.display = 'block';
+                deleteBtn.onclick = () => {
+                    if (confirm(`Bạn có chắc chắn muốn xóa đề thi "${exam.title}"? Hành động này không thể hoàn tả.`)) {
+                        deleteExam(examId);
+                    }
+                };
+                
+                modal.classList.add('active');
+                
+            } catch (error) {
+                console.error('Lỗi tải chi tiết đề thi:', error);
+                showNotification('Không thể tải chi tiết đề thi', 'error');
+            }
+        }
+
+        async function deleteExam(examId) {
+            try {
+                const attemptsCount = myAttempts.filter(a => a.examId === examId).length;
+                
+                if (attemptsCount > 0) {
+                    showNotification('Không thể xóa đề thi đã có bài làm', 'error');
+                    return;
+                }
+                
+                await db.collection('exams').doc(examId).delete();
+                
+                showNotification('Đã xóa đề thi thành công', 'success');
+                document.getElementById('examDetailsModal').classList.remove('active');
+                
+                myExams = myExams.filter(exam => exam.id !== examId);
+                updateExamsTable();
+                loadDashboardStats();
+                
+            } catch (error) {
+                console.error('Lỗi xóa đề thi:', error);
+                showNotification('Không thể xóa đề thi', 'error');
+            }
+        }
+
+        function updateGradingTable() {
+            const gradingTableContainer = document.getElementById('gradingTableContainer');
+            
+            if (myAttempts.length === 0) {
+                gradingTableContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-check"></i>
+                        <p>Không có bài thi nào trong hệ thống</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let filteredAttempts = myAttempts;
+            const filterValue = document.getElementById('gradingFilter').value;
+            const searchValue = document.getElementById('gradingSearch').value.toLowerCase();
+            
+            if (filterValue === 'pending') {
+                filteredAttempts = myAttempts.filter(attempt => attempt.status === 'submitted');
+            } else if (filterValue === 'graded') {
+                filteredAttempts = myAttempts.filter(attempt => attempt.status === 'graded');
+            }
+            
+            if (searchValue) {
+                filteredAttempts = filteredAttempts.filter(attempt => {
+                    const studentName = attempt.userName?.toLowerCase() || '';
+                    const examId = attempt.examId?.toLowerCase() || '';
+                    return studentName.includes(searchValue) || examId.includes(searchValue);
+                });
+            }
+            
+            if (filteredAttempts.length === 0) {
+                gradingTableContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-check"></i>
+                        <p>Không tìm thấy bài làm nào phù hợp</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let tableHTML = `
+                <table class="exams-table">
+                    <thead>
+                        <tr>
+                            <th>Học sinh</th>
+                            <th>Mã đề</th>
+                            <th>Tên đề thi</th>
+                            <th>Ngày nộp</th>
+                            <th>Trạng thái</th>
+                            <th>Điểm</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            filteredAttempts.forEach((attempt) => {
+                const attemptId = attempt.id;
+                
+                const submitDate = attempt.completedAt ? 
+                    new Date(attempt.completedAt).toLocaleDateString('vi-VN') : 
+                    'Chưa nộp';
+                
+                const status = attempt.status === 'graded' ? 'Đã chấm' : 
+                              attempt.status === 'submitted' ? 'Chờ chấm' : 
+                              'Đang làm';
+                
+                const statusClass = attempt.status === 'graded' ? 'status-graded' : 
+                                   attempt.status === 'submitted' ? 'status-pending' : 
+                                   'status-submitted';
+                
+                const scoreDisplay = attempt.status === 'graded' ? 
+                    `${attempt.score?.toFixed(1) || 0}/${attempt.totalPoints?.toFixed(1) || 10}` : 
+                    'Chưa chấm';
+                
+                const exam = myExams.find(e => e.id === attempt.examId);
+                const examTitle = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
+                
+                tableHTML += `
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(227, 124, 45, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-color);">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 500;">${attempt.userName || 'Học sinh'}</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">${attempt.userEmail || ''}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="exam-code">${attempt.examId}</span></td>
+                        <td>${examTitle}</td>
+                        <td>${submitDate}</td>
+                        <td><span class="status-badge ${statusClass}">${status}</span></td>
+                        <td>${scoreDisplay}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn view-btn grade-attempt-btn" data-attempt="${attemptId}">
+                                    <i class="fas fa-eye"></i> Xem
+                                </button>
+                                ${attempt.status !== 'graded' ? `
+                                <button class="action-btn grade-btn start-grading-btn" data-attempt="${attemptId}">
+                                    <i class="fas fa-graduation-cap"></i> Chấm
+                                </button>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+            
+            gradingTableContainer.innerHTML = tableHTML;
+            
+            document.querySelectorAll('.grade-attempt-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const attemptId = btn.dataset.attempt;
+                    viewGradedAttempt(attemptId);
+                });
+            });
+            
+            document.querySelectorAll('.start-grading-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const attemptId = btn.dataset.attempt;
+                    startGrading(attemptId);
+                });
+            });
+        }
+
+        async function viewGradedAttempt(attemptId) {
+            try {
+                const attempt = myAttempts.find(a => a.id === attemptId);
+                
+                if (!attempt) {
+                    showNotification('Không tìm thấy bài làm', 'error');
+                    return;
+                }
+                
+                const exam = myExams.find(e => e.id === attempt.examId);
+                currentExamForGrading = exam;
+                
+                document.getElementById('gradingExamTitle').textContent = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
+                document.getElementById('gradingExamCode').textContent = `Mã đề: ${attempt.examId}`;
+                document.getElementById('gradingStudentName').textContent = attempt.userName || 'Học sinh';
+                document.getElementById('gradingStudentEmail').textContent = attempt.userEmail || '';
+                document.getElementById('gradingSubmitDate').textContent = attempt.completedAt ? 
+                    new Date(attempt.completedAt).toLocaleDateString('vi-VN') : 'Chưa nộp';
+                
+                displayGradingContent(attempt, true);
+                
+                document.getElementById('totalScore').textContent = 
+                    `${attempt.score?.toFixed(1) || 0}/${attempt.totalPoints?.toFixed(1) || 10}`;
+                
+                document.getElementById('overallFeedback').value = attempt.feedback || '';
+                document.getElementById('overallFeedback').readOnly = true;
+                
+                document.getElementById('saveGradingBtn').style.display = 'none';
+                
+                document.querySelector('.tab-navigation').style.display = 'none';
+                document.getElementById('dashboard-tab').style.display = 'none';
+                document.getElementById('exams-tab').style.display = 'none';
+                document.getElementById('grading-tab').style.display = 'none';
+                document.getElementById('gradingInterface').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Lỗi xem bài đã chấm:', error);
+                showNotification('Không thể xem bài đã chấm', 'error');
+            }
+        }
+
+        async function startGrading(attemptId) {
+            try {
+                const attempt = myAttempts.find(a => a.id === attemptId);
+                
+                if (!attempt) {
+                    showNotification('Không tìm thấy bài làm', 'error');
+                    return;
+                }
+                
+                currentGradingAttempt = attemptId;
+                
+                const exam = myExams.find(e => e.id === attempt.examId);
+                currentExamForGrading = exam;
+                
+                document.getElementById('gradingExamTitle').textContent = exam?.title || attempt.examTitle || 'Đề thi Ngữ Văn';
+                document.getElementById('gradingExamCode').textContent = `Mã đề: ${attempt.examId}`;
+                document.getElementById('gradingStudentName').textContent = attempt.userName || 'Học sinh';
+                document.getElementById('gradingStudentEmail').textContent = attempt.userEmail || '';
+                document.getElementById('gradingSubmitDate').textContent = attempt.completedAt ? 
+                    new Date(attempt.completedAt).toLocaleDateString('vi-VN') : 'Chưa nộp';
+                
+                gradingScores = attempt.answers?.map(answer => ({
+                    questionId: answer.questionId,
+                    maxPoints: answer.points || 1.0,
+                    score: answer.score || 0,
+                    feedback: answer.feedback || ''
+                })) || [];
+                
+                displayGradingContent(attempt, false);
+                
+                updateTotalScore();
+                
+                document.getElementById('overallFeedback').value = attempt.feedback || '';
+                document.getElementById('overallFeedback').readOnly = false;
+                
+                document.getElementById('saveGradingBtn').style.display = 'flex';
+                
+                document.querySelector('.tab-navigation').style.display = 'none';
+                document.getElementById('dashboard-tab').style.display = 'none';
+                document.getElementById('exams-tab').style.display = 'none';
+                document.getElementById('grading-tab').style.display = 'none';
+                document.getElementById('gradingInterface').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Lỗi bắt đầu chấm điểm:', error);
+                showNotification('Không thể bắt đầu chấm điểm', 'error');
+            }
+        }
+
+        function displayGradingContent(attempt, isViewOnly) {
+            const gradingContent = document.getElementById('gradingContent');
+            let contentHTML = '';
+            
+            const examBlocks = currentExamForGrading?.blocks || [];
+            const textBlocks = examBlocks.filter(b => b.type === 'text');
+            const questionBlocks = examBlocks.filter(b => b.type === 'question');
+            
+            textBlocks.forEach((block, index) => {
+                contentHTML += `
+                    <div class="grading-question" style="border-left-color: var(--accent-color);">
+                        <div class="question-header">
+                            <div class="question-text">${block.title || 'Phần văn bản'}</div>
+                        </div>
+                        <div class="markdown-content" style="white-space: pre-wrap;">${markdownToHtml(block.content)}</div>
+                    </div>
+                `;
+            });
+            
+            questionBlocks.forEach((block, index) => {
+                const answer = attempt.answers?.find(a => a.questionId === index) || {};
+                const gradingScore = gradingScores.find(s => s.questionId === index);
+                
+                contentHTML += `
+                    <div class="grading-question">
+                        <div class="question-header">
+                            <div class="question-text markdown-content">
+                                <strong>Câu ${index + 1}:</strong> ${markdownToHtml(block.content)}
+                            </div>
+                            <div class="question-points">${block.points || 1.0} điểm</div>
+                        </div>
+                        
+                        <div>
+                            <div style="font-weight: 500; color: var(--primary-color); margin-bottom: 0.5rem;">Câu trả lời của học sinh:</div>
+                            <div class="student-answer">${answer.answer || 'Chưa trả lời'}</div>
+                        </div>
+                        
+                        <div class="grading-controls">
+                            <div style="flex: 1;">
+                                <label class="filter-label">Điểm:</label>
+                                ${isViewOnly ? `
+                                <div style="font-weight: 600; color: var(--primary-color);">
+                                    ${gradingScore?.score?.toFixed(1) || 0}/${gradingScore?.maxPoints || block.points || 1.0}
+                                </div>
+                                ` : `
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <input type="number" class="score-input" 
+                                           data-question="${index}"
+                                           min="0" 
+                                           max="${gradingScore?.maxPoints || block.points || 1.0}" 
+                                           step="0.5"
+                                           value="${gradingScore?.score || 0}"
+                                           onchange="updateQuestionScore(${index}, this.value)">
+                                    <span>/ ${gradingScore?.maxPoints || block.points || 1.0}</span>
+                                    <input type="range" class="score-slider"
+                                           data-question="${index}"
+                                           min="0" 
+                                           max="${gradingScore?.maxPoints || block.points || 1.0}" 
+                                           step="0.5"
+                                           value="${gradingScore?.score || 0}"
+                                           oninput="updateQuestionScore(${index}, this.value)">
+                                </div>
+                                `}
+                            </div>
+                        </div>
+                        
+                        ${!isViewOnly ? `
+                        <div>
+                            <label class="filter-label">Nhận xét cho câu này:</label>
+                            <textarea class="feedback-textarea" 
+                                      data-question="${index}"
+                                      placeholder="Nhập nhận xét cho câu trả lời này..."
+                                      oninput="updateQuestionFeedback(${index}, this.value)">${gradingScore?.feedback || ''}</textarea>
+                        </div>
+                        ` : gradingScore?.feedback ? `
+                        <div style="margin-top: 1rem;">
+                            <div style="font-weight: 500; color: var(--primary-color); margin-bottom: 0.5rem;">Nhận xét:</div>
+                            <div style="padding: 1rem; background: rgba(227, 124, 45, 0.05); border-radius: 8px; border-left: 3px solid var(--accent-color);">
+                                ${gradingScore.feedback}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            gradingContent.innerHTML = contentHTML;
+        }
+
+        function updateQuestionScore(questionId, score) {
+            const gradingScore = gradingScores.find(s => s.questionId === questionId);
+            if (gradingScore) {
+                gradingScore.score = parseFloat(score) || 0;
+                
+                const scoreInput = document.querySelector(`.score-input[data-question="${questionId}"]`);
+                const scoreSlider = document.querySelector(`.score-slider[data-question="${questionId}"]`);
+                
+                if (scoreInput && scoreInput.value !== score) {
+                    scoreInput.value = score;
+                }
+                if (scoreSlider && scoreSlider.value !== score) {
+                    scoreSlider.value = score;
+                }
+                
+                updateTotalScore();
+            }
+        }
+
+        function updateQuestionFeedback(questionId, feedback) {
+            const gradingScore = gradingScores.find(s => s.questionId === questionId);
+            if (gradingScore) {
+                gradingScore.feedback = feedback;
+            }
+        }
+
+        function updateTotalScore() {
+            const totalScore = gradingScores.reduce((sum, score) => sum + (score.score || 0), 0);
+            const totalMaxScore = gradingScores.reduce((sum, score) => sum + (score.maxPoints || 0), 0);
+            
+            document.getElementById('totalScore').textContent = 
+                `${totalScore.toFixed(1)}/${totalMaxScore.toFixed(1)}`;
+        }
+
+        async function saveGrading() {
+            try {
+                const saveBtn = document.getElementById('saveGradingBtn');
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<div class="loading-spinner"></div> Đang lưu...';
+                
+                const totalScore = gradingScores.reduce((sum, score) => sum + (score.score || 0), 0);
+                const totalMaxScore = gradingScores.reduce((sum, score) => sum + (score.maxPoints || 0), 0);
+                const overallFeedback = document.getElementById('overallFeedback').value;
+                
+                await db.collection('attempts').doc(currentGradingAttempt).update({
+                    status: 'graded',
+                    score: totalScore,
+                    totalPoints: totalMaxScore,
+                    answers: gradingScores.map(score => ({
+                        questionId: score.questionId,
+                        score: score.score,
+                        feedback: score.feedback
+                    })),
+                    feedback: overallFeedback,
+                    gradedAt: new Date().toISOString(),
+                    gradedBy: currentUser.uid,
+                    gradedByName: currentUser.displayName || 'Giáo viên'
+                });
+                
+                showNotification('Đã lưu điểm thành công', 'success');
+                
+                const attemptIndex = myAttempts.findIndex(a => a.id === currentGradingAttempt);
+                if (attemptIndex !== -1) {
+                    myAttempts[attemptIndex] = {
+                        ...myAttempts[attemptIndex],
+                        status: 'graded',
+                        score: totalScore,
+                        totalPoints: totalMaxScore,
+                        answers: gradingScores,
+                        feedback: overallFeedback,
+                        gradedAt: new Date().toISOString(),
+                        gradedBy: currentUser.uid,
+                        gradedByName: currentUser.displayName || 'Giáo viên'
+                    };
+                }
+                
+                cancelGrading();
+                
+                loadDashboardStats();
+                updateGradingTable();
+                
+            } catch (error) {
+                console.error('Lỗi lưu điểm:', error);
+                showNotification('Không thể lưu điểm', 'error');
+                
+                const saveBtn = document.getElementById('saveGradingBtn');
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Lưu điểm';
+            }
+        }
+
+        function cancelGrading() {
+            document.getElementById('gradingInterface').style.display = 'none';
+            document.querySelector('.tab-navigation').style.display = 'flex';
+            document.getElementById('dashboard-tab').style.display = 'block';
+            document.getElementById('exams-tab').style.display = 'block';
+            document.getElementById('grading-tab').style.display = 'block';
+            document.querySelector('[data-tab="grading"]').click();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            
+            setupTabs();
+            
+            document.getElementById('gradingFilter').addEventListener('change', updateGradingTable);
+            document.getElementById('gradingSearch').addEventListener('input', updateGradingTable);
+            document.getElementById('examSearch').addEventListener('input', updateExamsTable);
+            
+            document.getElementById('refreshExamsBtn').addEventListener('click', () => {
+                loadMyExams();
+                showNotification('Đã làm mới dữ liệu', 'success');
+            });
+            
+            document.getElementById('cancelGradingBtn').addEventListener('click', cancelGrading);
+            
+            document.getElementById('saveGradingBtn').addEventListener('click', saveGrading);
+            
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.closest('.modal').classList.remove('active');
+                });
+            });
+            
+            document.getElementById('examDetailsModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+            
+            window.updateQuestionScore = updateQuestionScore;
+            window.updateQuestionFeedback = updateQuestionFeedback;
+        });
+    </script>
+</body>
+</html>
