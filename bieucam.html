@@ -1044,34 +1044,6 @@
                     transform: translateX(100%) translateY(-20px);
                 }
             }
-            
-            /* Penalty Summary */
-            .penalty-summary {
-                background: rgba(244, 67, 54, 0.08);
-                border-radius: 12px;
-                padding: 1rem;
-                margin-top: 15px;
-                border: 1px solid var(--error-red);
-                font-size: 0.9rem;
-            }
-            
-            .penalty-title {
-                color: var(--error-red);
-                font-weight: 600;
-                margin-bottom: 8px;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-            
-            .penalty-details {
-                color: var(--text-dark);
-                line-height: 1.5;
-            }
-            
-            .penalty-details p {
-                margin: 5px 0;
-            }
         }
     </style>
 </head>
@@ -1252,17 +1224,6 @@
                                 <div class="comment-details">
                                     <span id="analysisTime">Thời gian phân tích: --:--</span>
                                 </div>
-                                
-                                <!-- Penalty Summary -->
-                                <div class="penalty-summary" id="penaltySummary" style="display: none;">
-                                    <div class="penalty-title">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <span>Tổng hợp điểm trừ</span>
-                                    </div>
-                                    <div class="penalty-details" id="penaltyDetails">
-                                        <!-- Chi tiết điểm trừ sẽ được hiển thị ở đây -->
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         
@@ -1437,8 +1398,6 @@
         const phraseTimingDetails = document.getElementById('phraseTimingDetails');
         const phraseSupabaseInfo = document.getElementById('phraseSupabaseInfo');
         const phraseSupabaseDetails = document.getElementById('phraseSupabaseDetails');
-        const penaltySummary = document.getElementById('penaltySummary');
-        const penaltyDetails = document.getElementById('penaltyDetails');
         
         // ========== HÀM TIỆN ÍCH ==========
         function countWords(text) {
@@ -1888,7 +1847,7 @@
             return totalEstimatedDuration;
         }
         
-        // ========== TÍNH TOÁN ĐIỂM TRỪ ==========
+        // ========== TÍNH TOÁN ĐIỂM TRỪ (GIỚI HẠN TỐI ĐA 35 ĐIỂM) ==========
         function calculatePenalty(accuracies) {
             // Reset biến đếm
             yellowPenaltyCount = 0;
@@ -1904,24 +1863,13 @@
                 }
             });
             
-            // Tính tổng điểm trừ
-            totalPenalty = (yellowPenaltyCount * 3) + (redPenaltyCount * 5);
+            // Tính tổng điểm trừ ban đầu
+            const initialPenalty = (yellowPenaltyCount * 3) + (redPenaltyCount * 5);
+            
+            // GIỚI HẠN ĐIỂM TRỪ TỐI ĐA LÀ 35 ĐIỂM
+            totalPenalty = Math.min(initialPenalty, 35);
             
             return totalPenalty;
-        }
-        
-        // ========== HIỂN THỊ TỔNG HỢP ĐIỂM TRỪ ==========
-        function displayPenaltySummary() {
-            if (totalPenalty > 0) {
-                penaltyDetails.innerHTML = `
-                    <p><strong>Cụm từ màu vàng (30-69%):</strong> ${yellowPenaltyCount} cụm × 3 điểm = ${yellowPenaltyCount * 3} điểm trừ</p>
-                    <p><strong>Cụm từ màu đỏ (dưới 30%):</strong> ${redPenaltyCount} cụm × 5 điểm = ${redPenaltyCount * 5} điểm trừ</p>
-                    <p><strong>Tổng điểm trừ:</strong> ${totalPenalty} điểm</p>
-                `;
-                penaltySummary.style.display = 'block';
-            } else {
-                penaltySummary.style.display = 'none';
-            }
         }
         
         function calculateAccuracy(original, recognized) {
@@ -1981,11 +1929,8 @@
             // Hiển thị các cụm từ với màu sắc phù hợp
             displayPhraseComparison(wordAccuracies);
             
-            // Tính điểm trừ
+            // Tính điểm trừ (giới hạn tối đa 35 điểm)
             calculatePenalty(wordAccuracies);
-            
-            // Hiển thị tổng hợp điểm trừ
-            displayPenaltySummary();
             
             // Tính độ chính xác trung bình toàn bài
             let totalAccuracy = 0;
@@ -2054,7 +1999,7 @@
             const effectiveSpeedScore = accuracy >= 50 ? speed : 0;
             const calculatedTotalScore = Math.round((accuracy * 0.5) + (effectiveSpeedScore * 0.5));
             
-            // ÁP DỤNG ĐIỂM TRỪ
+            // ÁP DỤNG ĐIỂM TRỪ (GIỚI HẠN TỐI ĐA 35 ĐIỂM)
             const scoreAfterPenalty = Math.max(0, calculatedTotalScore - totalPenalty);
             
             totalScore = Math.max(0, Math.min(100, scoreAfterPenalty));
@@ -2092,10 +2037,10 @@
             const accuracyComment = accuracyCommentSet[Math.floor(Math.random() * accuracyCommentSet.length)];
             const speedComment = speedCommentSet[Math.floor(Math.random() * speedCommentSet.length)];
             
-            // Thêm thông tin về điểm trừ nếu có
+            // Thêm thông tin về điểm trừ nếu có (KHÔNG HIỂN THỊ "TỔNG HỢP ĐIỂM TRỪ")
             let penaltyComment = "";
             if (totalPenalty > 0) {
-                penaltyComment = `\n\nĐã trừ ${totalPenalty} điểm (${yellowPenaltyCount} cụm vàng × 3 điểm + ${redPenaltyCount} cụm đỏ × 5 điểm).`;
+                penaltyComment = `\n\nĐã trừ ${totalPenalty} điểm cho các cụm từ phát âm chưa chính xác.`;
             }
             
             // Chọn 3-4 từ có điểm thấp để nhận xét
@@ -2757,7 +2702,7 @@
             const effectiveSpeedScore = speechAccuracy >= 50 ? speedScore : 0;
             const calculatedTotalScore = Math.round((speechAccuracy * 0.5) + (effectiveSpeedScore * 0.5));
             
-            // ÁP DỤNG ĐIỂM TRỪ cho điểm từ Firebase
+            // ÁP DỤNG ĐIỂM TRỪ (GIỚI HẠN TỐI ĐA 35 ĐIỂM)
             const scoreAfterPenalty = Math.max(0, calculatedTotalScore - totalPenalty);
             
             finalScore.textContent = scoreAfterPenalty;
