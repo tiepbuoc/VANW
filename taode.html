@@ -6,7 +6,6 @@
     <title>Tạo Đề Thi Văn Học - VANW</title>
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
     <style>
         @import url('https://unpkg.com/normalize.css') layer(normalize);
 
@@ -61,7 +60,7 @@
                 border: 1px solid var(--card-outline);
             }
 
-            ::-webkit-scrollbar-thumb {
+            ::webkit-scrollbar-thumb {
                 background: var(--scrollbar-thumb);
                 border-radius: 5px;
                 border: 1px solid var(--card-outline);
@@ -258,6 +257,177 @@
                 height: auto;
             }
             
+            /* NEW: Creation Mode Selector */
+            .creation-mode-selector {
+                margin-bottom: 2rem;
+                background: rgba(227, 124, 45, 0.05);
+                border-radius: 15px;
+                padding: 1.5rem;
+                border: 2px solid rgba(227, 124, 45, 0.2);
+            }
+            
+            .creation-mode-selector h3 {
+                color: var(--primary-color);
+                margin: 0 0 1rem 0;
+                font-size: 1.2rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .mode-tabs {
+                display: flex;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                flex-wrap: wrap;
+            }
+            
+            .mode-tab {
+                flex: 1;
+                min-width: 200px;
+                padding: 1rem 1.5rem;
+                background: var(--card-bg);
+                border: 2px solid var(--card-outline);
+                border-radius: 12px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-weight: 600;
+                color: var(--text-secondary);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .mode-tab:hover {
+                border-color: var(--primary-color);
+                background: rgba(227, 124, 45, 0.05);
+                transform: translateY(-3px);
+            }
+            
+            .mode-tab.active {
+                background: linear-gradient(135deg, rgba(227, 124, 45, 0.1), rgba(250, 216, 89, 0.1));
+                border-color: var(--primary-color);
+                color: var(--primary-color);
+                box-shadow: 0 4px 15px rgba(227, 124, 45, 0.15);
+            }
+            
+            .mode-tab i {
+                font-size: 1.5rem;
+            }
+            
+            .mode-content {
+                display: none;
+                animation: fadeIn 0.3s ease;
+            }
+            
+            .mode-content.active {
+                display: block;
+            }
+            
+            .mode-description {
+                color: var(--text-secondary);
+                font-size: 0.95rem;
+                margin-bottom: 1rem;
+                padding: 0.5rem;
+                background: rgba(255, 255, 255, 0.5);
+                border-radius: 8px;
+                border-left: 3px solid var(--primary-color);
+            }
+            
+            /* AI Prompt Mode Styles */
+            .ai-prompt-area {
+                margin-bottom: 1.5rem;
+            }
+            
+            .ai-prompt-area textarea {
+                width: 100%;
+                min-height: 120px;
+                padding: 1rem;
+                border-radius: 12px;
+                border: 2px solid var(--card-outline);
+                background-color: var(--card-bg);
+                color: var(--text-primary);
+                font-size: 1rem;
+                resize: vertical;
+                transition: all 0.3s ease;
+                font-family: inherit;
+                line-height: 1.6;
+            }
+            
+            .ai-prompt-area textarea:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
+            }
+            
+            .ai-prompt-examples {
+                margin-top: 0.5rem;
+                font-size: 0.9rem;
+                color: var(--text-secondary);
+            }
+            
+            .ai-prompt-examples ul {
+                margin: 0.5rem 0 0 1.5rem;
+                padding: 0;
+            }
+            
+            .ai-prompt-examples li {
+                margin-bottom: 0.25rem;
+            }
+            
+            /* Blocky Mode Styles */
+            .blocky-controls {
+                display: flex;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                flex-wrap: wrap;
+            }
+            
+            .blocky-btn {
+                padding: 0.75rem 1.5rem;
+                background: var(--card-bg);
+                border: 2px solid var(--card-outline);
+                border-radius: 30px;
+                color: var(--text-primary);
+                font-size: 0.95rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                flex: 1;
+                min-width: 120px;
+                justify-content: center;
+            }
+            
+            .blocky-btn:hover {
+                background: rgba(227, 124, 45, 0.1);
+                border-color: var(--primary-color);
+            }
+            
+            .blocky-preview {
+                background: rgba(0, 0, 0, 0.02);
+                border: 2px dashed var(--card-outline);
+                border-radius: 12px;
+                padding: 1.5rem;
+                min-height: 200px;
+            }
+            
+            .blocky-empty-state {
+                text-align: center;
+                color: var(--text-secondary);
+                padding: 3rem 1rem;
+            }
+            
+            .blocky-empty-state i {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+                opacity: 0.5;
+            }
+            
             .input-area {
                 margin-bottom: 2rem;
                 position: relative;
@@ -297,14 +467,27 @@
                 border: 1px solid var(--card-outline);
             }
             
-            .action-buttons {
+            /* ĐÃ SỬA: Action buttons layout - Chỉ dành cho chế độ text */
+            .action-buttons.text-mode {
                 display: flex;
+                flex-direction: column;
                 gap: 1rem;
                 margin-bottom: 2rem;
             }
             
+            .primary-action-row {
+                display: flex;
+                width: 100%;
+            }
+            
+            .secondary-action-row {
+                display: flex;
+                gap: 1rem;
+                width: 100%;
+            }
+            
             .generate-btn {
-                flex: 2;
+                flex: 1;
                 background: var(--gradient);
                 color: white;
                 padding: 1rem 2rem;
@@ -321,6 +504,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                min-width: 200px;
             }
             
             .generate-btn::before {
@@ -376,6 +560,7 @@
                 position: relative;
                 overflow: hidden;
                 z-index: 1;
+                min-width: 150px;
             }
             
             .random-btn::before {
@@ -421,11 +606,31 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                min-width: 60px;
             }
             
             .settings-btn:hover {
                 background: rgba(227, 124, 45, 0.1);
                 border-color: var(--primary-color);
+            }
+            
+            /* ĐÃ SỬA: Action buttons cho AI và Blocky mode vẫn giữ nguyên layout cũ */
+            .action-buttons.ai-mode,
+            .action-buttons.blocky-mode {
+                display: flex;
+                gap: 1rem;
+                margin-bottom: 2rem;
+                flex-wrap: wrap;
+            }
+            
+            .action-buttons.ai-mode .generate-btn,
+            .action-buttons.blocky-mode .generate-btn {
+                flex: 3;
+            }
+            
+            .action-buttons.ai-mode .settings-btn,
+            .action-buttons.blocky-mode .settings-btn {
+                flex: 1;
             }
             
             .settings-panel {
@@ -858,7 +1063,7 @@
                 margin-bottom: 1.5rem;
                 border-left: 4px solid var(--primary-color);
                 line-height: 1.7;
-                white-space: pre-line;
+                white-space: pre-wrap;
                 font-family: 'Times New Roman', Times, serif;
             }
             
@@ -1107,12 +1312,19 @@
                 margin-bottom: 1rem;
             }
             
-            .rich-text-editor .ql-toolbar {
+            .blocky-rich-text-editor {
+                border: 2px solid var(--card-outline);
+                border-radius: 8px;
+                overflow: hidden;
+                margin-bottom: 1rem;
+            }
+            
+            .ql-toolbar {
                 border-bottom: 2px solid var(--card-outline);
                 background: rgba(227, 124, 45, 0.05);
             }
             
-            .rich-text-editor .ql-container {
+            .ql-container {
                 font-family: inherit;
                 font-size: 1rem;
                 min-height: 200px;
@@ -1120,7 +1332,7 @@
                 overflow-y: auto;
             }
             
-            .rich-text-editor .ql-editor {
+            .ql-editor {
                 min-height: 200px;
                 white-space: pre-wrap;
             }
@@ -1247,6 +1459,176 @@
                 font-style: italic;
             }
             
+            /* Blocky Editor Styles */
+            .blocky-block {
+                background: var(--card-bg);
+                border: 2px solid var(--card-outline);
+                border-radius: 8px;
+                padding: 1rem;
+                margin-bottom: 1rem;
+                position: relative;
+            }
+            
+            .blocky-block-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid var(--card-outline);
+            }
+            
+            .blocky-block-title {
+                font-weight: 600;
+                color: var(--primary-color);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .blocky-block-controls {
+                display: flex;
+                gap: 0.5rem;
+            }
+            
+            .blocky-block-btn {
+                padding: 0.25rem 0.5rem;
+                background: var(--card-bg);
+                border: 1px solid var(--card-outline);
+                border-radius: 4px;
+                color: var(--text-primary);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .blocky-block-btn:hover {
+                background: rgba(227, 124, 45, 0.1);
+                border-color: var(--primary-color);
+            }
+            
+            .blocky-block-content {
+                min-height: 50px;
+            }
+            
+            .blocky-block-content textarea {
+                width: 100%;
+                min-height: 100px;
+                padding: 0.75rem;
+                border: 1px solid var(--card-outline);
+                border-radius: 6px;
+                font-family: inherit;
+                font-size: 1rem;
+                resize: vertical;
+                white-space: pre-wrap;
+            }
+            
+            .blocky-block-content textarea:focus {
+                outline: none;
+                border-color: var(--primary-color);
+            }
+            
+            .blocky-block-footer {
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 0.5rem;
+            }
+            
+            /* NEW: Blocky Formatting Controls */
+            .blocky-format-controls {
+                display: flex;
+                gap: 0.5rem;
+                margin-bottom: 0.5rem;
+                flex-wrap: wrap;
+            }
+            
+            .format-btn {
+                padding: 0.25rem 0.5rem;
+                background: var(--card-bg);
+                border: 1px solid var(--card-outline);
+                border-radius: 4px;
+                color: var(--text-primary);
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 0.9rem;
+            }
+            
+            .format-btn:hover {
+                background: rgba(227, 124, 45, 0.1);
+                border-color: var(--primary-color);
+            }
+            
+            .format-btn.active {
+                background: var(--primary-color);
+                color: white;
+                border-color: var(--primary-color);
+            }
+            
+            /* Enhanced blocky preview styles */
+            .blocky-content-editor {
+                margin-bottom: 1rem;
+            }
+            
+            .blocky-content-editor textarea {
+                width: 100%;
+                min-height: 150px;
+                padding: 1rem;
+                border-radius: 8px;
+                border: 2px solid var(--card-outline);
+                background-color: var(--card-bg);
+                color: var(--text-primary);
+                font-size: 1rem;
+                resize: vertical;
+                transition: all 0.3s ease;
+                font-family: inherit;
+                line-height: 1.6;
+                white-space: pre-wrap;
+            }
+            
+            .blocky-content-editor textarea:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
+            }
+            
+            .blocky-points-input {
+                width: 100px;
+                padding: 0.5rem;
+                border: 1px solid var(--card-outline);
+                border-radius: 4px;
+                font-family: inherit;
+                font-size: 1rem;
+            }
+            
+            /* Custom Quill styles to prevent duplicate toolbars */
+            .ql-toolbar.ql-snow {
+                border: 1px solid #ccc;
+                box-sizing: border-box;
+                font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+                padding: 8px;
+                border-radius: 4px 4px 0 0;
+                background: rgba(227, 124, 45, 0.05);
+                border-bottom: 2px solid var(--card-outline);
+            }
+            
+            .ql-container.ql-snow {
+                border: 1px solid #ccc;
+                border-top: none;
+                border-radius: 0 0 4px 4px;
+                font-family: inherit;
+            }
+            
+            .ql-editor {
+                min-height: 150px;
+                font-family: inherit;
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+            
+            /* Hide duplicate toolbars if they appear */
+            .ql-toolbar.ql-snow ~ .ql-toolbar.ql-snow {
+                display: none !important;
+            }
+            
             @media (max-width: 992px) {
                 .options-grid {
                     grid-template-columns: 1fr;
@@ -1262,12 +1644,26 @@
                     padding: 1.8rem;
                 }
                 
-                .action-buttons {
+                .action-buttons.ai-mode,
+                .action-buttons.blocky-mode {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+                
+                /* ĐÃ SỬA: Responsive cho chế độ text */
+                .action-buttons.text-mode {
                     flex-direction: column;
+                }
+                
+                .primary-action-row,
+                .secondary-action-row {
+                    flex-direction: column;
+                    gap: 1rem;
                 }
                 
                 .generate-btn, .random-btn, .settings-btn {
                     width: 100%;
+                    flex: none;
                 }
                 
                 .app-container {
@@ -1278,6 +1674,24 @@
                 main {
                     gap: 1.5rem;
                     padding-block: 1rem;
+                }
+                
+                .mode-tabs {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+                
+                .mode-tab {
+                    min-width: calc(33.333% - 0.67rem);
+                    padding: 0.8rem 1rem;
+                }
+                
+                .mode-tab i {
+                    font-size: 1.2rem;
+                }
+                
+                .mode-tab span {
+                    font-size: 0.9rem;
                 }
                 
                 .duration-header {
@@ -1322,11 +1736,14 @@
                 }
                 
                 .editor-actions {
-                    flex-direction: column;
+                    flex-direction: row;
+                    flex-wrap: wrap;
                 }
                 
                 .editor-action-btn {
-                    width: 100%;
+                    width: auto;
+                    flex: 1;
+                    min-width: 120px;
                     justify-content: center;
                 }
                 
@@ -1337,6 +1754,39 @@
                 
                 .app-footer p {
                     font-size: 0.9rem;
+                }
+                
+                .blocky-controls {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                }
+                
+                .blocky-btn {
+                    width: auto;
+                    flex: 1;
+                    min-width: 120px;
+                    justify-content: center;
+                }
+                
+                /* Mobile adjustments for mode tabs */
+                .mode-tab {
+                    min-width: calc(50% - 0.5rem);
+                }
+                
+                /* Mobile adjustments for AI and Blocky action buttons */
+                .action-buttons.ai-mode,
+                .action-buttons.blocky-mode {
+                    flex-direction: row;
+                }
+                
+                .action-buttons.ai-mode .generate-btn,
+                .action-buttons.blocky-mode .generate-btn {
+                    flex: 2;
+                }
+                
+                .action-buttons.ai-mode .settings-btn,
+                .action-buttons.blocky-mode .settings-btn {
+                    flex: 1;
                 }
             }
             
@@ -1362,6 +1812,58 @@
                     width: 95%;
                     margin: 0.5rem;
                 }
+                
+                .mode-tabs {
+                    gap: 0.5rem;
+                }
+                
+                .mode-tab {
+                    min-width: 100%;
+                    padding: 0.7rem 0.8rem;
+                }
+                
+                .mode-tab i {
+                    font-size: 1.1rem;
+                }
+                
+                .mode-tab span {
+                    font-size: 0.8rem;
+                }
+                
+                /* ĐÃ SỬA: Responsive cho mobile */
+                .action-buttons.text-mode {
+                    flex-direction: column;
+                }
+                
+                .primary-action-row,
+                .secondary-action-row {
+                    flex-direction: column;
+                }
+                
+                .generate-btn, .random-btn, .settings-btn {
+                    width: 100%;
+                }
+                
+                .action-buttons.ai-mode,
+                .action-buttons.blocky-mode {
+                    flex-direction: column;
+                }
+                
+                .action-buttons.ai-mode .generate-btn,
+                .action-buttons.blocky-mode .generate-btn,
+                .action-buttons.ai-mode .settings-btn,
+                .action-buttons.blocky-mode .settings-btn {
+                    width: 100%;
+                    flex: none;
+                }
+                
+                .blocky-controls {
+                    flex-direction: column;
+                }
+                
+                .blocky-btn {
+                    width: 100%;
+                }
             }
             
             @media (min-width: 1200px) {
@@ -1385,19 +1887,115 @@
                         <img src="htext1.png" alt="HỆ THỐNG TẠO BÀI THI VĂN HỌC">
                     </div>
                     
-                    <div class="input-area" id="existingTextArea">
-                        <textarea id="inputText" placeholder="Nhập hoặc dán nội dung văn bản văn học cần tạo đề thi... (Tối thiểu 20 từ)"></textarea>
-                        <div class="word-count" id="wordCount">0 từ</div>
+                    <!-- Creation Mode Selector -->
+                    <div class="creation-mode-selector">
+                        <h3><i class="fas fa-sliders-h"></i> CHẾ ĐỘ TẠO ĐỀ THI</h3>
+                        <div class="mode-tabs">
+                            <div class="mode-tab active" data-mode="text">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Tạo theo văn bản</span>
+                            </div>
+                            <div class="mode-tab" data-mode="ai">
+                                <i class="fas fa-robot"></i>
+                                <span>Tạo bằng AI</span>
+                            </div>
+                            <div class="mode-tab" data-mode="blocky">
+                                <i class="fas fa-cubes"></i>
+                                <span>Tạo Blocky</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Text Mode -->
+                        <div class="mode-content active" id="mode-text">
+                            <div class="mode-description">
+                                <strong>Mô tả:</strong> Nhập văn bản văn học có sẵn, hệ thống sẽ tự động tạo đề thi từ văn bản đó.
+                            </div>
+                            <div class="input-area" id="existingTextArea">
+                                <textarea id="inputText" placeholder="Nhập hoặc dán nội dung văn bản văn học cần tạo đề thi... (Tối thiểu 20 từ)"></textarea>
+                                <div class="word-count" id="wordCount">0 từ</div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI Mode -->
+                        <div class="mode-content" id="mode-ai">
+                            <div class="mode-description">
+                                <strong>Mô tả:</strong> Nhập yêu cầu bằng tiếng Việt, AI sẽ tự động tạo đề thi từ A-Z dựa trên yêu cầu của bạn.
+                            </div>
+                            <div class="ai-prompt-area">
+                                <textarea id="aiPrompt" placeholder="Nhập yêu cầu tạo đề thi... (Ví dụ: Tạo đề thi về bài thơ 'Sóng' của Xuân Quỳnh cho lớp 12 với 5 câu hỏi...)"></textarea>
+                                <div class="ai-prompt-examples">
+                                    <strong>Ví dụ yêu cầu AI:</strong>
+                                    <ul>
+                                        <li>Tạo đề thi về truyện ngắn "Chí Phèo" của Nam Cao cho lớp 11</li>
+                                        <li>Tạo đề thi thơ với bài "Đây thôn Vĩ Dạ" của Hàn Mặc Tử</li>
+                                        <li>Tạo đề đọc hiểu về văn bản nghị luận xã hội</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Blocky Mode -->
+                        <div class="mode-content" id="mode-blocky">
+                            <div class="mode-description">
+                                <strong>Mô tả:</strong> Tạo đề thi bằng cách thêm, xóa và chỉnh sửa từng khối câu hỏi và nội dung.
+                            </div>
+                            <div class="blocky-controls">
+                                <button id="addTextBlockBtn" class="blocky-btn">
+                                    <i class="fas fa-paragraph"></i> Thêm văn bản
+                                </button>
+                                <button id="addQuestionBlockBtn" class="blocky-btn">
+                                    <i class="fas fa-question-circle"></i> Thêm câu hỏi
+                                </button>
+                                <button id="clearBlocksBtn" class="blocky-btn">
+                                    <i class="fas fa-trash"></i> Xóa tất cả
+                                </button>
+                            </div>
+                            <div class="blocky-preview" id="blockyPreview">
+                                <div class="blocky-empty-state">
+                                    <i class="fas fa-cubes"></i>
+                                    <h4>Chưa có nội dung</h4>
+                                    <p>Bấm vào nút "Thêm văn bản" hoặc "Thêm câu hỏi" để bắt đầu tạo đề thi</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="action-buttons">
-                        <button id="generateExamBtn" class="generate-btn">
-                            <i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi Từ Văn Bản
+                    <!-- ĐÃ SỬA: Text Mode Action Buttons với layout mới -->
+                    <div class="action-buttons text-mode" id="textModeButtons">
+                        <!-- Hàng 1: Nút Tạo Đề Thi -->
+                        <div class="primary-action-row">
+                            <button id="generateExamBtn" class="generate-btn">
+                                <i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi
+                            </button>
+                        </div>
+                        
+                        <!-- Hàng 2: Nút Đề Thi Ngẫu Nhiên và Settings -->
+                        <div class="secondary-action-row">
+                            <button id="generateRandomExamBtn" class="random-btn">
+                                <i class="fas fa-dice mr-2"></i> Đề Thi Ngẫu Nhiên
+                            </button>
+                            <button id="settingsBtn" class="settings-btn">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Mode Action Buttons (vẫn giữ layout cũ) -->
+                    <div class="action-buttons ai-mode" id="aiModeButtons" style="display: none;">
+                        <button id="generateAIExamBtn" class="generate-btn">
+                            <i class="fas fa-robot mr-2"></i> Tạo Đề Thi Bằng AI
                         </button>
-                        <button id="generateRandomExamBtn" class="random-btn">
-                            <i class="fas fa-dice mr-2"></i> Tạo Đề Thi Ngẫu Nhiên
+                        <button id="aiSettingsBtn" class="settings-btn">
+                            <i class="fas fa-cog"></i>
                         </button>
-                        <button id="settingsBtn" class="settings-btn">
+                    </div>
+                    
+                    <!-- Blocky Mode Action Buttons (vẫn giữ layout cũ) -->
+                    <div class="action-buttons blocky-mode" id="blockyModeButtons" style="display: none;">
+                        <button id="generateBlockyExamBtn" class="generate-btn">
+                            <i class="fas fa-cubes mr-2"></i> Tạo Đề Thi Blocky
+                        </button>
+                        <button id="blockySettingsBtn" class="settings-btn">
                             <i class="fas fa-cog"></i>
                         </button>
                     </div>
@@ -1573,9 +2171,8 @@
     
     <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
     <script>
-       const REVERSED_API_KEY = "ADHvlJk9rfZ40q7ju_r-yVQl1ZqW4Z-MDySzAI";
-const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
-
+        const REVERSED_API_KEY = "ADHvlJk9rfZ40q7ju_r-yVQl1ZqW4Z-MDySzAI";
+        const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
 
         const firebaseConfigPrimary = {
             apiKey: "AIzaSyBLZpLQKl0x-kMez2v5NURU5qSthT_6qYI",
@@ -1607,7 +2204,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             }
             
             try {
-                firebase.initializeApp(firebaseConfigSecondary, "secondary");
+                firebase.initializeApp(fbaseConfigSecondary, "secondary");
                 console.log("Firebase Secondary initialized successfully");
             } catch (e) {
                 console.log("Secondary app already exists or error:", e.message);
@@ -1664,6 +2261,9 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
 
         let richTextEditors = [];
         let currentRealWorkInfo = null;
+        let currentCreationMode = 'text'; // 'text', 'ai', or 'blocky'
+        let blockyBlocks = [];
+        let blockyQuillEditors = [];
 
         window.addEventListener('error', function(e) {
             if (e.error && e.error.message && e.error.message.includes('asynchronous response')) {
@@ -1814,8 +2414,48 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             }
         }
 
+        // Function to properly handle line breaks for storage
+        function processContentForStorage(content) {
+            if (!content) return '';
+            
+            // Replace actual newlines with a special marker for storage
+            // We'll use |||NEWLINE||| as a marker that won't interfere with normal text
+            let processed = content.replace(/\n/g, '|||NEWLINE|||');
+            
+            // Also handle multiple consecutive newlines
+            processed = processed.replace(/\|\|\|NEWLINE\|\|\|\s*\|\|\|NEWLINE\|\|\|/g, '|||NEWLINE|||');
+            
+            return processed;
+        }
+
+        // Function to restore line breaks from storage
+        function restoreContentFromStorage(storedContent) {
+            if (!storedContent) return '';
+            
+            // Restore newlines from our marker
+            let restored = storedContent.replace(/\|\|\|NEWLINE\|\|\|/g, '\n');
+            
+            return restored;
+        }
+
+        // Function to properly display content with line breaks
+        function displayContentWithLineBreaks(content) {
+            if (!content) return '';
+            
+            // Check if content has our storage marker
+            if (content.includes('|||NEWLINE|||')) {
+                return restoreContentFromStorage(content);
+            }
+            
+            // If no marker, but has \n, display as is
+            return content.replace(/\\n/g, '\n');
+        }
+
         function markdownToHtml(text) {
             if (!text) return '';
+            
+            // First restore line breaks if needed
+            text = displayContentWithLineBreaks(text);
             
             let html = text;
             
@@ -1907,7 +2547,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     ]
                 }
                 
-                LƯU Ý: Giữ nguyên \n cho xuống dòng trong nội dung văn bản!
+                LƯU Ý: Giữ nguyên \\n cho xuống dòng trong nội dung văn bản!
             `;
 
             try {
@@ -1943,6 +2583,15 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 if (jsonMatch) {
                     const examData = JSON.parse(jsonMatch[0]);
                     
+                    // Process content for proper line break handling
+                    if (examData.blocks) {
+                        examData.blocks.forEach(block => {
+                            if (block.content) {
+                                block.content = processContentForStorage(block.content);
+                            }
+                        });
+                    }
+                    
                     if (!examData.workInfo && workInfo) {
                         examData.workInfo = workInfo;
                     }
@@ -1961,17 +2610,119 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                             {
                                 type: "text",
                                 title: "Phần I: ĐỌC HIỂU",
-                                content: text.substring(0, 500),
+                                content: processContentForStorage(text.substring(0, 500)),
                                 points: 0
                             },
                             {
                                 type: "question",
                                 title: "Câu hỏi 1",
-                                content: "**Nêu nội dung chính** của đoạn văn trên?",
+                                content: processContentForStorage("**Nêu nội dung chính** của đoạn văn trên?"),
                                 points: 1.0
                             }
                         ]
                     };
+                }
+            } catch (error) {
+                throw new Error('Lỗi kết nối với Gemini API: ' + error.message);
+            }
+        }
+
+        // Function to generate exam from AI prompt
+        async function generateExamFromAIPrompt(promptText) {
+            const fullPrompt = `
+                Tạo một đề thi Ngữ Văn hoàn chỉnh dựa trên yêu cầu sau:
+                
+                YÊU CẦU CỦA NGƯỜI DÙNG: ${promptText}
+                
+                THÔNG TIN ĐỀ THI:
+                - Thời gian: ${examSettings.time} phút
+                - Độ khó: ${examSettings.difficulty}
+                - Khối lớp: ${examSettings.grade}
+                - Số câu hỏi: ${examSettings.questionCount}
+                - Phần đọc hiểu: ${examSettings.hasReading ? 'CÓ' : 'KHÔNG'}
+                - Phần nghị luận: ${examSettings.hasEssay ? 'CÓ' : 'KHÔNG'}
+                - Phần liên hệ thực tế: ${examSettings.hasPractice ? 'CÓ' : 'KHÔNG'}
+                
+                YÊU CẦU QUAN TRỌNG:
+                1. PHẢI sử dụng tác phẩm văn học có thật trong chương trình Ngữ Văn Việt Nam
+                2. Giữ nguyên định dạng xuống dòng của văn bản, đặc biệt với THƠ
+                3. Tạo đề thi phù hợp với chương trình giáo dục Việt Nam
+                4. Bao gồm cả văn bản đọc hiểu và câu hỏi
+                5. Đảm bảo tính chính xác của thông tin tác phẩm
+                
+                Định dạng trả về JSON:
+                {
+                    "title": "Tiêu đề đề thi",
+                    "description": "Mô tả ngắn về đề thi",
+                    "workInfo": {
+                        "title": "Tên tác phẩm",
+                        "author": "Tác giả",
+                        "genre": "Thể loại"
+                    },
+                    "blocks": [
+                        {
+                            "type": "text",
+                            "title": "Phần I: ĐỌC HIỂU",
+                            "content": "Đoạn văn bản cho phần đọc hiểu...",
+                            "points": 0
+                        },
+                        {
+                            "type": "question",
+                            "title": "Câu hỏi 1",
+                            "content": "Nêu nội dung chính của đoạn văn trên?",
+                            "points": 1.0
+                        }
+                    ]
+                }
+                
+                LƯU Ý: Giữ nguyên \\n cho xuống dòng trong nội dung văn bản!
+            `;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: fullPrompt
+                            }]
+                        }],
+                        generationConfig: {
+                            maxOutputTokens: 8000,
+                            temperature: 0.7,
+                            topP: 0.95,
+                            topK: 40,
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error?.message || 'Lỗi từ API');
+                }
+
+                const resultText = data.candidates[0].content.parts[0].text;
+                
+                const jsonMatch = resultText.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    const examData = JSON.parse(jsonMatch[0]);
+                    
+                    // Process content for proper line break handling
+                    if (examData.blocks) {
+                        examData.blocks.forEach(block => {
+                            if (block.content) {
+                                block.content = processContentForStorage(block.content);
+                            }
+                        });
+                    }
+                    
+                    return examData;
+                } else {
+                    throw new Error('Không thể phân tích phản hồi từ AI');
                 }
             } catch (error) {
                 throw new Error('Lỗi kết nối với Gemini API: ' + error.message);
@@ -2085,7 +2836,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     }
                 }
                 
-                workInfo.content = contentLines.join('\n').trim();
+                workInfo.content = processContentForStorage(contentLines.join('\n').trim());
                 
                 if (!workInfo.title) workInfo.title = "Tác phẩm văn học";
                 if (!workInfo.author) workInfo.author = "Tác giả";
@@ -2102,7 +2853,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     title: "Chí Phèo",
                     author: "Nam Cao",
                     genre: "Truyện ngắn",
-                    content: "Hắn vừa đi vừa chửi. Bao giờ cũng thế, cứ rượu xong là hắn chửi. Bắt đầu hắn chửi trời. Có hề gì? Trời có của riêng nhà nào? Rồi hắn chửi đời. Thế cũng chẳng sao: đời là tất cả nhưng chẳng là ai..."
+                    content: processContentForStorage("Hắn vừa đi vừa chửi. Bao giờ cũng thế, cứ rượu xong là hắn chửi. Bắt đầu hắn chửi trời. Có hề gì? Trời có của riêng nhà nào? Rồi hắn chửi đời. Thế cũng chẳng sao: đời là tất cả nhưng chẳng là ai...")
                 };
                 
                 return currentRealWorkInfo.content;
@@ -2195,27 +2946,26 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 }
             } finally {
                 generateRandomBtn.disabled = false;
-                generateRandomBtn.innerHTML = '<i class="fas fa-dice mr-2"></i> Tạo Đề Thi Ngẫu Nhiên';
+                generateRandomBtn.innerHTML = '<i class="fas fa-dice mr-2"></i> Đề Thi Ngẫu Nhiên';
             }
         }
 
         async function generateExam() {
-            const text = document.getElementById('inputText').value.trim();
-            
-            if (!text) {
-                showNotification('Vui lòng nhập nội dung văn bản!', 'error');
-                return;
-            }
-            
-            const wordCount = countWords(text);
-            if (wordCount < 20) {
-                showNotification(`Văn bản quá ngắn (${wordCount} từ)! Vui lòng nhập ít nhất 20 từ.`, 'error');
-                return;
-            }
-            
-            const generateBtn = document.getElementById('generateExamBtn');
+            let examData;
             const progressContainer = document.getElementById('progressContainer');
             const examResult = document.getElementById('examResult');
+            let generateBtn;
+
+            // Get the correct generate button based on current mode
+            if (currentCreationMode === 'text') {
+                generateBtn = document.getElementById('generateExamBtn');
+            } else if (currentCreationMode === 'ai') {
+                generateBtn = document.getElementById('generateAIExamBtn');
+            } else if (currentCreationMode === 'blocky') {
+                generateBtn = document.getElementById('generateBlockyExamBtn');
+            }
+
+            if (!generateBtn) return;
 
             generateBtn.disabled = true;
             generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Đang tạo đề thi...';
@@ -2243,59 +2993,139 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 
                 const examNotes = document.getElementById('examNotes').value;
 
-                addProgressItem('Phân tích văn bản');
-                addProgressItem('Thực hiện tự kiểm chứng tác phẩm', 'verification');
-                addProgressItem('Tạo câu hỏi đề thi');
-                addProgressItem('Hoàn thiện cấu trúc đề');
-
-                const textTypeResponse = await fetchGemini(
-                    `Xác định thể loại chính xác của văn bản sau (chỉ trả về 1-3 từ): "${text.substring(0, 800)}"`
-                );
-                completeProgressItem(0);
-
-                markAsVerification(1);
-                
-                let workInfo = currentRealWorkInfo;
-                
-                if (!workInfo) {
-                    const verificationPrompt = `
-                        Văn bản sau có phải là tác phẩm văn học có thật trong chương trình Ngữ Văn Việt Nam không?
-                        Trả lời ngắn gọn: CÓ hoặc KHÔNG
-                        
-                        Văn bản: "${text.substring(0, 500)}"
-                    `;
+                if (currentCreationMode === 'text') {
+                    // Text mode
+                    const text = document.getElementById('inputText').value.trim();
                     
-                    try {
-                        const verificationResult = await fetchGemini(verificationPrompt);
-                        if (verificationResult.includes('CÓ') || verificationResult.includes('có')) {
-                            workInfo = {
-                                title: "Tác phẩm văn học",
-                                author: "Tác giả",
-                                genre: textTypeResponse.trim()
-                            };
-                        }
-                    } catch (e) {
-                        console.warn("Không thể kiểm chứng tác phẩm:", e);
+                    if (!text) {
+                        throw new Error('Vui lòng nhập nội dung văn bản!');
                     }
+                    
+                    const wordCount = countWords(text);
+                    if (wordCount < 20) {
+                        throw new Error(`Văn bản quá ngắn (${wordCount} từ)! Vui lòng nhập ít nhất 20 từ.`);
+                    }
+
+                    addProgressItem('Phân tích văn bản');
+                    addProgressItem('Thực hiện tự kiểm chứng tác phẩm', 'verification');
+                    addProgressItem('Tạo câu hỏi đề thi');
+                    addProgressItem('Hoàn thiện cấu trúc đề');
+
+                    const textTypeResponse = await fetchGemini(
+                        `Xác định thể loại chính xác của văn bản sau (chỉ trả về 1-3 từ): "${text.substring(0, 800)}"`
+                    );
+                    completeProgressItem(0);
+
+                    markAsVerification(1);
+                    
+                    let workInfo = currentRealWorkInfo;
+                    
+                    if (!workInfo) {
+                        const verificationPrompt = `
+                            Văn bản sau có phải là tác phẩm văn học có thật trong chương trình Ngữ Văn Việt Nam không?
+                            Trả lời ngắn gọn: CÓ hoặc KHÔNG
+                            
+                            Văn bản: "${text.substring(0, 500)}"
+                        `;
+                        
+                        try {
+                            const verificationResult = await fetchGemini(verificationPrompt);
+                            if (verificationResult.includes('CÓ') || verificationResult.includes('có')) {
+                                workInfo = {
+                                    title: "Tác phẩm văn học",
+                                    author: "Tác giả",
+                                    genre: textTypeResponse.trim()
+                                };
+                            }
+                        } catch (e) {
+                            console.warn("Không thể kiểm chứng tác phẩm:", e);
+                        }
+                    }
+                    
+                    completeProgressItem(1);
+
+                    examData = await generateExamWithGemini(text, workInfo);
+                    completeProgressItem(2);
+
+                    showExamResult(examData, examNotes);
+                    completeProgressItem(3);
+
+                    showNotification('Tạo đề thi thành công từ tác phẩm thật!', 'success');
+
+                } else if (currentCreationMode === 'ai') {
+                    // AI mode
+                    const prompt = document.getElementById('aiPrompt').value.trim();
+                    
+                    if (!prompt) {
+                        throw new Error('Vui lòng nhập yêu cầu cho AI!');
+                    }
+
+                    addProgressItem('Đang phân tích yêu cầu');
+                    addProgressItem('Tìm kiếm tác phẩm phù hợp', 'verification');
+                    addProgressItem('Tạo nội dung đề thi');
+                    addProgressItem('Hoàn thiện cấu trúc đề');
+
+                    completeProgressItem(0);
+
+                    markAsVerification(1);
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    completeProgressItem(1);
+
+                    examData = await generateExamFromAIPrompt(prompt);
+                    completeProgressItem(2);
+
+                    showExamResult(examData, examNotes);
+                    completeProgressItem(3);
+
+                    showNotification('Tạo đề thi bằng AI thành công!', 'success');
+
+                } else if (currentCreationMode === 'blocky') {
+                    // Blocky mode
+                    if (blockyBlocks.length === 0) {
+                        throw new Error('Vui lòng thêm ít nhất một khối nội dung!');
+                    }
+
+                    addProgressItem('Đang xử lý các khối nội dung');
+                    addProgressItem('Kiểm tra tính hợp lệ', 'verification');
+                    addProgressItem('Hoàn thiện đề thi');
+
+                    completeProgressItem(0);
+
+                    markAsVerification(1);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    completeProgressItem(1);
+
+                    // Convert blocky blocks to exam data format
+                    examData = {
+                        title: "ĐỀ THI NGỮ VĂN",
+                        description: "Đề thi được tạo bằng chế độ Blocky",
+                        workInfo: currentRealWorkInfo || {
+                            title: "Tác phẩm tổng hợp",
+                            author: "Nhiều tác giả",
+                            genre: "Văn học tổng hợp"
+                        },
+                        blocks: blockyBlocks.map((block, index) => ({
+                            type: block.type,
+                            title: block.title || (block.type === 'text' ? `Phần văn bản ${index + 1}` : `Câu hỏi ${index + 1}`),
+                            content: processContentForStorage(block.content || ''),
+                            points: block.points || (block.type === 'question' ? 1.0 : 0)
+                        }))
+                    };
+
+                    showExamResult(examData, examNotes);
+                    completeProgressItem(2);
+
+                    showNotification('Tạo đề thi bằng Blocky thành công!', 'success');
                 }
-                
-                completeProgressItem(1);
-
-                const examData = await generateExamWithGemini(text, workInfo);
-                completeProgressItem(2);
-
-                showExamResult(examData, examNotes);
-                completeProgressItem(3);
 
                 examResult.style.display = 'block';
-                showNotification('Tạo đề thi thành công từ tác phẩm thật!', 'success');
 
             } catch (error) {
                 console.error('Lỗi khi tạo đề thi:', error);
                 
                 let errorMessage = 'Đã xảy ra lỗi khi tạo đề thi. ';
                 if (error.message.includes('timeout')) {
-                    errorMessage += 'Yêu cầu mất quá nhiều thời gian. Vui lòng thử lại với văn bản ngắn hơn.';
+                    errorMessage += 'Yêu cầu mất quá nhiều thời gian. Vui lòng thử lại.';
                 } else if (error.message.includes('Failed after')) {
                     errorMessage += 'Không thể kết nối đến AI. Vui lòng kiểm tra kết nối internet và thử lại.';
                 } else {
@@ -2309,8 +3139,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                         <p><strong>Gợi ý:</strong></p>
                         <ul>
                             <li>Kiểm tra kết nối internet</li>
-                            <li>Thử lại với văn bản ngắn hơn</li>
-                            <li>Đảm bảo văn bản có ít nhất 20 từ</li>
+                            <li>Thử lại với nội dung khác</li>
                             <li>Thử lại sau vài phút</li>
                         </ul>
                     </div>
@@ -2325,7 +3154,13 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 }
             } finally {
                 generateBtn.disabled = false;
-                generateBtn.innerHTML = '<i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi Từ Văn Bản';
+                if (currentCreationMode === 'text') {
+                    generateBtn.innerHTML = '<i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi';
+                } else if (currentCreationMode === 'ai') {
+                    generateBtn.innerHTML = '<i class="fas fa-robot mr-2"></i> Tạo Đề Thi Bằng AI';
+                } else if (currentCreationMode === 'blocky') {
+                    generateBtn.innerHTML = '<i class="fas fa-cubes mr-2"></i> Tạo Đề Thi Blocky';
+                }
             }
         }
 
@@ -2333,9 +3168,10 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             currentExamBlocks = examData.blocks || [];
             currentExamCode = generateExamCode();
             
+            // Restore line breaks for display
             currentExamBlocks.forEach(block => {
                 if (block.content && typeof block.content === 'string') {
-                    block.content = block.content.replace(/\\n/g, '\n');
+                    block.content = displayContentWithLineBreaks(block.content);
                 }
             });
             
@@ -2511,10 +3347,11 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 
                 const totalPoints = currentExamBlocks.reduce((sum, block) => sum + (block.points || 0), 0);
                 
-                const examData = {
+                // Prepare exam data with processed content for storage
+                const examDataToSave = {
                     examId: currentExamCode,
                     title: "Đề thi Ngữ Văn",
-                    literaryText: document.getElementById('inputText').value.substring(0, 500),
+                    literaryText: document.getElementById('inputText')?.value.substring(0, 500) || '',
                     examTime: examSettings.time,
                     difficulty: examSettings.difficulty,
                     grade: examSettings.grade,
@@ -2526,8 +3363,16 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     source: "VANW Exam Tool",
                     status: "active",
                     isRealWork: !!currentRealWorkInfo,
-                    workInfo: currentRealWorkInfo || null
+                    workInfo: currentRealWorkInfo || null,
+                    creationMode: currentCreationMode
                 };
+                
+                // Process content for storage in each block
+                examDataToSave.blocks.forEach(block => {
+                    if (block.content && typeof block.content === 'string') {
+                        block.content = processContentForStorage(block.content);
+                    }
+                });
                 
                 showNotification('Đang lưu đề thi vào cả 2 database...', 'info');
                 
@@ -2536,14 +3381,14 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 if (firestoreDbPrimary) {
                     savePromises.push(
                         firestoreDbPrimary.collection('exams').doc(currentExamCode)
-                            .set(examData, { merge: true })
+                            .set(examDataToSave, { merge: true })
                     );
                 }
                 
                 if (firestoreDbSecondary) {
                     savePromises.push(
                         firestoreDbSecondary.collection('vanw_exams').doc(currentExamCode)
-                            .set(examData, { merge: true })
+                            .set(examDataToSave, { merge: true })
                     );
                 }
                 
@@ -2572,7 +3417,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     
                     const backupExams = JSON.parse(localStorage.getItem('vanw_exams_backup') || '{}');
                     backupExams[currentExamCode] = {
-                        ...examData,
+                        ...examDataToSave,
                         localBackup: true,
                         backupDate: new Date().toISOString()
                     };
@@ -2590,7 +3435,10 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     localExams[currentExamCode] = {
                         examId: currentExamCode,
                         title: "Đề thi Ngữ Văn",
-                        blocks: currentExamBlocks,
+                        blocks: currentExamBlocks.map(block => ({
+                            ...block,
+                            content: processContentForStorage(block.content)
+                        })),
                         examTime: examSettings.time,
                         difficulty: examSettings.difficulty,
                         grade: examSettings.grade,
@@ -2662,7 +3510,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
 
         function createBlockEditorHTML(block, index) {
             let content = block.content || '';
-            content = content.replace(/<br>/g, '\n');
+            content = displayContentWithLineBreaks(content);
             
             return `
                 <div class="exam-block-editor" data-index="${index}" style="margin-bottom: 1.5rem; border: 2px solid var(--card-outline); border-radius: 8px; padding: 1rem;">
@@ -2717,7 +3565,16 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 const editorId = `editor-${index}`;
                 const textareaId = `editor-text-${index}`;
                 
-                const quill = new Quill(`#${editorId}`, {
+                const editorElement = document.getElementById(editorId);
+                if (!editorElement) return;
+                
+                // Check if editor already exists
+                if (editorElement.querySelector('.ql-toolbar')) {
+                    console.log(`Editor ${editorId} already initialized, skipping...`);
+                    return;
+                }
+                
+                const quill = new Quill(editorElement, {
                     theme: 'snow',
                     modules: {
                         toolbar: [
@@ -2897,7 +3754,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     previewHTML += `
                         <div class="exam-section">
                             <h3 class="section-title">${block.title || 'Phần văn bản'}</h3>
-                            <div class="text-content markdown-content" style="white-space: pre-wrap; font-family: 'Times New Roman', Times, serif;">${block.content}</div>
+                            <div class="text-content markdown-content" style="white-space: pre-wrap; font-family: 'Times New Roman', Times, serif;">${markdownToHtml(block.content)}</div>
                         </div>
                     `;
                 } else if (block.type === 'question') {
@@ -2905,7 +3762,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     previewHTML += `
                         <div class="question-item">
                             <div class="question-header">
-                                <div class="question-text markdown-content"><strong>Câu ${questionCounter}:</strong> ${block.content}</div>
+                                <div class="question-text markdown-content"><strong>Câu ${questionCounter}:</strong> ${markdownToHtml(block.content)}</div>
                                 <div class="question-points">${block.points || 1.0} điểm</div>
                             </div>
                             <div class="answer-area">
@@ -2943,7 +3800,10 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 time: examSettings.time,
                 difficulty: examSettings.difficulty,
                 grade: examSettings.grade,
-                blocks: currentExamBlocks,
+                blocks: currentExamBlocks.map(block => ({
+                    ...block,
+                    content: processContentForStorage(block.content)
+                })),
                 isRealWork: !!currentRealWorkInfo,
                 workInfo: currentRealWorkInfo,
                 createdAt: new Date().toISOString(),
@@ -2985,7 +3845,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     printHTML += `
                         <div class="exam-section">
                             <h3 class="section-title">${block.title || 'Phần văn bản'}</h3>
-                            <div class="text-content markdown-content" style="white-space: pre-wrap; font-family: 'Times New Roman', Times, serif;">${block.content}</div>
+                            <div class="text-content markdown-content" style="white-space: pre-wrap; font-family: 'Times New Roman', Times, serif;">${markdownToHtml(block.content)}</div>
                         </div>
                     `;
                 } else if (block.type === 'question') {
@@ -2993,7 +3853,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     printHTML += `
                         <div class="question-item">
                             <div class="question-header">
-                                <div class="question-text markdown-content"><strong>Câu ${questionCounter}:</strong> ${block.content}</div>
+                                <div class="question-text markdown-content"><strong>Câu ${questionCounter}:</strong> ${markdownToHtml(block.content)}</div>
                                 <div class="question-points">${block.points || 1.0} điểm</div>
                             </div>
                             <div class="answer-area">
@@ -3126,6 +3986,205 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 </html>
             `);
             printWindow.document.close();
+        }
+
+        // Enhanced Blocky Mode Functions with Rich Text Editor
+        function addBlockyBlock(type) {
+            const blockId = Date.now();
+            const block = {
+                id: blockId,
+                type: type,
+                title: type === 'text' ? 'Phần văn bản' : 'Câu hỏi',
+                content: '',
+                points: type === 'question' ? 1.0 : 0
+            };
+            
+            blockyBlocks.push(block);
+            renderBlockyBlocks();
+            
+            // Initialize Quill editor for the new block
+            setTimeout(() => {
+                const editorId = `blocky-editor-${blockId}`;
+                const editorContainer = document.getElementById(editorId);
+                if (editorContainer) {
+                    // Check if editor already exists
+                    if (editorContainer.querySelector('.ql-toolbar')) {
+                        console.log(`Blocky editor ${editorId} already initialized, skipping...`);
+                        return;
+                    }
+                    
+                    const quill = new Quill(editorContainer, {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: [
+                                ['bold', 'italic', 'underline'],
+                                [{ 'header': 1 }, { 'header': 2 }],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                ['clean']
+                            ]
+                        },
+                        placeholder: type === 'text' ? 'Nhập nội dung văn bản...' : 'Nhập nội dung câu hỏi...'
+                    });
+                    
+                    quill.on('text-change', function() {
+                        updateBlockyBlock(blockId, 'content', quill.root.innerHTML);
+                    });
+                    
+                    blockyQuillEditors[blockId] = quill;
+                }
+            }, 100);
+        }
+
+        function removeBlockyBlock(blockId) {
+            blockyBlocks = blockyBlocks.filter(block => block.id !== blockId);
+            delete blockyQuillEditors[blockId];
+            renderBlockyBlocks();
+        }
+
+        function updateBlockyBlock(blockId, field, value) {
+            const block = blockyBlocks.find(b => b.id === blockId);
+            if (block) {
+                block[field] = value;
+            }
+        }
+
+        function moveBlockyBlock(blockId, direction) {
+            const index = blockyBlocks.findIndex(b => b.id === blockId);
+            if (index === -1) return;
+            
+            if (direction === 'up' && index > 0) {
+                [blockyBlocks[index], blockyBlocks[index - 1]] = [blockyBlocks[index - 1], blockyBlocks[index]];
+            } else if (direction === 'down' && index < blockyBlocks.length - 1) {
+                [blockyBlocks[index], blockyBlocks[index + 1]] = [blockyBlocks[index + 1], blockyBlocks[index]];
+            }
+            
+            renderBlockyBlocks();
+            
+            // Re-initialize Quill editors after moving
+            setTimeout(() => {
+                initBlockyQuillEditors();
+            }, 50);
+        }
+
+        function initBlockyQuillEditors() {
+            blockyBlocks.forEach(block => {
+                const editorId = `blocky-editor-${block.id}`;
+                const editorContainer = document.getElementById(editorId);
+                if (editorContainer && !blockyQuillEditors[block.id]) {
+                    // Check if editor already exists
+                    if (editorContainer.querySelector('.ql-toolbar')) {
+                        console.log(`Blocky editor ${editorId} already initialized, skipping...`);
+                        return;
+                    }
+                    
+                    const quill = new Quill(editorContainer, {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: [
+                                ['bold', 'italic', 'underline'],
+                                [{ 'header': 1 }, { 'header': 2 }],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                ['clean']
+                            ]
+                        },
+                        placeholder: block.type === 'text' ? 'Nhập nội dung văn bản...' : 'Nhập nội dung câu hỏi...'
+                    });
+                    
+                    if (block.content) {
+                        quill.root.innerHTML = block.content;
+                    }
+                    
+                    quill.on('text-change', function() {
+                        updateBlockyBlock(block.id, 'content', quill.root.innerHTML);
+                    });
+                    
+                    blockyQuillEditors[block.id] = quill;
+                }
+            });
+        }
+
+        function renderBlockyBlocks() {
+            const previewContainer = document.getElementById('blockyPreview');
+            
+            if (blockyBlocks.length === 0) {
+                previewContainer.innerHTML = `
+                    <div class="blocky-empty-state">
+                        <i class="fas fa-cubes"></i>
+                        <h4>Chưa có nội dung</h4>
+                        <p>Bấm vào nút "Thêm văn bản" hoặc "Thêm câu hỏi" để bắt đầu tạo đề thi</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            
+            blockyBlocks.forEach((block, index) => {
+                html += `
+                    <div class="blocky-block" data-block-id="${block.id}">
+                        <div class="blocky-block-header">
+                            <div class="blocky-block-title">
+                                <i class="fas fa-${block.type === 'text' ? 'paragraph' : 'question-circle'}"></i>
+                                ${block.title || (block.type === 'text' ? 'Phần văn bản' : 'Câu hỏi')}
+                            </div>
+                            <div class="blocky-block-controls">
+                                <button class="blocky-block-btn move-up" onclick="moveBlockyBlock(${block.id}, 'up')" ${index === 0 ? 'disabled' : ''}>
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                                <button class="blocky-block-btn move-down" onclick="moveBlockyBlock(${block.id}, 'down')" ${index === blockyBlocks.length - 1 ? 'disabled' : ''}>
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                                <button class="blocky-block-btn delete" onclick="removeBlockyBlock(${block.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="blocky-block-content">
+                            <div class="form-group" style="margin-bottom: 0.5rem;">
+                                <input type="text" 
+                                       value="${block.title || ''}" 
+                                       placeholder="Nhập tiêu đề..." 
+                                       oninput="updateBlockyBlock(${block.id}, 'title', this.value)"
+                                       style="width: 100%; padding: 0.5rem; border: 1px solid var(--card-outline); border-radius: 4px;">
+                            </div>
+                            <div class="blocky-rich-text-editor" id="blocky-editor-${block.id}"></div>
+                `;
+                
+                if (block.type === 'question') {
+                    html += `
+                            <div class="blocky-block-footer">
+                                <div class="form-group">
+                                    <label style="font-size: 0.9rem; color: var(--text-secondary); margin-right: 0.5rem;">Điểm:</label>
+                                    <input type="number" 
+                                           value="${block.points || 1.0}" 
+                                           min="0" 
+                                           max="10" 
+                                           step="0.5"
+                                           oninput="updateBlockyBlock(${block.id}, 'points', parseFloat(this.value))"
+                                           style="width: 80px; padding: 0.25rem 0.5rem; border: 1px solid var(--card-outline); border-radius: 4px;">
+                                </div>
+                            </div>
+                    `;
+                }
+                
+                html += `</div></div>`;
+            });
+            
+            previewContainer.innerHTML = html;
+            
+            // Initialize Quill editors
+            initBlockyQuillEditors();
+        }
+
+        function clearBlockyBlocks() {
+            if (blockyBlocks.length === 0) return;
+            
+            if (confirm('Bạn có chắc chắn muốn xóa tất cả các khối?')) {
+                blockyBlocks = [];
+                blockyQuillEditors = {};
+                renderBlockyBlocks();
+                showNotification('Đã xóa tất cả các khối', 'success');
+            }
         }
 
         function showNotification(message, type = 'info') {
@@ -3405,24 +4464,25 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             document.addEventListener('click', function(e) {
                 if (e.target && e.target.id === 'addTextBlockBtn') {
                     e.preventDefault();
-                    addBlock('text');
+                    if (currentCreationMode === 'blocky') {
+                        addBlockyBlock('text');
+                    } else {
+                        addBlock('text');
+                    }
                 }
                 
                 if (e.target && e.target.id === 'addQuestionBlockBtn') {
                     e.preventDefault();
-                    addBlock('question');
+                    if (currentCreationMode === 'blocky') {
+                        addBlockyBlock('question');
+                    } else {
+                        addBlock('question');
+                    }
                 }
                 
                 if (e.target && e.target.id === 'reorderBlocksBtn') {
                     e.preventDefault();
                     reorderBlocks();
-                }
-                
-                if (e.target && e.target.id === 'previewEditedExamBtn') {
-                    e.preventDefault();
-                    updateExamFromEditor();
-                    updateExamPreview();
-                    editModal.classList.remove('active');
                 }
                 
                 if (e.target && e.target.closest('.block-btn.delete')) {
@@ -3445,14 +4505,126 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     const index = parseInt(btn.dataset.index);
                     moveBlock(index, 'down');
                 }
+                
+                // Clear blocks in blocky mode
+                if (e.target && e.target.id === 'clearBlocksBtn') {
+                    e.preventDefault();
+                    clearBlockyBlocks();
+                }
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const generateExamBtn = document.getElementById('generateExamBtn');
-            if (generateExamBtn) {
-                generateExamBtn.addEventListener('click', generateExam);
+        // Function to switch creation mode
+        function switchCreationMode(mode) {
+            currentCreationMode = mode;
+            
+            // Update active tab
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                if (tab.dataset.mode === mode) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Show/hide mode content
+            document.querySelectorAll('.mode-content').forEach(content => {
+                if (content.id === `mode-${mode}`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+            
+            // Show/hide appropriate action buttons
+            document.getElementById('textModeButtons').style.display = mode === 'text' ? 'flex' : 'none';
+            document.getElementById('aiModeButtons').style.display = mode === 'ai' ? 'flex' : 'none';
+            document.getElementById('blockyModeButtons').style.display = mode === 'blocky' ? 'flex' : 'none';
+            
+            // Update generate button text based on mode
+            const textGenerateBtn = document.getElementById('generateExamBtn');
+            const aiGenerateBtn = document.getElementById('generateAIExamBtn');
+            const blockyGenerateBtn = document.getElementById('generateBlockyExamBtn');
+            
+            if (mode === 'text') {
+                textGenerateBtn.innerHTML = '<i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi';
+            } else if (mode === 'ai') {
+                aiGenerateBtn.innerHTML = '<i class="fas fa-robot mr-2"></i> Tạo Đề Thi Bằng AI';
+            } else if (mode === 'blocky') {
+                blockyGenerateBtn.innerHTML = '<i class="fas fa-cubes mr-2"></i> Tạo Đề Thi Blocky';
             }
+            
+            // Show notification
+            const modeNames = {
+                'text': 'Tạo theo văn bản',
+                'ai': 'Tạo bằng AI',
+                'blocky': 'Tạo Blocky'
+            };
+            showNotification(`Đã chuyển sang chế độ: ${modeNames[mode]}`, 'info');
+        }
+
+        // Function to handle settings button click for all modes
+        function setupSettingsButtons() {
+            const textSettingsBtn = document.getElementById('settingsBtn');
+            const aiSettingsBtn = document.getElementById('aiSettingsBtn');
+            const blockySettingsBtn = document.getElementById('blockySettingsBtn');
+            
+            const settingsPanel = document.getElementById('settingsPanel');
+            
+            function toggleSettingsPanel(btn) {
+                settingsPanel.classList.toggle('active');
+                
+                const icon = btn.querySelector('i');
+                if (settingsPanel.classList.contains('active')) {
+                    icon.className = 'fas fa-times';
+                    btn.style.backgroundColor = 'rgba(227, 124, 45, 0.2)';
+                    btn.style.borderColor = 'var(--primary-color)';
+                } else {
+                    icon.className = 'fas fa-cog';
+                    btn.style.backgroundColor = '';
+                    btn.style.borderColor = '';
+                }
+            }
+            
+            if (textSettingsBtn) {
+                textSettingsBtn.addEventListener('click', function() {
+                    toggleSettingsPanel(this);
+                });
+            }
+            
+            if (aiSettingsBtn) {
+                aiSettingsBtn.addEventListener('click', function() {
+                    toggleSettingsPanel(this);
+                });
+            }
+            
+            if (blockySettingsBtn) {
+                blockySettingsBtn.addEventListener('click', function() {
+                    toggleSettingsPanel(this);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup mode switching
+            document.querySelectorAll('.mode-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const mode = this.dataset.mode;
+                    switchCreationMode(mode);
+                });
+            });
+            
+            // Initialize blocky functions in global scope
+            window.addBlockyBlock = addBlockyBlock;
+            window.removeBlockyBlock = removeBlockyBlock;
+            window.updateBlockyBlock = updateBlockyBlock;
+            window.moveBlockyBlock = moveBlockyBlock;
+            window.clearBlockyBlocks = clearBlockyBlocks;
+            
+            // Setup event listeners for all generate buttons
+            document.getElementById('generateExamBtn')?.addEventListener('click', generateExam);
+            document.getElementById('generateAIExamBtn')?.addEventListener('click', generateExam);
+            document.getElementById('generateBlockyExamBtn')?.addEventListener('click', generateExam);
             
             const generateRandomExamBtn = document.getElementById('generateRandomExamBtn');
             if (generateRandomExamBtn) {
@@ -3469,26 +4641,18 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 });
             }
             
-            const settingsBtn = document.getElementById('settingsBtn');
-            if (settingsBtn) {
-                settingsBtn.addEventListener('click', function() {
-                    const settingsPanel = document.getElementById('settingsPanel');
-                    if (settingsPanel) {
-                        settingsPanel.classList.toggle('active');
-                        
-                        const icon = this.querySelector('i');
-                        if (settingsPanel.classList.contains('active')) {
-                            icon.className = 'fas fa-times';
-                            this.style.backgroundColor = 'rgba(227, 124, 45, 0.2)';
-                            this.style.borderColor = 'var(--primary-color)';
-                        } else {
-                            icon.className = 'fas fa-cog';
-                            this.style.backgroundColor = '';
-                            this.style.borderColor = '';
-                        }
+            const aiPrompt = document.getElementById('aiPrompt');
+            if (aiPrompt) {
+                aiPrompt.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && e.ctrlKey) {
+                        e.preventDefault();
+                        generateExam();
                     }
                 });
             }
+            
+            // Setup settings buttons for all modes
+            setupSettingsButtons();
             
             setupExamSlider();
             setupWordCounter();
@@ -3539,6 +4703,9 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             if (firestoreDbPrimary && firestoreDbSecondary) {
                 console.log('Cả 2 Firestore Databases đã sẵn sàng để lưu đề thi');
             }
+            
+            // Initialize blocky blocks
+            renderBlockyBlocks();
         });
     </script>
 </body>
