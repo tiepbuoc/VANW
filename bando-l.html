@@ -933,6 +933,170 @@ body {
             const MAP_REVERSED_API_KEY = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
             const MAP_API_KEY = MAP_REVERSED_API_KEY.split('').reverse().join('');
 
+            // Map tên quốc gia từ tiếng Việt sang tiếng Anh (từ code 2)
+            const countryNameMap = {
+                "Nguyễn Khuyến": "Vietnam",
+                "Việt Nam": "Vietnam",
+                "Anh": "United Kingdom",
+                "Mỹ": "United States",
+                "Hoa Kỳ": "United States",
+                "Pháp": "France",
+                "Đức": "Germany",
+                "Nga": "Russia",
+                "Nhật Bản": "Japan",
+                "Trung Quốc": "China",
+                "Trung Hoa": "China",
+                "Hàn Quốc": "South Korea",
+                "Ấn Độ": "India",
+                "Brazil": "Brazil",
+                "Canada": "Canada",
+                "Ý": "Italy",
+                "Tây Ban Nha": "Spain",
+                "Bồ Đào Nha": "Portugal",
+                "Thụy Điển": "Sweden",
+                "Na Uy": "Norway",
+                "Phần Lan": "Finland",
+                "Đan Mạch": "Denmark",
+                "Hà Lan": "Netherlands",
+                "Bỉ": "Belgium",
+                "Thụy Sĩ": "Switzerland",
+                "Áo": "Austria",
+                "Ba Lan": "Poland",
+                "Hy Lạp": "Greece",
+                "Thổ Nhĩ Kỳ": "Turkey",
+                "Ai Cập": "Egypt",
+                "Nam Phi": "South Africa",
+                "Mexico": "Mexico",
+                "Argentina": "Argentina",
+                "Úc": "Australia",
+                "New Zealand": "New Zealand"
+            };
+
+            // Hàm dịch tên quốc gia sang tiếng Anh
+            function translateCountryName(countryName) {
+                if (countryNameMap[countryName]) {
+                    return countryNameMap[countryName];
+                }
+                
+                const lowerCountryName = countryName.toLowerCase();
+                for (const [viName, enName] of Object.entries(countryNameMap)) {
+                    if (viName.toLowerCase() === lowerCountryName) {
+                        return enName;
+                    }
+                }
+                
+                return countryName;
+            }
+
+            // Hàm trích xuất tiểu sử ngắn (từ code 2)
+            function extractShortBio(text) {
+                const firstParagraph = text.split('\n\n')[0] || text;
+                const words = firstParagraph.split(' ');
+                const shortBio = words.slice(0, 300).join(' ');
+                return words.length > 250 ? shortBio + '...' : shortBio;
+            }
+
+            // Hàm tìm kiếm tác giả từ Wikipedia (từ code 2 - đã sửa để phù hợp với code 1)
+            async function searchAuthorFromWikipedia(authorName) {
+                const countryInfoContent = document.getElementById('countryInfoContent');
+                
+                if (!countryInfoContent) return null;
+                
+                try {
+                    const searchUrl = `https://vi.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(authorName)}&format=json&origin=*`;
+                    const searchResponse = await fetch(searchUrl);
+                    const searchData = await searchResponse.json();
+                    
+                    if (searchData.query.search.length === 0) {
+                        throw new Error('Không tìm thấy thông tin trên Wikipedia');
+                    }
+                    
+                    const pageTitle = searchData.query.search[0].title;
+                    
+                    const contentUrl = `https://vi.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|info&inprop=url&explaintext=true&exchars=1000&pithumbsize=300&titles=${encodeURIComponent(pageTitle)}&format=json&origin=*`;
+                    const contentResponse = await fetch(contentUrl);
+                    const contentData = await contentResponse.json();
+                    
+                    const pageId = Object.keys(contentData.query.pages)[0];
+                    const pageInfo = contentData.query.pages[pageId];
+                    const fullText = pageInfo.extract || '';
+                    
+                    let country = "Vietnam";
+                    const allCountries = [...Object.keys(countryNameMap), ...Object.values(countryNameMap)];
+                    
+                    for (const countryName of allCountries) {
+                        if (fullText.includes(countryName)) {
+                            country = countryName;
+                            break;
+                        }
+                    }
+                    
+                    country = translateCountryName(country);
+                    
+                    let century = 20;
+                    const yearMatch = fullText.match(/(\d{4})/);
+                    if (yearMatch) {
+                        const year = parseInt(yearMatch[1]);
+                        century = Math.ceil(year / 100);
+                    }
+                    
+                    // Xác định vị trí (nếu có trong văn bản)
+                    let birthPlace = { lat: 0, lng: 0 };
+                    
+                    // Tìm tọa độ nếu có thông tin địa lý
+                    if (fullText.includes("vĩ độ") || fullText.includes("kinh độ")) {
+                        // Đây là logic đơn giản, có thể cải thiện
+                        const latMatch = fullText.match(/vĩ độ.*?(\d+\.?\d*)/i);
+                        const lngMatch = fullText.match(/kinh độ.*?(\d+\.?\d*)/i);
+                        
+                        if (latMatch && lngMatch) {
+                            birthPlace.lat = parseFloat(latMatch[1]);
+                            birthPlace.lng = parseFloat(lngMatch[1]);
+                        }
+                    }
+                    
+                    // Nếu không có tọa độ, sử dụng tọa độ mặc định của quốc gia
+                    if (birthPlace.lat === 0 && birthPlace.lng === 0) {
+                        // Tọa độ mặc định cho một số quốc gia
+                        const defaultCoords = {
+                            "Vietnam": { lat: 16, lng: 106.2 },
+                            "United States": { lat: 37.0902, lng: -95.7129 },
+                            "United Kingdom": { lat: 55.3781, lng: -3.4360 },
+                            "France": { lat: 46.6035, lng: 1.8883 },
+                            "Germany": { lat: 51.1657, lng: 10.4515 },
+                            "Russia": { lat: 61.5240, lng: 105.3188 },
+                            "China": { lat: 35.8617, lng: 104.1954 },
+                            "Japan": { lat: 36.2048, lng: 138.2529 }
+                        };
+                        
+                        birthPlace = defaultCoords[country] || { lat: 0, lng: 0 };
+                    }
+                    
+                    // Trích xuất tác phẩm nếu có
+                    let works = [];
+                    const worksMatch = fullText.match(/tác phẩm nổi tiếng (.+?)(\.|,|;|\n|$)/i);
+                    if (worksMatch) {
+                        works = worksMatch[1].split(',').map(s => s.trim()).filter(s => s);
+                    }
+                    
+                    return {
+                        id: "wiki_" + Date.now(),
+                        name: pageTitle,
+                        bio: extractShortBio(fullText),
+                        works: works,
+                        birthPlace: birthPlace,
+                        country: country,
+                        century: century,
+                        image: pageInfo.thumbnail ? pageInfo.thumbnail.source : null,
+                        connections: [],
+                        source: "wikipedia"
+                    };
+                } catch (error) {
+                    console.error('Lỗi khi tìm kiếm Wikipedia:', error);
+                    return null;
+                }
+            }
+
             // Hàm tính khoảng cách giữa 2 điểm (Haversine formula)
             function calculateDistance(lat1, lon1, lat2, lon2) {
                 const R = 6371; // Bán kính Trái đất tính bằng km
@@ -2432,7 +2596,7 @@ body {
                 }, 3000);
             }
 
-            // Hàm xử lý tìm kiếm với suggestions
+            // Hàm xử lý tìm kiếm với suggestions - ĐÃ SỬA ĐỂ THÊM TÌM KIẾM WIKIPEDIA
             function handleSearchInput(e) {
                 const searchTerm = e.target.value.trim();
                 if (!suggestions) return;
@@ -2471,6 +2635,7 @@ body {
                     });
                 }
                 
+                // THÊM TÌM KIẾM WIKIPEDIA (từ code 2)
                 const wikiDiv = document.createElement('div');
                 wikiDiv.className = 'suggestion-item wiki-search-option';
                 wikiDiv.innerHTML = `
@@ -2483,63 +2648,48 @@ body {
                     const searchInput = document.getElementById('mapSearchInput');
                     if (searchInput) searchInput.value = searchTerm;
                     suggestions.style.display = 'none';
-                    await searchAuthorFromWikipedia(searchTerm);
+                    
+                    // Hiển thị loading
+                    const countryInfoContent = document.getElementById('countryInfoContent');
+                    if (countryInfoContent) {
+                        countryInfoContent.innerHTML = `
+                            <div class="firebase-loading">
+                                <span class="loading-spinner"></span>
+                                <p>Đang tìm kiếm thông tin trên Wikipedia...</p>
+                            </div>
+                        `;
+                    }
+                    
+                    // Tìm kiếm tác giả từ Wikipedia
+                    const authorInfo = await searchAuthorFromWikipedia(searchTerm);
+                    if (authorInfo) {
+                        // Kiểm tra xem tác giả đã tồn tại chưa
+                        const existingAuthorIndex = authors.findIndex(a => a.name === authorInfo.name);
+                        if (existingAuthorIndex === -1) {
+                            // Thêm tác giả mới vào danh sách
+                            authors.push(authorInfo);
+                            
+                            // Thêm marker nếu có tọa độ
+                            if (authorInfo.birthPlace && authorInfo.birthPlace.lat !== 0 && authorInfo.birthPlace.lng !== 0) {
+                                addAuthorMarker(authorInfo);
+                            }
+                            
+                            // Hiển thị thông tin tác giả
+                            showAuthorInfo(authorInfo);
+                            
+                            showNotification(`Đã thêm tác giả "${authorInfo.name}" từ Wikipedia`, 'success');
+                        } else {
+                            // Tác giả đã tồn tại, hiển thị thông tin
+                            showAuthorInfo(authors[existingAuthorIndex]);
+                            showNotification(`Tác giả "${authorInfo.name}" đã có trong cơ sở dữ liệu`, 'info');
+                        }
+                    } else {
+                        showError('Không thể tìm thấy thông tin cho "' + searchTerm + '" trên Wikipedia. Vui lòng thử lại với tên khác hoặc kiểm tra kết nối internet.');
+                    }
                 });
                 suggestions.appendChild(wikiDiv);
                 
                 suggestions.style.display = 'block';
-            }
-
-            // Hàm tìm kiếm tác giả từ Wikipedia
-            async function searchAuthorFromWikipedia(authorName) {
-                const countryInfoContent = document.getElementById('countryInfoContent');
-                
-                if (!countryInfoContent) return;
-                
-                countryInfoContent.innerHTML = `
-                    <div class="firebase-loading">
-                        <span class="loading-spinner"></span>
-                        <p>Đang tìm kiếm thông tin trên Wikipedia...</p>
-                    </div>
-                `;
-                
-                try {
-                    const searchUrl = `https://vi.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(authorName)}&format=json&origin=*`;
-                    const searchResponse = await fetch(searchUrl);
-                    const searchData = await searchResponse.json();
-                    
-                    if (searchData.query.search.length === 0) {
-                        throw new Error('Không tìm thấy thông tin trên Wikipedia');
-                    }
-                    
-                    const pageTitle = searchData.query.search[0].title;
-                    
-                    const newAuthor = {
-                        id: authors.length + 1,
-                        name: pageTitle,
-                        bio: `Thông tin từ Wikipedia về ${pageTitle}. Đang cập nhật đầy đủ...`,
-                        works: [],
-                        birthPlace: { lat: 16, lng: 106.2 },
-                        country: "Vietnam",
-                        century: 20,
-                        image: null,
-                        connections: []
-                    };
-                    
-                    authors.push(newAuthor);
-                    addAuthorMarker(newAuthor);
-                    showAuthorInfo(newAuthor);
-                    
-                } catch (error) {
-                    console.error('Lỗi khi tìm kiếm Wikipedia:', error);
-                    countryInfoContent.innerHTML = `
-                        <div class="info-section">
-                            <h3 style="color: #ef4444;">Lỗi tìm kiếm</h3>
-                            <p>Không thể tìm thấy thông tin cho "${authorName}" trên Wikipedia.</p>
-                            <p>Vui lòng thử lại với tên khác hoặc kiểm tra kết nối internet.</p>
-                        </div>
-                    `;
-                }
             }
 
             // Hàm áp dụng tìm kiếm nâng cao
@@ -2729,4 +2879,4 @@ body {
         });
     </script>
 </body>
-    </html>
+</html>
