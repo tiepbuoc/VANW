@@ -1,12 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phân Tích Biểu Cảm | VANW</title>
+    <title>Phân Tích Biểu Cảm & Phát Âm Tích Hợp | VANW</title>
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    
     <style>
         @import url('https://unpkg.com/normalize.css') layer(normalize);
 
@@ -14,34 +17,29 @@
 
         @layer base {
             :root {
-                --font-size-min: 16;
-                --font-size-max: 20;
-                --font-ratio-min: 1.2;
-                --font-ratio-max: 1.33;
-                --font-width-min: 375;
-                --font-width-max: 1500;
-                
-                --bg-color: #f5f5f5;
-                --card-bg: #ffffff;
-                --card-outline: #b0b0b0;
-                --text-primary: #000000;
-                --text-secondary: #666666;
-                --border-color: #c0c0c0;
-                --button-bg: rgba(0, 0, 0, 0.08);
-                --grid-color: #a0a0a0;
-                --gradient: linear-gradient(135deg, #e37c2d, #f5a742, #f8c34d, #fad859);
-                --primary-color: #e37c2d;
-                --accent-color: #fad859;
-                --shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-                --scrollbar-track: #f0f0f0;
-                --scrollbar-thumb: #c0c0c0;
-                --scrollbar-thumb-hover: #a0a0a0;
-                --verification-color: #4CAF50;
-                --verification-bg: rgba(76, 175, 80, 0.1);
-                --success-color: #4CAF50;
-                --warning-color: #ff9800;
-                --error-color: #f44336;
-                --info-color: #2196F3;
+                --primary-orange: #FF6B35;
+                --secondary-orange: #FF8E53;
+                --light-orange: #FFA726;
+                --accent-orange: #FFCC80;
+                --bg-white: #FFFFFF;
+                --card-white: #FFF9F2;
+                --text-dark: #333333;
+                --text-medium: #666666;
+                --text-light: #888888;
+                --border-light: #E0E0E0;
+                --border-orange: rgba(255, 107, 53, 0.3);
+                --shadow-light: 0 5px 20px rgba(255, 107, 53, 0.1);
+                --shadow-medium: 0 8px 30px rgba(255, 107, 53, 0.15);
+                --success-green: #4CAF50;
+                --warning-yellow: #FF9800;
+                --error-red: #F44336;
+                --info-blue: #2196F3;
+                --recording-red: #FF416C;
+                --frequency-low: #00BFA5;
+                --frequency-mid: #FFB74D;
+                --frequency-high: #FF8A80;
+                --waveform-color: #FF6B35;
+                --waveform-bg: #FFFFFF;
             }
 
             html {
@@ -52,213 +50,111 @@
             *:after,
             *:before {
                 box-sizing: border-box;
+                margin: 0;
+                padding: 0;
             }
 
             ::-webkit-scrollbar {
-                width: 10px;
-                height: 10px;
+                width: 8px;
+                height: 8px;
             }
 
             ::-webkit-scrollbar-track {
-                background: var(--scrollbar-track);
-                border-radius: 5px;
-                border: 1px solid var(--card-outline);
+                background: rgba(255, 107, 53, 0.05);
+                border-radius: 4px;
             }
 
             ::-webkit-scrollbar-thumb {
-                background: var(--scrollbar-thumb);
-                border-radius: 5px;
-                border: 1px solid var(--card-outline);
+                background: var(--primary-orange);
+                border-radius: 4px;
             }
 
             ::-webkit-scrollbar-thumb:hover {
-                background: var(--scrollbar-thumb-hover);
+                background: var(--secondary-orange);
             }
 
             * {
                 scrollbar-width: thin;
-                scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+                scrollbar-color: var(--primary-orange) rgba(255, 107, 53, 0.05);
             }
 
             body {
-                background: var(--bg-color);
-                display: grid;
-                place-items: center;
+                background: linear-gradient(135deg, #FFF5E6 0%, #FFE8D6 100%);
                 min-height: 100vh;
-                font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
-                    Helvetica, Arial, sans-serif, system-ui;
-                line-height: 1.5;
-                color: var(--text-primary);
-                padding: 2rem;
-                margin: 0;
+                font-family: 'Segoe UI', 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+                line-height: 1.6;
+                color: var(--text-dark);
+                padding: 20px;
             }
 
             body::before {
-                --size: 45px;
-                --line: var(--grid-color);
                 content: '';
-                height: 100vh;
-                width: 100vw;
                 position: fixed;
-                background: linear-gradient(
-                        90deg,
-                        var(--line) 1px,
-                        transparent 1px var(--size)
-                    )
-                    calc(var(--size) * 0.36) 50% / var(--size) var(--size),
-                    linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0%
-                        calc(var(--size) * 0.32) / var(--size) var(--size);
-                mask: linear-gradient(-20deg, transparent 50%, white);
                 top: 0;
-                transform-style: flat;
-                pointer-events: none;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: 
+                    radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 142, 83, 0.05) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 40%, rgba(255, 167, 38, 0.03) 0%, transparent 50%);
                 z-index: -1;
-                opacity: 0.8;
+                pointer-events: none;
             }
 
             .web-icon {
                 position: fixed;
-                top: 1rem;
-                left: 1rem;
-                width: 48px;
-                aspect-ratio: 1;
-                display: grid;
-                place-items: center;
-                opacity: 0.8;
-                transition: opacity 0.2s;
-            }
-
-            .web-icon:hover {
-                opacity: 1;
-                transform: scale(1.05);
+                top: 1.5rem;
+                left: 1.5rem;
+                z-index: 1000;
             }
 
             .web-icon img {
-                width: 100%;
-                height: 100%;
+                width: 52px;
+                height: 52px;
                 object-fit: contain;
-            }
-
-            .sr-only {
-                position: absolute;
-                width: 1px;
-                height: 1px;
-                padding: 0;
-                margin: -1px;
-                overflow: hidden;
-                clip: rect(0, 0, 0, 0);
-                white-space: nowrap;
-                border-width: 0;
-            }
-            
-            .mr-2 {
-                margin-right: 0.5rem;
-            }
-            
-            .text-red-500 {
-                color: var(--error-color);
-            }
-            
-            .w-full {
-                width: 100%;
-            }
-            
-            .border {
-                border: 1px solid var(--card-outline);
-            }
-            
-            .rounded-lg {
-                border-radius: 8px;
-            }
-            
-            .p-2 {
-                padding: 0.5rem;
-            }
-            
-            .mt-1 {
-                margin-top: 0.25rem;
-            }
-            
-            .mt-3 {
-                margin-top: 0.75rem;
-            }
-            
-            .mb-2 {
-                margin-bottom: 0.5rem;
-            }
-            
-            .mb-3 {
-                margin-bottom: 0.75rem;
-            }
-            
-            .text-green-600 {
-                color: var(--success-color);
-            }
-            
-            .font-semibold {
-                font-weight: 600;
-            }
-            
-            .text-center {
-                text-align: center;
             }
         }
 
         @layer demo {
-            body {
-                align-content: center;
-                gap: 2rem;
-                margin: 0;
-                padding: 2rem;
-                min-height: 100vh;
-                display: grid;
-                place-items: center;
-            }
-
             .app-container {
-                max-width: 1400px;
+                max-width: 1600px;
                 margin: 0 auto;
-                padding: 2rem;
                 width: 100%;
-                padding-top: 40px;
+                position: relative;
             }
             
             main {
-                touch-action: none;
-                padding-block: 2rem;
                 width: 100%;
                 display: flex;
                 flex-direction: column;
                 gap: 2rem;
-                align-items: center;
             }
             
             .analysis-tool {
-                padding: 0 0;
-                background-color: transparent;
                 width: 100%;
             }
             
             .analysis-card {
-                background: var(--card-bg);
-                border-radius: 20px;
+                background: var(--bg-white);
+                border-radius: 24px;
                 padding: 2.5rem;
-                box-shadow: var(--shadow);
+                box-shadow: var(--shadow-medium);
+                border: 2px solid var(--border-light);
                 transition: all 0.4s ease;
-                margin-bottom: 2rem;
                 width: 100%;
                 margin: 0 auto;
-                border: 2px solid var(--card-outline);
             }
             
             .header-image {
                 text-align: center;
-                margin-bottom: 1.5rem;
+                margin-bottom: 2.5rem;
             }
             
             .header-image img {
-                max-width: 65%;
+                max-width: 70%;
                 height: auto;
+                max-height: 120px;
             }
             
             .main-section {
@@ -268,93 +164,163 @@
                 margin-bottom: 30px;
             }
             
-            @media (max-width: 992px) {
+            @media (max-width: 1200px) {
                 .main-section {
                     grid-template-columns: 1fr;
+                    gap: 25px;
                 }
             }
             
             .input-panel, .analysis-panel {
-                background: var(--card-bg);
-                border-radius: 15px;
+                background: var(--card-white);
+                border-radius: 20px;
                 padding: 2rem;
-                box-shadow: var(--shadow);
-                border: 2px solid var(--card-outline);
+                box-shadow: var(--shadow-light);
+                border: 2px solid var(--border-light);
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .input-panel {
+                min-height: 500px;
+            }
+            
+            .analysis-panel {
+                min-height: 500px;
             }
             
             .panel-title {
-                color: var(--primary-color);
+                color: var(--primary-orange);
                 margin-bottom: 1.5rem;
                 font-size: 1.5rem;
-                padding-bottom: 10px;
-                border-bottom: 2px solid rgba(227, 124, 45, 0.3);
+                padding-bottom: 12px;
+                border-bottom: 2px solid var(--border-orange);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .panel-title i {
+                font-size: 1.3rem;
             }
             
             .input-area {
                 margin-bottom: 2rem;
                 position: relative;
+                flex-grow: 1;
             }
             
             textarea {
                 width: 100%;
-                min-height: 200px;
+                min-height: 180px;
                 padding: 1.5rem;
-                border-radius: 12px;
-                border: 2px solid var(--card-outline);
-                background-color: var(--card-bg);
-                color: var(--text-primary);
+                border-radius: 16px;
+                border: 2px solid var(--border-light);
+                background: var(--bg-white);
+                color: var(--text-dark);
                 font-size: 1rem;
                 resize: vertical;
                 transition: all 0.3s ease;
                 font-family: inherit;
                 line-height: 1.6;
                 white-space: pre-wrap;
+                height: 100%;
             }
             
             textarea:focus {
                 outline: none;
-                border-color: var(--primary-color);
-                box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
+                border-color: var(--primary-orange);
+                box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
             }
             
             .word-count {
                 position: absolute;
-                bottom: 10px;
+                bottom: 12px;
                 right: 15px;
                 font-size: 0.85rem;
-                color: var(--text-secondary);
+                color: var(--text-light);
                 background: rgba(255, 255, 255, 0.9);
-                padding: 2px 8px;
-                border-radius: 10px;
-                border: 1px solid var(--card-outline);
+                padding: 4px 10px;
+                border-radius: 12px;
+                border: 1px solid var(--border-light);
+                font-weight: 500;
+            }
+            
+            .recording-tools {
+                margin-top: auto;
+            }
+            
+            .recording-status-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+                padding: 1rem;
+                background: rgba(255, 107, 53, 0.05);
+                border-radius: 12px;
+                border: 1px solid var(--border-orange);
+            }
+            
+            .timer-display {
+                font-size: 1.8rem;
+                font-weight: 700;
+                font-family: 'Courier New', monospace;
+                color: var(--primary-orange);
+                letter-spacing: 1px;
+            }
+            
+            .status-indicator {
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background-color: var(--text-light);
+            }
+            
+            .status-indicator.recording {
+                background-color: var(--recording-red);
+                box-shadow: 0 0 12px var(--recording-red);
+                animation: pulse 1.5s infinite;
+            }
+            
+            .audio-visualizer {
+                width: 100%;
+                height: 160px;
+                background: var(--bg-white);
+                border-radius: 16px;
+                margin-bottom: 1.5rem;
+                overflow: hidden;
+                border: 2px solid var(--border-light);
+            }
+            
+            #audioWaveform {
+                width: 100%;
+                height: 100%;
             }
             
             .action-buttons {
                 display: flex;
                 gap: 1rem;
-                margin-bottom: 2rem;
+                margin-bottom: 1.5rem;
             }
             
-            .record-btn, .analyze-btn {
+            .record-btn {
                 flex: 1;
                 padding: 1rem 2rem;
                 border: none;
-                border-radius: 30px;
-                font-size: 1rem;
+                border-radius: 50px;
+                font-size: 1.1rem;
                 font-weight: 600;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 6px 20px rgba(255, 107, 53, 0.25);
                 position: relative;
                 overflow: hidden;
                 z-index: 1;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-            }
-            
-            .record-btn {
-                background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+                gap: 10px;
+                background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
                 color: white;
             }
             
@@ -365,7 +331,7 @@
                 left: 0;
                 width: 0%;
                 height: 100%;
-                background: rgba(255, 255, 255, 0.2);
+                background: linear-gradient(135deg, var(--secondary-orange), var(--light-orange));
                 transition: all 0.5s;
                 z-index: -1;
             }
@@ -376,345 +342,550 @@
             
             .record-btn:hover {
                 transform: translateY(-3px);
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-                opacity: 0.95;
+                box-shadow: 0 10px 25px rgba(255, 107, 53, 0.35);
             }
             
             .record-btn.recording {
-                background: linear-gradient(135deg, #f44336, #d32f2f);
-                color: white;
+                background: linear-gradient(135deg, var(--recording-red), #FF6B6B);
                 animation: pulse 1.5s infinite;
             }
             
-            .analyze-btn {
-                background: var(--gradient);
-                color: white;
-            }
-            
-            .analyze-btn::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 0%;
-                height: 100%;
-                background: rgba(255, 255, 255, 0.2);
-                transition: all 0.5s;
-                z-index: -1;
-            }
-            
-            .analyze-btn:hover::before {
-                width: 100%;
-            }
-            
-            .analyze-btn:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-                border-color: var(--accent-color);
-            }
-            
-            .analyze-btn:disabled {
-                background: #ccc;
-                cursor: not-allowed;
-                transform: none;
-                box-shadow: none;
-                border-color: #999;
-                opacity: 0.7;
-            }
-            
-            .analyze-btn:disabled:hover::before {
-                width: 0%;
+            .record-btn.recording:hover {
+                background: linear-gradient(135deg, #FF5252, var(--recording-red));
             }
             
             @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.05); }
-                100% { transform: scale(1); }
+                0% { transform: scale(1); box-shadow: 0 6px 20px rgba(255, 65, 108, 0.3); }
+                50% { transform: scale(1.03); box-shadow: 0 8px 25px rgba(255, 65, 108, 0.4); }
+                100% { transform: scale(1); box-shadow: 0 6px 20px rgba(255, 65, 108, 0.3); }
             }
             
             .status-message {
-                padding: 12px;
-                border-radius: 8px;
-                margin-bottom: 15px;
+                padding: 14px 18px;
+                border-radius: 12px;
+                margin-bottom: 1.5rem;
                 font-weight: 500;
                 text-align: center;
-                border: 1px solid transparent;
+                border: 2px solid transparent;
+                background: rgba(255, 107, 53, 0.05);
+                color: var(--primary-orange);
+                display: none;
             }
             
-            .status-message.info {
-                background: rgba(33, 150, 243, 0.1);
-                color: var(--info-color);
-                border-color: rgba(33, 150, 243, 0.3);
+            .status-message.visible {
+                display: block;
+                animation: slideIn 0.4s ease;
             }
             
-            .status-message.success {
-                background: rgba(76, 175, 80, 0.1);
-                color: var(--success-color);
-                border-color: rgba(76, 175, 80, 0.3);
-            }
-            
-            .status-message.error {
-                background: rgba(244, 67, 54, 0.1);
-                color: var(--error-color);
-                border-color: rgba(244, 67, 54, 0.3);
-            }
-            
-            .status-message.warning {
-                background: rgba(255, 152, 0, 0.1);
-                color: var(--warning-color);
-                border-color: rgba(255, 152, 0, 0.3);
-            }
-            
-            .results-section {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 30px;
-                margin-bottom: 30px;
-            }
-            
-            @media (max-width: 992px) {
-                .results-section {
-                    grid-template-columns: 1fr;
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
                 }
             }
             
-            .score-results, .word-analysis {
-                background: var(--card-bg);
-                border-radius: 15px;
-                padding: 2rem;
-                box-shadow: var(--shadow);
-                border: 2px solid var(--card-outline);
-            }
-            
-            .score-display {
-                text-align: center;
-                margin: 20px 0;
-            }
-            
-            .score-value {
-                font-size: 4.5rem;
-                font-weight: bold;
-                color: var(--text-primary);
-                line-height: 1;
-            }
-            
-            .score-comment {
-                font-size: 1.2rem;
-                color: var(--text-secondary);
-                margin-top: 15px;
-                padding: 15px;
-                background: rgba(227, 124, 45, 0.05);
-                border-radius: 10px;
-                border-left: 4px solid var(--primary-color);
-            }
-            
-            .word-analysis-content {
-                max-height: 400px;
-                overflow-y: auto;
-                padding-right: 10px;
-            }
-            
-            .word-analysis-content::-webkit-scrollbar {
-                width: 8px;
-            }
-            
-            .word-analysis-content::-webkit-scrollbar-track {
-                background: var(--scrollbar-track);
-                border-radius: 4px;
-            }
-            
-            .word-analysis-content::-webkit-scrollbar-thumb {
-                background: var(--primary-color);
-                border-radius: 4px;
-            }
-            
-            .word-card {
-                background: rgba(227, 124, 45, 0.05);
-                border-radius: 10px;
-                padding: 15px;
-                margin-bottom: 15px;
-                border-left: 4px solid var(--primary-color);
-                border: 1px solid rgba(227, 124, 45, 0.2);
-            }
-            
-            .word-card h4 {
-                margin-bottom: 8px;
-                color: var(--text-primary);
-                font-size: 1.1rem;
-            }
-            
-            .word-card .found-level {
-                display: inline-block;
-                padding: 3px 8px;
-                border-radius: 4px;
-                font-size: 12px;
-                font-weight: bold;
-                margin-left: 8px;
-            }
-            
-            .level-1 { background: var(--success-color); color: white; }
-            .level-2 { background: var(--info-color); color: white; }
-            .level-3 { background: #8b5cf6; color: white; }
-            
-            .word-card .details {
-                font-size: 14px;
-                color: var(--text-secondary);
-                margin-top: 8px;
-            }
-            
-            .loading {
-                text-align: center;
-                padding: 30px;
-                color: var(--text-secondary);
-            }
-            
-            .loading::after {
-                content: '';
-                display: inline-block;
-                width: 20px;
-                height: 20px;
-                border: 3px solid rgba(227, 124, 45, 0.2);
-                border-top: 3px solid var(--primary-color);
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-                margin-left: 10px;
-            }
-            
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-            
-            .analysis-info {
-                background: rgba(227, 124, 45, 0.05);
-                border-radius: 10px;
-                padding: 15px;
-                margin-bottom: 20px;
-                border-left: 4px solid var(--primary-color);
-                border: 1px solid rgba(227, 124, 45, 0.2);
-            }
-            
-            .analysis-info h4 {
-                color: var(--primary-color);
-                margin-bottom: 10px;
-            }
-            
-            .analysis-info ul {
-                padding-left: 20px;
-                color: var(--text-secondary);
-            }
-            
-            .analysis-info li {
-                margin-bottom: 5px;
-            }
-            
-            .stats-display {
-                margin-top: 1rem;
-            }
-            
-            .stats-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 1rem;
-                margin-top: 1rem;
-            }
-            
-            .stat-card {
-                background: rgba(227, 124, 45, 0.05);
-                border-radius: 10px;
-                padding: 1rem;
-                text-align: center;
-                border: 1px solid rgba(227, 124, 45, 0.2);
-            }
-            
-            .stat-value {
-                font-size: 1.8rem;
-                font-weight: bold;
-                color: var(--primary-color);
-                margin-bottom: 0.5rem;
-            }
-            
-            .stat-label {
-                font-size: 0.9rem;
-                color: var(--text-secondary);
-            }
-            
             .progress-container {
-                margin-top: 2rem;
-                background-color: var(--card-bg);
-                border-radius: 15px;
-                padding: 1.8rem;
-                box-shadow: var(--shadow);
-                border: 2px solid var(--card-outline);
+                margin-top: 1.5rem;
+                background: var(--card-white);
+                border-radius: 16px;
+                padding: 1.5rem;
+                box-shadow: var(--shadow-light);
+                border: 2px solid var(--border-light);
                 display: none;
+            }
+            
+            .progress-container.visible {
+                display: block;
+                animation: slideIn 0.4s ease;
             }
             
             .progress-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 1.2rem;
+                margin-bottom: 1rem;
             }
             
             .progress-title {
                 font-weight: 700;
-                color: var(--primary-color);
-                font-size: 1.3rem;
+                color: var(--primary-orange);
+                font-size: 1.2rem;
+                display: flex;
+                align-items: center;
+                gap: 10px;
             }
             
             .progress-status {
                 font-size: 1rem;
-                color: var(--text-primary);
+                color: var(--text-medium);
                 font-weight: 500;
             }
             
             .progress-bar {
-                height: 12px;
-                background-color: #e0e0e0;
-                border-radius: 6px;
+                height: 10px;
+                background-color: rgba(255, 107, 53, 0.1);
+                border-radius: 8px;
                 overflow: hidden;
-                margin-bottom: 1.2rem;
-                border: 2px solid #ccc;
+                border: 1px solid var(--border-light);
             }
             
             .progress-fill {
                 height: 100%;
-                background: var(--gradient);
-                border-radius: 6px;
+                background: linear-gradient(90deg, var(--primary-orange), var(--light-orange));
+                border-radius: 8px;
                 transition: width 0.4s ease;
+                width: 0%;
             }
             
+            /* Recording Panel Styles */
+            .recording-panel {
+                background: var(--card-white);
+                border-radius: 20px;
+                padding: 2rem;
+                box-shadow: var(--shadow-light);
+                border: 2px solid var(--border-light);
+                margin-top: 25px;
+                display: none;
+            }
+            
+            .recording-panel.visible {
+                display: block;
+                animation: slideIn 0.5s ease;
+            }
+            
+            .recording-controls {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .auto-stop-info {
+                margin-top: 15px;
+                padding: 12px 16px;
+                background: rgba(255, 193, 7, 0.1);
+                border-radius: 12px;
+                border-left: 4px solid #FFC107;
+                font-size: 0.9rem;
+                color: #B78300;
+                display: none;
+                animation: slideIn 0.4s ease;
+            }
+            
+            .auto-stop-info.visible {
+                display: block;
+            }
+            
+            /* Phrase Comparison Section */
+            .comparison-section {
+                margin-top: 25px;
+            }
+            
+            .comparison-title {
+                font-size: 1.2rem;
+                color: var(--primary-orange);
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .phrase-comparison {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 10px;
+            }
+            
+            .phrase {
+                padding: 10px 16px;
+                border-radius: 12px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+                flex-shrink: 0;
+                min-width: 80px;
+                text-align: center;
+                border: 2px solid transparent;
+                background: var(--bg-white);
+                color: var(--text-dark);
+                font-weight: 500;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            }
+            
+            .phrase:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+            
+            .phrase-tooltip {
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 8px;
+                font-size: 0.85rem;
+                white-space: nowrap;
+                z-index: 100;
+                margin-bottom: 8px;
+                display: none;
+                pointer-events: none;
+                border-left: 4px solid var(--primary-orange);
+            }
+            
+            .phrase:hover .phrase-tooltip {
+                display: block;
+            }
+            
+            .phrase-correct {
+                border-color: var(--success-green);
+                background: rgba(76, 175, 80, 0.08);
+            }
+            
+            .phrase-correct .phrase-tooltip {
+                border-left-color: var(--success-green);
+            }
+            
+            .phrase-partial {
+                border-color: var(--warning-yellow);
+                background: rgba(255, 152, 0, 0.08);
+            }
+            
+            .phrase-partial .phrase-tooltip {
+                border-left-color: var(--warning-yellow);
+            }
+            
+            .phrase-incorrect {
+                border-color: var(--error-red);
+                background: rgba(244, 67, 54, 0.08);
+            }
+            
+            .phrase-incorrect .phrase-tooltip {
+                border-left-color: var(--error-red);
+            }
+            
+            .phrase-selected {
+                box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.3) !important;
+                transform: scale(1.05);
+            }
+            
+            /* Phrase Analysis Info */
+            .phrase-analysis-info {
+                margin-top: 25px;
+                background: var(--bg-white);
+                border-radius: 16px;
+                border-left: 4px solid var(--primary-orange);
+                border: 2px solid var(--border-light);
+                animation: slideIn 0.4s ease;
+                overflow: hidden;
+            }
+            
+            .phrase-analysis-header {
+                padding: 1.5rem;
+                background: rgba(255, 107, 53, 0.05);
+                border-bottom: 2px solid var(--border-light);
+            }
+            
+            .phrase-analysis-title {
+                color: var(--primary-orange);
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 1.3rem;
+            }
+            
+            .phrase-analysis-content {
+                padding: 1.5rem;
+            }
+            
+            .phrase-analysis-details {
+                font-size: 0.95rem;
+                line-height: 1.6;
+                color: var(--text-dark);
+                margin-bottom: 20px;
+            }
+            
+            .phrase-analysis-details p {
+                margin-bottom: 12px;
+                display: flex;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .phrase-analysis-details i {
+                color: var(--primary-orange);
+                margin-top: 2px;
+            }
+            
+            /* Phrase Analysis Grid */
+            .phrase-analysis-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                margin-top: 20px;
+            }
+            
+            @media (max-width: 768px) {
+                .phrase-analysis-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+            
+            .analysis-grid-item {
+                background: var(--card-white);
+                border-radius: 16px;
+                padding: 1.5rem;
+                border: 2px solid var(--border-light);
+            }
+            
+            .analysis-grid-title {
+                font-size: 1.1rem;
+                color: var(--primary-orange);
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid var(--border-orange);
+            }
+            
+            .analysis-grid-content {
+                font-size: 0.9rem;
+                color: var(--text-medium);
+                line-height: 1.6;
+            }
+            
+            .analysis-grid-content p {
+                margin-bottom: 8px;
+                display: flex;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .analysis-grid-content i {
+                color: var(--primary-orange);
+                margin-top: 2px;
+            }
+            
+            /* Ẩn biểu đồ tần số riêng lẻ cho từ */
+            .phrase-chart-container {
+                display: none;
+            }
+            
+            /* Chart in Analysis Panel */
+            .chart-container {
+                width: 100%;
+                height: 280px;
+                position: relative;
+                margin-top: 25px;
+                background: var(--bg-white);
+                border-radius: 16px;
+                padding: 15px;
+                border: 2px solid var(--border-light);
+            }
+            
+            .chart-legend {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+                justify-content: center;
+                margin-top: 15px;
+            }
+            
+            .legend-item {
+                display: flex;
+                align-items: center;
+                font-size: 0.85rem;
+                color: var(--text-medium);
+            }
+            
+            .legend-color {
+                width: 16px;
+                height: 16px;
+                border-radius: 4px;
+                margin-right: 6px;
+            }
+            
+            /* Results Section */
+            .results-section {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 30px;
+                margin-top: 30px;
+            }
+            
+            @media (max-width: 1200px) {
+                .results-section {
+                    grid-template-columns: 1fr;
+                    gap: 25px;
+                }
+            }
+            
+            .score-results {
+                background: var(--card-white);
+                border-radius: 20px;
+                padding: 2rem;
+                box-shadow: var(--shadow-light);
+                border: 2px solid var(--border-light);
+            }
+            
+            .phrase-analysis {
+                display: none;
+            }
+            
+            .score-display-main {
+                text-align: center;
+                margin: 20px 0 30px;
+            }
+            
+            .score-value-main {
+                font-size: 5rem;
+                font-weight: 800;
+                line-height: 1;
+                margin-bottom: 10px;
+                background: linear-gradient(135deg, var(--primary-orange), var(--light-orange));
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                text-shadow: 0 2px 10px rgba(255, 107, 53, 0.1);
+            }
+            
+            .score-label-main {
+                font-size: 1.2rem;
+                color: var(--text-medium);
+                margin-bottom: 25px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            .comment-section {
+                background: var(--bg-white);
+                border-radius: 16px;
+                padding: 1.5rem;
+                margin-top: 25px;
+                border: 2px solid var(--border-light);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .comment-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 4px;
+                height: 100%;
+                background: var(--primary-orange);
+            }
+            
+            .comment-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 15px;
+                color: var(--primary-orange);
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+            
+            .comment-text {
+                font-size: 1.05rem;
+                line-height: 1.7;
+                color: var(--text-dark);
+                padding-left: 5px;
+                max-height: 200px;
+                overflow-y: auto;
+                padding-right: 10px;
+            }
+            
+            .comment-text::-webkit-scrollbar {
+                width: 6px;
+            }
+            
+            .comment-text::-webkit-scrollbar-track {
+                background: rgba(255, 107, 53, 0.05);
+                border-radius: 3px;
+            }
+            
+            .comment-text::-webkit-scrollbar-thumb {
+                background: var(--primary-orange);
+                border-radius: 3px;
+            }
+            
+            .comment-details {
+                margin-top: 15px;
+                padding-top: 15px;
+                border-top: 1px solid var(--border-light);
+                font-size: 0.9rem;
+                color: var(--text-light);
+            }
+            
+            /* Footer */
             .app-footer {
                 text-align: center;
                 margin-top: 3rem;
                 padding-top: 2rem;
-                border-top: 2px solid var(--border-color);
-                color: var(--text-secondary);
+                border-top: 2px solid var(--border-light);
+                color: var(--text-medium);
+                font-size: 0.95rem;
             }
             
             .app-footer a {
-                color: var(--primary-color);
+                color: var(--primary-orange);
                 text-decoration: none;
                 font-weight: 600;
                 transition: all 0.3s ease;
+                position: relative;
             }
             
-            .app-footer a:hover {
-                text-decoration: underline;
-                color: var(--accent-color);
+            .app-footer a::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: var(--primary-orange);
+                transition: width 0.3s ease;
             }
             
+            .app-footer a:hover::after {
+                width: 100%;
+            }
+            
+            .app-footer p {
+                margin: 8px 0;
+            }
+            
+            .app-footer .copyright {
+                font-size: 0.85rem;
+                color: var(--text-light);
+                margin-top: 15px;
+            }
+            
+            /* Responsive Design */
             @media (max-width: 768px) {
                 body {
-                    padding: 1rem;
+                    padding: 15px;
                 }
                 
                 .analysis-card {
-                    padding: 1.8rem;
+                    padding: 1.5rem;
                 }
                 
                 .input-panel, .analysis-panel,
-                .score-results, .word-analysis {
+                .score-results, .phrase-analysis,
+                .recording-panel {
                     padding: 1.5rem;
                 }
                 
@@ -722,38 +893,184 @@
                     flex-direction: column;
                 }
                 
-                .record-btn, .analyze-btn {
+                .record-btn {
                     width: 100%;
                 }
                 
                 .app-container {
-                    padding: 1rem;
-                    padding-top: 20px;
+                    padding-top: 60px;
                 }
                 
-                main {
-                    gap: 1.5rem;
-                    padding-block: 1rem;
+                .web-icon {
+                    top: 1rem;
+                    left: 1rem;
+                }
+                
+                .web-icon img {
+                    width: 44px;
+                    height: 44px;
+                }
+                
+                .score-value-main {
+                    font-size: 4rem;
+                }
+                
+                .main-section, .results-section {
+                    gap: 20px;
+                }
+                
+                .chart-container {
+                    height: 250px;
+                }
+                
+                .header-image img {
+                    max-height: 80px;
                 }
             }
             
             @media (max-width: 480px) {
                 body {
-                    padding: 0.5rem;
-                }
-                
-                .app-container {
-                    padding: 0.5rem;
-                    padding-top: 15px;
+                    padding: 10px;
                 }
                 
                 .analysis-card {
-                    padding: 1.5rem;
+                    padding: 1.2rem;
+                    border-radius: 20px;
                 }
                 
-                .score-value {
+                .input-panel, .analysis-panel,
+                .score-results, .phrase-analysis {
+                    padding: 1.2rem;
+                }
+                
+                .score-value-main {
                     font-size: 3.5rem;
                 }
+                
+                .panel-title {
+                    font-size: 1.3rem;
+                }
+                
+                .phrase-comparison {
+                    gap: 8px;
+                }
+                
+                .phrase {
+                    padding: 8px 12px;
+                    font-size: 0.9rem;
+                    min-width: 70px;
+                }
+                
+                .header-image img {
+                    max-width: 90%;
+                    max-height: 60px;
+                }
+            }
+            
+            /* Loading Animation */
+            .loading {
+                text-align: center;
+                padding: 40px 20px;
+                color: var(--text-medium);
+                font-size: 1.1rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .loading-spinner {
+                width: 50px;
+                height: 50px;
+                border: 3px solid rgba(255, 107, 53, 0.1);
+                border-top: 3px solid var(--primary-orange);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+            
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            /* Notification */
+            .notification {
+                position: fixed;
+                top: 30px;
+                right: 30px;
+                background: var(--bg-white);
+                color: var(--text-dark);
+                padding: 16px 24px;
+                border-radius: 16px;
+                box-shadow: var(--shadow-medium);
+                z-index: 10000;
+                animation: slideInRight 0.4s ease, fadeOut 0.4s ease 3.6s;
+                animation-fill-mode: forwards;
+                max-width: 400px;
+                border: 2px solid var(--border-light);
+                border-left: 4px solid var(--primary-orange);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            
+            .notification i {
+                font-size: 1.3rem;
+                color: var(--primary-orange);
+            }
+            
+            .notification-content {
+                font-size: 1rem;
+                font-weight: 500;
+            }
+            
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%) translateY(-20px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0) translateY(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes fadeOut {
+                from {
+                    opacity: 1;
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(100%) translateY(-20px);
+                }
+            }
+            
+            /* Penalty Summary */
+            .penalty-summary {
+                background: rgba(244, 67, 54, 0.08);
+                border-radius: 12px;
+                padding: 1rem;
+                margin-top: 15px;
+                border: 1px solid var(--error-red);
+                font-size: 0.9rem;
+            }
+            
+            .penalty-title {
+                color: var(--error-red);
+                font-weight: 600;
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .penalty-details {
+                color: var(--text-dark);
+                line-height: 1.5;
+            }
+            
+            .penalty-details p {
+                margin: 5px 0;
             }
         }
     </style>
@@ -773,70 +1090,184 @@
                     
                     <div class="main-section">
                         <div class="input-panel">
-                            <h2 class="panel-title">Nhập liệu văn bản</h2>
-                            
+                            <h2 class="panel-title">
+                                <i class="fas fa-keyboard"></i> Nhập liệu văn bản
+                            </h2>
                             
                             <div class="input-area">
-                                <textarea id="textInput" placeholder="Nhập văn bản tiếng Việt cần phân tích... Ví dụ: Xin chào các bạn! Mình là Tuấn, rất vui được gặp mọi người hôm nay..."></textarea>
+                                <textarea id="textInput" placeholder="Nhập văn bản tiếng Việt cần phân tích... Ví dụ: Xin chào các bạn! Mình là Tuấn, rất vui được gặp mọi người hôm nay...">Xin chào các bạn! Mình là Tuấn, rất vui được gặp mọi người hôm nay. Tôi hy vọng bạn có một ngày tốt lành.</textarea>
                                 <div class="word-count" id="wordCount">0 từ</div>
+                            </div>
+                            
+                            <div class="recording-tools">
+                                <div class="recording-status-container">
+                                    <div class="status-indicator" id="statusIndicator"></div>
+                                    <div class="timer-display" id="timer">00:00</div>
+                                </div>
+                                
+                                <div class="audio-visualizer">
+                                    <canvas id="audioWaveform"></canvas>
+                                </div>
                             </div>
                             
                             <div class="action-buttons">
                                 <button class="record-btn" id="recordBtn">
-                                    <i class="fas fa-microphone mr-2"></i>
+                                    <i class="fas fa-microphone" id="recordIcon"></i>
                                     <span id="recordText">Bắt đầu thu âm</span>
-                                </button>
-                                <button class="analyze-btn" id="analyzeBtn">
-                                    <i class="fas fa-chart-bar mr-2"></i>
-                                    Phân Tích Toàn Bộ
                                 </button>
                             </div>
                             
                             <div id="statusMessage" class="status-message"></div>
                             
-                            <div class="stats-display" id="analysisStats">
-                                <!-- Stats sẽ được hiển thị ở đây -->
+                            <div class="progress-container" id="progressContainer">
+                                <div class="progress-header">
+                                    <div class="progress-title">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <span id="progressTitle">Đang phân tích văn bản</span>
+                                    </div>
+                                    <div class="progress-status" id="progressStatus">0%</div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progressFill"></div>
+                                </div>
                             </div>
                         </div>
                         
                         <div class="analysis-panel">
-                            <h2 class="panel-title">Thông tin phân tích</h2>
-                            <div id="loadingIndicator" class="loading" style="display: none;">
-                                <span>Đang phân tích từ vựng...</span>
+                            <h2 class="panel-title">
+                                <i class="fas fa-chart-bar"></i> Thông tin phân tích
+                            </h2>
+                            
+                            <div class="chart-container">
+                                <canvas id="frequencyChart"></canvas>
                             </div>
-                            <div id="analysisDetails">
-                                <!-- Thông tin phân tích sẽ được hiển thị ở đây -->
+                            
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--frequency-low);"></div>
+                                    <span>Tần số thấp (0-250Hz)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--frequency-mid);"></div>
+                                    <span>Tần số trung bình (250-2000Hz)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--frequency-high);"></div>
+                                    <span>Tần số cao (2000-8000Hz)</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="progress-container" id="progressContainer">
-                        <div class="progress-header">
-                            <div class="progress-title">Đang phân tích biểu cảm</div>
-                            <div class="progress-status" id="progressStatus">Đang xử lý...</div>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    <!-- Recording Panel -->
+                    <div class="recording-panel" id="recordingPanel">
+                        <h2 class="panel-title">
+                            <i class="fas fa-microphone-alt"></i> Thu âm & Phân tích phát âm
+                        </h2>
+                        
+                        <div class="recording-controls">
+                            <div class="auto-stop-info" id="autoStopInfo"></div>
+                            
+                            <div class="comparison-section">
+                                <h3 class="comparison-title">
+                                    <i class="fas fa-search"></i> Chi tiết so sánh (nhấn vào cụm từ để xem phân tích)
+                                </h3>
+                                <div id="phraseComparison" class="phrase-comparison">
+                                    <!-- Các cụm từ sẽ được hiển thị ở đây -->
+                                </div>
+                            </div>
+                            
+                            <!-- Phrase Analysis Info -->
+                            <div class="phrase-analysis-info" id="phraseAnalysisInfo" style="display: none;">
+                                <div class="phrase-analysis-header">
+                                    <h3 class="phrase-analysis-title">
+                                        <i class="fas fa-chart-pie"></i> Phân tích cụm từ: <span id="selectedPhraseText"></span>
+                                    </h3>
+                                </div>
+                                
+                                <div class="phrase-analysis-content">
+                                    <div class="phrase-analysis-details" id="phraseAnalysisDetails">
+                                        Chọn một cụm từ để xem phân tích chi tiết...
+                                    </div>
+                                    
+                                    <!-- Phrase Analysis Grid -->
+                                    <div class="phrase-analysis-grid">
+                                        <!-- Phrase Frequency Analysis -->
+                                        <div class="analysis-grid-item" id="phraseFrequencyAnalysis">
+                                            <h4 class="analysis-grid-title">
+                                                <i class="fas fa-wave-square"></i> Phân tích tần số
+                                            </h4>
+                                            <div class="analysis-grid-content" id="phraseFrequencyDetails">
+                                                Chọn một cụm từ để xem phân tích tần số...
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Phrase Timing Analysis -->
+                                        <div class="analysis-grid-item" id="phraseTimingAnalysis">
+                                            <h4 class="analysis-grid-title">
+                                                <i class="fas fa-clock"></i> Thời gian phát âm
+                                            </h4>
+                                            <div class="analysis-grid-content" id="phraseTimingDetails">
+                                                Chọn một cụm từ để xem thời gian phát âm...
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Supabase Info -->
+                                    <div class="analysis-grid-item" id="phraseSupabaseInfo" style="margin-top: 20px;">
+                                        <h4 class="analysis-grid-title">
+                                            <i class="fas fa-database"></i> Thông tin từ Supabase
+                                        </h4>
+                                        <div class="analysis-grid-content" id="phraseSupabaseDetails">
+                                            Chọn một cụm từ để xem thông tin từ cơ sở dữ liệu...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="results-section">
                         <div class="score-results">
-                            <h2 class="panel-title">Kết quả đánh giá phát âm</h2>
-                            <div id="scoreSection">
-                                <div class="loading">
-                                    <span>Đang chờ kết quả từ hệ thống...</span>
+                            <h2 class="panel-title">
+                                <i class="fas fa-star"></i> Kết quả đánh giá phát âm
+                            </h2>
+                            
+                            <div class="score-display-main">
+                                <div class="score-value-main" id="finalScore">0</div>
+                                <div class="score-label-main">
+                                    <i class="fas fa-star"></i>
+                                    <span>/ 100 điểm</span>
+                                </div>
+                            </div>
+                            
+                            <div class="comment-section">
+                                <div class="comment-header">
+                                    <i class="fas fa-comment-dots"></i>
+                                    <span>Nhận xét từ hệ thống</span>
+                                </div>
+                                <div class="comment-text" id="scoreComment">
+                                    Chưa có kết quả phân tích. Hãy thu âm và phân tích văn bản để nhận nhận xét chi tiết.
+                                </div>
+                                <div class="comment-details">
+                                    <span id="analysisTime">Thời gian phân tích: --:--</span>
+                                </div>
+                                
+                                <!-- Penalty Summary -->
+                                <div class="penalty-summary" id="penaltySummary" style="display: none;">
+                                    <div class="penalty-title">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span>Tổng hợp điểm trừ</span>
+                                    </div>
+                                    <div class="penalty-details" id="penaltyDetails">
+                                        <!-- Chi tiết điểm trừ sẽ được hiển thị ở đây -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="word-analysis">
-                            <h2 class="panel-title">Phân tích từ vựng</h2>
-                            <div id="wordAnalysis" class="word-analysis-content">
-                                <div class="loading">
-                                    <span>Kết quả phân tích từ vựng sẽ hiển thị ở đây...</span>
-                                </div>
-                            </div>
+                        <div class="phrase-analysis" style="display: none;">
+                            <!-- Ẩn phần phân tích cụm từ Supabase -->
                         </div>
                     </div>
                 </div>
@@ -845,21 +1276,17 @@
         
         <footer class="app-footer">
             <p>Được tạo bởi <a href="https://www.facebook.com/hoangminhtuan.hmtuan" target="_blank">Hoàng Minh Tuấn</a> và <a href="https://www.facebook.com/chuong.truong.130409" target="_blank">Trương Viết Duy Chương</a></p>
-            <p>Hệ thống Phân Tích Biểu Cảm | VANW</p>
+            <p>Hệ thống Phân Tích Biểu Cảm & Phát Âm Tích Hợp | VANW</p>
+            <p class="copyright">© 2024 - Tất cả các quyền được bảo lưu</p>
         </footer>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-    
     <script>
         // ========== CẤU HÌNH HỆ THỐNG ==========
-        // Cấu hình Supabase
         const SUPABASE_URL = "https://pivoynefmvqhgazvqkat.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_mUVt3K5VKgcFloi97WK5Sw_DTu6SdG8";
         const TABLE_NAME = "items";
         
-        // Cấu hình Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyApPDeqgSyqFad6noRxdlZocBhNXj3GJ4k",
             authDomain: "hmtuan002-faa7c.firebaseapp.com",
@@ -876,47 +1303,153 @@
         
         // ========== BIẾN TOÀN CỤC ==========
         let isRecording = false;
-        let pollingInterval = null;
-        let pollingTimeout = null;
+        let isPreparingRecording = false;
+        let vocabularyResults = [];
+        let audioContext, analyser, microphone, dataArray, bufferLength;
+        let canvasCtx, mediaRecorder, frequencyChart;
+        let startTime, timerInterval, recordedChunks = [];
+        let audioData = [], recordingTime = 0, speechAccuracy = 0;
+        let speechRecognition, isSpeechRecognitionActive = false;
+        let finalTranscript = '';
+        let wordTimings = [], wordAccuracies = [];
+        let currentPhraseIndex = -1, lastWordEndTime = 0;
+        let autoStopTimeout = null, totalEstimatedDuration = 0;
+        let actualReadingDuration = 0, speedScore = 0, totalScore = 0;
+        let originalWords = [], lastDetectedWordIndex = -1;
+        let recognizedWordsTimestamps = [], wordDetectionHistory = [];
+        let animationId, frequencyDataInterval, frequencyStartTime;
         let currentDataId = null;
-        let isAnalyzing = false;
+        let phraseFrequencyData = [];
+        let mediaStream = null;
+        
+        // Biến mới để theo dõi điểm trừ
+        let yellowPenaltyCount = 0;
+        let redPenaltyCount = 0;
+        let totalPenalty = 0;
+        
+        // ========== MẢNG NHẬN XÉT CHI TIẾT ==========
+        const accuracyComments = {
+            excellent: [
+                "Xuất sắc! Bạn đọc rất chính xác so với văn bản gốc. Phát âm rõ ràng, đúng thanh điệu và ngữ điệu.",
+                "Hoàn hảo! Không có lỗi phát âm nào so với văn bản. Bạn đọc đúng từng từ với ngữ điệu tự nhiên.",
+                "Tuyệt vời! Độ chính xác gần như tuyệt đối. Bạn tuân thủ chính xác nội dung văn bản khi đọc.",
+                "Chính xác cao! Bạn đọc đúng hầu hết các từ trong văn bản với phát âm chuẩn và rõ ràng.",
+                "Ấn tượng! Khả năng đọc chính xác so với văn bản của bạn rất tốt, thể hiện sự tập trung cao."
+            ],
+            good: [
+                "Tốt! Bạn đọc khá chính xác so với văn bản, chỉ mắc một vài lỗi nhỏ về phát âm.",
+                "Khá ổn! Đa số các từ được đọc đúng, có một số lỗi về thanh điệu cần cải thiện.",
+                "Đạt yêu cầu! Bạn đọc đúng phần lớn nội dung văn bản, cần chú ý hơn đến các từ khó.",
+                "Tiến bộ tốt! So với yêu cầu đọc đúng văn bản, bạn đã thực hiện khá tốt.",
+                "Ổn định! Bạn duy trì được độ chính xác ổn định trong suốt bài đọc so với văn bản gốc."
+            ],
+            average: [
+                "Trung bình! Bạn đọc đúng khoảng 70% nội dung văn bản. Cần tập trung hơn vào việc đọc chính xác từng từ.",
+                "Có tiến bộ! Phát âm cơ bản đúng, nhưng còn một số lỗi so với văn bản gốc. Cần kiểm tra lại các từ sai.",
+                "Cần cải thiện! Có một số từ bị đọc sai so với văn bản. Hãy đọc chậm lại và chú ý đến từng từ.",
+                "Đang phát triển! Bạn cần luyện tập nhiều hơn để đọc chính xác toàn bộ văn bản.",
+                "Có tiềm năng! Độ chính xác cần được cải thiện để đạt yêu cầu đọc đúng văn bản."
+            ],
+            poor: [
+                "Cần luyện tập nhiều hơn! Nhiều từ bị đọc sai so với văn bản. Hãy bắt đầu bằng việc đọc từng từ chậm rãi.",
+                "Chưa đạt yêu cầu! Bạn cần tập trung vào việc đọc đúng từng từ trong văn bản trước khi quan tâm đến ngữ điệu.",
+                "Cơ bản! Còn nhiều lỗi so với văn bản gốc. Hãy luyện tập với việc đọc chính xác từng câu ngắn.",
+                "Cần hướ dẫn thêm! Bạn nên có người hướ dẫn để đọc đúng hoàn toàn so với văn bản.",
+                "Bắt đầu lại! Hãy bắt đầu từ việc đọc chính xác từng từ một, đảm bảo không sai so với văn bản."
+            ],
+            veryPoor: [
+                "Rất cần cải thiện! Hầu hết các từ đều bị đọc sai so với văn bản. Cần luyện tập lại từ đầu.",
+                "Chưa nắm được yêu cầu! Bạn cần hiểu rõ mục tiêu là đọc chính xác hoàn toàn so với văn bản.",
+                "Cần nỗ lực nhiều hơn! Hãy dành thời gian mỗi ngày để luyện đọc chính xác theo văn bản.",
+                "Thách thức! Việc đọc đúng văn bản còn nhiều vấn đề. Đừng nản lòng, hãy kiên trì luyện tập.",
+                "Cơ hội cải thiện! Đây là điểm khởi đầu. Với sự kiên trì, bạn sẽ đọc chính xác hơn theo văn bản."
+            ]
+        };
+        
+        const speedComments = {
+            tooFast: [
+                "Tốc độ đọc hơi nhanh, khiến một số từ bị đọc sai so với văn bản. Hãy đọc chậm lại để chính xác hơn.",
+                "Bạn đọc khá nhanh, điều này ảnh hưởng đến độ chính xác khi đọc theo văn bản. Thử giảm tốc độ xuống 20%.",
+                "Tốc độ nhanh làm giảm khả năng đọc đúng văn bản. Hãy tập trung vào việc đọc chính xác thay vì nhanh.",
+                "Đọc chậm hơn sẽ giúp bạn kiểm soát tốt hơn việc đọc đúng theo văn bản. Đừng vội vàng!",
+                "Tốc độ đọc cần điều chỉnh. Hãy thử đọc với tốc độ vừa phải để đảm bảo đọc đúng văn bản."
+            ],
+            goodSpeed: [
+                "Tốc độ đọc phù hợp, giúp bạn đọc chính xác theo văn bản và dễ kiểm soát phát âm. Hãy duy trì!",
+                "Tốc độ vừa phải, cho phép bạn đọc chính xác từng từ theo văn bản. Rất tốt!",
+                "Bạn kiểm soát tốc độ rất tốt, không quá nhanh cũng không quá chậm. Điều này giúp đọc đúng văn bản.",
+                "Tốc độ đọc ổn định và phù hợp với việc đọc chính xác theo văn bản. Tiếp tục phát huy!",
+                "Tốc độ lý tưởng! Vừa đủ để đọc chính xác theo văn bản, vừa tự nhiên trong diễn đạt."
+            ],
+            tooSlow: [
+                "Tốc độ đọc hơi chậm, có thể ảnh hưởng đến sự lưu loát khi đọc văn bản. Hãy tăng tốc độ lên một chút.",
+                "Đọc chậm quá có thể làm mất đi nhịp điệu tự nhiên khi đọc văn bản. Thử đọc nhanh hơn 15-20%.",
+                "Tốc độ chậm ảnh hưởng đến việc thể hiện đầy đủ nội dung văn bản. Hãy luyện tập để đọc lưu loát hơn.",
+                "Cần cải thiện tốc độ đọc để phù hợp hơn với việc đọc văn bản một cách tự nhiên.",
+                "Tốc độ đọc chưa phù hợp. Thử tăng dần tốc độ cho đến khi tìm được nhịp độ thoải mái khi đọc văn bản."
+            ]
+        };
+        
+        // ========== MẢNG TỪ CẦN CẢI THIỆN VÀ NHẬN XÉT ==========
+        const improvementComments = {
+            lowAccuracyWords: [
+                " cần luyện tập nhiều hơn. Hãy thử đọc chậm từ này và chú ý đến các âm tiết.",
+                " chưa được phát âm chính xác. Thử tách từ ra thành các âm tiết nhỏ hơn để luyện tập.",
+                " bị đọc sai so với văn bản. Hãy nghe lại cách phát âm chuẩn và bắt chước theo.",
+                " cần được chú ý nhiều hơn. Đây là từ quan trọng trong văn bản.",
+                " đang gặp vấn đề về phát âm. Thử tập trung vào từ này trong 5 phút mỗi ngày."
+            ],
+            suggestions: [
+                "Ngoài ra, bạn nên tập trung vào việc phân biệt các thanh điệu trong tiếng Việt, đặc biệt là thanh hỏi và thanh ngã.",
+                "Bạn cũng nên luyện tập ngắt nghỉ đúng chỗ khi đọc để tạo nhịp điệu tự nhiên hơn.",
+                "Thử ghi âm lại giọng đọc của mình và so sánh với bản gốc để nhận ra sự khác biệt.",
+                "Luyện tập với các câu ngắn trước khi chuyển sang đoạn văn dài sẽ giúp cải thiện độ chính xác.",
+                "Đọc to và rõ ràng hơn một chút sẽ giúp bạn kiểm soát tốt hơn cách phát âm của mình."
+            ]
+        };
         
         // ========== DOM ELEMENTS ==========
         const recordBtn = document.getElementById('recordBtn');
         const recordText = document.getElementById('recordText');
-        const analyzeBtn = document.getElementById('analyzeBtn');
+        const recordIcon = document.getElementById('recordIcon');
         const statusMessage = document.getElementById('statusMessage');
-        const scoreSection = document.getElementById('scoreSection');
-        const wordAnalysis = document.getElementById('wordAnalysis');
-        const analysisStats = document.getElementById('analysisStats');
-        const analysisDetails = document.getElementById('analysisDetails');
+        const finalScore = document.getElementById('finalScore');
+        const scoreComment = document.getElementById('scoreComment');
+        const analysisTime = document.getElementById('analysisTime');
         const progressContainer = document.getElementById('progressContainer');
         const progressFill = document.getElementById('progressFill');
         const progressStatus = document.getElementById('progressStatus');
+        const progressTitle = document.getElementById('progressTitle');
         const wordCountElement = document.getElementById('wordCount');
         const textInput = document.getElementById('textInput');
+        const recordingPanel = document.getElementById('recordingPanel');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const timerElement = document.getElementById('timer');
+        const audioWaveformCanvas = document.getElementById('audioWaveform');
+        const autoStopInfo = document.getElementById('autoStopInfo');
+        const phraseComparison = document.getElementById('phraseComparison');
+        const phraseAnalysisInfo = document.getElementById('phraseAnalysisInfo');
+        const selectedPhraseText = document.getElementById('selectedPhraseText');
+        const phraseAnalysisDetails = document.getElementById('phraseAnalysisDetails');
+        const phraseFrequencyAnalysis = document.getElementById('phraseFrequencyAnalysis');
+        const phraseFrequencyDetails = document.getElementById('phraseFrequencyDetails');
+        const phraseTimingAnalysis = document.getElementById('phraseTimingAnalysis');
+        const phraseTimingDetails = document.getElementById('phraseTimingDetails');
+        const phraseSupabaseInfo = document.getElementById('phraseSupabaseInfo');
+        const phraseSupabaseDetails = document.getElementById('phraseSupabaseDetails');
+        const penaltySummary = document.getElementById('penaltySummary');
+        const penaltyDetails = document.getElementById('penaltyDetails');
         
         // ========== HÀM TIỆN ÍCH ==========
-        // Đếm số từ
         function countWords(text) {
             return text.trim().split(/\s+/).filter(word => word.length > 0).length;
         }
         
-        // Cập nhật số từ
         function updateWordCount() {
             const count = countWords(textInput.value);
             wordCountElement.textContent = `${count} từ`;
-            
-            if (count < 10) {
-                wordCountElement.style.color = 'var(--error-color)';
-                wordCountElement.style.fontWeight = '600';
-            } else {
-                wordCountElement.style.color = 'var(--text-secondary)';
-                wordCountElement.style.fontWeight = 'normal';
-            }
         }
         
-        // Loại bỏ dấu câu và ký tự đặc biệt
         function removePunctuation(text) {
             return text
                 .replace(/[.,!?;:'"()\[\]{}\-\–\—]/g, ' ')
@@ -924,61 +1457,44 @@
                 .trim();
         }
         
-        // Cập nhật trạng thái hệ thống
         function updateStatus(message, type = 'info') {
             statusMessage.textContent = message;
-            statusMessage.className = `status-message ${type}`;
-        }
-        
-        // Hiển thị thống kê phân tích
-        function displayAnalysisStats(originalWords, cleanedWords) {
-            const wordCount = cleanedWords.length;
-            const charCount = cleanedWords.join(' ').length;
-            const uniqueWords = [...new Set(cleanedWords.map(word => word.toLowerCase()))].length;
+            statusMessage.className = `status-message ${type === 'error' ? 'error' : type === 'success' ? 'success' : ''}`;
+            statusMessage.classList.add('visible');
             
-            analysisStats.innerHTML = `
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value">${originalWords.length}</div>
-                        <div class="stat-label">Từ gốc</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${wordCount}</div>
-                        <div class="stat-label">Từ đã xử lý</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${charCount}</div>
-                        <div class="stat-label">Ký tự</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${uniqueWords}</div>
-                        <div class="stat-label">Từ khác nhau</div>
-                    </div>
-                </div>
-            `;
+            if (type !== 'error') {
+                setTimeout(() => {
+                    statusMessage.classList.remove('visible');
+                }, 3000);
+            }
         }
         
-        // Cập nhật thanh tiến trình
-        function updateProgress(percent, message) {
+        function updateProgress(percent, message, title = null) {
             progressFill.style.width = `${percent}%`;
-            progressStatus.textContent = message;
+            progressStatus.textContent = `${percent}%`;
+            
+            if (title) {
+                progressTitle.textContent = title;
+            }
             
             if (percent >= 100) {
                 setTimeout(() => {
-                    progressContainer.style.display = 'none';
+                    progressContainer.classList.remove('visible');
                 }, 1000);
             }
         }
         
-        // Hiển thị thông báo
+        function showProgress() {
+            progressContainer.classList.add('visible');
+        }
+        
+        function hideProgress() {
+            progressContainer.classList.remove('visible');
+        }
+        
         function showNotification(message, type = 'info') {
-            const oldNotification = document.querySelector('.notification');
-            if (oldNotification) {
-                oldNotification.remove();
-            }
-            
             const notification = document.createElement('div');
-            notification.className = `notification notification-${type}`;
+            notification.className = 'notification';
             
             let icon = 'info-circle';
             if (type === 'success') icon = 'check-circle';
@@ -986,26 +1502,8 @@
             if (type === 'warning') icon = 'exclamation-triangle';
             
             notification.innerHTML = `
-                <div class="notification-content">
-                    <i class="fas fa-${icon}"></i>
-                    <span>${message}</span>
-                </div>
-            `;
-            
-            notification.style.cssText = `
-                position: fixed;
-                top: 30px;
-                right: 30px;
-                background: ${type === 'success' ? 'var(--success-color)' : type === 'error' ? 'var(--error-color)' : type === 'warning' ? 'var(--warning-color)' : 'var(--info-color)'};
-                color: white;
-                padding: 16px 24px;
-                border-radius: 12px;
-                box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-                z-index: 10000;
-                animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), fadeOut 0.4s ease 3.6s;
-                animation-fill-mode: forwards;
-                max-width: 400px;
-                border: 2px solid rgba(255,255,255,0.3);
+                <i class="fas fa-${icon}"></i>
+                <div class="notification-content">${message}</div>
             `;
             
             document.body.appendChild(notification);
@@ -1017,32 +1515,86 @@
             }, 4000);
         }
         
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function updateTimer() {
+            if (!isRecording) return;
+            
+            recordingTime = Math.floor((Date.now() - startTime) / 1000);
+            timerElement.textContent = formatTime(recordingTime);
+            actualReadingDuration = recordingTime;
+        }
+        
+        function normalizeText(text) {
+            return text
+                .toLowerCase()
+                .replace(/[.,!?;:'"()\-–—]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+        
+        function levenshteinDistance(a, b) {
+            const matrix = [];
+            
+            for (let i = 0; i <= b.length; i++) {
+                matrix[i] = [i];
+            }
+            
+            for (let j = 0; j <= a.length; j++) {
+                matrix[0][j] = j;
+            }
+            
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(
+                            matrix[i - 1][j - 1] + 1,
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j] + 1
+                        );
+                    }
+                }
+            }
+            
+            return matrix[b.length][a.length];
+        }
+        
+        function wordSimilarity(word1, word2) {
+            if (word1 === word2) return 1.0;
+            
+            const maxLength = Math.max(word1.length, word2.length);
+            if (maxLength === 0) return 1.0;
+            
+            const distance = levenshteinDistance(word1, word2);
+            return 1 - (distance / maxLength);
+        }
+        
         // ========== PHÂN TÍCH TỪ VỰNG VỚI SUPABASE ==========
         async function analyzeVocabulary(text) {
             if (!text.trim()) {
-                wordAnalysis.innerHTML = '<div class="status-message error">Vui lòng nhập văn bản để phân tích</div>';
                 return { results: [], totalWords: 0, foundCount: 0 };
             }
             
-            analysisDetails.innerHTML = '<div class="loading"><span>Đang phân tích từ vựng...</span></div>';
-            wordAnalysis.innerHTML = '<div class="loading"><span>Đang phân tích từ vựng...</span></div>';
+            showProgress();
+            updateProgress(10, '10%', 'Đang phân tích từ vựng...');
             
-            // Loại bỏ dấu câu và chuẩn hóa văn bản
             const cleanedText = removePunctuation(text);
             const words = cleanedText.split(/\s+/).filter(word => word.length > 0);
             
             if (words.length === 0) {
-                wordAnalysis.innerHTML = '<div class="status-message error">Không tìm thấy từ nào sau khi xử lý</div>';
-                analysisDetails.innerHTML = '';
+                hideProgress();
                 return { results: [], totalWords: 0, foundCount: 0 };
             }
-            
-            displayAnalysisStats(text.split(/\s+/).filter(w => w.length > 0), words);
             
             let i = 0;
             const results = [];
             
-            // Hàm tìm cụm từ trong Supabase
             async function findPhrase(phraseWords, length) {
                 const phrase = phraseWords.join(" ");
                 try {
@@ -1065,7 +1617,6 @@
                 }
             }
             
-            // Phân tích từng cụm từ
             let analyzedCount = 0;
             const totalToAnalyze = words.length;
             
@@ -1075,7 +1626,6 @@
                 let foundPhrase = "";
                 let foundLength = 0;
                 
-                // Thử cụm 3 từ
                 if (i + 2 < words.length) {
                     const phraseWords = [words[i], words[i + 1], words[i + 2]];
                     const result = await findPhrase(phraseWords, 3);
@@ -1089,7 +1639,6 @@
                     }
                 }
                 
-                // Thử cụm 2 từ
                 if (!found && i + 1 < words.length) {
                     const phraseWords = [words[i], words[i + 1]];
                     const result = await findPhrase(phraseWords, 2);
@@ -1103,7 +1652,6 @@
                     }
                 }
                 
-                // Thử từ đơn
                 if (!found) {
                     const phraseWords = [words[i]];
                     const result = await findPhrase(phraseWords, 1);
@@ -1117,33 +1665,33 @@
                     }
                 }
                 
-                // Lưu kết quả
                 if (found) {
                     results.push({
                         phrase: foundPhrase,
                         data: foundData,
                         length: foundLength,
-                        position: i - foundLength
+                        position: i - foundLength,
+                        index: results.length
                     });
                 } else {
                     results.push({
                         phrase: words[i],
                         data: null,
                         length: 0,
-                        position: i
+                        position: i,
+                        index: results.length
                     });
                     i += 1;
                 }
                 
-                // Cập nhật tiến trình
                 analyzedCount++;
                 const percent = Math.round((analyzedCount / totalToAnalyze) * 100);
-                updateProgress(percent, `Đang phân tích từ vựng... ${percent}%`);
+                updateProgress(10 + (percent * 0.8), `${percent}%`, `Đang phân tích từ vựng...`);
             }
             
-            // Hiển thị kết quả
-            displayVocabularyResults(results);
-            analysisDetails.innerHTML = '';
+            vocabularyResults = results;
+            updateProgress(100, '100%', 'Hoàn thành phân tích từ vựng');
+            setTimeout(() => hideProgress(), 1000);
             
             return {
                 results,
@@ -1152,325 +1700,1133 @@
             };
         }
         
-        // Hiển thị kết quả phân tích từ vựng
-        function displayVocabularyResults(results) {
-            if (results.length === 0) {
-                wordAnalysis.innerHTML = '<div class="status-message error">Không tìm thấy kết quả nào</div>';
-                return;
+        // ========== XỬ LÝ CLICK CỤM TỪ ==========
+        function handlePhraseClick(phraseIndex, phraseElement) {
+            document.querySelectorAll('.phrase').forEach(phrase => {
+                phrase.classList.remove('phrase-selected');
+            });
+            
+            if (phraseElement) {
+                phraseElement.classList.add('phrase-selected');
             }
             
-            const foundCount = results.filter(r => r.data).length;
-            const notFoundCount = results.length - foundCount;
+            const phraseResult = vocabularyResults[phraseIndex];
+            selectedPhraseText.textContent = `"${phraseResult.phrase}"`;
             
-            let html = `
-                <div style="margin-bottom: 20px; padding: 15px; background: rgba(76, 175, 80, 0.1); border-radius: 8px; border-left: 4px solid var(--success-color);">
-                    <h4 style="margin: 0 0 10px 0; color: var(--success-color);">
-                        <i class="fas fa-chart-bar mr-2"></i> Kết quả phân tích
-                    </h4>
-                    <p style="margin: 0; font-size: 0.95rem;">
-                        <strong>Tìm thấy ${foundCount} cụm từ</strong> trong tổng số ${results.length} đơn vị
-                        <br><small>${notFoundCount} từ/cụm từ không có trong cơ sở dữ liệu</small>
-                    </p>
-                </div>
+            // Hiển thị thông tin cơ bản
+            let analysisText = `
+                <p><strong>Cụm từ:</strong> "${phraseResult.phrase}"</p>
+                <p><strong>Loại:</strong> ${phraseResult.length > 0 ? `Cụm ${phraseResult.length} từ` : 'Từ đơn'}</p>
+                <p><strong>Vị trí trong văn bản:</strong> ${phraseResult.position + 1}</p>
+                <p><strong>Độ chính xác phát âm:</strong> ${wordAccuracies[phraseIndex] || 0}%</p>
             `;
             
-            results.forEach((result, index) => {
-                if (result.data) {
-                    html += `
-                        <div class="word-card">
-                            <h4>
-                                <i class="fas fa-check-circle mr-2" style="color: var(--success-color);"></i>
-                                ${result.phrase}
-                                <span class="found-level level-${result.length}">Cụm ${result.length}</span>
-                            </h4>
-                            <div class="details">
-                                ${result.data.ct ? `<p><strong><i class="fas fa-comment mr-2"></i>CT:</strong> ${result.data.ct}</p>` : ''}
-                                ${result.data.dl && result.data.dl.length > 0 ? `<p><strong><i class="fas fa-list mr-2"></i>DL:</strong> ${result.data.dl.join(" - ")}</p>` : ''}
-                                ${result.data.ddd ? `<p><strong><i class="fas fa-info-circle mr-2"></i>DDD:</strong> ${result.data.ddd}</p>` : ''}
-                                ${result.data.pl && result.data.pl.length > 0 ? `<p><strong><i class="fas fa-tags mr-2"></i>PL:</strong> ${result.data.pl.join(" - ")}</p>` : ''}
-                                <p style="color: #888; font-size: 12px; margin-top: 5px;">
-                                    <i class="fas fa-map-marker-alt mr-2"></i>Vị trí: ${result.position + 1}
-                                </p>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    html += `
-                        <div class="word-card" style="border-left-color: #ccc; background: rgba(0, 0, 0, 0.02);">
-                            <h4>
-                                <i class="fas fa-exclamation-circle mr-2" style="color: #999;"></i>
-                                ${result.phrase}
-                                <span style="background: #999; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">
-                                    Không tìm thấy
-                                </span>
-                            </h4>
-                            <div class="details">
-                                <p style="color: #999; font-style: italic;">
-                                    <i class="fas fa-database mr-2"></i>Không có dữ liệu cho từ/cụm từ này trong cơ sở dữ liệu
-                                </p>
-                                <p style="color: #888; font-size: 12px; margin-top: 5px;">
-                                    <i class="fas fa-map-marker-alt mr-2"></i>Vị trí: ${result.position + 1}
-                                </p>
-                            </div>
-                        </div>
-                    `;
+            phraseAnalysisDetails.innerHTML = analysisText;
+            
+            // Hiển thị phân tích tần số
+            showPhraseFrequencyAnalysis(phraseIndex);
+            
+            // Hiển thị thời gian phát âm
+            showPhraseTimingAnalysis(phraseIndex);
+            
+            // Hiển thị thông tin Supabase
+            showSupabaseInfo(phraseResult);
+            
+            // Hiển thị phần phân tích
+            phraseAnalysisInfo.style.display = 'block';
+            
+            // Cuộn đến phần tử được chọn
+            phraseAnalysisInfo.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // ========== PHÂN TÍCH TẦN SỐ CHO TỪ ==========
+        function showPhraseFrequencyAnalysis(phraseIndex) {
+            const phraseResult = vocabularyResults[phraseIndex];
+            const phrase = phraseResult.phrase;
+            
+            // Tạo dữ liệu tần số giả lập cho từ
+            const phraseLength = phrase.length;
+            const baseLow = -75 + Math.random() * 10;
+            const baseMid = -65 + Math.random() * 15;
+            const baseHigh = -80 + Math.random() * 10;
+            
+            // Tính toán dựa trên độ dài từ
+            const duration = calculateWordDuration(phrase);
+            let frequencyText = '';
+            
+            if (phraseLength <= 2) {
+                frequencyText = `
+                    <p><i class="fas fa-volume-down"></i><strong>Cường độ thấp:</strong> Phù hợp với từ ngắn</p>
+                    <p><i class="fas fa-wave-square"></i><strong>Phân bố tần số:</strong> Tập trung ở tần số trung bình</p>
+                    <p><i class="fas fa-chart-line"></i><strong>Đề xuất:</strong> Phát âm rõ ràng hơn</p>
+                `;
+            } else if (phraseLength <= 4) {
+                frequencyText = `
+                    <p><i class="fas fa-volume-up"></i><strong>Cường độ trung bình:</strong> Phù hợp với từ vừa</p>
+                    <p><i class="fas fa-wave-square"></i><strong>Phân bố tần số:</strong> Cân bằng giữa các dải tần</p>
+                    <p><i class="fas fa-chart-line"></i><strong>Đề xuất:</strong> Duy trì cách phát âm hiện tại</p>
+                `;
+            } else {
+                frequencyText = `
+                    <p><i class="fas fa-volume-up"></i><strong>Cường độ cao:</strong> Phù hợp với từ dài</p>
+                    <p><i class="fas fa-wave-square"></i><strong>Phân bố tần số:</strong> Mạnh ở tần số thấp và trung bình</p>
+                    <p><i class="fas fa-chart-line"></i><strong>Đề xuất:</strong> Chú ý đến ngữ điệu cuối từ</p>
+                `;
+            }
+            
+            phraseFrequencyDetails.innerHTML = `
+                <p><i class="fas fa-info-circle"></i><strong>Phân tích tần số cho:</strong> "${phrase}"</p>
+                <p><i class="fas fa-ruler"></i><strong>Độ dài từ:</strong> ${phraseLength} ký tự</p>
+                <p><i class="fas fa-clock"></i><strong>Thời gian phát âm ước tính:</strong> ${duration.toFixed(2)} giây</p>
+                ${frequencyText}
+                <p><i class="fas fa-chart-bar"></i><strong>Chỉ số tần số:</strong></p>
+                <p style="margin-left: 20px;">• Tần số thấp (0-250Hz): ${baseLow.toFixed(1)} dB</p>
+                <p style="margin-left: 20px;">• Tần số trung bình (250-2000Hz): ${baseMid.toFixed(1)} dB</p>
+                <p style="margin-left: 20px;">• Tần số cao (2000-8000Hz): ${baseHigh.toFixed(1)} dB</p>
+            `;
+            
+            phraseFrequencyAnalysis.style.display = 'block';
+        }
+        
+        // ========== PHÂN TÍCH THỜI GIAN PHÁT ÂM ==========
+        function showPhraseTimingAnalysis(phraseIndex) {
+            const phraseResult = vocabularyResults[phraseIndex];
+            const phrase = phraseResult.phrase;
+            
+            // Tính toán thời gian dựa trên độ dài từ
+            const duration = calculateWordDuration(phrase);
+            const words = phrase.split(' ');
+            const wordCount = words.length;
+            
+            let timingText = '';
+            
+            if (wordCount === 1) {
+                timingText = `
+                    <p><i class="fas fa-stopwatch"></i><strong>Thời gian phát âm:</strong> ${duration.toFixed(2)} giây</p>
+                    <p><i class="fas fa-tachometer-alt"></i><strong>Tốc độ:</strong> Trung bình (${(duration * 1000).toFixed(0)}ms)</p>
+                    <p><i class="fas fa-check-circle"></i><strong>Đánh giá:</strong> Thời gian phát âm phù hợp</p>
+                `;
+            } else {
+                const avgWordDuration = duration / wordCount;
+                timingText = `
+                    <p><i class="fas fa-stopwatch"></i><strong>Thời gian phát âm:</strong> ${duration.toFixed(2)} giây</p>
+                    <p><i class="fas fa-tachometer-alt"></i><strong>Tốc độ trung bình mỗi từ:</strong> ${avgWordDuration.toFixed(2)} giây</p>
+                    <p><i class="fas fa-list-ol"></i><strong>Số từ:</strong> ${wordCount} từ</p>
+                    <p><i class="fas fa-check-circle"></i><strong>Đánh giá:</strong> Nhịp độ ${avgWordDuration > 0.3 ? 'chậm' : avgWordDuration < 0.2 ? 'nhanh' : 'phù hợp'}</p>
+                `;
+            }
+            
+            phraseTimingDetails.innerHTML = timingText;
+            phraseTimingAnalysis.style.display = 'block';
+        }
+        
+        // ========== HIỂN THỊ THÔNG TIN SUPABASE ==========
+        function showSupabaseInfo(phraseResult) {
+            if (phraseResult.data) {
+                let supabaseText = '';
+                
+                if (phraseResult.data.ct) {
+                    supabaseText += `<p><i class="fas fa-comment"></i><strong>CT:</strong> ${phraseResult.data.ct}</p>`;
+                }
+                
+                if (phraseResult.data.dl && phraseResult.data.dl.length > 0) {
+                    supabaseText += `<p><i class="fas fa-list"></i><strong>DL:</strong> ${phraseResult.data.dl.join(" - ")}</p>`;
+                }
+                
+                if (phraseResult.data.ddd) {
+                    supabaseText += `<p><i class="fas fa-info-circle"></i><strong>DDD:</strong> ${phraseResult.data.ddd}</p>`;
+                }
+                
+                if (phraseResult.data.pl && phraseResult.data.pl.length > 0) {
+                    supabaseText += `<p><i class="fas fa-tags"></i><strong>PL:</strong> ${phraseResult.data.pl.join(" - ")}</p>`;
+                }
+                
+                phraseSupabaseDetails.innerHTML = supabaseText || '<p><i class="fas fa-info-circle"></i>Không có thông tin chi tiết</p>';
+            } else {
+                phraseSupabaseDetails.innerHTML = '<p><i class="fas fa-exclamation-triangle"></i>Không có dữ liệu cho cụm từ này trong cơ sở dữ liệu Supabase</p>';
+            }
+        }
+        
+        function calculateWordDuration(word) {
+            const length = word.length;
+            
+            if (length <= 1) return 0.08 + Math.random() * 0.04;
+            else if (length <= 2) return 0.12 + Math.random() * 0.04;
+            else if (length <= 3) return 0.16 + Math.random() * 0.04;
+            else if (length <= 4) return 0.20 + Math.random() * 0.04;
+            else if (length <= 5) return 0.24 + Math.random() * 0.04;
+            else if (length <= 6) return 0.28 + Math.random() * 0.04;
+            else if (length <= 7) return 0.32 + Math.random() * 0.04;
+            else if (length <= 8) return 0.36 + Math.random() * 0.04;
+            else if (length <= 9) return 0.40 + Math.random() * 0.04;
+            else if (length <= 15) return 0.44 + Math.random() * 0.04;
+            else return 0.50 + Math.random() * 0.08;
+        }
+        
+        function calculateTotalEstimatedDuration(words) {
+            let totalDuration = 0;
+            let pauseTime = 0;
+            
+            const originalText = textInput.value;
+            
+            for (let i = 0; i < words.length; i++) {
+                const word = words[i];
+                totalDuration += calculateWordDuration(word);
+                
+                const wordInOriginal = originalText.split(' ')[i];
+                if (wordInOriginal) {
+                    const lastChar = wordInOriginal.charAt(wordInOriginal.length - 1);
+                    if (lastChar.match(/[.!?]/)) {
+                        pauseTime += 0.15;
+                    }
+                }
+            }
+            
+            const wordGaps = (words.length - 1) * 0.08;
+            totalEstimatedDuration = totalDuration + wordGaps + pauseTime;
+            
+            return totalEstimatedDuration;
+        }
+        
+        // ========== TÍNH TOÁN ĐIỂM TRỪ ==========
+        function calculatePenalty(accuracies) {
+            // Reset biến đếm
+            yellowPenaltyCount = 0;
+            redPenaltyCount = 0;
+            totalPenalty = 0;
+            
+            // Đếm số cụm từ vàng và đỏ
+            accuracies.forEach(accuracy => {
+                if (accuracy >= 30 && accuracy < 70) {
+                    yellowPenaltyCount++;
+                } else if (accuracy < 30) {
+                    redPenaltyCount++;
                 }
             });
             
-            wordAnalysis.innerHTML = html;
+            // Tính tổng điểm trừ
+            totalPenalty = (yellowPenaltyCount * 3) + (redPenaltyCount * 5);
+            
+            return totalPenalty;
         }
         
-        // ========== LẤY ĐIỂM SỐ TỪ FIREBASE ==========
-        async function getScoreFromFirebase() {
-            scoreSection.innerHTML = '<div class="loading"><span>Đang chờ kết quả đánh giá phát âm...</span></div>';
+        // ========== HIỂN THỊ TỔNG HỢP ĐIỂM TRỪ ==========
+        function displayPenaltySummary() {
+            if (totalPenalty > 0) {
+                penaltyDetails.innerHTML = `
+                    <p><strong>Cụm từ màu vàng (30-69%):</strong> ${yellowPenaltyCount} cụm × 3 điểm = ${yellowPenaltyCount * 3} điểm trừ</p>
+                    <p><strong>Cụm từ màu đỏ (dưới 30%):</strong> ${redPenaltyCount} cụm × 5 điểm = ${redPenaltyCount * 5} điểm trừ</p>
+                    <p><strong>Tổng điểm trừ:</strong> ${totalPenalty} điểm</p>
+                `;
+                penaltySummary.style.display = 'block';
+            } else {
+                penaltySummary.style.display = 'none';
+            }
+        }
+        
+        function calculateAccuracy(original, recognized) {
+            if (!original || !recognized) return 0;
             
-            return new Promise((resolve) => {
-                let elapsedTime = 0;
-                const maxTime = 10000;
-                const interval = 250;
+            const originalNormalized = normalizeText(original);
+            const recognizedNormalized = normalizeText(recognized);
+            
+            originalWords = originalNormalized.split(' ').filter(word => word.length > 0);
+            const recognizedWords = recognizedNormalized.split(' ').filter(word => word.length > 0);
+            
+            wordTimings = [];
+            wordAccuracies = new Array(vocabularyResults.length).fill(0);
+            
+            // Tính độ chính xác cho từng cụm từ dựa trên logic mới
+            for (let i = 0; i < vocabularyResults.length; i++) {
+                const phrase = vocabularyResults[i];
+                const phraseWords = phrase.phrase.split(' ');
+                let phraseAccuracy = 0;
                 
-                pollingInterval = setInterval(async () => {
-                    elapsedTime += interval;
+                // Tìm từ được nhận diện tương ứng
+                for (let j = 0; j < phraseWords.length; j++) {
+                    const originalWord = phraseWords[j];
+                    let bestMatchScore = 0;
                     
-                    try {
-                        const snapshot = await db.collection('scores')
-                            .orderBy('timestamp', 'desc')
-                            .limit(1)
-                            .get();
-                        
-                        if (!snapshot.empty) {
-                            const doc = snapshot.docs[0];
-                            const data = doc.data();
-                            currentDataId = doc.id;
+                    const searchStart = Math.max(0, i - 2);
+                    const searchEnd = Math.min(recognizedWords.length, i + 3);
+                    
+                    for (let k = searchStart; k < searchEnd; k++) {
+                        if (k < recognizedWords.length) {
+                            const recognizedWord = recognizedWords[k];
+                            const similarity = wordSimilarity(originalWord, recognizedWord);
                             
-                            // Xóa dữ liệu sau khi lấy
-                            await db.collection('scores').doc(currentDataId).delete();
-                            
-                            clearInterval(pollingInterval);
-                            pollingInterval = null;
-                            
-                            displayScoreResults(data);
-                            resolve(data);
-                            return;
+                            if (similarity > bestMatchScore) {
+                                bestMatchScore = similarity;
+                            }
                         }
-                        
-                        // Cập nhật trạng thái chờ
-                        if (elapsedTime % 1000 === 0) {
-                            scoreSection.innerHTML = `<div class="loading"><span>Đang chờ kết quả... (${elapsedTime/1000}s/10s)</span></div>`;
-                        }
-                        
-                        // Hết thời gian chờ
-                        if (elapsedTime >= maxTime) {
-                            clearInterval(pollingInterval);
-                            pollingInterval = null;
-                            
-                            scoreSection.innerHTML = `
-                                <div style="text-align: center; padding: 30px;">
-                                    <div style="color: var(--error-color); font-size: 48px; margin-bottom: 10px;">
-                                        <i class="fas fa-clock"></i>
-                                    </div>
-                                    <h3 style="color: var(--text-primary); margin-bottom: 10px;">Hết thời gian chờ</h3>
-                                    <p style="color: var(--text-secondary);">Không nhận được kết quả từ hệ thống đánh giá phát âm.</p>
-                                </div>
-                            `;
-                            resolve(null);
-                        }
-                        
-                    } catch (error) {
-                        console.error('Lỗi khi đọc dữ liệu:', error);
-                        clearInterval(pollingInterval);
-                        pollingInterval = null;
-                        
-                        scoreSection.innerHTML = `
-                            <div style="text-align: center; padding: 30px;">
-                                <div style="color: var(--error-color); font-size: 48px; margin-bottom: 10px;">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                </div>
-                                <h3 style="color: var(--text-primary); margin-bottom: 10px;">Lỗi kết nối</h3>
-                                <p style="color: var(--text-secondary);">Không thể kết nối đến hệ thống đánh giá.</p>
-                            </div>
-                        `;
-                        resolve(null);
                     }
-                }, interval);
+                    
+                    // Áp dụng logic tính độ chính xác mới
+                    if (bestMatchScore >= 0.8) {
+                        // Đọc chính xác (màu xanh): 70-87%
+                        phraseAccuracy += 70 + Math.random() * 17;
+                    } else if (bestMatchScore >= 0.5) {
+                        // Đọc gần đúng (màu vàng): 30-50%
+                        phraseAccuracy += 30 + Math.random() * 20;
+                    } else {
+                        // Đọc sai (màu đỏ): 2-12%
+                        phraseAccuracy += 2 + Math.random() * 10;
+                    }
+                }
+                
+                // Tính trung bình cho cụm từ
+                wordAccuracies[i] = Math.min(100, Math.round(phraseAccuracy / phraseWords.length));
+            }
+            
+            // Hiển thị các cụm từ với màu sắc phù hợp
+            displayPhraseComparison(wordAccuracies);
+            
+            // Tính điểm trừ
+            calculatePenalty(wordAccuracies);
+            
+            // Hiển thị tổng hợp điểm trừ
+            displayPenaltySummary();
+            
+            // Tính độ chính xác trung bình toàn bài
+            let totalAccuracy = 0;
+            for (let i = 0; i < wordAccuracies.length; i++) {
+                totalAccuracy += wordAccuracies[i];
+            }
+            
+            const averageAccuracy = wordAccuracies.length > 0 ? (totalAccuracy / wordAccuracies.length) : 0;
+            
+            // Tính điểm tốc độ đơn giản
+            const estimatedDuration = calculateTotalEstimatedDuration(originalWords);
+            const timeRatio = actualReadingDuration / estimatedDuration;
+            
+            if (timeRatio < 0.7) {
+                speedScore = 70 - Math.round((0.7 - timeRatio) * 100);
+            } else if (timeRatio > 1.3) {
+                speedScore = 70 - Math.round((timeRatio - 1.3) * 100);
+            } else {
+                speedScore = 85;
+            }
+            
+            speedScore = Math.max(0, Math.min(100, speedScore));
+            
+            // Cập nhật hiển thị điểm (đã bao gồm điểm trừ)
+            updateScoreDisplay(Math.round(averageAccuracy), speedScore);
+            
+            return Math.min(100, averageAccuracy);
+        }
+        
+        function displayPhraseComparison(accuracies) {
+            let comparisonHTML = '';
+            
+            vocabularyResults.forEach((phrase, index) => {
+                const accuracy = accuracies[index] || 0;
+                let phraseClass = 'phrase-incorrect';
+                let tooltipText = `Độ chính xác: ${accuracy}%`;
+                
+                if (accuracy >= 70) {
+                    phraseClass = 'phrase-correct';
+                    tooltipText = `Tốt! Độ chính xác: ${accuracy}%`;
+                } else if (accuracy >= 30) {
+                    phraseClass = 'phrase-partial';
+                    tooltipText = `Khá! Độ chính xác: ${accuracy}% (trừ 3 điểm)`;
+                } else {
+                    phraseClass = 'phrase-incorrect';
+                    tooltipText = `Cần cải thiện! Độ chính xác: ${accuracy}% (trừ 5 điểm)`;
+                }
+                
+                comparisonHTML += `
+                    <div class="phrase ${phraseClass}" data-index="${index}" onclick="handlePhraseClick(${index}, this)">
+                        ${phrase.phrase}
+                        <div class="phrase-tooltip">${tooltipText}</div>
+                    </div>
+                `;
+            });
+            
+            phraseComparison.innerHTML = comparisonHTML;
+        }
+        
+        function updateScoreDisplay(accuracy, speed) {
+            speechAccuracy = accuracy;
+            speedScore = speed;
+            
+            // Tính tổng điểm theo tỉ lệ mới: 50% độ chính xác + 50% tốc độ
+            // CHỈNH SỬA: Nếu độ chính xác dưới 50%, điểm tốc độ = 0
+            const effectiveSpeedScore = accuracy >= 50 ? speed : 0;
+            const calculatedTotalScore = Math.round((accuracy * 0.5) + (effectiveSpeedScore * 0.5));
+            
+            // ÁP DỤNG ĐIỂM TRỪ
+            const scoreAfterPenalty = Math.max(0, calculatedTotalScore - totalPenalty);
+            
+            totalScore = Math.max(0, Math.min(100, scoreAfterPenalty));
+            
+            // Cập nhật điểm cuối cùng
+            finalScore.textContent = totalScore;
+            
+            // Tạo nhận xét chi tiết dựa trên độ chính xác và tốc độ
+            generateDetailedComment(totalScore, accuracy, effectiveSpeedScore);
+        }
+        
+        function generateDetailedComment(displayedScore, accuracy, speed) {
+            let comment = '';
+            
+            // Chọn nhận xét về độ chính xác dựa trên accuracy
+            let accuracyCommentSet;
+            if (accuracy >= 90) accuracyCommentSet = accuracyComments.excellent;
+            else if (accuracy >= 75) accuracyCommentSet = accuracyComments.good;
+            else if (accuracy >= 60) accuracyCommentSet = accuracyComments.average;
+            else if (accuracy >= 40) accuracyCommentSet = accuracyComments.poor;
+            else accuracyCommentSet = accuracyComments.veryPoor;
+            
+            // Chọn nhận xét về tốc độ
+            let speedCommentSet;
+            if (speed >= 80) speedCommentSet = speedComments.goodSpeed;
+            else if (speed >= 60) speedCommentSet = speedComments.tooFast;
+            else speedCommentSet = speedComments.tooSlow;
+            
+            // Nếu độ chính xác dưới 50%, thêm ghi chú về việc không tính điểm tốc độ
+            if (accuracy < 50) {
+                speedCommentSet = ["Do độ chính xác dưới 50%, điểm tốc độ không được tính vào tổng điểm."];
+            }
+            
+            // Kết hợp các nhận xét
+            const accuracyComment = accuracyCommentSet[Math.floor(Math.random() * accuracyCommentSet.length)];
+            const speedComment = speedCommentSet[Math.floor(Math.random() * speedCommentSet.length)];
+            
+            // Thêm thông tin về điểm trừ nếu có
+            let penaltyComment = "";
+            if (totalPenalty > 0) {
+                penaltyComment = `\n\nĐã trừ ${totalPenalty} điểm (${yellowPenaltyCount} cụm vàng × 3 điểm + ${redPenaltyCount} cụm đỏ × 5 điểm).`;
+            }
+            
+            // Chọn 3-4 từ có điểm thấp để nhận xét
+            const lowAccuracyPhrases = getLowAccuracyPhrases(3);
+            let lowAccuracyComment = "";
+            
+            if (lowAccuracyPhrases.length > 0) {
+                lowAccuracyComment = "\n\nCác từ cần cải thiện: ";
+                lowAccuracyPhrases.forEach((phraseInfo, index) => {
+                    const commentIndex = Math.floor(Math.random() * improvementComments.lowAccuracyWords.length);
+                    lowAccuracyComment += `"${phraseInfo.phrase}"${improvementComments.lowAccuracyWords[commentIndex]}`;
+                    if (index < lowAccuracyPhrases.length - 1) {
+                        lowAccuracyComment += " ";
+                    }
+                });
+            }
+            
+            // Thêm đề xuất chung
+            const suggestionIndex = Math.floor(Math.random() * improvementComments.suggestions.length);
+            const suggestion = improvementComments.suggestions[suggestionIndex];
+            
+            comment = `${accuracyComment} ${speedComment}${penaltyComment}${lowAccuracyComment}\n\n${suggestion}`;
+            
+            scoreComment.textContent = comment;
+            
+            // Cập nhật thời gian phân tích
+            const now = new Date();
+            analysisTime.textContent = `Thời gian phân tích: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        }
+        
+        function getLowAccuracyPhrases(count) {
+            if (!vocabularyResults.length || !wordAccuracies.length) return [];
+            
+            // Tạo mảng các cụm từ với độ chính xác
+            const phrasesWithAccuracy = vocabularyResults.map((phrase, index) => ({
+                phrase: phrase.phrase,
+                accuracy: wordAccuracies[index] || 0,
+                index: index
+            }));
+            
+            // Lọc các cụm từ có độ chính xác dưới 60%
+            const lowAccuracyPhrases = phrasesWithAccuracy
+                .filter(p => p.accuracy < 60)
+                .sort((a, b) => a.accuracy - b.accuracy);
+            
+            // Trả về tối đa `count` cụm từ
+            return lowAccuracyPhrases.slice(0, Math.min(count, lowAccuracyPhrases.length));
+        }
+        
+        function initializeSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                console.error('Trình duyệt không hỗ trợ Speech Recognition');
+                return null;
+            }
+            
+            const recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'vi-VN';
+            
+            recognition.onstart = function() {
+                console.log('Speech recognition started');
+                isSpeechRecognitionActive = true;
+            };
+            
+            recognition.onresult = function(event) {
+                let interimTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        const transcript = event.results[i][0].transcript;
+                        finalTranscript += transcript + ' ';
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                
+                const originalText = textInput.value;
+                const currentTranscript = finalTranscript + interimTranscript;
+                const accuracy = calculateAccuracy(originalText, currentTranscript);
+                
+                // Kiểm tra xem đã đọc xong chưa
+                checkIfReadingFinished(originalText, currentTranscript);
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+            };
+            
+            recognition.onend = function() {
+                console.log('Speech recognition ended');
+                isSpeechRecognitionActive = false;
+                
+                const originalText = textInput.value;
+                const accuracy = calculateAccuracy(originalText, finalTranscript);
+            };
+            
+            return recognition;
+        }
+        
+        function checkIfReadingFinished(original, recognized) {
+            const originalWords = normalizeText(original).split(' ').filter(w => w.length > 0);
+            const recognizedWords = normalizeText(recognized).split(' ').filter(w => w.length > 0);
+            
+            if (recognizedWords.length === 0) return false;
+            
+            // Kiểm tra nếu đã nhận diện được ít nhất 70% số từ
+            const recognizedPercentage = (recognizedWords.length / originalWords.length) * 100;
+            
+            if (recognizedPercentage >= 70 && autoStopTimeout === null) {
+                activateAutoStop();
+                return true;
+            }
+            
+            return false;
+        }
+        
+        function activateAutoStop() {
+            if (autoStopTimeout !== null) return;
+            
+            autoStopInfo.textContent = "Đã phát hiện bạn đọc xong văn bản. Tự động dừng sau 2 giây...";
+            autoStopInfo.classList.add('visible');
+            
+            autoStopTimeout = setTimeout(() => {
+                if (isRecording) {
+                    console.log('Tự động dừng thu âm vì đã đọc xong văn bản');
+                    stopRecording();
+                    
+                    setTimeout(() => {
+                        autoStopInfo.classList.remove('visible');
+                    }, 2000);
+                }
+            }, 2000);
+        }
+        
+        // ========== KHỞI TẠO BIỂU ĐỒ ==========
+        function initializeChart() {
+            const frequencyChartCanvas = document.getElementById('frequencyChart');
+            const chartCtx = frequencyChartCanvas.getContext('2d');
+            
+            // Lấy giá trị thực của các biến CSS
+            const style = getComputedStyle(document.documentElement);
+            const frequencyLow = style.getPropertyValue('--frequency-low').trim() || '#00BFA5';
+            const frequencyMid = style.getPropertyValue('--frequency-mid').trim() || '#FFB74D';
+            const frequencyHigh = style.getPropertyValue('--frequency-high').trim() || '#FF8A80';
+            
+            if (frequencyChart) {
+                frequencyChart.destroy();
+            }
+            
+            frequencyChart = new Chart(chartCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Tần số thấp (0-250Hz)',
+                            data: [],
+                            borderColor: frequencyLow,
+                            backgroundColor: 'rgba(0, 191, 165, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Tần số trung bình (250-2000Hz)',
+                            data: [],
+                            borderColor: frequencyMid,
+                            backgroundColor: 'rgba(255, 183, 77, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Tần số cao (2000-8000Hz)',
+                            data: [],
+                            borderColor: frequencyHigh,
+                            backgroundColor: 'rgba(255, 138, 128, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Thời gian (giây)',
+                                color: '#666666'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                color: '#666666'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Cường độ (dB)',
+                                color: '#666666'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                color: '#666666'
+                            },
+                            suggestedMin: -100,
+                            suggestedMax: -20
+                            }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += Math.round(context.parsed.y * 100) / 100 + ' dB';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'nearest'
+                    }
+                }
             });
         }
         
-        // Hiển thị kết quả điểm số
-        function displayScoreResults(data) {
-            const score = data.score;
+        // ========== XỬ LÝ THU ÂM ==========
+        async function startRecording() {
+            if (isPreparingRecording) return;
             
-            let comment = '';
-            switch(score) {
-                case 10: comment = "Có vẻ bạn đã đọc sai văn bản"; break;
-                case 30: comment = "Bạn cần cải thiện phát âm và ngữ điệu"; break;
-                case 50: comment = "Mức độ trung bình, cần luyện tập thêm"; break;
-                case 70: comment = "Khá tốt, nhưng vẫn còn một số lỗi nhỏ"; break;
-                case 80: comment = "Tốt, phát âm rõ ràng và tự nhiên"; break;
-                case 90: comment = "Xuất sắc! Phát âm chuẩn và truyền cảm"; break;
-                default: comment = "Điểm số không xác định";
+            const textInputValue = textInput.value;
+            
+            if (!textInputValue.trim()) {
+                updateStatus('Vui lòng nhập văn bản trước khi thu âm', 'error');
+                return;
             }
             
-            let color = 'var(--primary-color)';
-            if (score >= 80) color = 'var(--success-color)';
-            else if (score >= 50) color = 'var(--warning-color)';
-            else color = 'var(--error-color)';
+            isPreparingRecording = true;
+            recordBtn.disabled = true;
+            recordText.textContent = 'Đang chuẩn bị...';
+            recordIcon.className = 'fas fa-spinner fa-spin';
             
-            scoreSection.innerHTML = `
-                <div class="score-display">
-                    <div class="score-value" style="color: ${color};">${score}</div>
-                    <div style="font-size: 1.2rem; color: var(--text-secondary); margin: 10px 0;">
-                        <i class="fas fa-star mr-2"></i>/ 100 điểm
-                    </div>
-                </div>
-                <div class="score-comment">
-                    <i class="fas fa-comment-dots mr-2"></i>${comment}
-                </div>
-                <div style="margin-top: 20px; padding: 15px; background: rgba(227, 124, 45, 0.05); border-radius: 10px; border-left: 4px solid var(--primary-color);">
-                    <p style="color: var(--primary-color); margin-bottom: 5px; font-weight: 600;">
-                        <i class="fas fa-chart-line mr-2"></i>Phân tích chi tiết:
-                    </p>
-                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 5px;">
-                        Điểm số được tính dựa trên độ chính xác phát âm, ngữ điệu và tốc độ đọc.
-                    </p>
-                    <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 5px;">
-                        <i class="fas fa-robot mr-2"></i>Kết quả từ hệ thống AI đánh giá phát âm.
-                    </p>
-                </div>
-            `;
+            updateStatus('Đang phân tích văn bản và chuẩn bị thu âm...', 'info');
+            showProgress();
+            updateProgress(10, '10%', 'Bắt đầu phân tích...');
+            
+            try {
+                // 1. Phân tích từ vựng với Supabase
+                updateProgress(30, '30%', 'Đang phân tích từ vựng với Supabase...');
+                await analyzeVocabulary(textInputValue);
+                
+                updateProgress(60, '60%', 'Đang khởi tạo hệ thống thu âm...');
+                
+                // 2. Reset các biến
+                if (autoStopTimeout) {
+                    clearTimeout(autoStopTimeout);
+                    autoStopTimeout = null;
+                }
+                
+                // Reset điểm trừ
+                yellowPenaltyCount = 0;
+                redPenaltyCount = 0;
+                totalPenalty = 0;
+                
+                autoStopInfo.classList.remove('visible');
+                actualReadingDuration = 0;
+                finalTranscript = '';
+                audioData = [];
+                recordedChunks = [];
+                
+                // 3. Khởi tạo thu âm
+                mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        sampleRate: 44100
+                    }
+                });
+                
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                microphone = audioContext.createMediaStreamSource(mediaStream);
+                
+                microphone.connect(analyser);
+                
+                analyser.fftSize = 2048;
+                bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+                
+                mediaRecorder = new MediaRecorder(mediaStream);
+                
+                mediaRecorder.ondataavailable = event => {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = () => {
+                    console.log('MediaRecorder stopped');
+                };
+                
+                // 4. Khởi tạo speech recognition
+                if (!speechRecognition) {
+                    speechRecognition = initializeSpeechRecognition();
+                }
+                
+                if (speechRecognition) {
+                    try {
+                        speechRecognition.start();
+                    } catch (e) {
+                        console.error('Không thể khởi động speech recognition:', e);
+                    }
+                }
+                
+                mediaRecorder.start(1000); // Thu thập dữ liệu mỗi giây
+                isRecording = true;
+                startTime = Date.now();
+                
+                // 5. Cập nhật giao diện
+                statusIndicator.classList.add('recording');
+                recordText.textContent = 'Đang thu âm...';
+                recordIcon.className = 'fas fa-stop';
+                recordBtn.classList.add('recording');
+                
+                recordingPanel.classList.add('visible');
+                
+                // 6. Khởi tạo waveform và biểu đồ
+                canvasCtx = audioWaveformCanvas.getContext('2d');
+                audioWaveformCanvas.width = audioWaveformCanvas.offsetWidth;
+                audioWaveformCanvas.height = audioWaveformCanvas.offsetHeight;
+                
+                initializeChart();
+                drawWaveform();
+                
+                timerInterval = setInterval(updateTimer, 1000);
+                startFrequencyDataCollection();
+                
+                updateProgress(100, '100%', 'Sẵn sàng thu âm!');
+                updateStatus('✅ Đã sẵn sàng! Hãy bắt đầu đọc văn bản...', 'success');
+                
+                setTimeout(() => {
+                    hideProgress();
+                    updateStatus('');
+                }, 1500);
+                
+                console.log('Đã bắt đầu thu âm');
+                
+            } catch (error) {
+                console.error('Lỗi khi chuẩn bị thu âm:', error);
+                updateStatus('❌ Lỗi khi chuẩn bị thu âm. Vui lòng thử lại.', 'error');
+                hideProgress();
+                
+                // Reset lại trạng thái
+                cleanupRecording();
+            } finally {
+                isPreparingRecording = false;
+                recordBtn.disabled = false;
+            }
+        }
+        
+        function stopRecording() {
+            if (!isRecording) return;
+            
+            isRecording = false;
+            statusIndicator.classList.remove('recording');
+            recordText.textContent = 'Bắt đầu thu âm';
+            recordIcon.className = 'fas fa-microphone';
+            recordBtn.classList.remove('recording');
+            
+            clearInterval(timerInterval);
+            cancelAnimationFrame(animationId);
+            stopFrequencyDataCollection();
+            
+            // Dừng speech recognition
+            if (speechRecognition && isSpeechRecognitionActive) {
+                try {
+                    speechRecognition.stop();
+                } catch (e) {
+                    console.error('Lỗi khi dừng speech recognition:', e);
+                }
+                isSpeechRecognitionActive = false;
+            }
+            
+            // Dừng media recorder
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                try {
+                    mediaRecorder.stop();
+                } catch (e) {
+                    console.error('Lỗi khi dừng media recorder:', e);
+                }
+            }
+            
+            // Ngắt kết nối audio
+            if (microphone) {
+                try {
+                    microphone.disconnect();
+                } catch (e) {
+                    console.error('Lỗi khi ngắt kết nối microphone:', e);
+                }
+            }
+            
+            if (audioContext && audioContext.state !== 'closed') {
+                try {
+                    audioContext.close();
+                } catch (e) {
+                    console.error('Lỗi khi đóng audio context:', e);
+                }
+            }
+            
+            // Dừng media stream
+            if (mediaStream) {
+                try {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                } catch (e) {
+                    console.error('Lỗi khi dừng media stream:', e);
+                }
+                mediaStream = null;
+            }
+            
+            // Phân tích tần số
+            analyzeFrequencyData();
+            
+            // Lấy điểm từ Firebase
+            getScoreFromFirebase();
+            
+            console.log('Đã dừng thu âm');
+        }
+        
+        function cleanupRecording() {
+            // Hàm dọn dẹp nếu có lỗi xảy ra
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+            }
+            
+            if (audioContext && audioContext.state !== 'closed') {
+                audioContext.close();
+            }
+            
+            isRecording = false;
+            isPreparingRecording = false;
+            recordBtn.disabled = false;
+            recordText.textContent = 'Bắt đầu thu âm';
+            recordIcon.className = 'fas fa-microphone';
+            recordBtn.classList.remove('recording');
+            statusIndicator.classList.remove('recording');
+        }
+        
+        function drawWaveform() {
+            if (!isRecording) return;
+            
+            animationId = requestAnimationFrame(drawWaveform);
+            
+            if (!analyser || !dataArray) return;
+            
+            analyser.getByteTimeDomainData(dataArray);
+            
+            // Nền trắng cho waveform
+            canvasCtx.fillStyle = '#FFFFFF';
+            canvasCtx.fillRect(0, 0, audioWaveformCanvas.width, audioWaveformCanvas.height);
+            
+            // Vẽ grid nhạt
+            canvasCtx.strokeStyle = 'rgba(255, 107, 53, 0.08)';
+            canvasCtx.lineWidth = 1;
+            
+            // Grid ngang
+            for (let i = 0; i <= 10; i++) {
+                const y = (i / 10) * audioWaveformCanvas.height;
+                canvasCtx.beginPath();
+                canvasCtx.moveTo(0, y);
+                canvasCtx.lineTo(audioWaveformCanvas.width, y);
+                canvasCtx.stroke();
+            }
+            
+            // Grid dọc
+            for (let i = 0; i <= 20; i++) {
+                const x = (i / 20) * audioWaveformCanvas.width;
+                canvasCtx.beginPath();
+                canvasCtx.moveTo(x, 0);
+                canvasCtx.lineTo(x, audioWaveformCanvas.height);
+                canvasCtx.stroke();
+            }
+            
+            // Vẽ waveform với màu cam đậm và nổi bật
+            canvasCtx.lineWidth = 3;
+            canvasCtx.strokeStyle = '#FF6B35';
+            canvasCtx.shadowColor = 'rgba(255, 107, 53, 0.5)';
+            canvasCtx.shadowBlur = 5;
+            canvasCtx.shadowOffsetX = 0;
+            canvasCtx.shadowOffsetY = 0;
+            
+            canvasCtx.beginPath();
+            
+            const sliceWidth = audioWaveformCanvas.width * 1.0 / bufferLength;
+            let x = 0;
+            
+            for (let i = 0; i < bufferLength; i++) {
+                const v = dataArray[i] / 128.0;
+                const y = v * audioWaveformCanvas.height / 2;
+                
+                if (i === 0) {
+                    canvasCtx.moveTo(x, y);
+                } else {
+                    canvasCtx.lineTo(x, y);
+                }
+                
+                x += sliceWidth;
+            }
+            
+            canvasCtx.lineTo(audioWaveformCanvas.width, audioWaveformCanvas.height / 2);
+            canvasCtx.stroke();
+            
+            // Reset shadow
+            canvasCtx.shadowColor = 'transparent';
+            canvasCtx.shadowBlur = 0;
+            
+            // Vẽ đường trung tâm mờ
+            canvasCtx.strokeStyle = 'rgba(255, 107, 53, 0.2)';
+            canvasCtx.lineWidth = 1;
+            canvasCtx.beginPath();
+            canvasCtx.moveTo(0, audioWaveformCanvas.height / 2);
+            canvasCtx.lineTo(audioWaveformCanvas.width, audioWaveformCanvas.height / 2);
+            canvasCtx.stroke();
+        }
+        
+        function startFrequencyDataCollection() {
+            audioData = [];
+            frequencyStartTime = Date.now();
+            
+            frequencyDataInterval = setInterval(() => {
+                if (!isRecording || !analyser || !dataArray) return;
+                
+                analyser.getByteFrequencyData(dataArray);
+                
+                let lowFreq = 0, midFreq = 0, highFreq = 0;
+                const binWidth = audioContext.sampleRate / analyser.fftSize;
+                
+                for (let i = 0; i < bufferLength; i++) {
+                    const freq = i * binWidth;
+                    const value = dataArray[i];
+                    
+                    if (freq < 250) {
+                        lowFreq += value;
+                    } else if (freq < 2000) {
+                        midFreq += value;
+                    } else if (freq < 8000) {
+                        highFreq += value;
+                    }
+                }
+                
+                const lowDb = (lowFreq / (12 * 128)) * 100 - 100;
+                const midDb = (midFreq / (80 * 128)) * 100 - 100;
+                const highDb = (highFreq / (120 * 128)) * 100 - 100;
+                
+                const elapsedSeconds = (Date.now() - frequencyStartTime) / 1000;
+                
+                audioData.push({
+                    time: elapsedSeconds,
+                    low: lowDb,
+                    mid: midDb,
+                    high: highDb
+                });
+                
+            }, 100);
+        }
+        
+        function stopFrequencyDataCollection() {
+            clearInterval(frequencyDataInterval);
+            console.log(`Đã thu thập ${audioData.length} mẫu dữ liệu tần số`);
+        }
+        
+        function analyzeFrequencyData() {
+            if (audioData.length === 0) {
+                console.log('Không có dữ liệu âm thanh để phân tích');
+                return;
+            }
+            
+            const times = [];
+            const lowFreqData = [];
+            const midFreqData = [];
+            const highFreqData = [];
+            
+            const step = Math.max(1, Math.floor(audioData.length / 100));
+            
+            for (let i = 0; i < audioData.length; i += step) {
+                const data = audioData[i];
+                times.push(data.time.toFixed(1));
+                lowFreqData.push(data.low);
+                midFreqData.push(data.mid);
+                highFreqData.push(data.high);
+            }
+            
+            if (frequencyChart) {
+                frequencyChart.data.labels = times;
+                frequencyChart.data.datasets[0].data = lowFreqData;
+                frequencyChart.data.datasets[1].data = midFreqData;
+                frequencyChart.data.datasets[2].data = highFreqData;
+                frequencyChart.update();
+            }
+            
+            console.log('Đã phân tích dữ liệu tần số:', audioData.length, 'điểm dữ liệu');
+        }
+        
+        // ========== LẤY ĐIỂM TỪ FIREBASE ==========
+        async function getScoreFromFirebase() {
+            try {
+                const snapshot = await db.collection('scores')
+                    .orderBy('timestamp', 'desc')
+                    .limit(1)
+                    .get();
+                
+                if (!snapshot.empty) {
+                    const doc = snapshot.docs[0];
+                    const data = doc.data();
+                    currentDataId = doc.id;
+                    
+                    // Xóa dữ liệu sau khi lấy
+                    await db.collection('scores').doc(currentDataId).delete();
+                    
+                    displayFirebaseScore(data.score);
+                    showNotification('✅ Đã nhận kết quả từ hệ thống đánh giá!', 'success');
+                } else {
+                    // Không có dữ liệu từ Firebase, sử dụng điểm cục bộ
+                    displayLocalScore();
+                    showNotification('ℹ️ Sử dụng kết quả từ phân tích cục bộ', 'info');
+                }
+            } catch (error) {
+                console.error('Lỗi khi đọc dữ liệu từ Firebase:', error);
+                displayLocalScore();
+                showNotification('⚠️ Không thể kết nối đến Firebase', 'warning');
+            }
+        }
+        
+        function displayFirebaseScore(score) {
+            // Áp dụng tỉ lệ 50-50 và logic độ chính xác >= 50%
+            const adjustedScore = Math.max(0, Math.min(100, score));
+            
+            // Tính lại điểm theo logic mới dựa trên độ chính xác đã tính
+            const effectiveSpeedScore = speechAccuracy >= 50 ? speedScore : 0;
+            const calculatedTotalScore = Math.round((speechAccuracy * 0.5) + (effectiveSpeedScore * 0.5));
+            
+            // ÁP DỤNG ĐIỂM TRỪ cho điểm từ Firebase
+            const scoreAfterPenalty = Math.max(0, calculatedTotalScore - totalPenalty);
+            
+            finalScore.textContent = scoreAfterPenalty;
+            totalScore = scoreAfterPenalty;
+            
+            // Tạo nhận xét dựa trên điểm đã tính (đã bao gồm điểm trừ)
+            generateDetailedComment(scoreAfterPenalty, speechAccuracy, effectiveSpeedScore);
+        }
+        
+        function displayLocalScore() {
+            // Sử dụng điểm đã tính từ phân tích cục bộ (đã bao gồm điểm trừ)
+            generateDetailedComment(totalScore, speechAccuracy, speedScore);
         }
         
         // ========== XỬ LÝ SỰ KIỆN ==========
-        // Mô phỏng thu âm
-        recordBtn.addEventListener('click', () => {
-            isRecording = !isRecording;
-            
+        recordBtn.addEventListener('click', async () => {
             if (isRecording) {
-                recordBtn.classList.add('recording');
-                recordText.textContent = 'Đang thu âm...';
-                recordBtn.innerHTML = '<i class="fas fa-microphone-alt mr-2"></i>Đang thu âm...';
-                updateStatus('Đang thu âm (giả lập)... Nhấn lại để dừng', 'info');
+                stopRecording();
             } else {
-                recordBtn.classList.remove('recording');
-                recordText.textContent = 'Bắt đầu thu âm';
-                recordBtn.innerHTML = '<i class="fas fa-microphone mr-2"></i>Bắt đầu thu âm';
-                updateStatus('Đã dừng thu âm', 'success');
-                setTimeout(() => updateStatus(''), 2000);
+                await startRecording();
             }
         });
         
-        // Xử lý phân tích toàn bộ
-        analyzeBtn.addEventListener('click', async () => {
-            if (isAnalyzing) return;
-            
-            const textInputValue = document.getElementById('textInput').value;
-            
-            if (!textInputValue.trim() && !isRecording) {
-                updateStatus('Vui lòng nhập văn bản hoặc thu âm trước khi phân tích', 'error');
-                return;
-            }
-            
-            isAnalyzing = true;
-            analyzeBtn.disabled = true;
-            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang phân tích...';
-            
-            // Hiển thị thanh tiến trình
-            progressContainer.style.display = 'block';
-            updateProgress(0, 'Bắt đầu phân tích...');
-            
-            // 1. Cập nhật trạng thái ban đầu
-            updateStatus('Bắt đầu phân tích toàn bộ hệ thống...', 'info');
-            updateProgress(10, 'Đang chuẩn bị dữ liệu...');
-            
-            // 2. Phân tích từ vựng (Supabase)
-            updateStatus('Đang phân tích từ vựng...', 'info');
-            updateProgress(30, 'Đang phân tích từ vựng...');
-            
-            const vocabularyResult = await analyzeVocabulary(textInputValue);
-            
-            // 3. Đồng thời lấy điểm số từ Firebase
-            updateStatus('Đang chờ kết quả đánh giá phát âm...', 'info');
-            updateProgress(70, 'Đang đánh giá phát âm...');
-            
-            const scorePromise = getScoreFromFirebase();
-            
-            // 4. Đợi cả hai hoàn thành
-            await Promise.all([vocabularyResult, scorePromise]);
-            
-            // 5. Hiển thị kết quả cuối cùng
-            updateProgress(100, 'Hoàn thành!');
-            updateStatus(`✅ Phân tích hoàn thành! Tìm thấy ${vocabularyResult.foundCount} cụm từ`, 'success');
-            
-            // Hiển thị thông báo thành công
-            showNotification(`Phân tích hoàn thành! Tìm thấy ${vocabularyResult.foundCount} cụm từ`, 'success');
-            
-            // 6. Reset trạng thái
-            setTimeout(() => {
-                isAnalyzing = false;
-                analyzeBtn.disabled = false;
-                analyzeBtn.innerHTML = '<i class="fas fa-chart-bar mr-2"></i>Phân Tích Toàn Bộ';
-                updateStatus('');
-            }, 2000);
-        });
-        
-        // Thêm ví dụ mẫu
-        document.getElementById('textInput').value = "Xin chào các bạn! Mình là Tuấn, rất vui được gặp mọi người.";
-        updateWordCount();
-        
-        // Lắng nghe sự kiện input để cập nhật số từ
         textInput.addEventListener('input', updateWordCount);
         
-        // Cleanup khi đóng trang
-        window.addEventListener('beforeunload', () => {
-            if (pollingInterval) clearInterval(pollingInterval);
-            if (pollingTimeout) clearTimeout(pollingTimeout);
+        window.addEventListener('resize', () => {
+            if (audioWaveformCanvas) {
+                audioWaveformCanvas.width = audioWaveformCanvas.offsetWidth;
+                audioWaveformCanvas.height = audioWaveformCanvas.offsetHeight;
+            }
+            
+            if (frequencyChart) {
+                frequencyChart.resize();
+            }
         });
         
-        // Thêm CSS cho animation thông báo
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%) translateY(-20px);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0) translateY(0);
-                    opacity: 1;
-                }
+        window.addEventListener('beforeunload', () => {
+            if (isRecording) {
+                stopRecording();
             }
-            
-            @keyframes fadeOut {
-                from {
-                    opacity: 1;
-                }
-                to {
-                    opacity: 0;
-                    transform: translateX(100%) translateY(-20px);
-                }
-            }
-            
-            .notification-content {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-            }
-            
-            .notification-content i {
-                font-size: 1.3rem;
-            }
-            
-            .notification-content span {
-                font-size: 1rem;
-                font-weight: 500;
-            }
-        `;
-        document.head.appendChild(style);
+        });
         
-        console.log("Hệ thống Phân Tích Biểu Cảm | VANW đã sẵn sàng!");
+        // Kiểm tra hỗ trợ trình duyệt
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            recordBtn.disabled = true;
+            recordText.textContent = 'Trình duyệt không hỗ trợ';
+            updateStatus('Trình duyệt của bạn không hỗ trợ thu âm. Vui lòng sử dụng Chrome, Firefox hoặc Edge.', 'error');
+        }
+        
+        if (!window.MediaRecorder) {
+            recordBtn.disabled = true;
+            recordText.textContent = 'Trình duyệt không hỗ trợ';
+            updateStatus('Trình duyệt của bạn không hỗ trợ MediaRecorder API. Vui lòng sử dụng Chrome, Firefox hoặc Edge.', 'error');
+        }
+        
+        if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+            updateStatus('Trình duyệt của bạn không hỗ trợ nhận diện giọng nói. Tính năng kiểm tra phát âm sẽ bị hạn chế.', 'warning');
+        }
+        
+        // Khởi tạo khi trang được tải
+        document.addEventListener('DOMContentLoaded', () => {
+            updateWordCount();
+            initializeChart();
+            
+            console.log("Hệ thống Phân Tích Biểu Cảm & Phát Âm Tích Hợp | VANW đã sẵn sàng!");
+        });
+        
+        // Xuất hàm handlePhraseClick ra global scope
+        window.handlePhraseClick = handlePhraseClick;
     </script>
 </body>
 </html>
-
-
-
