@@ -6,6 +6,7 @@
     <title>Tạo Đề Thi Văn Học - VANW</title>
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
     <style>
         @import url('https://unpkg.com/normalize.css') layer(normalize);
 
@@ -197,6 +198,34 @@
             .text-center {
                 text-align: center;
             }
+            
+            .flex {
+                display: flex;
+            }
+            
+            .flex-wrap {
+                flex-wrap: wrap;
+            }
+            
+            .items-center {
+                align-items: center;
+            }
+            
+            .justify-between {
+                justify-content: space-between;
+            }
+            
+            .gap-2 {
+                gap: 0.5rem;
+            }
+            
+            .gap-3 {
+                gap: 0.75rem;
+            }
+            
+            .flex-1 {
+                flex: 1;
+            }
         }
 
         @layer demo {
@@ -275,17 +304,20 @@
                 gap: 0.5rem;
             }
             
+            /* SỬA: Mode tabs nằm ngang */
             .mode-tabs {
                 display: flex;
                 gap: 1rem;
                 margin-bottom: 1.5rem;
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 10px;
             }
             
             .mode-tab {
                 flex: 1;
-                min-width: 200px;
-                padding: 1rem 1.5rem;
+                min-width: 0;
+                padding: 1rem;
                 background: var(--card-bg);
                 border: 2px solid var(--card-outline);
                 border-radius: 12px;
@@ -298,6 +330,7 @@
                 flex-direction: column;
                 align-items: center;
                 gap: 0.5rem;
+                white-space: nowrap;
             }
             
             .mode-tab:hover {
@@ -377,12 +410,14 @@
                 margin-bottom: 0.25rem;
             }
             
-            /* Blocky Mode Styles */
+            /* Blocky Mode Styles - ĐÃ SỬA */
             .blocky-controls {
                 display: flex;
                 gap: 1rem;
                 margin-bottom: 1.5rem;
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 10px;
             }
             
             .blocky-btn {
@@ -398,9 +433,8 @@
                 display: flex;
                 align-items: center;
                 gap: 0.5rem;
-                flex: 1;
-                min-width: 120px;
-                justify-content: center;
+                white-space: nowrap;
+                flex-shrink: 0;
             }
             
             .blocky-btn:hover {
@@ -414,6 +448,7 @@
                 border-radius: 12px;
                 padding: 1.5rem;
                 min-height: 200px;
+                margin-bottom: 1.5rem;
             }
             
             .blocky-empty-state {
@@ -426,6 +461,159 @@
                 font-size: 3rem;
                 margin-bottom: 1rem;
                 opacity: 0.5;
+            }
+            
+            /* SỬA: Action buttons layout */
+            .action-buttons {
+                display: flex;
+                gap: 1rem;
+                margin-bottom: 2rem;
+                flex-wrap: wrap;
+            }
+            
+            .action-buttons.text-mode {
+                justify-content: space-between;
+            }
+            
+            .action-buttons.ai-mode,
+            .action-buttons.blocky-mode {
+                justify-content: flex-start;
+            }
+            
+            .action-buttons .left-buttons {
+                display: flex;
+                gap: 1rem;
+                flex: 1;
+            }
+            
+            .action-buttons .right-buttons {
+                display: flex;
+                gap: 1rem;
+            }
+            
+            .generate-btn {
+                background: var(--gradient);
+                color: white;
+                padding: 1rem 2rem;
+                border: none;
+                border-radius: 30px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                position: relative;
+                overflow: hidden;
+                z-index: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                white-space: nowrap;
+            }
+            
+            .generate-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.2);
+                transition: all 0.5s;
+                z-index: -1;
+            }
+            
+            .generate-btn:hover::before {
+                width: 100%;
+            }
+            
+            .generate-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+                border-color: var(--accent-color);
+            }
+            
+            .generate-btn:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+                border-color: #999;
+                opacity: 0.7;
+            }
+            
+            .generate-btn:disabled:hover::before {
+                width: 0%;
+            }
+            
+            .random-btn {
+                background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+                color: white;
+                padding: 1rem 1.5rem;
+                border: none;
+                border-radius: 30px;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                position: relative;
+                overflow: hidden;
+                z-index: 1;
+                white-space: nowrap;
+            }
+            
+            .random-btn::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0%;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.2);
+                transition: all 0.5s;
+                z-index: -1;
+            }
+            
+            .random-btn:hover::before {
+                width: 100%;
+            }
+            
+            .random-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+                opacity: 0.95;
+            }
+            
+            .random-btn:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+                opacity: 0.7;
+            }
+            
+            .settings-btn {
+                background: var(--card-bg);
+                color: var(--text-primary);
+                padding: 1rem 1.5rem;
+                border: 2px solid var(--card-outline);
+                border-radius: 30px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                white-space: nowrap;
+            }
+            
+            .settings-btn:hover {
+                background: rgba(227, 124, 45, 0.1);
+                border-color: var(--primary-color);
             }
             
             .input-area {
@@ -465,141 +653,6 @@
                 padding: 2px 8px;
                 border-radius: 10px;
                 border: 1px solid var(--card-outline);
-            }
-            
-            .action-buttons {
-                display: flex;
-                gap: 1rem;
-                margin-bottom: 2rem;
-                flex-wrap: wrap;
-            }
-            
-            .generate-btn {
-                flex: 2;
-                background: var(--gradient);
-                color: white;
-                padding: 1rem 2rem;
-                border: none;
-                border-radius: 30px;
-                font-size: 1.1rem;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-                position: relative;
-                overflow: hidden;
-                z-index: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                min-width: 200px;
-            }
-            
-            .generate-btn::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 0%;
-                height: 100%;
-                background: rgba(255, 255, 255, 0.2);
-                transition: all 0.5s;
-                z-index: -1;
-            }
-            
-            .generate-btn:hover::before {
-                width: 100%;
-            }
-            
-            .generate-btn:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-                border-color: var(--accent-color);
-            }
-            
-            .generate-btn:disabled {
-                background: #ccc;
-                cursor: not-allowed;
-                transform: none;
-                box-shadow: none;
-                border-color: #999;
-                opacity: 0.7;
-            }
-            
-            .generate-btn:disabled:hover::before {
-                width: 0%;
-            }
-            
-            .random-btn {
-                flex: 1;
-                background: linear-gradient(135deg, #9C27B0, #7B1FA2);
-                color: white;
-                padding: 1rem 1.5rem;
-                border: none;
-                border-radius: 30px;
-                font-size: 1rem;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-                position: relative;
-                overflow: hidden;
-                z-index: 1;
-                min-width: 150px;
-            }
-            
-            .random-btn::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 0%;
-                height: 100%;
-                background: rgba(255, 255, 255, 0.2);
-                transition: all 0.5s;
-                z-index: -1;
-            }
-            
-            .random-btn:hover::before {
-                width: 100%;
-            }
-            
-            .random-btn:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-                opacity: 0.95;
-            }
-            
-            .random-btn:disabled {
-                background: #ccc;
-                cursor: not-allowed;
-                transform: none;
-                box-shadow: none;
-                opacity: 0.7;
-            }
-            
-            .settings-btn {
-                flex: 0.5;
-                background: var(--card-bg);
-                color: var(--text-primary);
-                padding: 1rem;
-                border: 2px solid var(--card-outline);
-                border-radius: 30px;
-                font-size: 1.1rem;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                min-width: 60px;
-            }
-            
-            .settings-btn:hover {
-                background: rgba(227, 124, 45, 0.1);
-                border-color: var(--primary-color);
             }
             
             .settings-panel {
@@ -1281,19 +1334,12 @@
                 margin-bottom: 1rem;
             }
             
-            .blocky-rich-text-editor {
-                border: 2px solid var(--card-outline);
-                border-radius: 8px;
-                overflow: hidden;
-                margin-bottom: 1rem;
-            }
-            
-            .ql-toolbar {
+            .rich-text-editor .ql-toolbar {
                 border-bottom: 2px solid var(--card-outline);
                 background: rgba(227, 124, 45, 0.05);
             }
             
-            .ql-container {
+            .rich-text-editor .ql-container {
                 font-family: inherit;
                 font-size: 1rem;
                 min-height: 200px;
@@ -1301,7 +1347,7 @@
                 overflow-y: auto;
             }
             
-            .ql-editor {
+            .rich-text-editor .ql-editor {
                 min-height: 200px;
                 white-space: pre-wrap;
             }
@@ -1428,7 +1474,7 @@
                 font-style: italic;
             }
             
-            /* Blocky Editor Styles */
+            /* Blocky Editor Styles - ĐÃ CẢI THIỆN */
             .blocky-block {
                 background: var(--card-bg);
                 border: 2px solid var(--card-outline);
@@ -1479,6 +1525,31 @@
                 min-height: 50px;
             }
             
+            .blocky-rich-editor {
+                border: 2px solid var(--card-outline);
+                border-radius: 8px;
+                overflow: hidden;
+                margin-bottom: 1rem;
+            }
+            
+            .blocky-rich-editor .ql-toolbar {
+                border-bottom: 2px solid var(--card-outline);
+                background: rgba(227, 124, 45, 0.05);
+            }
+            
+            .blocky-rich-editor .ql-container {
+                font-family: inherit;
+                font-size: 1rem;
+                min-height: 150px;
+                max-height: 250px;
+                overflow-y: auto;
+            }
+            
+            .blocky-rich-editor .ql-editor {
+                min-height: 150px;
+                white-space: pre-wrap;
+            }
+            
             .blocky-block-content textarea {
                 width: 100%;
                 min-height: 100px;
@@ -1502,131 +1573,25 @@
                 margin-top: 0.5rem;
             }
             
-            /* NEW: Blocky Formatting Controls */
-            .blocky-format-controls {
-                display: flex;
-                gap: 0.5rem;
-                margin-bottom: 0.5rem;
-                flex-wrap: wrap;
-            }
-            
-            .format-btn {
-                padding: 0.25rem 0.5rem;
-                background: var(--card-bg);
-                border: 1px solid var(--card-outline);
-                border-radius: 4px;
-                color: var(--text-primary);
-                cursor: pointer;
-                transition: all 0.3s ease;
-                font-size: 0.9rem;
-            }
-            
-            .format-btn:hover {
-                background: rgba(227, 124, 45, 0.1);
-                border-color: var(--primary-color);
-            }
-            
-            .format-btn.active {
-                background: var(--primary-color);
-                color: white;
-                border-color: var(--primary-color);
-            }
-            
-            /* NEW: Action buttons layout adjustments */
-            .action-buttons.text-mode {
-                display: flex;
-                gap: 1rem;
-                margin-bottom: 2rem;
-                flex-wrap: wrap;
-            }
-            
-            .action-buttons.ai-mode,
-            .action-buttons.blocky-mode {
-                display: flex;
-                gap: 1rem;
-                margin-bottom: 2rem;
-                flex-wrap: wrap;
-            }
-            
-            .action-buttons.ai-mode .generate-btn,
-            .action-buttons.blocky-mode .generate-btn {
-                flex: 3;
-            }
-            
-            .action-buttons.ai-mode .settings-btn,
-            .action-buttons.blocky-mode .settings-btn {
-                flex: 1;
-            }
-            
-            /* NEW: Enhanced blocky preview styles */
-            .blocky-content-editor {
-                margin-bottom: 1rem;
-            }
-            
-            .blocky-content-editor textarea {
-                width: 100%;
-                min-height: 150px;
-                padding: 1rem;
-                border-radius: 8px;
-                border: 2px solid var(--card-outline);
-                background-color: var(--card-bg);
-                color: var(--text-primary);
-                font-size: 1rem;
-                resize: vertical;
-                transition: all 0.3s ease;
-                font-family: inherit;
-                line-height: 1.6;
-                white-space: pre-wrap;
-            }
-            
-            .blocky-content-editor textarea:focus {
-                outline: none;
-                border-color: var(--primary-color);
-                box-shadow: 0 0 0 3px rgba(227, 124, 45, 0.2);
-            }
-            
-            .blocky-points-input {
-                width: 100px;
-                padding: 0.5rem;
-                border: 1px solid var(--card-outline);
-                border-radius: 4px;
-                font-family: inherit;
-                font-size: 1rem;
-            }
-            
-            /* Custom Quill styles to prevent duplicate toolbars */
-            .ql-toolbar.ql-snow {
-                border: 1px solid #ccc;
-                box-sizing: border-box;
-                font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-                padding: 8px;
-                border-radius: 4px 4px 0 0;
-                background: rgba(227, 124, 45, 0.05);
-                border-bottom: 2px solid var(--card-outline);
-            }
-            
-            .ql-container.ql-snow {
-                border: 1px solid #ccc;
-                border-top: none;
-                border-radius: 0 0 4px 4px;
-                font-family: inherit;
-            }
-            
-            .ql-editor {
-                min-height: 150px;
-                font-family: inherit;
-                font-size: 1rem;
-                line-height: 1.6;
-            }
-            
-            /* Hide duplicate toolbars if they appear */
-            .ql-toolbar.ql-snow ~ .ql-toolbar.ql-snow {
-                display: none !important;
-            }
-            
             @media (max-width: 992px) {
                 .options-grid {
                     grid-template-columns: 1fr;
+                }
+                
+                .mode-tabs {
+                    flex-wrap: wrap;
+                }
+                
+                .mode-tab {
+                    min-width: calc(33.333% - 0.67rem);
+                }
+                
+                .blocky-controls {
+                    flex-wrap: wrap;
+                }
+                
+                .blocky-btn {
+                    min-width: calc(33.333% - 0.67rem);
                 }
             }
             
@@ -1640,14 +1605,18 @@
                 }
                 
                 .action-buttons {
-                    flex-direction: row;
-                    flex-wrap: wrap;
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+                
+                .action-buttons .left-buttons,
+                .action-buttons .right-buttons {
+                    width: 100%;
+                    flex-direction: column;
                 }
                 
                 .generate-btn, .random-btn, .settings-btn {
-                    width: auto;
-                    flex: 1;
-                    min-width: 120px;
+                    width: 100%;
                 }
                 
                 .app-container {
@@ -1662,20 +1631,24 @@
                 
                 .mode-tabs {
                     flex-direction: row;
-                    flex-wrap: wrap;
+                    flex-wrap: nowrap;
+                    overflow-x: auto;
                 }
                 
                 .mode-tab {
-                    min-width: calc(33.333% - 0.67rem);
-                    padding: 0.8rem 1rem;
+                    min-width: 150px;
+                    flex-shrink: 0;
                 }
                 
-                .mode-tab i {
-                    font-size: 1.2rem;
+                .blocky-controls {
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    overflow-x: auto;
                 }
                 
-                .mode-tab span {
-                    font-size: 0.9rem;
+                .blocky-btn {
+                    min-width: 150px;
+                    flex-shrink: 0;
                 }
                 
                 .duration-header {
@@ -1720,14 +1693,11 @@
                 }
                 
                 .editor-actions {
-                    flex-direction: row;
-                    flex-wrap: wrap;
+                    flex-direction: column;
                 }
                 
                 .editor-action-btn {
-                    width: auto;
-                    flex: 1;
-                    min-width: 120px;
+                    width: 100%;
                     justify-content: center;
                 }
                 
@@ -1739,46 +1709,6 @@
                 .app-footer p {
                     font-size: 0.9rem;
                 }
-                
-                .blocky-controls {
-                    flex-direction: row;
-                    flex-wrap: wrap;
-                }
-                
-                .blocky-btn {
-                    width: auto;
-                    flex: 1;
-                    min-width: 120px;
-                    justify-content: center;
-                }
-                
-                /* NEW: Mobile adjustments for mode tabs */
-                .mode-tab {
-                    min-width: calc(50% - 0.5rem);
-                }
-                
-                /* NEW: Mobile adjustments for action buttons */
-                .action-buttons.text-mode,
-                .action-buttons.ai-mode,
-                .action-buttons.blocky-mode {
-                    flex-direction: row;
-                }
-                
-                .action-buttons.text-mode .generate-btn,
-                .action-buttons.ai-mode .generate-btn,
-                .action-buttons.blocky-mode .generate-btn {
-                    flex: 2;
-                }
-                
-                .action-buttons.text-mode .random-btn,
-                .action-buttons.text-mode .settings-btn {
-                    flex: 1;
-                }
-                
-                .action-buttons.ai-mode .settings-btn,
-                .action-buttons.blocky-mode .settings-btn {
-                    flex: 1;
-                }
             }
             
             @media (max-width: 480px) {
@@ -1789,6 +1719,22 @@
                 .app-container {
                     padding: 0.5rem;
                     padding-top: 15px;
+                }
+                
+                .mode-tab {
+                    min-width: 120px;
+                    padding: 0.75rem 0.5rem;
+                    font-size: 0.9rem;
+                }
+                
+                .mode-tab i {
+                    font-size: 1.2rem;
+                }
+                
+                .blocky-btn {
+                    min-width: 120px;
+                    padding: 0.6rem 1rem;
+                    font-size: 0.9rem;
                 }
                 
                 .progress-items {
@@ -1804,61 +1750,27 @@
                     margin: 0.5rem;
                 }
                 
-                .mode-tabs {
-                    gap: 0.5rem;
-                }
-                
-                .mode-tab {
-                    min-width: 100%;
-                    padding: 0.7rem 0.8rem;
-                }
-                
-                .mode-tab i {
-                    font-size: 1.1rem;
-                }
-                
-                .mode-tab span {
-                    font-size: 0.8rem;
-                }
-                
                 .action-buttons {
-                    flex-direction: column;
+                    gap: 0.75rem;
                 }
                 
                 .generate-btn, .random-btn, .settings-btn {
-                    width: 100%;
-                    flex: none;
-                }
-                
-                .action-buttons.text-mode,
-                .action-buttons.ai-mode,
-                .action-buttons.blocky-mode {
-                    flex-direction: column;
-                }
-                
-                .action-buttons.text-mode .generate-btn,
-                .action-buttons.ai-mode .generate-btn,
-                .action-buttons.blocky-mode .generate-btn,
-                .action-buttons.text-mode .random-btn,
-                .action-buttons.text-mode .settings-btn,
-                .action-buttons.ai-mode .settings-btn,
-                .action-buttons.blocky-mode .settings-btn {
-                    width: 100%;
-                    flex: none;
-                }
-                
-                .blocky-controls {
-                    flex-direction: column;
-                }
-                
-                .blocky-btn {
-                    width: 100%;
+                    padding: 0.9rem 1.2rem;
+                    font-size: 1rem;
                 }
             }
             
             @media (min-width: 1200px) {
                 .exam-card {
                     max-width: 1000px;
+                }
+                
+                .mode-tab {
+                    min-width: 200px;
+                }
+                
+                .blocky-btn {
+                    min-width: 180px;
                 }
             }
         }
@@ -1929,6 +1841,7 @@
                             <div class="mode-description">
                                 <strong>Mô tả:</strong> Tạo đề thi bằng cách thêm, xóa và chỉnh sửa từng khối câu hỏi và nội dung.
                             </div>
+                            <!-- SỬA: Blocky controls nằm ngang -->
                             <div class="blocky-controls">
                                 <button id="addTextBlockBtn" class="blocky-btn">
                                     <i class="fas fa-paragraph"></i> Thêm văn bản
@@ -1950,37 +1863,22 @@
                         </div>
                     </div>
                     
-                    <!-- Text Mode Action Buttons -->
-                    <div class="action-buttons text-mode" id="textModeButtons">
-                        <button id="generateExamBtn" class="generate-btn">
-                            <i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi
-                        </button>
-                        <button id="generateRandomExamBtn" class="random-btn">
-                            <i class="fas fa-dice mr-2"></i> Đề Thi Ngẫu Nhiên
-                        </button>
-                        <button id="settingsBtn" class="settings-btn">
-                            <i class="fas fa-cog"></i>
-                        </button>
-                    </div>
-                    
-                    <!-- AI Mode Action Buttons -->
-                    <div class="action-buttons ai-mode" id="aiModeButtons" style="display: none;">
-                        <button id="generateAIExamBtn" class="generate-btn">
-                            <i class="fas fa-robot mr-2"></i> Tạo Đề Thi Bằng AI
-                        </button>
-                        <button id="aiSettingsBtn" class="settings-btn">
-                            <i class="fas fa-cog"></i>
-                        </button>
-                    </div>
-                    
-                    <!-- Blocky Mode Action Buttons -->
-                    <div class="action-buttons blocky-mode" id="blockyModeButtons" style="display: none;">
-                        <button id="generateBlockyExamBtn" class="generate-btn">
-                            <i class="fas fa-cubes mr-2"></i> Tạo Đề Thi Blocky
-                        </button>
-                        <button id="blockySettingsBtn" class="settings-btn">
-                            <i class="fas fa-cog"></i>
-                        </button>
+                    <!-- SỬA: Action buttons layout theo từng chế độ -->
+                    <div class="action-buttons text-mode" id="actionButtonsContainer">
+                        <!-- Chế độ văn bản: có nút ngẫu nhiên và settings -->
+                        <div class="left-buttons">
+                            <button id="generateExamBtn" class="generate-btn">
+                                <i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi
+                            </button>
+                            <button id="generateRandomExamBtn" class="random-btn">
+                                <i class="fas fa-dice mr-2"></i> Đề Thi Ngẫu Nhiên
+                            </button>
+                        </div>
+                        <div class="right-buttons">
+                            <button id="settingsBtn" class="settings-btn">
+                                <i class="fas fa-cog mr-2"></i> Cài đặt
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="settings-panel" id="settingsPanel">
@@ -2154,9 +2052,8 @@
     
     <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
     <script>
-       const REVERSED_API_KEY = "ADHvlJk9rfZ40q7ju_r-yVQl1ZqW4Z-MDySzAI";
-const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
-
+        const REVERSED_API_KEY = "ADHvlJk9rfZ40q7ju_r-yVQl1ZqW4Z-MDySzAI";
+        const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
 
         const firebaseConfigPrimary = {
             apiKey: "AIzaSyBLZpLQKl0x-kMez2v5NURU5qSthT_6qYI",
@@ -2247,7 +2144,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
         let currentRealWorkInfo = null;
         let currentCreationMode = 'text'; // 'text', 'ai', or 'blocky'
         let blockyBlocks = [];
-        let blockyQuillEditors = [];
+        let blockyEditors = [];
 
         window.addEventListener('error', function(e) {
             if (e.error && e.error.message && e.error.message.includes('asynchronous response')) {
@@ -2938,18 +2835,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             let examData;
             const progressContainer = document.getElementById('progressContainer');
             const examResult = document.getElementById('examResult');
-            let generateBtn;
-
-            // Get the correct generate button based on current mode
-            if (currentCreationMode === 'text') {
-                generateBtn = document.getElementById('generateExamBtn');
-            } else if (currentCreationMode === 'ai') {
-                generateBtn = document.getElementById('generateAIExamBtn');
-            } else if (currentCreationMode === 'blocky') {
-                generateBtn = document.getElementById('generateBlockyExamBtn');
-            }
-
-            if (!generateBtn) return;
+            const generateBtn = document.getElementById('generateExamBtn');
 
             generateBtn.disabled = true;
             generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Đang tạo đề thi...';
@@ -3138,13 +3024,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 }
             } finally {
                 generateBtn.disabled = false;
-                if (currentCreationMode === 'text') {
-                    generateBtn.innerHTML = '<i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi';
-                } else if (currentCreationMode === 'ai') {
-                    generateBtn.innerHTML = '<i class="fas fa-robot mr-2"></i> Tạo Đề Thi Bằng AI';
-                } else if (currentCreationMode === 'blocky') {
-                    generateBtn.innerHTML = '<i class="fas fa-cubes mr-2"></i> Tạo Đề Thi Blocky';
-                }
+                generateBtn.innerHTML = '<i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi';
             }
         }
 
@@ -3549,16 +3429,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 const editorId = `editor-${index}`;
                 const textareaId = `editor-text-${index}`;
                 
-                const editorElement = document.getElementById(editorId);
-                if (!editorElement) return;
-                
-                // Check if editor already exists
-                if (editorElement.querySelector('.ql-toolbar')) {
-                    console.log(`Editor ${editorId} already initialized, skipping...`);
-                    return;
-                }
-                
-                const quill = new Quill(editorElement, {
+                const quill = new Quill(`#${editorId}`, {
                     theme: 'snow',
                     modules: {
                         toolbar: [
@@ -3972,7 +3843,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             printWindow.document.close();
         }
 
-        // NEW: Enhanced Blocky Mode Functions with Rich Text Editor
+        // NEW: Blocky Mode Functions với rich text editor
         function addBlockyBlock(type) {
             const blockId = Date.now();
             const block = {
@@ -3986,42 +3857,16 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             blockyBlocks.push(block);
             renderBlockyBlocks();
             
-            // Initialize Quill editor for the new block
+            // Initialize rich text editor for the new block
             setTimeout(() => {
-                const editorId = `blocky-editor-${blockId}`;
-                const editorContainer = document.getElementById(editorId);
-                if (editorContainer) {
-                    // Check if editor already exists
-                    if (editorContainer.querySelector('.ql-toolbar')) {
-                        console.log(`Blocky editor ${editorId} already initialized, skipping...`);
-                        return;
-                    }
-                    
-                    const quill = new Quill(editorContainer, {
-                        theme: 'snow',
-                        modules: {
-                            toolbar: [
-                                ['bold', 'italic', 'underline'],
-                                [{ 'header': 1 }, { 'header': 2 }],
-                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                                ['clean']
-                            ]
-                        },
-                        placeholder: type === 'text' ? 'Nhập nội dung văn bản...' : 'Nhập nội dung câu hỏi...'
-                    });
-                    
-                    quill.on('text-change', function() {
-                        updateBlockyBlock(blockId, 'content', quill.root.innerHTML);
-                    });
-                    
-                    blockyQuillEditors[blockId] = quill;
-                }
+                initBlockyEditor(blockId);
             }, 100);
         }
 
         function removeBlockyBlock(blockId) {
             blockyBlocks = blockyBlocks.filter(block => block.id !== blockId);
-            delete blockyQuillEditors[blockId];
+            // Remove from editors array
+            blockyEditors = blockyEditors.filter(editor => editor.blockId !== blockId);
             renderBlockyBlocks();
         }
 
@@ -4044,47 +3889,54 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             
             renderBlockyBlocks();
             
-            // Re-initialize Quill editors after moving
+            // Reinitialize editors
             setTimeout(() => {
-                initBlockyQuillEditors();
-            }, 50);
+                blockyBlocks.forEach(block => {
+                    initBlockyEditor(block.id);
+                });
+            }, 100);
         }
 
-        function initBlockyQuillEditors() {
-            blockyBlocks.forEach(block => {
-                const editorId = `blocky-editor-${block.id}`;
-                const editorContainer = document.getElementById(editorId);
-                if (editorContainer && !blockyQuillEditors[block.id]) {
-                    // Check if editor already exists
-                    if (editorContainer.querySelector('.ql-toolbar')) {
-                        console.log(`Blocky editor ${editorId} already initialized, skipping...`);
-                        return;
-                    }
-                    
-                    const quill = new Quill(editorContainer, {
-                        theme: 'snow',
-                        modules: {
-                            toolbar: [
-                                ['bold', 'italic', 'underline'],
-                                [{ 'header': 1 }, { 'header': 2 }],
-                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                                ['clean']
-                            ]
-                        },
-                        placeholder: block.type === 'text' ? 'Nhập nội dung văn bản...' : 'Nhập nội dung câu hỏi...'
-                    });
-                    
-                    if (block.content) {
-                        quill.root.innerHTML = block.content;
-                    }
-                    
-                    quill.on('text-change', function() {
-                        updateBlockyBlock(block.id, 'content', quill.root.innerHTML);
-                    });
-                    
-                    blockyQuillEditors[block.id] = quill;
-                }
+        function initBlockyEditor(blockId) {
+            const editorContainer = document.querySelector(`[data-block-id="${blockId}"] .blocky-rich-editor`);
+            if (!editorContainer) return;
+            
+            // Remove existing editor if any
+            const existingEditor = blockyEditors.find(editor => editor.blockId === blockId);
+            if (existingEditor && existingEditor.quill) {
+                existingEditor.quill.root.innerHTML = '';
+            }
+            
+            const quill = new Quill(editorContainer, {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline'],
+                        [{ 'header': 1 }, { 'header': 2 }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ]
+                },
+                placeholder: 'Nhập nội dung...'
             });
+            
+            const block = blockyBlocks.find(b => b.id === blockId);
+            if (block && block.content) {
+                quill.root.innerHTML = markdownToHtml(displayContentWithLineBreaks(block.content));
+            }
+            
+            // Update content on change
+            quill.on('text-change', function() {
+                updateBlockyBlock(blockId, 'content', quill.root.innerHTML);
+            });
+            
+            // Add to editors array
+            const editorIndex = blockyEditors.findIndex(editor => editor.blockId === blockId);
+            if (editorIndex > -1) {
+                blockyEditors[editorIndex] = { blockId, quill };
+            } else {
+                blockyEditors.push({ blockId, quill });
+            }
         }
 
         function renderBlockyBlocks() {
@@ -4131,13 +3983,13 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                                        oninput="updateBlockyBlock(${block.id}, 'title', this.value)"
                                        style="width: 100%; padding: 0.5rem; border: 1px solid var(--card-outline); border-radius: 4px;">
                             </div>
-                            <div class="blocky-rich-text-editor" id="blocky-editor-${block.id}"></div>
+                            <div class="blocky-rich-editor" id="blocky-editor-${block.id}"></div>
                 `;
                 
                 if (block.type === 'question') {
                     html += `
                             <div class="blocky-block-footer">
-                                <div class="form-group">
+                                <div class="form-group" style="margin-top: 1rem;">
                                     <label style="font-size: 0.9rem; color: var(--text-secondary); margin-right: 0.5rem;">Điểm:</label>
                                     <input type="number" 
                                            value="${block.points || 1.0}" 
@@ -4156,8 +4008,12 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             
             previewContainer.innerHTML = html;
             
-            // Initialize Quill editors
-            initBlockyQuillEditors();
+            // Initialize editors
+            setTimeout(() => {
+                blockyBlocks.forEach(block => {
+                    initBlockyEditor(block.id);
+                });
+            }, 100);
         }
 
         function clearBlockyBlocks() {
@@ -4165,7 +4021,7 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             
             if (confirm('Bạn có chắc chắn muốn xóa tất cả các khối?')) {
                 blockyBlocks = [];
-                blockyQuillEditors = {};
+                blockyEditors = [];
                 renderBlockyBlocks();
                 showNotification('Đã xóa tất cả các khối', 'success');
             }
@@ -4527,22 +4383,71 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                 }
             });
             
-            // Show/hide appropriate action buttons
-            document.getElementById('textModeButtons').style.display = mode === 'text' ? 'flex' : 'none';
-            document.getElementById('aiModeButtons').style.display = mode === 'ai' ? 'flex' : 'none';
-            document.getElementById('blockyModeButtons').style.display = mode === 'blocky' ? 'flex' : 'none';
-            
-            // Update generate button text based on mode
-            const textGenerateBtn = document.getElementById('generateExamBtn');
-            const aiGenerateBtn = document.getElementById('generateAIExamBtn');
-            const blockyGenerateBtn = document.getElementById('generateBlockyExamBtn');
+            // Update action buttons layout based on mode
+            const actionButtonsContainer = document.getElementById('actionButtonsContainer');
+            const generateBtn = document.getElementById('generateExamBtn');
+            const randomBtn = document.getElementById('generateRandomExamBtn');
+            const settingsBtn = document.getElementById('settingsBtn');
             
             if (mode === 'text') {
-                textGenerateBtn.innerHTML = '<i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi';
+                // Text mode: có nút ngẫu nhiên và settings nằm cùng hàng
+                actionButtonsContainer.className = 'action-buttons text-mode';
+                actionButtonsContainer.innerHTML = `
+                    <div class="left-buttons">
+                        <button id="generateExamBtn" class="generate-btn">
+                            <i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi
+                        </button>
+                        <button id="generateRandomExamBtn" class="random-btn">
+                            <i class="fas fa-dice mr-2"></i> Đề Thi Ngẫu Nhiên
+                        </button>
+                    </div>
+                    <div class="right-buttons">
+                        <button id="settingsBtn" class="settings-btn">
+                            <i class="fas fa-cog mr-2"></i> Cài đặt
+                        </button>
+                    </div>
+                `;
+                
+                // Reattach event listeners
+                document.getElementById('generateExamBtn').addEventListener('click', generateExam);
+                document.getElementById('generateRandomExamBtn').addEventListener('click', generateRandomExam);
+                document.getElementById('settingsBtn').addEventListener('click', toggleSettingsPanel);
+                
             } else if (mode === 'ai') {
-                aiGenerateBtn.innerHTML = '<i class="fas fa-robot mr-2"></i> Tạo Đề Thi Bằng AI';
+                // AI mode: không có nút ngẫu nhiên, settings và generate nằm cùng hàng
+                actionButtonsContainer.className = 'action-buttons ai-mode';
+                actionButtonsContainer.innerHTML = `
+                    <div class="left-buttons">
+                        <button id="generateExamBtn" class="generate-btn" style="flex: 2;">
+                            <i class="fas fa-robot mr-2"></i> Tạo Đề Thi Bằng AI
+                        </button>
+                        <button id="settingsBtn" class="settings-btn" style="flex: 1;">
+                            <i class="fas fa-cog mr-2"></i> Cài đặt
+                        </button>
+                    </div>
+                `;
+                
+                // Reattach event listeners
+                document.getElementById('generateExamBtn').addEventListener('click', generateExam);
+                document.getElementById('settingsBtn').addEventListener('click', toggleSettingsPanel);
+                
             } else if (mode === 'blocky') {
-                blockyGenerateBtn.innerHTML = '<i class="fas fa-cubes mr-2"></i> Tạo Đề Thi Blocky';
+                // Blocky mode: không có nút ngẫu nhiên, settings và generate nằm cùng hàng
+                actionButtonsContainer.className = 'action-buttons blocky-mode';
+                actionButtonsContainer.innerHTML = `
+                    <div class="left-buttons">
+                        <button id="generateExamBtn" class="generate-btn" style="flex: 2;">
+                            <i class="fas fa-cubes mr-2"></i> Tạo Đề Thi Blocky
+                        </button>
+                        <button id="settingsBtn" class="settings-btn" style="flex: 1;">
+                            <i class="fas fa-cog mr-2"></i> Cài đặt
+                        </button>
+                    </div>
+                `;
+                
+                // Reattach event listeners
+                document.getElementById('generateExamBtn').addEventListener('click', generateExam);
+                document.getElementById('settingsBtn').addEventListener('click', toggleSettingsPanel);
             }
             
             // Show notification
@@ -4554,45 +4459,21 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             showNotification(`Đã chuyển sang chế độ: ${modeNames[mode]}`, 'info');
         }
 
-        // NEW: Function to handle settings button click for all modes
-        function setupSettingsButtons() {
-            const textSettingsBtn = document.getElementById('settingsBtn');
-            const aiSettingsBtn = document.getElementById('aiSettingsBtn');
-            const blockySettingsBtn = document.getElementById('blockySettingsBtn');
-            
+        function toggleSettingsPanel() {
             const settingsPanel = document.getElementById('settingsPanel');
-            
-            function toggleSettingsPanel(btn) {
+            if (settingsPanel) {
                 settingsPanel.classList.toggle('active');
                 
-                const icon = btn.querySelector('i');
+                const icon = this.querySelector('i');
                 if (settingsPanel.classList.contains('active')) {
-                    icon.className = 'fas fa-times';
-                    btn.style.backgroundColor = 'rgba(227, 124, 45, 0.2)';
-                    btn.style.borderColor = 'var(--primary-color)';
+                    icon.className = 'fas fa-times mr-2';
+                    this.style.backgroundColor = 'rgba(227, 124, 45, 0.2)';
+                    this.style.borderColor = 'var(--primary-color)';
                 } else {
-                    icon.className = 'fas fa-cog';
-                    btn.style.backgroundColor = '';
-                    btn.style.borderColor = '';
+                    icon.className = 'fas fa-cog mr-2';
+                    this.style.backgroundColor = '';
+                    this.style.borderColor = '';
                 }
-            }
-            
-            if (textSettingsBtn) {
-                textSettingsBtn.addEventListener('click', function() {
-                    toggleSettingsPanel(this);
-                });
-            }
-            
-            if (aiSettingsBtn) {
-                aiSettingsBtn.addEventListener('click', function() {
-                    toggleSettingsPanel(this);
-                });
-            }
-            
-            if (blockySettingsBtn) {
-                blockySettingsBtn.addEventListener('click', function() {
-                    toggleSettingsPanel(this);
-                });
             }
         }
 
@@ -4612,14 +4493,20 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
             window.moveBlockyBlock = moveBlockyBlock;
             window.clearBlockyBlocks = clearBlockyBlocks;
             
-            // Setup event listeners for all generate buttons
-            document.getElementById('generateExamBtn')?.addEventListener('click', generateExam);
-            document.getElementById('generateAIExamBtn')?.addEventListener('click', generateExam);
-            document.getElementById('generateBlockyExamBtn')?.addEventListener('click', generateExam);
+            // Attach initial event listeners for text mode (default)
+            const generateExamBtn = document.getElementById('generateExamBtn');
+            if (generateExamBtn) {
+                generateExamBtn.addEventListener('click', generateExam);
+            }
             
             const generateRandomExamBtn = document.getElementById('generateRandomExamBtn');
             if (generateRandomExamBtn) {
                 generateRandomExamBtn.addEventListener('click', generateRandomExam);
+            }
+            
+            const settingsBtn = document.getElementById('settingsBtn');
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', toggleSettingsPanel);
             }
             
             const inputText = document.getElementById('inputText');
@@ -4641,9 +4528,6 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
                     }
                 });
             }
-            
-            // Setup settings buttons for all modes
-            setupSettingsButtons();
             
             setupExamSlider();
             setupWordCounter();
@@ -4701,6 +4585,3 @@ const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
     </script>
 </body>
 </html>
-
-
-TRẢ TÔI CODE ĐẦY ĐỦ SAU KHI SỬA
