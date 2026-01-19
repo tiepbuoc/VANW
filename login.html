@@ -535,7 +535,6 @@
                         <input type="email" id="registerEmail" placeholder="Nhập email của bạn" required>
                     </div>
                     <div class="error-message" id="registerEmailError"></div>
-                    <div class="info-text">Sử dụng email hợp lệ để xác nhận tài khoản</div>
                 </div>
                 
                 <div class="form-group">
@@ -836,9 +835,7 @@
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
 
-                    await user.sendEmailVerification();
-
-                    showNotification('Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản.', 'success');
+                    showNotification('Đăng ký thành công!', 'success');
                     
                     registerForm.reset();
                     clearError('registerName');
@@ -935,13 +932,6 @@
                     const userCredential = await auth.signInWithEmailAndPassword(email, password);
                     const user = userCredential.user;
 
-                    if (!user.emailVerified) {
-                        showNotification('Vui lòng xác nhận email trước khi đăng nhập. Kiểm tra hộp thư của bạn.', 'error');
-                        
-                        await auth.signOut();
-                        return;
-                    }
-
                     const userDoc = await db.collection('users').doc(user.uid).get();
                     const userData = userDoc.data();
 
@@ -996,7 +986,7 @@
             setupLoginForm();
 
             auth.onAuthStateChanged((user) => {
-                if (user && user.emailVerified) {
+                if (user) {
                     window.location.href = 'index.html';
                 }
             });
