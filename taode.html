@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tạo Đề Thi Văn Học - VANW</title>
-    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
     <style>
@@ -286,7 +286,6 @@
                 height: auto;
             }
             
-            /* NEW: Creation Mode Selector */
             .creation-mode-selector {
                 margin-bottom: 2rem;
                 background: rgba(227, 124, 45, 0.05);
@@ -304,7 +303,6 @@
                 gap: 0.5rem;
             }
             
-            /* SỬA: Mode tabs nằm ngang */
             .mode-tabs {
                 display: flex;
                 gap: 1rem;
@@ -369,7 +367,6 @@
                 border-left: 3px solid var(--primary-color);
             }
             
-            /* AI Prompt Mode Styles */
             .ai-prompt-area {
                 margin-bottom: 1.5rem;
             }
@@ -410,7 +407,6 @@
                 margin-bottom: 0.25rem;
             }
             
-            /* Blocky Mode Styles - ĐÃ SỬA */
             .blocky-controls {
                 display: flex;
                 gap: 1rem;
@@ -463,7 +459,6 @@
                 opacity: 0.5;
             }
             
-            /* SỬA: Action buttons layout */
             .action-buttons {
                 display: flex;
                 gap: 1rem;
@@ -1474,7 +1469,6 @@
                 font-style: italic;
             }
             
-            /* Blocky Editor Styles - ĐÃ CẢI THIỆN */
             .blocky-block {
                 background: var(--card-bg);
                 border: 2px solid var(--card-outline);
@@ -1778,7 +1772,7 @@
 </head>
 <body>
     <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
-        <img src="logo.png" alt="Website Icon" />
+        <img src="assets/logo.png" alt="Website Icon" />
     </a>
     
     <div class="app-container">
@@ -1786,10 +1780,9 @@
             <div class="exam-tool">
                 <div class="exam-card">
                     <div class="header-image">
-                        <img src="htext1.png" alt="HỆ THỐNG TẠO BÀI THI VĂN HỌC">
+                        <img src="assets/htext1.png" alt="HỆ THỐNG TẠO BÀI THI VĂN HỌC">
                     </div>
                     
-                    <!-- NEW: Creation Mode Selector -->
                     <div class="creation-mode-selector">
                         <h3><i class="fas fa-sliders-h"></i> CHẾ ĐỘ TẠO ĐỀ THI</h3>
                         <div class="mode-tabs">
@@ -1807,7 +1800,6 @@
                             </div>
                         </div>
                         
-                        <!-- Text Mode -->
                         <div class="mode-content active" id="mode-text">
                             <div class="mode-description">
                                 <strong>Mô tả:</strong> Nhập văn bản văn học có sẵn, hệ thống sẽ tự động tạo đề thi từ văn bản đó.
@@ -1818,7 +1810,6 @@
                             </div>
                         </div>
                         
-                        <!-- AI Mode -->
                         <div class="mode-content" id="mode-ai">
                             <div class="mode-description">
                                 <strong>Mô tả:</strong> Nhập yêu cầu bằng tiếng Việt, AI sẽ tự động tạo đề thi từ A-Z dựa trên yêu cầu của bạn.
@@ -1836,12 +1827,10 @@
                             </div>
                         </div>
                         
-                        <!-- Blocky Mode -->
                         <div class="mode-content" id="mode-blocky">
                             <div class="mode-description">
                                 <strong>Mô tả:</strong> Tạo đề thi bằng cách thêm, xóa và chỉnh sửa từng khối câu hỏi và nội dung.
                             </div>
-                            <!-- SỬA: Blocky controls nằm ngang -->
                             <div class="blocky-controls">
                                 <button id="addTextBlockBtn" class="blocky-btn">
                                     <i class="fas fa-paragraph"></i> Thêm văn bản
@@ -1863,9 +1852,7 @@
                         </div>
                     </div>
                     
-                    <!-- SỬA: Action buttons layout theo từng chế độ -->
                     <div class="action-buttons text-mode" id="actionButtonsContainer">
-                        <!-- Chế độ văn bản: có nút ngẫu nhiên và settings -->
                         <div class="left-buttons">
                             <button id="generateExamBtn" class="generate-btn">
                                 <i class="fas fa-file-alt mr-2"></i> Tạo Đề Thi
@@ -2037,9 +2024,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="modal-btn" id="saveEditedExamBtn">
-                    <i class="fas fa-save mr-2"></i> Lưu thay đổi
-                </button>
                 <button class="modal-btn secondary-btn" id="cancelEditBtn">
                     <i class="fas fa-times mr-2"></i> Hủy
                 </button>
@@ -2081,14 +2065,11 @@
         try {
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfigPrimary, "primary");
-                console.log("Firebase Primary initialized successfully");
             }
             
             try {
                 firebase.initializeApp(firebaseConfigSecondary, "secondary");
-                console.log("Firebase Secondary initialized successfully");
             } catch (e) {
-                console.log("Secondary app already exists or error:", e.message);
             }
             
             firestoreDbPrimary = firebase.app("primary").firestore();
@@ -2100,10 +2081,7 @@
                 });
             });
             
-            console.log("Both Firestore databases initialized successfully");
-            
         } catch (error) {
-            console.warn("Firebase initialization warning:", error.message);
             const fakeDb = {
                 collection: () => ({
                     doc: () => ({
@@ -2121,6 +2099,29 @@
             firestoreDbPrimary = fakeDb;
             firestoreDbSecondary = fakeDb;
         }
+
+        // Biến lưu API đang hoạt động
+        let activeApiIndex = 0;
+        let apiRetryCount = 0;
+        const MAX_RETRY_COUNT = 2;
+        
+        // Danh sách các API endpoints với ưu tiên
+        const API_ENDPOINTS = [
+            {
+                name: "Gemini API",
+                url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+                model: "gemini-2.5-flash",
+                priority: 1,
+                active: true
+            },
+            {
+                name: "Gemini API Flash Lite",
+                url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
+                model: "gemini-2.5-flash-lite",
+                priority: 2,
+                active: true
+            }
+        ];
 
         let generationProgress = {
             total: 0,
@@ -2142,18 +2143,16 @@
 
         let richTextEditors = [];
         let currentRealWorkInfo = null;
-        let currentCreationMode = 'text'; // 'text', 'ai', or 'blocky'
+        let currentCreationMode = 'text';
         let blockyBlocks = [];
         let blockyEditors = [];
 
         window.addEventListener('error', function(e) {
             if (e.error && e.error.message && e.error.message.includes('asynchronous response')) {
-                console.warn('Browser extension conflict detected. You may disable extensions if issues persist.');
             }
         });
 
         window.addEventListener('unhandledrejection', function(e) {
-            console.warn('Unhandled promise rejection:', e.reason);
         });
 
         function countWords(text) {
@@ -2239,103 +2238,148 @@
             }
         }
 
-        async function fetchGemini(prompt, maxRetries = 3) {
-            for (let attempt = 1; attempt <= maxRetries; attempt++) {
-                try {
-                    const timeoutPromise = new Promise((_, reject) => {
-                        setTimeout(() => reject(new Error('Request timeout after 90 seconds')), 90000);
-                    });
-                    
-                    const fetchPromise = fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            contents: [{ 
-                                parts: [{ text: prompt }] 
-                            }],
-                            generationConfig: {
-                                maxOutputTokens: 8000,
-                                temperature: 0.7,
-                                topP: 0.95,
-                                topK: 40,
-                            }
-                        })
-                    });
-                    
-                    const response = await Promise.race([fetchPromise, timeoutPromise]);
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts || !data.candidates[0].content.parts[0]) {
-                        throw new Error('Invalid response format from API');
-                    }
-                    
-                    const result = data.candidates[0].content.parts[0].text.trim();
-                    
-                    if (result.includes('\\n')) {
-                        result = result.replace(/\\n/g, '\n');
-                    }
-                    
-                    return result;
-                    
-                } catch (error) {
-                    console.error(`Attempt ${attempt} failed:`, error);
-                    
-                    if (attempt === maxRetries) {
-                        throw new Error(`Failed after ${maxRetries} attempts: ${error.message}`);
-                    }
-                    
-                    await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
+        async function callGeminiAPI(prompt, apiIndex = activeApiIndex) {
+            const api = API_ENDPOINTS[apiIndex];
+            if (!api || !api.active) {
+                throw new Error(`API ${apiIndex} không khả dụng`);
+            }
+
+            try {
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error(`Request timeout after 90 seconds (${api.name})`)), 90000);
+                });
+                
+                const fetchPromise = fetch(api.url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{ 
+                            parts: [{ text: prompt }] 
+                        }],
+                        generationConfig: {
+                            maxOutputTokens: 8000,
+                            temperature: 0.7,
+                            topP: 0.95,
+                            topK: 40,
+                        }
+                    })
+                });
+                
+                const response = await Promise.race([fetchPromise, timeoutPromise]);
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.error?.message || 'Unknown error'}`);
+                }
+                
+                const data = await response.json();
+                if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts || !data.candidates[0].content.parts[0]) {
+                    throw new Error('Invalid response format from API');
+                }
+                
+                let result = data.candidates[0].content.parts[0].text.trim();
+                
+                if (result.includes('\\n')) {
+                    result = result.replace(/\\n/g, '\n');
+                }
+                
+                // Đánh dấu API hiện tại là hoạt động thành công
+                activeApiIndex = apiIndex;
+                apiRetryCount = 0;
+                
+                return result;
+                
+            } catch (error) {
+                // Đánh dấu API hiện tại có vấn đề
+                console.warn(`API ${api.name} thất bại: ${error.message}`);
+                
+                // Thử API tiếp theo nếu có
+                if (apiIndex < API_ENDPOINTS.length - 1) {
+                    const nextApiIndex = apiIndex + 1;
+                    console.log(`Thử API tiếp theo: ${API_ENDPOINTS[nextApiIndex].name}`);
+                    return await callGeminiAPI(prompt, nextApiIndex);
+                } else {
+                    // Đã thử hết tất cả API
+                    throw new Error(`Tất cả API đã thất bại. Lỗi cuối cùng: ${error.message}`);
                 }
             }
         }
 
-        // NEW: Function to properly handle line breaks for storage
+        async function retryWithDifferentAPI(originalError, prompt) {
+            apiRetryCount++;
+            
+            if (apiRetryCount > MAX_RETRY_COUNT) {
+                throw originalError;
+            }
+            
+            // Chuyển sang API tiếp theo
+            activeApiIndex = (activeApiIndex + 1) % API_ENDPOINTS.length;
+            
+            console.log(`Thử lại với API khác: ${API_ENDPOINTS[activeApiIndex].name}, lần thử: ${apiRetryCount}`);
+            
+            try {
+                return await callGeminiAPI(prompt, activeApiIndex);
+            } catch (error) {
+                // Nếu API mới cũng lỗi, tiếp tục thử API tiếp theo
+                return await retryWithDifferentAPI(error, prompt);
+            }
+        }
+
+        async function fetchGemini(prompt, maxRetries = 3) {
+            try {
+                // Luôn bắt đầu với API ưu tiên cao nhất (index 0)
+                return await callGeminiAPI(prompt, 0);
+            } catch (error) {
+                // Nếu tất cả API đều thất bại, thử lại với retry logic cũ
+                for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                    try {
+                        console.log(`Thử lại lần ${attempt}/${maxRetries} với API hiện tại`);
+                        return await callGeminiAPI(prompt, activeApiIndex);
+                    } catch (retryError) {
+                        if (attempt === maxRetries) {
+                            throw new Error(`Failed after ${maxRetries} attempts: ${retryError.message}`);
+                        }
+                        
+                        await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
+                    }
+                }
+                throw error;
+            }
+        }
+
         function processContentForStorage(content) {
             if (!content) return '';
             
-            // Replace actual newlines with a special marker for storage
-            // We'll use |||NEWLINE||| as a marker that won't interfere with normal text
             let processed = content.replace(/\n/g, '|||NEWLINE|||');
             
-            // Also handle multiple consecutive newlines
             processed = processed.replace(/\|\|\|NEWLINE\|\|\|\s*\|\|\|NEWLINE\|\|\|/g, '|||NEWLINE|||');
             
             return processed;
         }
 
-        // NEW: Function to restore line breaks from storage
         function restoreContentFromStorage(storedContent) {
             if (!storedContent) return '';
             
-            // Restore newlines from our marker
             let restored = storedContent.replace(/\|\|\|NEWLINE\|\|\|/g, '\n');
             
             return restored;
         }
 
-        // NEW: Function to properly display content with line breaks
         function displayContentWithLineBreaks(content) {
             if (!content) return '';
             
-            // Check if content has our storage marker
             if (content.includes('|||NEWLINE|||')) {
                 return restoreContentFromStorage(content);
             }
             
-            // If no marker, but has \n, display as is
             return content.replace(/\\n/g, '\n');
         }
 
         function markdownToHtml(text) {
             if (!text) return '';
             
-            // First restore line breaks if needed
             text = displayContentWithLineBreaks(text);
             
             let html = text;
@@ -2432,39 +2476,13 @@
             `;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: prompt
-                            }]
-                        }],
-                        generationConfig: {
-                            maxOutputTokens: 8000,
-                            temperature: 0.7,
-                            topP: 0.95,
-                            topK: 40,
-                        }
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.error?.message || 'Lỗi từ API');
-                }
-
-                const resultText = data.candidates[0].content.parts[0].text;
+                // Sử dụng hàm callGeminiAPI mới với logic chuyển đổi API
+                const resultText = await callGeminiAPI(prompt);
                 
                 const jsonMatch = resultText.match(/\{[\s\S]*\}/);
                 if (jsonMatch) {
                     const examData = JSON.parse(jsonMatch[0]);
                     
-                    // Process content for proper line break handling
                     if (examData.blocks) {
                         examData.blocks.forEach(block => {
                             if (block.content) {
@@ -2504,11 +2522,39 @@
                     };
                 }
             } catch (error) {
+                // Nếu có lỗi trong quá trình xử lý, thử lại với API khác
+                console.error('Lỗi khi gọi Gemini API:', error);
+                
+                try {
+                    // Thử lại với API khác
+                    const resultText = await retryWithDifferentAPI(error, prompt);
+                    
+                    const jsonMatch = resultText.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        const examData = JSON.parse(jsonMatch[0]);
+                        
+                        if (examData.blocks) {
+                            examData.blocks.forEach(block => {
+                                if (block.content) {
+                                    block.content = processContentForStorage(block.content);
+                                }
+                            });
+                        }
+                        
+                        if (!examData.workInfo && workInfo) {
+                            examData.workInfo = workInfo;
+                        }
+                        
+                        return examData;
+                    }
+                } catch (retryError) {
+                    throw new Error('Lỗi kết nối với Gemini API: ' + retryError.message);
+                }
+                
                 throw new Error('Lỗi kết nối với Gemini API: ' + error.message);
             }
         }
 
-        // NEW: Function to generate exam from AI prompt
         async function generateExamFromAIPrompt(promptText) {
             const fullPrompt = `
                 Tạo một đề thi Ngữ Văn hoàn chỉnh dựa trên yêu cầu sau:
@@ -2560,39 +2606,13 @@
             `;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: fullPrompt
-                            }]
-                        }],
-                        generationConfig: {
-                            maxOutputTokens: 8000,
-                            temperature: 0.7,
-                            topP: 0.95,
-                            topK: 40,
-                        }
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.error?.message || 'Lỗi từ API');
-                }
-
-                const resultText = data.candidates[0].content.parts[0].text;
+                // Sử dụng hàm callGeminiAPI mới
+                const resultText = await callGeminiAPI(fullPrompt);
                 
                 const jsonMatch = resultText.match(/\{[\s\S]*\}/);
                 if (jsonMatch) {
                     const examData = JSON.parse(jsonMatch[0]);
                     
-                    // Process content for proper line break handling
                     if (examData.blocks) {
                         examData.blocks.forEach(block => {
                             if (block.content) {
@@ -2606,7 +2626,29 @@
                     throw new Error('Không thể phân tích phản hồi từ AI');
                 }
             } catch (error) {
-                throw new Error('Lỗi kết nối với Gemini API: ' + error.message);
+                // Thử lại với API khác
+                try {
+                    const resultText = await retryWithDifferentAPI(error, fullPrompt);
+                    
+                    const jsonMatch = resultText.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        const examData = JSON.parse(jsonMatch[0]);
+                        
+                        if (examData.blocks) {
+                            examData.blocks.forEach(block => {
+                                if (block.content) {
+                                    block.content = processContentForStorage(block.content);
+                                }
+                            });
+                        }
+                        
+                        return examData;
+                    } else {
+                        throw new Error('Không thể phân tích phản hồi từ AI');
+                    }
+                } catch (retryError) {
+                    throw new Error('Lỗi kết nối với Gemini API: ' + retryError.message);
+                }
             }
         }
 
@@ -2689,7 +2731,8 @@
             try {
                 addProgressItem('Đang tải tác phẩm ngẫu nhiên...');
                 
-                const result = await fetchGemini(prompt);
+                // Sử dụng hàm callGeminiAPI mới
+                const result = await callGeminiAPI(prompt);
                 completeProgressItem(0);
                 
                 const lines = result.split('\n');
@@ -2727,17 +2770,61 @@
                 
                 return workInfo.content;
             } catch (error) {
-                console.error('Lỗi khi tạo văn bản ngẫu nhiên:', error);
-                errorProgressItem(0);
+                // Nếu API thất bại, dùng dữ liệu mẫu
+                console.error('Lỗi khi tải tác phẩm ngẫu nhiên:', error);
                 
-                currentRealWorkInfo = {
-                    title: "Chí Phèo",
-                    author: "Nam Cao",
-                    genre: "Truyện ngắn",
-                    content: processContentForStorage("Hắn vừa đi vừa chửi. Bao giờ cũng thế, cứ rượu xong là hắn chửi. Bắt đầu hắn chửi trời. Có hề gì? Trời có của riêng nhà nào? Rồi hắn chửi đời. Thế cũng chẳng sao: đời là tất cả nhưng chẳng là ai...")
-                };
-                
-                return currentRealWorkInfo.content;
+                try {
+                    // Thử lại với API khác
+                    const result = await retryWithDifferentAPI(error, prompt);
+                    completeProgressItem(0);
+                    
+                    const lines = result.split('\n');
+                    const workInfo = {
+                        title: '',
+                        author: '',
+                        genre: '',
+                        content: ''
+                    };
+                    
+                    let contentStarted = false;
+                    let contentLines = [];
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('TÁC PHẨM:')) {
+                            workInfo.title = line.replace('TÁC PHẨM:', '').trim();
+                        } else if (line.startsWith('TÁC GIẢ:')) {
+                            workInfo.author = line.replace('TÁC GIẢ:', '').trim();
+                        } else if (line.startsWith('THỂ LOẠI:')) {
+                            workInfo.genre = line.replace('THỂ LOẠI:', '').trim();
+                        } else if (line.trim() === '' && workInfo.title && !contentStarted) {
+                            contentStarted = true;
+                        } else if (contentStarted) {
+                            contentLines.push(line);
+                        }
+                    }
+                    
+                    workInfo.content = processContentForStorage(contentLines.join('\n').trim());
+                    
+                    if (!workInfo.title) workInfo.title = "Tác phẩm văn học";
+                    if (!workInfo.author) workInfo.author = "Tác giả";
+                    if (!workInfo.genre) workInfo.genre = "Văn học";
+                    
+                    currentRealWorkInfo = workInfo;
+                    
+                    return workInfo.content;
+                } catch (retryError) {
+                    // Dùng dữ liệu mẫu nếu tất cả API đều thất bại
+                    errorProgressItem(0);
+                    
+                    currentRealWorkInfo = {
+                        title: "Chí Phèo",
+                        author: "Nam Cao",
+                        genre: "Truyện ngắn",
+                        content: processContentForStorage("Hắn vừa đi vừa chửi. Bao giờ cũng thế, cứ rượu xong là hắn chửi. Bắt đầu hắn chửi trời. Có hề gì? Trời có của riêng nhà nào? Rồi hắn chửi đời. Thế cũng chẳng sao: đời là tất cả nhưng chẳng là ai...")
+                    };
+                    
+                    return currentRealWorkInfo.content;
+                }
             }
         }
 
@@ -2791,16 +2878,15 @@
                 completeProgressItem(3);
 
                 examResult.style.display = 'block';
-                showNotification('Tạo đề thi ngẫu nhiên thành công từ tác phẩm thật!', 'success');
 
             } catch (error) {
-                console.error('Lỗi khi tạo đề thi ngẫu nhiên:', error);
-                
                 let errorMessage = 'Đã xảy ra lỗi khi tạo đề thi ngẫu nhiên. ';
                 if (error.message.includes('timeout')) {
                     errorMessage += 'Yêu cầu mất quá nhiều thời gian. Vui lòng thử lại.';
                 } else if (error.message.includes('Failed after')) {
                     errorMessage += 'Không thể kết nối đến AI. Vui lòng kiểm tra kết nối internet và thử lại.';
+                } else if (error.message.includes('Tất cả API đã thất bại')) {
+                    errorMessage += 'Tất cả các API đều không hoạt động. Vui lòng thử lại sau.';
                 } else {
                     errorMessage += error.message;
                 }
@@ -2809,17 +2895,18 @@
                     <div class="exam-info" style="background: rgba(239, 68, 68, 0.1); border-color: #ef4444;">
                         <h3 style="color: #ef4444;"><i class="fas fa-exclamation-triangle"></i> Lỗi khi tạo đề thi ngẫu nhiên</h3>
                         <p>${errorMessage}</p>
+                        <p><strong>API đang sử dụng:</strong> ${API_ENDPOINTS[activeApiIndex]?.name || 'Không xác định'}</p>
                         <p><strong>Gợi ý:</strong></p>
                         <ul>
                             <li>Kiểm tra kết nối internet</li>
                             <li>Thử lại với tác giả khác</li>
                             <li>Thử lại sau vài phút</li>
+                            <li>Hệ thống sẽ tự động thử API khác nếu có lỗi</li>
                         </ul>
                     </div>
                 `;
                 
                 examResult.style.display = 'block';
-                showNotification(errorMessage, 'error');
                 
                 if (generationProgress.items.length > 0) {
                     const lastIndex = generationProgress.items.length - 1;
@@ -2864,7 +2951,6 @@
                 const examNotes = document.getElementById('examNotes').value;
 
                 if (currentCreationMode === 'text') {
-                    // Text mode
                     const text = document.getElementById('inputText').value.trim();
                     
                     if (!text) {
@@ -2881,7 +2967,7 @@
                     addProgressItem('Tạo câu hỏi đề thi');
                     addProgressItem('Hoàn thiện cấu trúc đề');
 
-                    const textTypeResponse = await fetchGemini(
+                    const textTypeResponse = await callGeminiAPI(
                         `Xác định thể loại chính xác của văn bản sau (chỉ trả về 1-3 từ): "${text.substring(0, 800)}"`
                     );
                     completeProgressItem(0);
@@ -2899,7 +2985,7 @@
                         `;
                         
                         try {
-                            const verificationResult = await fetchGemini(verificationPrompt);
+                            const verificationResult = await callGeminiAPI(verificationPrompt);
                             if (verificationResult.includes('CÓ') || verificationResult.includes('có')) {
                                 workInfo = {
                                     title: "Tác phẩm văn học",
@@ -2908,7 +2994,7 @@
                                 };
                             }
                         } catch (e) {
-                            console.warn("Không thể kiểm chứng tác phẩm:", e);
+                            // Bỏ qua lỗi xác minh
                         }
                     }
                     
@@ -2920,10 +3006,7 @@
                     showExamResult(examData, examNotes);
                     completeProgressItem(3);
 
-                    showNotification('Tạo đề thi thành công từ tác phẩm thật!', 'success');
-
                 } else if (currentCreationMode === 'ai') {
-                    // AI mode
                     const prompt = document.getElementById('aiPrompt').value.trim();
                     
                     if (!prompt) {
@@ -2947,10 +3030,7 @@
                     showExamResult(examData, examNotes);
                     completeProgressItem(3);
 
-                    showNotification('Tạo đề thi bằng AI thành công!', 'success');
-
                 } else if (currentCreationMode === 'blocky') {
-                    // Blocky mode
                     if (blockyBlocks.length === 0) {
                         throw new Error('Vui lòng thêm ít nhất một khối nội dung!');
                     }
@@ -2965,7 +3045,6 @@
                     await new Promise(resolve => setTimeout(resolve, 500));
                     completeProgressItem(1);
 
-                    // Convert blocky blocks to exam data format
                     examData = {
                         title: "ĐỀ THI NGỮ VĂN",
                         description: "Đề thi được tạo bằng chế độ Blocky",
@@ -2984,20 +3063,18 @@
 
                     showExamResult(examData, examNotes);
                     completeProgressItem(2);
-
-                    showNotification('Tạo đề thi bằng Blocky thành công!', 'success');
                 }
 
                 examResult.style.display = 'block';
 
             } catch (error) {
-                console.error('Lỗi khi tạo đề thi:', error);
-                
                 let errorMessage = 'Đã xảy ra lỗi khi tạo đề thi. ';
                 if (error.message.includes('timeout')) {
                     errorMessage += 'Yêu cầu mất quá nhiều thời gian. Vui lòng thử lại.';
                 } else if (error.message.includes('Failed after')) {
                     errorMessage += 'Không thể kết nối đến AI. Vui lòng kiểm tra kết nối internet và thử lại.';
+                } else if (error.message.includes('Tất cả API đã thất bại')) {
+                    errorMessage += 'Tất cả các API đều không hoạt động. Vui lòng thử lại sau.';
                 } else {
                     errorMessage += error.message;
                 }
@@ -3006,17 +3083,19 @@
                     <div class="exam-info" style="background: rgba(239, 68, 68, 0.1); border-color: #ef4444;">
                         <h3 style="color: #ef4444;"><i class="fas fa-exclamation-triangle"></i> Lỗi khi tạo đề thi</h3>
                         <p>${errorMessage}</p>
+                        <p><strong>API đang sử dụng:</strong> ${API_ENDPOINTS[activeApiIndex]?.name || 'Không xác định'}</p>
+                        <p><strong>Số lần thử lại:</strong> ${apiRetryCount}</p>
                         <p><strong>Gợi ý:</strong></p>
                         <ul>
                             <li>Kiểm tra kết nối internet</li>
                             <li>Thử lại với nội dung khác</li>
                             <li>Thử lại sau vài phút</li>
+                            <li>Hệ thống sẽ tự động thử API khác nếu có lỗi</li>
                         </ul>
                     </div>
                 `;
                 
                 examResult.style.display = 'block';
-                showNotification(errorMessage, 'error');
                 
                 if (generationProgress.items.length > 0) {
                     const lastIndex = generationProgress.items.length - 1;
@@ -3032,7 +3111,6 @@
             currentExamBlocks = examData.blocks || [];
             currentExamCode = generateExamCode();
             
-            // Restore line breaks for display
             currentExamBlocks.forEach(block => {
                 if (block.content && typeof block.content === 'string') {
                     block.content = displayContentWithLineBreaks(block.content);
@@ -3166,8 +3244,6 @@
         }
 
         async function testDatabaseConnection() {
-            showNotification('Đang kiểm tra kết nối cả 2 database...', 'info');
-            
             try {
                 if (firestoreDbPrimary) {
                     const testRef1 = firestoreDbPrimary.collection('_connection_tests').doc('test_' + Date.now());
@@ -3176,7 +3252,6 @@
                         timestamp: new Date().toISOString(),
                         db: 'primary'
                     });
-                    showNotification('✅ Database chính kết nối OK', 'success');
                     
                     setTimeout(() => {
                         testRef1.delete().catch(() => {});
@@ -3190,7 +3265,6 @@
                         timestamp: new Date().toISOString(),
                         db: 'secondary'
                     });
-                    showNotification('✅ Database phụ kết nối OK', 'success');
                     
                     setTimeout(() => {
                         testRef2.delete().catch(() => {});
@@ -3198,8 +3272,6 @@
                 }
                 
             } catch (error) {
-                console.error('Database test error:', error);
-                showNotification(`❌ Lỗi kết nối: ${error.message}`, 'error');
             }
         }
 
@@ -3211,7 +3283,6 @@
                 
                 const totalPoints = currentExamBlocks.reduce((sum, block) => sum + (block.points || 0), 0);
                 
-                // Prepare exam data with processed content for storage
                 const examDataToSave = {
                     examId: currentExamCode,
                     title: "Đề thi Ngữ Văn",
@@ -3228,17 +3299,15 @@
                     status: "active",
                     isRealWork: !!currentRealWorkInfo,
                     workInfo: currentRealWorkInfo || null,
-                    creationMode: currentCreationMode
+                    creationMode: currentCreationMode,
+                    apiUsed: API_ENDPOINTS[activeApiIndex]?.name || 'Unknown'
                 };
                 
-                // Process content for storage in each block
                 examDataToSave.blocks.forEach(block => {
                     if (block.content && typeof block.content === 'string') {
                         block.content = processContentForStorage(block.content);
                     }
                 });
-                
-                showNotification('Đang lưu đề thi vào cả 2 database...', 'info');
                 
                 const savePromises = [];
                 
@@ -3267,15 +3336,12 @@
                     { exists: false };
                 
                 if (savedDoc1.exists || savedDoc2.exists) {
-                    showNotification(`✅ Đã lưu đề thi thành công vào ${savedDoc1.exists && savedDoc2.exists ? 'cả 2 database' : savedDoc1.exists ? 'database chính' : 'database phụ'}! Mã đề: ${currentExamCode}`, 'success');
                     
                     const link = `${window.location.origin}/take_exam.html?code=${currentExamCode}`;
                     
                     setTimeout(() => {
                         navigator.clipboard.writeText(link).then(() => {
-                            showNotification(`📋 Link đề thi đã được sao chép vào clipboard!`, 'info');
                         }).catch(() => {
-                            showNotification(`📝 Link đề thi: ${link}`, 'info');
                         });
                     }, 1000);
                     
@@ -3292,8 +3358,6 @@
                 }
                 
             } catch (error) {
-                console.error('Lỗi khi lưu đề thi vào database:', error);
-                
                 try {
                     const localExams = JSON.parse(localStorage.getItem('vanw_exams_local') || '{}');
                     localExams[currentExamCode] = {
@@ -3309,13 +3373,12 @@
                         isRealWork: !!currentRealWorkInfo,
                         workInfo: currentRealWorkInfo,
                         savedAt: new Date().toISOString(),
-                        reason: "Firestore failed, saved locally"
+                        reason: "Firestore failed, saved locally",
+                        apiUsed: API_ENDPOINTS[activeApiIndex]?.name || 'Unknown'
                     };
                     localStorage.setItem('vanw_exams_local', JSON.stringify(localExams));
                     
-                    showNotification(`⚠️ Lưu vào database thất bại. Đã lưu vào localStorage (Mã: ${currentExamCode})`, 'warning');
                 } catch (localError) {
-                    showNotification(`❌ Lỗi: ${error.message} - Không thể lưu cả vào localStorage`, 'error');
                 }
             }
         }
@@ -3328,6 +3391,7 @@
             
             setTimeout(() => {
                 initRichTextEditors();
+                initAutoUpdate();
             }, 100);
             
             modal.classList.add('active');
@@ -3348,6 +3412,18 @@
                         </button>
                     </div>
                     
+                    <!-- Preview area -->
+                    <div id="editorPreviewArea" style="margin-bottom: 1.5rem; border: 2px solid var(--card-outline); border-radius: 8px; padding: 1rem; background: rgba(0, 0, 0, 0.02);">
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem; border-bottom: 1px solid var(--card-outline); padding-bottom: 0.5rem;">
+                            <i class="fas fa-eye mr-2"></i> XEM TRƯỚC ĐỀ THI
+                        </h4>
+                        <div id="editorPreviewContent">
+                            <p style="color: var(--text-secondary); text-align: center; padding: 1rem;">
+                                Thay đổi sẽ được hiển thị tự động tại đây...
+                            </p>
+                        </div>
+                    </div>
+                    
                     <div class="exam-blocks-container" id="examBlocksContainer">
             `;
             
@@ -3358,10 +3434,7 @@
             editorHTML += `
                     </div>
                     
-                    <div class="exam-actions">
-                        <button id="previewEditedExamBtn" class="exam-action-btn preview-btn">
-                            <i class="fas fa-eye mr-2"></i> Xem trước
-                        </button>
+                    <div class="exam-actions" style="margin-top: 2rem;">
                         <button id="saveEditedExamBtn" class="exam-action-btn save-btn">
                             <i class="fas fa-save mr-2"></i> Lưu thay đổi
                         </button>
@@ -3451,25 +3524,33 @@
                     quill: quill,
                     textareaId: textareaId
                 };
-                
-                quill.on('text-change', function() {
-                    if (textarea) {
-                        textarea.value = quill.root.innerHTML;
-                    }
-                });
             });
         }
 
-        function updateExamFromEditor() {
-            const blocksContainer = document.getElementById('examBlocksContainer');
+        function initAutoUpdate() {
+            // Thêm sự kiện cho tất cả các input
+            document.querySelectorAll('.block-title, .block-points-input, .block-type-select').forEach(input => {
+                input.addEventListener('input', updateEditorPreview);
+                input.addEventListener('change', updateEditorPreview);
+            });
             
-            if (!blocksContainer) {
-                console.log('Trình chỉnh sửa không mở, bỏ qua cập nhật từ editor');
-                return;
-            }
+            // Thêm sự kiện cho các quill editor
+            richTextEditors.forEach(editor => {
+                if (editor.quill) {
+                    editor.quill.on('text-change', updateEditorPreview);
+                }
+            });
+            
+            // Cập nhật preview ngay lần đầu
+            updateEditorPreview();
+        }
+
+        function updateEditorPreview() {
+            // Lưu tạm thời các thay đổi
+            const blocksContainer = document.getElementById('examBlocksContainer');
+            if (!blocksContainer) return;
             
             const blockElements = blocksContainer.querySelectorAll('.exam-block-editor');
-            
             const updatedBlocks = [];
             
             const blockArray = Array.from(blockElements);
@@ -3499,12 +3580,53 @@
                 updatedBlocks.push(blockData);
             });
             
+            // Hiển thị preview
+            const previewContent = document.getElementById('editorPreviewContent');
+            
+            if (previewContent) {
+                let previewHTML = '';
+                let questionCounter = 1;
+                
+                updatedBlocks.forEach((block, index) => {
+                    if (block.type === 'text') {
+                        previewHTML += `
+                            <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(0,0,0,0.02); border-radius: 4px; border-left: 3px solid var(--primary-color);">
+                                <h5 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">${block.title || 'Phần văn bản'}</h5>
+                                <div style="white-space: pre-wrap; font-family: 'Times New Roman', Times, serif;">${markdownToHtml(block.content)}</div>
+                            </div>
+                        `;
+                    } else if (block.type === 'question') {
+                        previewHTML += `
+                            <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid var(--card-outline); border-radius: 4px;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                                    <div style="flex: 1;"><strong>Câu ${questionCounter}:</strong> ${markdownToHtml(block.content)}</div>
+                                    <div style="background: var(--primary-color); color: white; padding: 0.1rem 0.5rem; border-radius: 10px; font-size: 0.8rem; flex-shrink: 0;">${block.points || 1.0} điểm</div>
+                                </div>
+                                <div style="min-height: 40px; border: 1px dashed #ccc; padding: 0.5rem; font-size: 0.9rem; color: #666; background: rgba(0,0,0,0.02);">
+                                    [Khu vực trả lời của thí sinh]
+                                </div>
+                            </div>
+                        `;
+                        questionCounter++;
+                    }
+                });
+                
+                if (previewHTML === '') {
+                    previewHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 1rem;">Chưa có nội dung để hiển thị</p>';
+                }
+                
+                previewContent.innerHTML = previewHTML;
+            }
+            
+            // Lưu các thay đổi vào currentExamBlocks
             currentExamBlocks = updatedBlocks;
         }
 
+        function updateExamFromEditor() {
+            updateEditorPreview(); // Gọi hàm này để cập nhật currentExamBlocks
+        }
+
         function reorderBlocks() {
-            showNotification('Kéo và thả các block để sắp xếp lại', 'info');
-            
             updateExamFromEditor();
             
             const modal = document.getElementById('editExamModal');
@@ -3528,37 +3650,83 @@
             const blocksContainer = document.getElementById('examBlocksContainer');
             blocksContainer.insertAdjacentHTML('beforeend', createBlockEditorHTML(newBlock, currentExamBlocks.length - 1));
             
-            initRichTextEditors();
+            // Khởi tạo editor mới
+            const newIndex = currentExamBlocks.length - 1;
+            const editorId = `editor-${newIndex}`;
+            const textareaId = `editor-text-${newIndex}`;
+            
+            const quill = new Quill(`#${editorId}`, {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline'],
+                        [{ 'header': 1 }, { 'header': 2 }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ]
+                },
+                placeholder: 'Nhập nội dung...'
+            });
+            
+            richTextEditors[newIndex] = {
+                quill: quill,
+                textareaId: textareaId
+            };
+            
+            // Thêm sự kiện cho editor mới
+            quill.on('text-change', updateEditorPreview);
+            
+            // Thêm sự kiện cho các input mới
+            const blockElement = document.querySelector(`[data-index="${newIndex}"]`);
+            if (blockElement) {
+                blockElement.querySelector('.block-title').addEventListener('input', updateEditorPreview);
+                blockElement.querySelector('.block-type-select').addEventListener('change', updateEditorPreview);
+                const pointsInput = blockElement.querySelector('.block-points-input');
+                if (pointsInput) {
+                    pointsInput.addEventListener('input', updateEditorPreview);
+                }
+            }
+            
+            // Cập nhật preview
+            updateEditorPreview();
         }
 
         function deleteBlock(index) {
             if (currentExamBlocks.length <= 1) {
-                showNotification('Đề thi phải có ít nhất một phần!', 'error');
+                alert('Cần ít nhất một khối nội dung!');
                 return;
             }
             
             currentExamBlocks.splice(index, 1);
+            richTextEditors.splice(index, 1);
             
+            // Tạo lại giao diện
             const editorContainer = document.getElementById('examEditorContainer');
             editorContainer.innerHTML = createExamEditorHTML();
             
             setTimeout(() => {
                 initRichTextEditors();
+                initAutoUpdate();
             }, 100);
         }
 
         function moveBlock(index, direction) {
             if (direction === 'up' && index > 0) {
+                // Hoán đổi vị trí trong mảng
                 [currentExamBlocks[index], currentExamBlocks[index - 1]] = [currentExamBlocks[index - 1], currentExamBlocks[index]];
+                [richTextEditors[index], richTextEditors[index - 1]] = [richTextEditors[index - 1], richTextEditors[index]];
             } else if (direction === 'down' && index < currentExamBlocks.length - 1) {
                 [currentExamBlocks[index], currentExamBlocks[index + 1]] = [currentExamBlocks[index + 1], currentExamBlocks[index]];
+                [richTextEditors[index], richTextEditors[index + 1]] = [richTextEditors[index + 1], richTextEditors[index]];
             }
             
+            // Tạo lại giao diện
             const editorContainer = document.getElementById('examEditorContainer');
             editorContainer.innerHTML = createExamEditorHTML();
             
             setTimeout(() => {
                 initRichTextEditors();
+                initAutoUpdate();
             }, 100);
         }
 
@@ -3577,8 +3745,6 @@
             
             const examNotes = document.getElementById('examNotes').value;
             showExamResult(examData, examNotes);
-            
-            showNotification('Đã lưu thay đổi đề thi!', 'success');
         }
 
         function updateExamPreview() {
@@ -3662,14 +3828,13 @@
                 isRealWork: !!currentRealWorkInfo,
                 workInfo: currentRealWorkInfo,
                 createdAt: new Date().toISOString(),
-                totalPoints: currentExamBlocks.reduce((sum, block) => sum + (block.points || 0), 0)
+                totalPoints: currentExamBlocks.reduce((sum, block) => sum + (block.points || 0), 0),
+                apiUsed: API_ENDPOINTS[activeApiIndex]?.name || 'Unknown'
             };
             
             const savedExams = JSON.parse(localStorage.getItem('vanw_exams') || '[]');
             savedExams.push(examData);
             localStorage.setItem('vanw_exams', JSON.stringify(savedExams));
-            
-            showNotification(`Đã lưu đề thi thành công! Mã đề: ${currentExamCode}`, 'success');
         }
 
         function printExam() {
@@ -3843,7 +4008,6 @@
             printWindow.document.close();
         }
 
-        // NEW: Blocky Mode Functions với rich text editor
         function addBlockyBlock(type) {
             const blockId = Date.now();
             const block = {
@@ -3856,16 +4020,10 @@
             
             blockyBlocks.push(block);
             renderBlockyBlocks();
-            
-            // Initialize rich text editor for the new block
-            setTimeout(() => {
-                initBlockyEditor(blockId);
-            }, 100);
         }
 
         function removeBlockyBlock(blockId) {
             blockyBlocks = blockyBlocks.filter(block => block.id !== blockId);
-            // Remove from editors array
             blockyEditors = blockyEditors.filter(editor => editor.blockId !== blockId);
             renderBlockyBlocks();
         }
@@ -3888,25 +4046,19 @@
             }
             
             renderBlockyBlocks();
-            
-            // Reinitialize editors
-            setTimeout(() => {
-                blockyBlocks.forEach(block => {
-                    initBlockyEditor(block.id);
-                });
-            }, 100);
         }
 
         function initBlockyEditor(blockId) {
             const editorContainer = document.querySelector(`[data-block-id="${blockId}"] .blocky-rich-editor`);
             if (!editorContainer) return;
             
-            // Remove existing editor if any
+            // Xóa editor cũ nếu tồn tại
             const existingEditor = blockyEditors.find(editor => editor.blockId === blockId);
             if (existingEditor && existingEditor.quill) {
                 existingEditor.quill.root.innerHTML = '';
             }
             
+            // Tạo editor mới với chỉ MỘT toolbar
             const quill = new Quill(editorContainer, {
                 theme: 'snow',
                 modules: {
@@ -3925,12 +4077,10 @@
                 quill.root.innerHTML = markdownToHtml(displayContentWithLineBreaks(block.content));
             }
             
-            // Update content on change
             quill.on('text-change', function() {
                 updateBlockyBlock(blockId, 'content', quill.root.innerHTML);
             });
             
-            // Add to editors array
             const editorIndex = blockyEditors.findIndex(editor => editor.blockId === blockId);
             if (editorIndex > -1) {
                 blockyEditors[editorIndex] = { blockId, quill };
@@ -4008,7 +4158,7 @@
             
             previewContainer.innerHTML = html;
             
-            // Initialize editors
+            // Khởi tạo editors
             setTimeout(() => {
                 blockyBlocks.forEach(block => {
                     initBlockyEditor(block.id);
@@ -4023,7 +4173,6 @@
                 blockyBlocks = [];
                 blockyEditors = [];
                 renderBlockyBlocks();
-                showNotification('Đã xóa tất cả các khối', 'success');
             }
         }
 
@@ -4143,7 +4292,6 @@
             const closePreviewBtn = document.getElementById('closePreviewBtn');
             const printPreviewBtn = document.getElementById('printPreviewBtn');
             const cancelEditBtn = document.getElementById('cancelEditBtn');
-            const saveEditedExamBtn = document.getElementById('saveEditedExamBtn');
             
             closeButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -4163,13 +4311,6 @@
             if (cancelEditBtn) {
                 cancelEditBtn.addEventListener('click', function() {
                     editModal.classList.remove('active');
-                });
-            }
-            
-            if (saveEditedExamBtn) {
-                saveEditedExamBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    saveEditedExam();
                 });
             }
             
@@ -4325,13 +4466,6 @@
                     reorderBlocks();
                 }
                 
-                if (e.target && e.target.id === 'previewEditedExamBtn') {
-                    e.preventDefault();
-                    updateExamFromEditor();
-                    updateExamPreview();
-                    editModal.classList.remove('active');
-                }
-                
                 if (e.target && e.target.closest('.block-btn.delete')) {
                     e.preventDefault();
                     const btn = e.target.closest('.block-btn.delete');
@@ -4353,19 +4487,21 @@
                     moveBlock(index, 'down');
                 }
                 
-                // Clear blocks in blocky mode
                 if (e.target && e.target.id === 'clearBlocksBtn') {
                     e.preventDefault();
                     clearBlockyBlocks();
                 }
+                
+                if (e.target && e.target.id === 'saveEditedExamBtn') {
+                    e.preventDefault();
+                    saveEditedExam();
+                }
             });
         }
 
-        // NEW: Function to switch creation mode
         function switchCreationMode(mode) {
             currentCreationMode = mode;
             
-            // Update active tab
             document.querySelectorAll('.mode-tab').forEach(tab => {
                 if (tab.dataset.mode === mode) {
                     tab.classList.add('active');
@@ -4374,7 +4510,6 @@
                 }
             });
             
-            // Show/hide mode content
             document.querySelectorAll('.mode-content').forEach(content => {
                 if (content.id === `mode-${mode}`) {
                     content.classList.add('active');
@@ -4383,14 +4518,12 @@
                 }
             });
             
-            // Update action buttons layout based on mode
             const actionButtonsContainer = document.getElementById('actionButtonsContainer');
             const generateBtn = document.getElementById('generateExamBtn');
             const randomBtn = document.getElementById('generateRandomExamBtn');
             const settingsBtn = document.getElementById('settingsBtn');
             
             if (mode === 'text') {
-                // Text mode: có nút ngẫu nhiên và settings nằm cùng hàng
                 actionButtonsContainer.className = 'action-buttons text-mode';
                 actionButtonsContainer.innerHTML = `
                     <div class="left-buttons">
@@ -4408,13 +4541,11 @@
                     </div>
                 `;
                 
-                // Reattach event listeners
                 document.getElementById('generateExamBtn').addEventListener('click', generateExam);
                 document.getElementById('generateRandomExamBtn').addEventListener('click', generateRandomExam);
                 document.getElementById('settingsBtn').addEventListener('click', toggleSettingsPanel);
                 
             } else if (mode === 'ai') {
-                // AI mode: không có nút ngẫu nhiên, settings và generate nằm cùng hàng
                 actionButtonsContainer.className = 'action-buttons ai-mode';
                 actionButtonsContainer.innerHTML = `
                     <div class="left-buttons">
@@ -4427,12 +4558,10 @@
                     </div>
                 `;
                 
-                // Reattach event listeners
                 document.getElementById('generateExamBtn').addEventListener('click', generateExam);
                 document.getElementById('settingsBtn').addEventListener('click', toggleSettingsPanel);
                 
             } else if (mode === 'blocky') {
-                // Blocky mode: không có nút ngẫu nhiên, settings và generate nằm cùng hàng
                 actionButtonsContainer.className = 'action-buttons blocky-mode';
                 actionButtonsContainer.innerHTML = `
                     <div class="left-buttons">
@@ -4445,18 +4574,15 @@
                     </div>
                 `;
                 
-                // Reattach event listeners
                 document.getElementById('generateExamBtn').addEventListener('click', generateExam);
                 document.getElementById('settingsBtn').addEventListener('click', toggleSettingsPanel);
             }
             
-            // Show notification
             const modeNames = {
                 'text': 'Tạo theo văn bản',
                 'ai': 'Tạo bằng AI',
                 'blocky': 'Tạo Blocky'
             };
-            showNotification(`Đã chuyển sang chế độ: ${modeNames[mode]}`, 'info');
         }
 
         function toggleSettingsPanel() {
@@ -4478,7 +4604,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Setup mode switching
             document.querySelectorAll('.mode-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     const mode = this.dataset.mode;
@@ -4486,14 +4611,12 @@
                 });
             });
             
-            // Initialize blocky functions in global scope
             window.addBlockyBlock = addBlockyBlock;
             window.removeBlockyBlock = removeBlockyBlock;
             window.updateBlockyBlock = updateBlockyBlock;
             window.moveBlockyBlock = moveBlockyBlock;
             window.clearBlockyBlocks = clearBlockyBlocks;
             
-            // Attach initial event listeners for text mode (default)
             const generateExamBtn = document.getElementById('generateExamBtn');
             if (generateExamBtn) {
                 generateExamBtn.addEventListener('click', generateExam);
@@ -4570,17 +4693,23 @@
                     font-size: 1rem;
                     font-weight: 500;
                 }
+                
+                #editExamModal .modal-footer {
+                    display: none;
+                }
             `;
             document.head.appendChild(style);
             
             document.getElementById('inputText')?.focus();
             
-            if (firestoreDbPrimary && firestoreDbSecondary) {
-                console.log('Cả 2 Firestore Databases đã sẵn sàng để lưu đề thi');
-            }
-            
-            // Initialize blocky blocks
             renderBlockyBlocks();
+            
+            // Log API status khi khởi động
+            console.log('API Status:');
+            API_ENDPOINTS.forEach((api, index) => {
+                console.log(`${index + 1}. ${api.name}: ${api.active ? 'Active' : 'Inactive'}`);
+            });
+            console.log(`Active API: ${API_ENDPOINTS[activeApiIndex]?.name || 'None'}`);
         });
     </script>
 </body>
