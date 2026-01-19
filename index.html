@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VANW</title>
-    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -15,16 +15,13 @@
         
         @layer demo {
             body {
-                align-content: center;
-                gap: 2rem;
                 margin: 0;
-                padding: 2rem;
+                padding: 0;
                 min-height: 100vh;
-                display: grid;
-                place-items: center;
                 background-color: #f5f5f5;
                 color: #000000;
                 transition: background-color 0.5s ease, color 0.5s ease;
+                overflow-x: hidden;
             }
             
             .app-container {
@@ -57,7 +54,6 @@
             }
             
             main {
-                touch-action: none;
                 padding-block: 2rem;
                 width: 100%;
                 display: flex;
@@ -66,11 +62,10 @@
                 justify-content: center;
             }
             
-            /* Sửa article thành hình vuông */
             article {
                 -webkit-tap-highlight-color: #0000;
-                width: 280px; /* Hình vuông */
-                height: 280px; /* Hình vuông */
+                width: 280px;
+                height: 280px;
                 outline: 3px solid #ed7839;
                 background: #ffffff;
                 position: relative;
@@ -93,20 +88,18 @@
                 inset: 0;
                 border-radius: 12px;
                 overflow: hidden;
-                background-color: #ffffff; /* Nền trắng cho khối */
+                background-color: #ffffff;
             }
             
-            /* Container cho necon chỉ chiếm 70% diện tích */
             .necon-container {
-                width: 70%; /* Chiếm 70% chiều rộng */
-                height: 70%; /* Chiếm 70% chiều cao */
-                background-size: contain; /* Giữ nguyên tỉ lệ ảnh */
+                width: 70%;
+                height: 70%;
+                background-size: contain;
                 background-position: center;
                 background-repeat: no-repeat;
                 transition: transform 0.3s ease;
             }
             
-            /* Hiệu ứng nâng lên khi hover */
             article:hover {
                 transform: translateY(-10px);
                 box-shadow: 0 15px 30px rgba(237, 120, 57, 0.3);
@@ -114,7 +107,7 @@
             }
             
             article:hover .necon-container {
-                transform: scale(1.05); /* Phóng nhẹ necon khi hover */
+                transform: scale(1.05);
             }
             
             article:active {
@@ -141,7 +134,6 @@
                 position: relative;
             }
             
-            /* Thanh mở rộng với hình nền logo - Nhỏ và dài ra */
             .liquidGlass-wrapper {
                 position: relative;
                 display: flex;
@@ -154,7 +146,7 @@
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
                 border-radius: 12px;
                 padding: 0.8rem 1.5rem;
-                background: url('logtext.png') center center no-repeat;
+                background: url('assets/logtext.png') center center no-repeat;
                 background-size: contain;
                 background-color: #ffffff;
                 height: 60px;
@@ -180,7 +172,6 @@
                 transform: translateY(3px);
             }
             
-            /* Dropdown container với khối lớn bao quanh */
             .features-dropdown {
                 max-height: 0;
                 overflow: hidden;
@@ -213,11 +204,10 @@
                 padding: 1rem;
             }
             
-            /* Feature item - hình vuông */
             .feature-item {
                 -webkit-tap-highlight-color: #0000;
                 width: 200px;
-                height: 200px; /* Hình vuông */
+                height: 200px;
                 outline: 3px solid #ed7839;
                 background: #ffffff;
                 position: relative;
@@ -240,14 +230,13 @@
                 inset: 0;
                 border-radius: 12px;
                 overflow: hidden;
-                background-color: #ffffff; /* Nền trắng cho khối */
+                background-color: #ffffff;
             }
             
-            /* Container cho necon trong feature item chỉ chiếm 70% diện tích */
             .feature-necon-container {
-                width: 70%; /* Chiếm 70% chiều rộng */
-                height: 70%; /* Chiếm 70% chiều cao */
-                background-size: contain; /* Giữ nguyên tỉ lệ ảnh */
+                width: 70%;
+                height: 70%;
+                background-size: contain;
                 background-position: center;
                 background-repeat: no-repeat;
                 transition: transform 0.3s ease;
@@ -260,7 +249,7 @@
             }
             
             .feature-item:hover .feature-necon-container {
-                transform: scale(1.05); /* Phóng nhẹ necon khi hover */
+                transform: scale(1.05);
             }
             
             .feature-item:active {
@@ -280,7 +269,6 @@
                 transform: translateZ(0);
             }
             
-            /* THANH KHÁM PHÁ CÁC TÍNH NĂNG RIÊNG LẺ - THÊM MỚI */
             .features-individual-section {
                 width: 100%;
                 max-width: 800px;
@@ -288,7 +276,6 @@
                 position: relative;
             }
             
-            /* Thanh mở rộng với hình nền logtext2.png */
             .features-individual-wrapper {
                 position: relative;
                 display: flex;
@@ -301,7 +288,7 @@
                 transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
                 border-radius: 12px;
                 padding: 0.8rem 1.5rem;
-                background: url('logtext2.png') center center no-repeat;
+                background: url('assets/logtext2.png') center center no-repeat;
                 background-size: contain;
                 background-color: #ffffff;
                 height: 60px;
@@ -327,7 +314,6 @@
                 transform: translateY(3px);
             }
             
-            /* Dropdown container cho tính năng riêng lẻ */
             .individual-dropdown {
                 max-height: 0;
                 overflow: hidden;
@@ -360,11 +346,10 @@
                 padding: 1rem;
             }
             
-            /* Individual item - hình vuông */
             .individual-item {
                 -webkit-tap-highlight-color: #0000;
                 width: 200px;
-                height: 200px; /* Hình vuông */
+                height: 200px;
                 outline: 3px solid #ed7839;
                 background: #ffffff;
                 position: relative;
@@ -390,7 +375,6 @@
                 background-color: #ffffff;
             }
             
-            /* Container cho necon trong individual item chỉ chiếm 70% diện tích */
             .individual-necon-container {
                 width: 70%;
                 height: 70%;
@@ -471,7 +455,7 @@
             }
             
             .footer-links a {
-                color: #ed7839; /* Đổi màu thành màu cam */
+                color: #ed7839;
                 text-decoration: none;
                 font-weight: 600;
                 transition: color 0.3s ease;
@@ -479,12 +463,34 @@
             
             .footer-links a:hover {
                 text-decoration: underline;
-                color: #ff8c42; /* Màu cam sáng hơn khi hover */
+                color: #ff8c42;
+            }
+            
+            .loading-text {
+                color: #ff6600;
+                font-size: 1rem;
+                font-weight: 600;
+                margin-top: -50px;
+                animation: pulse 1.5s infinite;
+                text-align: center;
+            }
+            
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.6; }
             }
             
             @media (max-width: 768px) {
+                body {
+                    overflow-y: auto;
+                    -webkit-overflow-scrolling: touch;
+                    height: 100%;
+                }
+                
                 .app-container {
                     padding: 1rem;
+                    min-height: auto;
+                    overflow-y: visible;
                 }
                 
                 .app-header {
@@ -503,6 +509,7 @@
                 main {
                     gap: 1.5rem;
                     padding-block: 1rem;
+                    overflow: visible;
                 }
                 
                 article {
@@ -513,6 +520,7 @@
                 .liquid-glass-section,
                 .features-individual-section {
                     margin: 1.5rem auto 2rem;
+                    overflow: visible;
                 }
                 
                 .liquidGlass-wrapper,
@@ -524,12 +532,14 @@
                 .features-dropdown.active,
                 .individual-dropdown.active {
                     padding: 15px;
+                    overflow: visible;
                 }
                 
                 .features-grid,
                 .individual-grid {
                     gap: 1rem;
                     padding: 0.5rem;
+                    overflow: visible;
                 }
                 
                 .feature-item,
@@ -546,15 +556,21 @@
                 .footer-content {
                     gap: 1.5rem;
                 }
+                
+                .loading-text {
+                    font-size: 0.7rem;
+                }
             }
             
             @media (max-width: 480px) {
                 body {
-                    padding: 1rem;
+                    padding: 0;
+                    overflow-y: auto;
                 }
                 
                 .app-container {
                     padding: 0.5rem;
+                    overflow-y: visible;
                 }
                 
                 .app-header img {
@@ -589,6 +605,10 @@
                 .logout-btn {
                     padding: 8px 25px;
                     font-size: 0.9rem;
+                }
+                
+                .loading-text {
+                    font-size: 0.85rem;
                 }
             }
             
@@ -810,82 +830,75 @@
                     <circle class="dot" cx="100" cy="100" r="6" />
                 </g>
             </svg>
+            <div class="loading-text">Đang tải...</div>
         </div>
     </div>
     
     <div class="app-container" id="mainContent" style="display: none;">
         <header class="app-header">
-            <img src="text.png" alt="VANW" />
+            <img src="assets/text.png" alt="VANW" />
             <p>Khám phá thế giới văn học một cách dễ dàng và tiện lợi.</p>
         </header>
         
         <main>
-            <!-- 3 khối chính với necon chiếm 70% diện tích ở trung tâm -->
             <article onclick="navigateTo('khampha.html')">
                 <div>
-                    <div class="necon-container" style="background-image: url('necon1.png');"></div>
+                    <div class="necon-container" style="background-image: url('assets/necon1.png');"></div>
                 </div>
             </article>
             <article onclick="navigateTo('vangv.html')">
                 <div>
-                    <div class="necon-container" style="background-image: url('necon2.png');"></div>
+                    <div class="necon-container" style="background-image: url('assets/necon2.png');"></div>
                 </div>
             </article>
             <article onclick="navigateTo('bieucam.html')">
                 <div>
-                    <div class="necon-container" style="background-image: url('necon3.png');"></div>
+                    <div class="necon-container" style="background-image: url('assets/necon3.png');"></div>
                 </div>
             </article>
         </main>
         
         <div class="liquid-glass-section">
-            <!-- Thanh mở rộng với hình nền logo - nhỏ và dài -->
             <div class="liquidGlass-wrapper" id="liquidGlassBar">
                 <i class="fas fa-chevron-down"></i>
             </div>
             
-            <!-- Dropdown với khối lớn bao quanh 3 khối nhỏ -->
             <div class="features-dropdown" id="featuresDropdown">
                 <div class="features-grid">
-                    <!-- 3 khối thi thử với necon chiếm 70% diện tích ở trung tâm -->
                     <div class="feature-item" onclick="navigateTo('taode.html')">
                         <div>
-                            <div class="feature-necon-container" style="background-image: url('necon4.png');"></div>
+                            <div class="feature-necon-container" style="background-image: url('assets/necon4.png');"></div>
                         </div>
                     </div>
                     <div class="feature-item" onclick="navigateTo('take_exam.html')">
                         <div>
-                            <div class="feature-necon-container" style="background-image: url('necon5.png');"></div>
+                            <div class="feature-necon-container" style="background-image: url('assets/necon5.png');"></div>
                         </div>
                     </div>
                     <div class="feature-item" onclick="navigateTo('quanly.html')">
                         <div>
-                            <div class="feature-necon-container" style="background-image: url('necon6.png');"></div>
+                            <div class="feature-necon-container" style="background-image: url('assets/necon6.png');"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- THÊM MỚI: Thanh khám phá các tính năng riêng lẻ -->
         <div class="features-individual-section">
-            <!-- Thanh mở rộng với hình nền logtext2.png -->
             <div class="features-individual-wrapper" id="featuresIndividualBar">
                 <i class="fas fa-chevron-down"></i>
             </div>
             
-            <!-- Dropdown với khối lớn bao quanh 2 khối nhỏ -->
             <div class="individual-dropdown" id="individualDropdown">
                 <div class="individual-grid">
-                    <!-- 2 khối tính năng riêng lẻ với necon chiếm 70% diện tích ở trung tâm -->
                     <div class="individual-item" onclick="navigateTo('bando-l.html')">
                         <div>
-                            <div class="individual-necon-container" style="background-image: url('necon7.png');"></div>
+                            <div class="individual-necon-container" style="background-image: url('assets/necon7.png');"></div>
                         </div>
                     </div>
                     <div class="individual-item" onclick="navigateTo('chatbot-l.html')">
                         <div>
-                            <div class="individual-necon-container" style="background-image: url('necon8.png');"></div>
+                            <div class="individual-necon-container" style="background-image: url('assets/necon8.png');"></div>
                         </div>
                     </div>
                 </div>
@@ -911,7 +924,7 @@
     </svg>
     
     <a aria-label="Website Icon" class="web-icon" href="#" target="_blank" rel="noreferrer noopener">
-        <img src="logo.png" alt="Website Icon" />
+        <img src="assets/logo.png" alt="Website Icon" />
     </a>
 
     <script>
@@ -1065,12 +1078,10 @@
             }, 3000);
         }
 
-        // Xử lý thanh thi thử
         const liquidGlassBar = document.getElementById('liquidGlassBar');
         const featuresDropdown = document.getElementById('featuresDropdown');
         const chevronIcon = liquidGlassBar.querySelector('i');
         
-        // Xử lý thanh khám phá tính năng riêng lẻ
         const featuresIndividualBar = document.getElementById('featuresIndividualBar');
         const individualDropdown = document.getElementById('individualDropdown');
         const chevronIconIndividual = featuresIndividualBar.querySelector('i');
@@ -1085,13 +1096,11 @@
             }
         }
         
-        // Sự kiện cho thanh thi thử
         liquidGlassBar.addEventListener('click', function(e) {
             e.stopPropagation();
             featuresDropdown.classList.toggle('active');
             liquidGlassBar.classList.toggle('active');
             
-            // Đóng thanh khám phá tính năng riêng lẻ nếu đang mở
             if (individualDropdown.classList.contains('active')) {
                 individualDropdown.classList.remove('active');
                 featuresIndividualBar.classList.remove('active');
@@ -1115,13 +1124,11 @@
             }
         });
         
-        // Sự kiện cho thanh khám phá tính năng riêng lẻ
         featuresIndividualBar.addEventListener('click', function(e) {
             e.stopPropagation();
             individualDropdown.classList.toggle('active');
             featuresIndividualBar.classList.toggle('active');
             
-            // Đóng thanh thi thử nếu đang mở
             if (featuresDropdown.classList.contains('active')) {
                 featuresDropdown.classList.remove('active');
                 liquidGlassBar.classList.remove('active');
@@ -1145,7 +1152,6 @@
             }
         });
         
-        // Hiệu ứng hover cho thanh thi thử
         liquidGlassBar.addEventListener('mouseenter', function() {
             if (!featuresDropdown.classList.contains('active')) {
                 this.style.transform = 'translateY(-5px)';
@@ -1160,7 +1166,6 @@
             }
         });
         
-        // Hiệu ứng hover cho thanh khám phá tính năng riêng lẻ
         featuresIndividualBar.addEventListener('mouseenter', function() {
             if (!individualDropdown.classList.contains('active')) {
                 this.style.transform = 'translateY(-5px)';
@@ -1175,9 +1180,7 @@
             }
         });
         
-        // Đóng dropdown khi click ra ngoài
         document.addEventListener('click', function(event) {
-            // Kiểm tra click bên ngoài thanh thi thử
             if (!liquidGlassBar.contains(event.target) && !featuresDropdown.contains(event.target)) {
                 featuresDropdown.classList.remove('active');
                 liquidGlassBar.classList.remove('active');
@@ -1190,7 +1193,6 @@
                 }
             }
             
-            // Kiểm tra click bên ngoài thanh khám phá tính năng riêng lẻ
             if (!featuresIndividualBar.contains(event.target) && !individualDropdown.contains(event.target)) {
                 individualDropdown.classList.remove('active');
                 featuresIndividualBar.classList.remove('active');
@@ -1204,7 +1206,6 @@
             }
         });
         
-        // Xử lý click cho các feature item
         document.querySelectorAll('.feature-item, .individual-item').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -1221,7 +1222,6 @@
             });
         });
         
-        // Thêm hiệu ứng hover cho 3 khối chính
         document.querySelectorAll('article').forEach(item => {
             item.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-10px)';
@@ -1248,7 +1248,6 @@
             });
         });
         
-        // Đóng dropdown khi nhấn Escape
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 if (featuresDropdown.classList.contains('active')) {
@@ -1271,7 +1270,6 @@
             }
         });
         
-        // Cập nhật kích thước dropdown khi resize
         window.addEventListener('resize', function() {
             if (featuresDropdown.classList.contains('active')) {
                 setTimeout(() => updateDropdownHeight(featuresDropdown, '.features-grid'), 100);
@@ -1281,14 +1279,11 @@
             }
         });
         
-        // Xử lý đăng xuất
         document.getElementById('logoutBtn').addEventListener('click', logout);
         
-        // Khởi tạo
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthState();
         });
     </script>
 </body>
 </html>
-

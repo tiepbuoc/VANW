@@ -1,40 +1,91 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VANW | Chatbot AI Văn Học</title>
-    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
     <style>
-        /* Reset và font chữ */
+        /* CSS loading screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            z-index: 9999;
+            background-color: white;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loading-container {
+            text-align: center;
+        }
+        
+        .loading-container h1 {
+            margin-bottom: 30px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: #ff6600;
+        }
+        
+        .loading-screen svg {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .loading-screen .dot {
+            transition: cx 0.5s cubic-bezier(0.3, 1.4, 0.4, 1),
+                        cy 0.5s cubic-bezier(0.3, 1.4, 0.4, 1),
+                        r 0.5s cubic-bezier(0.3, 1.4, 0.4, 1);
+        }
+        
+        .loading-screen .dot {
+            fill: #ff8441;
+        }
+        
+        .loading-screen #gooey {
+            transform-origin: 100px 100px;
+            transition: transform 0.5s linear;
+        }
+
+        .loading-text {
+            color: #ff6600;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 20px;
+            animation: pulse 1.5s infinite;
+            text-align: center;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* CSS chính */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
         body {
             line-height: 1.6;
             color: #333;
             background-color: #f5f5f5;
         }
-        
-        /* Chatbot Styles */
         .app-container {
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
-        
         .sidebar {
             width: 250px;
             background-color: #f8f9fa;
@@ -42,7 +93,6 @@
             display: flex;
             flex-direction: column;
         }
-        
         .sidebar-header {
             padding: 1rem;
             display: flex;
@@ -50,18 +100,15 @@
             gap: 10px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
-        
         .logo-link {
             display: flex;
             align-items: center;
             text-decoration: none;
         }
-        
         .logo-icon {
             width: 32px;
             height: 32px;
         }
-        
         .new-chat-btn {
             flex: 1;
             padding: 0.75rem 1rem;
@@ -77,17 +124,14 @@
             justify-content: center;
             gap: 8px;
         }
-        
         .new-chat-btn:hover {
             background: linear-gradient(135deg, #d46a2e, #e64a19);
         }
-        
         .chat-history {
             flex: 1;
             overflow-y: auto;
             padding: 0.5rem;
         }
-        
         .chat-item {
             padding: 0.75rem;
             border-radius: 8px;
@@ -98,16 +142,13 @@
             align-items: center;
             justify-content: space-between;
         }
-        
         .chat-item:hover {
             background-color: #e9ecef;
         }
-        
         .chat-item.active {
             background-color: #e9ecef;
             border-left: 3px solid #ed7839;
         }
-        
         .chat-title {
             font-weight: 500;
             white-space: nowrap;
@@ -115,13 +156,11 @@
             text-overflow: ellipsis;
             flex: 1;
         }
-        
         .chat-date {
             font-size: 0.75rem;
             color: #666;
             opacity: 0.7;
         }
-        
         .delete-chat-btn {
             background: none;
             border: none;
@@ -132,13 +171,11 @@
             border-radius: 4px;
             transition: all 0.3s ease;
         }
-        
         .delete-chat-btn:hover {
             opacity: 1;
             background-color: rgba(255, 0, 0, 0.1);
             color: #ff4444;
         }
-        
         .sidebar-footer {
             padding: 1rem;
             text-align: center;
@@ -147,14 +184,12 @@
             opacity: 0.7;
             border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
-        
         .chat-area {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
-        
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -163,7 +198,6 @@
             flex-direction: column;
             gap: 1rem;
         }
-        
         .welcome-container {
             display: flex;
             flex-direction: column;
@@ -172,13 +206,11 @@
             height: 100%;
             padding: 2rem;
         }
-        
         .welcome-logo {
             max-width: 400px;
             width: 100%;
             margin-bottom: 2rem;
         }
-        
         .user-message {
             align-self: flex-end;
             background: linear-gradient(135deg, #ed7839, #ff5722);
@@ -188,7 +220,6 @@
             max-width: 70%;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
-        
         .bot-message {
             align-self: flex-start;
             background-color: #ffffff;
@@ -199,7 +230,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(0, 0, 0, 0.05);
         }
-        
         .quick-reply-message {
             align-self: flex-start;
             background-color: #ffffff;
@@ -210,13 +240,12 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             border: 2px solid #ff9800;
             position: relative;
-            margin-bottom: 25px; /* Thêm margin ở dưới để chừa chỗ cho nhãn */
+            margin-bottom: 25px;
         }
-        
         .quick-reply-label {
             position: absolute;
-            bottom: -18px; /* Đặt nhãn bên dưới tin nhắn */
-            left: 15px; /* Căn trái */
+            bottom: -18px;
+            left: 15px;
             background-color: #ff9800;
             color: white;
             font-size: 0.85rem;
@@ -226,7 +255,6 @@
             white-space: nowrap;
             z-index: 1;
         }
-        
         .quick-reply-label::after {
             content: '';
             position: absolute;
@@ -237,13 +265,11 @@
             background-color: #ff9800;
             transform: rotate(45deg);
         }
-        
         .quick-reply-loading {
             display: inline-block;
             margin-left: 4px;
             color: white;
         }
-        
         .typing-indicator {
             align-self: flex-start;
             background-color: #ffffff;
@@ -257,12 +283,10 @@
             align-items: center;
             gap: 8px;
         }
-        
         .typing-dots {
             display: flex;
             gap: 4px;
         }
-        
         .typing-dot {
             width: 8px;
             height: 8px;
@@ -270,15 +294,12 @@
             background-color: #ed7839;
             animation: typing 1.4s infinite ease-in-out;
         }
-        
         .typing-dot:nth-child(1) {
             animation-delay: -0.32s;
         }
-        
         .typing-dot:nth-child(2) {
             animation-delay: -0.16s;
         }
-        
         @keyframes typing {
             0%, 80%, 100% {
                 transform: scale(0.8);
@@ -289,26 +310,21 @@
                 opacity: 1;
             }
         }
-        
         .loading-dots {
             display: inline-block;
         }
-        
         .loading-dots span {
             display: inline-block;
             animation: blink 1.4s infinite both;
             font-weight: bold;
             font-size: 1.2em;
         }
-        
         .loading-dots span:nth-child(2) {
             animation-delay: 0.2s;
         }
-        
         .loading-dots span:nth-child(3) {
             animation-delay: 0.4s;
         }
-        
         @keyframes blink {
             0%, 100% {
                 opacity: 0.2;
@@ -317,26 +333,22 @@
                 opacity: 1;
             }
         }
-        
         .suggestions-bar {
             padding: 0.5rem 1rem;
             border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
-        
         .suggestions-title {
             font-size: 0.9rem;
             color: #666;
             opacity: 0.7;
             margin-bottom: 0.5rem;
         }
-        
         .suggestions-container {
             display: flex;
             gap: 0.5rem;
             overflow-x: auto;
             padding-bottom: 0.5rem;
         }
-        
         .suggestion-chip {
             background-color: #ffffff;
             color: #333;
@@ -348,24 +360,20 @@
             white-space: nowrap;
             transition: all 0.3s ease;
         }
-        
         .suggestion-chip:hover {
             background-color: #ed7839;
             color: white;
             border-color: #ed7839;
         }
-        
         .input-area {
             padding: 1rem;
             border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
-        
         .chat-form {
             display: flex;
             gap: 0.5rem;
             align-items: flex-end;
         }
-        
         .message-input {
             flex: 1;
             padding: 12px 16px;
@@ -378,13 +386,11 @@
             max-height: 120px;
             transition: all 0.3s ease;
         }
-        
         .message-input:focus {
             outline: none;
             border-color: #ed7839;
             box-shadow: 0 0 0 2px rgba(237, 120, 57, 0.2);
         }
-        
         .send-button {
             width: 48px;
             height: 48px;
@@ -398,18 +404,15 @@
             justify-content: center;
             transition: all 0.3s ease;
         }
-        
         .send-button:hover {
             background: linear-gradient(135deg, #d46a2e, #e64a19);
         }
-        
         .send-button:disabled {
             opacity: 0.7;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
-        
         .loading-spinner {
             width: 20px;
             height: 20px;
@@ -418,25 +421,19 @@
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
         }
-        
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
-        /* Markdown Styles */
         .markdown p {
             margin-bottom: 0.5rem;
         }
-        
         .markdown ul, .markdown ol {
             margin-bottom: 0.5rem;
             padding-left: 1.5rem;
         }
-        
         .markdown li {
             margin-bottom: 0.25rem;
         }
-        
         .markdown code:not(pre code) {
             background-color: rgba(0, 0, 0, 0.1);
             padding: 0.1rem 0.3rem;
@@ -444,44 +441,35 @@
             font-family: monospace;
             font-size: 0.9em;
         }
-        
         .markdown strong {
             font-weight: 600;
         }
-        
         .markdown em {
             font-style: italic;
         }
-        
         .markdown h1, .markdown h2, .markdown h3, .markdown h4 {
             font-weight: 600;
             margin-top: 1rem;
             margin-bottom: 0.5rem;
         }
-        
         .markdown h1 {
             font-size: 1.5rem;
         }
-        
         .markdown h2 {
             font-size: 1.25rem;
         }
-        
         .markdown h3 {
             font-size: 1.125rem;
         }
-        
         .markdown h4 {
             font-size: 1rem;
         }
-        
         .markdown blockquote {
             border-left: 4px solid #ed7839;
             padding-left: 1rem;
             margin: 0.5rem 0;
             color: #666;
         }
-        
         .code-block {
             position: relative;
             margin: 0.5rem 0;
@@ -490,7 +478,6 @@
             background-color: #f8f9fa;
             border: 1px solid rgba(0, 0, 0, 0.1);
         }
-        
         .code-header {
             display: flex;
             justify-content: space-between;
@@ -500,7 +487,6 @@
             font-family: monospace;
             font-size: 0.8rem;
         }
-        
         .copy-code-btn {
             background: none;
             border: none;
@@ -509,18 +495,14 @@
             font-size: 0.8rem;
             transition: all 0.3s ease;
         }
-        
         .copy-code-btn:hover {
             color: #ed7839;
         }
-        
         pre {
             margin: 0 !important;
             padding: 1rem !important;
             overflow-x: auto;
         }
-        
-        /* Sidebar Toggle Button */
         .sidebar-toggle {
             position: fixed;
             top: 50%;
@@ -539,12 +521,9 @@
             display: none;
             border: none;
         }
-        
         .sidebar-toggle:hover {
             background-color: #d46a2e;
         }
-        
-        /* Responsive Design */
         @media (max-width: 768px) {
             .sidebar {
                 position: absolute;
@@ -554,85 +533,100 @@
                 z-index: 10;
                 transition: left 0.3s ease;
             }
-            
             .sidebar.active {
                 left: 0;
             }
-            
             .user-message, .bot-message, .quick-reply-message {
                 max-width: 85%;
             }
-            
             .quick-reply-label {
                 font-size: 0.8rem;
                 padding: 2px 8px;
                 bottom: -16px;
             }
-            
             .sidebar-toggle {
                 display: flex;
             }
-            
             .welcome-logo {
                 max-width: 300px;
             }
+            .loading-screen svg {
+                width: 150px;
+                height: 150px;
+            }
         }
-        
         @media (max-width: 480px) {
             .user-message, .bot-message, .quick-reply-message {
                 max-width: 90%;
             }
-            
             .quick-reply-label {
                 font-size: 0.75rem;
                 padding: 2px 6px;
                 bottom: -14px;
             }
-            
             .suggestions-container {
                 flex-wrap: wrap;
             }
-            
             .welcome-logo {
                 max-width: 250px;
+            }
+            .loading-screen svg {
+                width: 120px;
+                height: 120px;
+            }
+            .loading-text {
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Chatbot App -->
-    <div class="app-container">
-        <!-- Sidebar -->
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-container">
+            <svg viewBox="0 0 200 200">
+                <defs>
+                    <filter id="goo">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+                        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0
+                                    0 1 0 0 0
+                                    0 0 1 0 0
+                                    0 0 0 20 -10" result="goo" />
+                        <feBlend in="SourceGraphic" in2="goo" />
+                    </filter>
+                </defs>
+                <g id="gooey" filter="url(#goo)">
+                    <circle class="dot" cx="100" cy="100" r="6" />
+                </g>
+            </svg>
+            <div class="loading-text">Đang khởi tạo hệ thống API...</div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container" id="mainContent" style="display: none;">
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <a href="index.html" class="logo-link">
-                    <img src="logo.png" alt="VANW" class="logo-icon">
+                    <img src="assets/logo.png" alt="VANW" class="logo-icon">
                 </a>
                 <button id="new-chat-btn" class="new-chat-btn">
                     <i class="fas fa-file-circle-plus"></i>
                     <span>Đoạn nhắn mới</span>
                 </button>
             </div>
-            
-            <div class="chat-history" id="chat-history">
-                <!-- Chat history will be populated here -->
-            </div>
-            
+            <div class="chat-history" id="chat-history"></div>
             <div class="sidebar-footer">
                 <p>©2025 THPT Thừa Lưu</p>
                 <p>Hoàng Minh Tuấn & Trương Viết Duy Chương</p>
             </div>
         </div>
-        
-        <!-- Chat Area -->
         <div class="chat-area">
             <div class="chat-messages" id="chat-messages">
-                <!-- Welcome logo -->
                 <div class="welcome-container">
-                    <img src="text.png" alt="VANW" class="welcome-logo">
+                    <img src="assets/text.png" alt="VANW" class="welcome-logo">
                 </div>
             </div>
-            
             <div class="suggestions-bar" id="suggestions-bar">
                 <div class="suggestions-title">Gợi ý câu hỏi:</div>
                 <div class="suggestions-container" id="suggestions-container">
@@ -642,7 +636,6 @@
                     <div class="suggestion-chip">Đặc điểm thơ Hồ Xuân Hương</div>
                 </div>
             </div>
-            
             <div class="input-area">
                 <form id="chat-form" class="chat-form">
                     <textarea 
@@ -662,13 +655,10 @@
             </div>
         </div>
     </div>
-    
-    <!-- Sidebar Toggle Button (Mobile only) -->
     <button class="sidebar-toggle" id="sidebarToggle">
         <i class="fas fa-chevron-right"></i>
     </button>
     
-    <!-- JavaScript -->
     <script type="importmap">
         {
             "imports": {
@@ -677,7 +667,9 @@
         }
     </script>
     <script type="module">
-        // Firebase Configuration
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "UHK6FEikvKhAhgmo0i8OZkGtW6Mq_ueJDySazIA",
             authDomain: "tkc-vanw.firebaseapp.com",
@@ -692,23 +684,381 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         
-        // Hàm đảo ngược chuỗi để lấy API key thực
-        function reverseApiKey(encodedKey) {
-            return encodedKey.split('').reverse().join('');
-        }
-        
-        // API key đã được đảo ngược để bảo mật
-        // Key thực: AIzaSyAQMglgiKEHY8XznNf9ZIdjYMnKgH9DhJg
-        const ENCODED_API_KEY = "cSrpZ5sOecGANFvg8sg3jYjki3InbsPUAySazIA";
-        
-        // Giải mã API key
-        const API_KEY = "AIzaSyDq_sSF2kgHzuDgYNpQef6EDrk8MsP0vlM";
-        
-        import { GoogleGenerativeAI } from "@google/generative-ai";
-        
-        const genAI = new GoogleGenerativeAI(API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+        // ============================
+        // API PHÒNG THỦ HỆ THỐNG - ĐÃ SỬA THEO YÊU CẦU
+        // ============================
+        class APIDefenseSystem {
+            constructor() {
+                // API key CHÍNH bị đảo ngược
+                this.reversedPrimaryApiKey = "cbRSGo7aT22YUIRKGY4db94W_uD1rUmkDySazIA";
+                this.primaryModel = "gemini-2.5-flash";
+                this.allApis = [];
+                this.workingApis = [];
+                this.currentApiIndex = -1;
+                this.isInitialized = false;
+                this.consolePrefix = "🔧 [API Phòng Thủ]";
+                this.currentWorkingApi = null; // API đang hoạt động hiện tại
+            }
 
+            // Hàm đảo ngược chuỗi để lấy key đúng
+            reverseApiKey(reversedKey) {
+                if (!reversedKey || typeof reversedKey !== 'string') {
+                    console.error(`${this.consolePrefix} API key không hợp lệ:`, reversedKey);
+                    return reversedKey;
+                }
+                return reversedKey.split('').reverse().join('');
+            }
+
+            async initialize() {
+                console.log(`${this.consolePrefix} === BẮT ĐẦU KIỂM TRA API THEO THỨ TỰ ===`);
+                console.log(`${this.consolePrefix} Lưu ý: Tất cả API key đều được đảo ngược, hệ thống sẽ tự động đảo lại`);
+                
+                // Thêm API chính vào danh sách (đã đảo ngược)
+                this.allApis.push({
+                    reversedKey: this.reversedPrimaryApiKey,
+                    apiKey: this.reverseApiKey(this.reversedPrimaryApiKey),
+                    model: this.primaryModel,
+                    isPrimary: true,
+                    index: 0
+                });
+                
+                // Load API dự phòng từ file
+                await this.loadBackupApis();
+                
+                // Test tất cả API theo thứ tự - CHỈ DỪNG KHI TÌM ĐƯỢC API HOẠT ĐỘNG
+                await this.testApisSequentially();
+                
+                // Kiểm tra kết quả
+                if (this.currentWorkingApi) {
+                    console.log(`${this.consolePrefix} === ĐÃ TÌM THẤY API HOẠT ĐỘNG: #${this.currentWorkingApi.index} ===`);
+                    console.log(`${this.consolePrefix} Số API đã kiểm tra: ${this.checkedApisCount}`);
+                    console.log(`${this.consolePrefix} Số API còn lại chưa kiểm tra: ${this.allApis.length - this.checkedApisCount}`);
+                    this.isInitialized = true;
+                    return this.currentWorkingApi;
+                } else {
+                    console.error(`${this.consolePrefix} === KHÔNG CÓ API NÀO HOẠT ĐỘNG! ===`);
+                    throw new Error("KHÔNG CÓ API NÀO HOẠT ĐỘNG!");
+                }
+            }
+
+            async loadBackupApis() {
+                try {
+                    console.log(`${this.consolePrefix} === ĐANG TẢI API DỰ PHÒNG ===`);
+                    
+                    // Thử các đường dẫn khác nhau cho file apiphongthu.txt
+                    const possiblePaths = [
+                        'assets/apiphongthu.txt',
+                    ];
+                    
+                    let response = null;
+                    let usedPath = '';
+                    
+                    // Thử từng đường dẫn
+                    for (const path of possiblePaths) {
+                        try {
+                            console.log(`${this.consolePrefix} Thử đường dẫn: ${path}`);
+                            response = await fetch(path);
+                            if (response.ok) {
+                                usedPath = path;
+                                console.log(`${this.consolePrefix} ✓ Tìm thấy file tại: ${path}`);
+                                break;
+                            }
+                        } catch (e) {
+                            console.log(`${this.consolePrefix} ✗ Không tìm thấy file tại: ${path}`);
+                            continue;
+                        }
+                    }
+                    
+                    if (!response || !response.ok) {
+                        console.log(`${this.consolePrefix} Không tìm thấy file apiphongthu.txt, chỉ dùng API chính`);
+                        return false;
+                    }
+                    
+                    const text = await response.text();
+                    console.log(`${this.consolePrefix} Nội dung file (truncated):`, text.substring(0, 200) + "...");
+                    
+                    // Xử lý nội dung file
+                    const lines = text.trim().split('\n').filter(line => line.trim() !== '');
+                    
+                    console.log(`${this.consolePrefix} Số dòng trong file: ${lines.length}`);
+                    
+                    // Bắt đầu index từ 1 vì 0 là API chính
+                    let index = 1;
+                    
+                    // Xử lý từng cặp key-model
+                    for (let i = 0; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        
+                        if (!line) continue;
+                        
+                        // Kiểm tra nếu dòng này có vẻ là API key
+                        if (line.includes('AIza')) {
+                            const reversedKey = line;
+                            const model = (i + 1 < lines.length) ? lines[i + 1].trim() : this.primaryModel;
+                            
+                            console.log(`${this.consolePrefix}\n[API #${index}]`);
+                            
+                            // Thử đảo ngược key để xem có hợp lệ không
+                            const normalKey = this.reverseApiKey(reversedKey);
+                            
+                            // Kiểm tra nếu key đảo lại có chứa "AIza" (dấu hiệu của key hợp lệ)
+                            const isValidKey = normalKey.includes("AIza");
+                            
+                            const apiKey = isValidKey ? normalKey : reversedKey;
+                            
+                            this.allApis.push({
+                                reversedKey: reversedKey,
+                                apiKey: apiKey,
+                                model: model,
+                                isPrimary: false,
+                                index: index
+                            });
+                            
+                            console.log(`${this.consolePrefix} Model: ${model}`);
+                            console.log(`${this.consolePrefix} Type: BACKUP`);
+                            console.log(`${this.consolePrefix} Key hợp lệ: ${isValidKey ? '✓' : '✗'}`);
+                            
+                            index++;
+                            i++; // Bỏ qua dòng model
+                        } else if (line.toLowerCase().includes('gemini')) {
+                            continue;
+                        } else {
+                            // Thử xem có phải là key đảo ngược không
+                            const normalKey = this.reverseApiKey(line);
+                            const isValidKey = normalKey.includes("AIza");
+                            
+                            if (isValidKey) {
+                                const model = (i + 1 < lines.length) ? lines[i + 1].trim() : this.primaryModel;
+                                
+                                this.allApis.push({
+                                    reversedKey: line,
+                                    apiKey: normalKey,
+                                    model: model,
+                                    isPrimary: false,
+                                    index: index
+                                });
+                                
+                                console.log(`${this.consolePrefix} ✓ Phát hiện key đảo ngược API #${index}`);
+                                index++;
+                                i++;
+                            }
+                        }
+                    }
+                    
+                    console.log(`${this.consolePrefix}\n=== KẾT QUẢ TẢI API DỰ PHÒNG ===`);
+                    console.log(`${this.consolePrefix} Đã tải ${this.allApis.length - 1} API dự phòng từ file`);
+                    console.log(`${this.consolePrefix} File path: ${usedPath}`);
+                    
+                    return true;
+                } catch (error) {
+                    console.error(`${this.consolePrefix} Lỗi khi tải API dự phòng:`, error);
+                    return false;
+                }
+            }
+
+            async testApiConnection(apiInfo) {
+                try {
+                    console.log(`${this.consolePrefix}\n[TEST API #${apiInfo.index}]`);
+                    console.log(`${this.consolePrefix} Type: ${apiInfo.isPrimary ? 'PRIMARY' : 'BACKUP'}`);
+                    
+                    // Kiểm tra xem key có hợp lệ không
+                    if (!apiInfo.apiKey || apiInfo.apiKey.length < 20) {
+                        console.log(`${this.consolePrefix} [API #${apiInfo.index}] ✗ KEY KHÔNG HỢP LỆ (quá ngắn)`);
+                        return null;
+                    }
+                    
+                    // Kiểm tra xem key có chứa AIza không
+                    if (!apiInfo.apiKey.includes("AIza")) {
+                        console.log(`${this.consolePrefix} [API #${apiInfo.index}] ✗ KEY KHÔNG HỢP LỆ (thiếu 'AIza')`);
+                        return null;
+                    }
+                    
+                    const genAI = new GoogleGenerativeAI(apiInfo.apiKey);
+                    const testModel = genAI.getGenerativeModel({ model: apiInfo.model || "gemini-2.5-flash" });
+                    
+                    // Test với câu hỏi đơn giản (timeout 5s)
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+                    
+                    try {
+                        const testResult = await testModel.generateContent("Xin chào");
+                        const response = await testResult.response;
+                        const text = response.text();
+                        
+                        clearTimeout(timeoutId);
+                        
+                        console.log(`${this.consolePrefix} [API #${apiInfo.index}] ✓ HOẠT ĐỘNG TỐT`);
+                        
+                        return {
+                            ...apiInfo,
+                            status: 'working'
+                        };
+                    } catch (timeoutError) {
+                        console.log(`${this.consolePrefix} [API #${apiInfo.index}] ✗ TIMEOUT`);
+                        return null;
+                    }
+                } catch (error) {
+                    console.log(`${this.consolePrefix} [API #${apiInfo.index}] ✗ LỖI: ${error.message}`);
+                    return null;
+                }
+            }
+
+            async testApisSequentially() {
+                this.workingApis = [];
+                this.checkedApisCount = 0;
+                
+                console.log(`${this.consolePrefix}\n=== BẮT ĐẦU KIỂM TRA ${this.allApis.length} API THEO THỨ TỰ ===`);
+                
+                // Test tuần tự từng API - DỪNG KHI TÌM ĐƯỢC API HOẠT ĐỘNG ĐẦU TIÊN
+                for (let i = 0; i < this.allApis.length; i++) {
+                    const apiInfo = this.allApis[i];
+                    this.checkedApisCount++;
+                    
+                    console.log(`${this.consolePrefix} Đang kiểm tra API #${apiInfo.index} (${i+1}/${this.allApis.length})...`);
+                    
+                    const result = await this.testApiConnection(apiInfo);
+                    
+                    if (result) {
+                        // Tìm thấy API hoạt động!
+                        this.workingApis.push(result);
+                        this.currentWorkingApi = result;
+                        this.currentApiIndex = 0;
+                        
+                        console.log(`${this.consolePrefix}\n🎯 ĐÃ TÌM THẤY API HOẠT ĐỘNG: #${apiInfo.index}`);
+                        console.log(`${this.consolePrefix} Dừng kiểm tra, không kiểm tra các API còn lại`);
+                        
+                        break; // DỪNG LẠI, KHÔNG KIỂM TRA API TIẾP THEO
+                    } else {
+                        console.log(`${this.consolePrefix} API #${apiInfo.index} không hoạt động, tiếp tục kiểm tra API tiếp theo...`);
+                    }
+                    
+                    // Delay nhẹ giữa các lần test
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+                
+                console.log(`${this.consolePrefix}\n=== KẾT QUẢ KIỂM TRA ===`);
+                console.log(`${this.consolePrefix} Đã kiểm tra: ${this.checkedApisCount}/${this.allApis.length} API`);
+                console.log(`${this.consolePrefix} API hoạt động: ${this.workingApis.length}`);
+                
+                if (this.workingApis.length === 0) {
+                    console.log(`${this.consolePrefix}\n⚠️ CẢNH BÁO: Không có API nào hoạt động!`);
+                }
+                
+                return this.workingApis;
+            }
+
+            getCurrentApi() {
+                return this.currentWorkingApi;
+            }
+
+            async switchToNextApi() {
+                if (this.workingApis.length <= 1) {
+                    console.log(`${this.consolePrefix} Không còn API dự phòng nào trong danh sách hoạt động!`);
+                    
+                    // Thử kiểm tra lại các API chưa được kiểm tra
+                    console.log(`${this.consolePrefix} Kiểm tra lại các API còn lại...`);
+                    
+                    for (let i = this.checkedApisCount; i < this.allApis.length; i++) {
+                        const apiInfo = this.allApis[i];
+                        console.log(`${this.consolePrefix} Kiểm tra API #${apiInfo.index} (đã bỏ qua trước đó)...`);
+                        
+                        const result = await this.testApiConnection(apiInfo);
+                        
+                        if (result) {
+                            this.workingApis.push(result);
+                            this.currentWorkingApi = result;
+                            this.currentApiIndex = this.workingApis.length - 1;
+                            
+                            console.log(`${this.consolePrefix} Tìm thấy API hoạt động mới: #${apiInfo.index}`);
+                            return this.currentWorkingApi;
+                        }
+                    }
+                    
+                    console.log(`${this.consolePrefix} Không tìm thấy API hoạt động mới nào!`);
+                    return false;
+                }
+                
+                // Nếu có nhiều API hoạt động, chuyển sang API tiếp theo
+                const nextIndex = (this.currentApiIndex + 1) % this.workingApis.length;
+                this.currentApiIndex = nextIndex;
+                this.currentWorkingApi = this.workingApis[nextIndex];
+                
+                console.log(`${this.consolePrefix} Đã chuyển sang API hoạt động khác: #${this.currentWorkingApi.index}`);
+                return this.currentWorkingApi;
+            }
+
+            async tryAllApisForResponse(userMessage, conversationHistory) {
+                console.log(`${this.consolePrefix}\n=== THỬ TẤT CẢ API ĐỂ TRẢ LỜI ===`);
+                
+                // Nếu không có API nào hoạt động
+                if (!this.currentWorkingApi) {
+                    console.log(`${this.consolePrefix} Không có API nào hoạt động!`);
+                    return {
+                        success: false,
+                        error: "Không có API nào hoạt động"
+                    };
+                }
+                
+                // Thử API hiện tại trước
+                let lastError = null;
+                
+                for (let attempt = 0; attempt < 2; attempt++) {
+                    try {
+                        const genAI = new GoogleGenerativeAI(this.currentWorkingApi.apiKey);
+                        const model = genAI.getGenerativeModel({ 
+                            model: this.currentWorkingApi.model || "gemini-2.5-flash" 
+                        });
+                        
+                        const chatSession = model.startChat({
+                            history: conversationHistory,
+                            generationConfig: {
+                                maxOutputTokens: 1500,
+                                temperature: 0.8,
+                                topP: 0.1,
+                                topK: 16,
+                            }
+                        });
+
+                        const result = await chatSession.sendMessage(userMessage);
+                        const response = await result.response;
+                        const botReply = response.text();
+                        
+                        console.log(`${this.consolePrefix} ✓ Thành công với API #${this.currentWorkingApi.index} (lần thử ${attempt + 1})`);
+                        
+                        return {
+                            success: true,
+                            response: botReply,
+                            apiInfo: this.currentWorkingApi
+                        };
+                    } catch (error) {
+                        lastError = error;
+                        console.log(`${this.consolePrefix} ✗ API #${this.currentWorkingApi.index} lỗi: ${error.message}`);
+                        
+                        // Nếu API hiện tại lỗi, thử chuyển sang API khác
+                        if (attempt === 0) {
+                            console.log(`${this.consolePrefix} Thử chuyển sang API khác...`);
+                            const switched = await this.switchToNextApi();
+                            
+                            if (!switched) {
+                                // Không có API nào khác hoạt động
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                // Nếu cả 2 lần thử đều thất bại
+                console.log(`${this.consolePrefix} ✗ Tất cả API đều lỗi!`);
+                return {
+                    success: false,
+                    error: lastError ? lastError.message : "Tất cả API đều không hoạt động"
+                };
+            }
+        }
+
+        // ============================
+        // BIẾN TOÀN CỤC VÀ HỆ THỐNG CHÍNH
+        // ============================
         const chatMessages = document.getElementById('chat-messages');
         const chatForm = document.getElementById('chat-form');
         const messageInput = document.getElementById('message-input');
@@ -719,32 +1069,290 @@
         const sidebarToggle = document.getElementById('sidebarToggle');
         const suggestionsBar = document.getElementById('suggestions-bar');
         const suggestionsContainer = document.getElementById('suggestions-container');
-
+        const loadingScreen = document.getElementById('loadingScreen');
+        const mainContent = document.getElementById('mainContent');
+        
         let chats = [];
         let currentChatId = null;
         let isSending = false;
         let isStopped = false;
         let isSidebarVisible = true;
-        let quickReplyMessageId = null; // ID của phản hồi nhanh để xóa sau này
-        let isFirstMessage = false; // Kiểm tra xem có phải tin nhắn đầu tiên không
+        let quickReplyMessageId = null;
+        let isFirstMessage = false;
+        let apiDefenseSystem = null;
+        let currentGenAI = null;
+        let currentModel = null;
 
-        // Sidebar toggle for mobile
-        sidebarToggle.addEventListener('click', function() {
-            isSidebarVisible = !isSidebarVisible;
-            toggleSidebar();
-        });
+        // ============================
+        // HÀM LOADING ANIMATION
+        // ============================
+        function startLoadingAnimation() {
+            loadingScreen.style.display = 'grid';
+            loadingScreen.style.opacity = '1';
+            loadingScreen.style.visibility = 'visible';
+            
+            animateSpinner();
+        }
 
-        function toggleSidebar() {
-            if (isSidebarVisible) {
-                sidebar.style.left = '0';
-                sidebarToggle.innerHTML = '<i class="fas fa-chevron-left"></i>';
-            } else {
-                sidebar.style.left = '-250px';
-                sidebarToggle.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        function hideLoadingScreen() {
+            loadingScreen.style.opacity = '0';
+            loadingScreen.style.visibility = 'hidden';
+            mainContent.style.display = 'flex';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
+        }
+
+        function animateSpinner() {
+            const svgGroup = document.querySelector("#gooey");
+            if (!svgGroup) return;
+            
+            let centerDot = svgGroup.querySelector(".dot");
+
+            const spacing = 25;
+
+            function createDot(cx, cy, r) {
+                const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                dot.setAttribute("cx", cx);
+                dot.setAttribute("cy", cy);
+                dot.setAttribute("r", 1);
+                dot.classList.add("dot");
+                svgGroup.appendChild(dot);
+                return dot;
+            }
+
+            svgGroup.querySelectorAll(".dot").forEach((dot) => dot.remove());
+            centerDot = createDot(100, 100, 6);
+
+            const first4 = [
+                { cx: 100, cy: 100 - spacing },
+                { cx: 100, cy: 100 + spacing },
+                { cx: 100 - spacing, cy: 100 },
+                { cx: 100 + spacing, cy: 100 }
+            ];
+
+            const allDots = [];
+
+            first4.forEach((pos) => {
+                const dot = createDot(100, 100, 6);
+                allDots.push(dot);
+                const midX = (100 + pos.cx) / 2;
+                const midY = (100 + pos.cy) / 2;
+                setTimeout(() => {
+                    dot.setAttribute("r", 8);
+                    dot.setAttribute("cx", midX);
+                    dot.setAttribute("cy", midY);
+                }, 50);
+                setTimeout(() => {
+                    dot.setAttribute("r", 6);
+                    dot.setAttribute("cx", pos.cx);
+                    dot.setAttribute("cy", pos.cy);
+                }, 500);
+            });
+
+            setTimeout(() => {
+                const diagSpacing = spacing / Math.sqrt(2);
+                const diagonal = [
+                    { cx: 100 - diagSpacing, cy: 100 - diagSpacing },
+                    { cx: 100 + diagSpacing, cy: 100 - diagSpacing },
+                    { cx: 100 - diagSpacing, cy: 100 + diagSpacing },
+                    { cx: 100 + diagSpacing, cy: 100 + diagSpacing }
+                ];
+                diagonal.forEach((pos) => {
+                    const dot = createDot(100, 100, 6);
+                    allDots.push(dot);
+                    const midX = (100 + pos.cx) / 2;
+                    const midY = (100 + pos.cy) / 2;
+                    setTimeout(() => {
+                        dot.setAttribute("r", 8);
+                        dot.setAttribute("cx", midX);
+                        dot.setAttribute("cy", midY);
+                    }, 50);
+                    setTimeout(() => {
+                        dot.setAttribute("r", 6);
+                        dot.setAttribute("cx", pos.cx);
+                        dot.setAttribute("cy", pos.cy);
+                    }, 500);
+                });
+            }, 1000);
+
+            setTimeout(() => {
+                svgGroup.style.transform = "rotate(360deg)";
+            }, 2500);
+
+            setTimeout(() => {
+                svgGroup.style.transition = "transform 0.5s linear";
+                svgGroup.style.transform = "rotate(0deg)";
+                allDots.forEach((dot) => {
+                    dot.setAttribute("cx", 100);
+                    dot.setAttribute("cy", 100);
+                    dot.setAttribute("r", 6);
+                });
+            }, 3000);
+        }
+
+        // ============================
+        // HÀM KHỞI TẠO API PHÒNG THỦ
+        // ============================
+        async function initializeAPIDefense() {
+            try {
+                console.log("🚀 Khởi tạo hệ thống API Phòng Thủ...");
+                apiDefenseSystem = new APIDefenseSystem();
+                
+                // Cập nhật loading text
+                const loadingText = document.querySelector('.loading-text');
+                loadingText.textContent = 'Đang kiểm tra các API...';
+                
+                const apiInfo = await apiDefenseSystem.initialize();
+                
+                // Cập nhật loading text khi đã tìm thấy API
+                loadingText.textContent = 'Đang khởi động chatbot...';
+                
+                // Tạo Gemini AI instance với API đã chọn
+                currentGenAI = new GoogleGenerativeAI(apiInfo.apiKey);
+                currentModel = currentGenAI.getGenerativeModel({ 
+                    model: apiInfo.model || "gemini-2.5-flash" 
+                });
+                
+                console.log(`✅ Hệ thống API Phòng Thủ đã sẵn sàng`);
+                console.log(`📊 Đang dùng API: #${apiInfo.index}`);
+                
+                return true;
+            } catch (error) {
+                console.error("❌ Lỗi khởi tạo API Phòng Thủ:", error);
+                
+                // Cập nhật loading text khi có lỗi
+                const loadingText = document.querySelector('.loading-text');
+                loadingText.textContent = 'Đang thử API dự phòng...';
+                
+                // Thử dùng API key cũ từ code 1 như fallback
+                try {
+                    const fallbackApiKey = "AIzaSyDq_sSF2kgHzuDgYNpQef6EDrk8MsP0vlM";
+                    currentGenAI = new GoogleGenerativeAI(fallbackApiKey);
+                    currentModel = currentGenAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+                    console.log("⚠️ Đang dùng API fallback cũ");
+                    
+                    // Tạo API info giả cho fallback
+                    apiDefenseSystem = {
+                        currentWorkingApi: {
+                            index: 'fallback',
+                            apiKey: fallbackApiKey,
+                            model: "gemini-2.5-flash-lite"
+                        },
+                        isInitialized: true,
+                        getCurrentApi: () => apiDefenseSystem.currentWorkingApi,
+                        switchToNextApi: async () => false,
+                        tryAllApisForResponse: async (userMessage, conversationHistory) => {
+                            try {
+                                const genAI = new GoogleGenerativeAI(fallbackApiKey);
+                                const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+                                
+                                const chatSession = model.startChat({
+                                    history: conversationHistory,
+                                    generationConfig: {
+                                        maxOutputTokens: 1500,
+                                        temperature: 0.8,
+                                        topP: 0.1,
+                                        topK: 16,
+                                    }
+                                });
+
+                                const result = await chatSession.sendMessage(userMessage);
+                                const response = await result.response;
+                                const botReply = response.text();
+                                
+                                return {
+                                    success: true,
+                                    response: botReply,
+                                    apiInfo: apiDefenseSystem.currentWorkingApi
+                                };
+                            } catch (error) {
+                                return {
+                                    success: false,
+                                    error: error.message
+                                };
+                            }
+                        }
+                    };
+                    
+                    return true;
+                } catch (fallbackError) {
+                    console.error("❌ Lỗi cả với API fallback:", fallbackError);
+                    loadingText.textContent = 'Không thể khởi động hệ thống API';
+                    return false;
+                }
             }
         }
 
-        // Literary Keywords for filtering
+        // ============================
+        // HÀM GỬI TIN NHẮN VỚI API PHÒNG THỦ
+        // ============================
+        async function sendMessageWithAPIDefense(userMessage, currentChat) {
+            if (!apiDefenseSystem || !apiDefenseSystem.isInitialized) {
+                console.error("Hệ thống API chưa được khởi tạo!");
+                return null;
+            }
+
+            try {
+                // Thử tất cả API để trả lời
+                const result = await apiDefenseSystem.tryAllApisForResponse(
+                    userMessage,
+                    currentChat.messages.map(msg => ({
+                        role: msg.role === "user" ? "user" : "model",
+                        parts: [{ text: msg.content }]
+                    }))
+                );
+
+                if (result.success) {
+                    // Cập nhật model hiện tại nếu API thay đổi
+                    if (result.apiInfo) {
+                        currentGenAI = new GoogleGenerativeAI(result.apiInfo.apiKey);
+                        currentModel = currentGenAI.getGenerativeModel({ 
+                            model: result.apiInfo.model || "gemini-2.5-flash" 
+                        });
+                        
+                        console.log(`🔄 Đang dùng API #${result.apiInfo.index} để trả lời`);
+                    }
+                    
+                    return result.response;
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error("Lỗi khi gửi tin nhắn với API phòng thủ:", error);
+                
+                // Thử phương pháp cũ nếu hệ thống API phòng thủ thất bại
+                if (currentModel) {
+                    try {
+                        const chatSession = currentModel.startChat({
+                            history: currentChat.messages.map(msg => ({
+                                role: msg.role === "user" ? "user" : "model",
+                                parts: [{ text: msg.content }]
+                            })),
+                            generationConfig: {
+                                maxOutputTokens: 1500,
+                                temperature: 0.8,
+                                topP: 0.1,
+                                topK: 16,
+                            }
+                        });
+
+                        const result = await chatSession.sendMessage(userMessage);
+                        const response = await result.response;
+                        return response.text();
+                    } catch (innerError) {
+                        console.error("Lỗi cả với phương pháp cũ:", innerError);
+                        return null;
+                    }
+                }
+                
+                return null;
+            }
+        }
+
+        // ============================
+        // CÁC HÀM CHỨC NĂNG CHÍNH
+        // ============================
         const literaryKeywords = [
             "văn học", "tác phẩm", "nhà văn", "thơ", "truyện", "tác giả", "chào", "là ai", 
             "tiểu thuyết", "chào", "bởi ai", "cảm hứng", "viết", "chữ", "từ", "câu", 
@@ -785,10 +1393,7 @@
                     "Phân tích nhân vật Chí Phèo trong tác phẩm cùng tên"
                 ];
             }
-            
-            // Simple logic to generate follow-up questions based on previous messages
             const lastMessage = userMessages[userMessages.length - 1].content;
-            
             if (lastMessage.includes("phân tích")) {
                 return [
                     "Bạn có thể phân tích sâu hơn về nghệ thuật trong tác phẩm này không?",
@@ -808,7 +1413,6 @@
                     "Hoàn cảnh sáng tác bài thơ này"
                 ];
             }
-            
             return [
                 "Bạn có thể giải thích rõ hơn về điều này không?",
                 "Có tác phẩm nào tương tự như vậy không?",
@@ -817,11 +1421,29 @@
         }
 
         async function initApp() {
+            console.log("🚀 Khởi động VANW Chatbot...");
+            
+            // Hiển thị loading screen
+            startLoadingAnimation();
+            
+            // Khởi tạo API phòng thủ
+            const apiInitSuccess = await initializeAPIDefense();
+            
+            if (!apiInitSuccess) {
+                addMessageToUI("assistant", 
+                    "⚠️ **Cảnh báo hệ thống:**\n\n" +
+                    "Hệ thống gặp sự cố khi khởi tạo API. Một số tính năng có thể bị hạn chế.\n" +
+                    "Vui lòng refresh trang nếu vấn đề tiếp diễn."
+                );
+            }
+            
+            // Ẩn loading screen và hiển thị nội dung chính
+            hideLoadingScreen();
+            
+            // Tiếp tục khởi tạo app như bình thường
             loadChats();
             setupEventListeners();
             setupTextareaAutoResize();
-
-            // Setup suggestion chips
             setupSuggestionChips();
             
             if (chats.length === 0) {
@@ -829,6 +1451,8 @@
             } else {
                 loadChat(chats[0].id);
             }
+            
+            console.log("✅ VANW Chatbot đã sẵn sàng!");
         }
 
         function setupSuggestionChips() {
@@ -868,43 +1492,32 @@
             messageInput.style.height = `${newHeight}px`;
         }
 
-        // Hàm kiểm tra và lấy phản hồi nhanh từ Firestore
         async function checkQuickReply(userMessage) {
             try {
-                // Chuẩn hóa tin nhắn để so sánh
                 const normalizedMessage = userMessage.toLowerCase().trim();
-                
-                // Tìm trong Firestore xem có tin nhắn tương tự không
                 const snapshot = await db.collection('first_messages')
                     .where('normalizedQuestion', '==', normalizedMessage)
                     .limit(1)
                     .get();
-                
                 if (!snapshot.empty) {
                     const doc = snapshot.docs[0];
                     const data = doc.data();
-                    
-                    // Cập nhật số lần sử dụng
                     await doc.ref.update({
                         usageCount: firebase.firestore.FieldValue.increment(1),
                         lastUsed: new Date().toISOString()
                     });
-                    
-                    return data.answer; // Trả về câu trả lời từ Firestore
+                    return data.answer;
                 }
-                
-                return null; // Không tìm thấy phản hồi nhanh
+                return null;
             } catch (error) {
                 console.error("Lỗi khi kiểm tra phản hồi nhanh:", error);
                 return null;
             }
         }
 
-        // Hàm lưu tin nhắn đầu tiên và câu trả lời vào Firestore
         async function saveFirstMessageToFirestore(userMessage, aiResponse) {
             try {
                 const normalizedMessage = userMessage.toLowerCase().trim();
-                
                 await db.collection('first_messages').add({
                     question: userMessage,
                     normalizedQuestion: normalizedMessage,
@@ -913,7 +1526,6 @@
                     usageCount: 1,
                     lastUsed: new Date().toISOString()
                 });
-                
                 console.log("Đã lưu tin nhắn đầu tiên vào Firestore");
             } catch (error) {
                 console.error("Lỗi khi lưu vào Firestore:", error);
@@ -924,8 +1536,7 @@
             e.preventDefault();
             const userMessage = messageInput.value.trim();
             if (!userMessage || isSending) return;
-
-            // Kiểm tra nếu không phải câu hỏi văn học
+            
             if (!isLiteraryQuestion(userMessage)) {
                 addMessageToUI("assistant", "Xin lỗi, tôi chỉ trả lời chuyên về các câu hỏi liên quan đến văn học, bạn có câu hỏi nào liên quan đến văn học mà muốn hỏi tôi không?");
                 messageInput.value = "";
@@ -946,12 +1557,9 @@
 
             isSending = true;
             addMessageToUI("user", userMessage);
-            
-            // Change send button to loading spinner
             sendButton.innerHTML = '<div class="loading-spinner"></div>';
             sendButton.disabled = true;
 
-            // Check if it's a greeting
             const greetings = ["chào", "hello", "hi", "xin chào"];
             if (greetings.some(greet => userMessage.toLowerCase().includes(greet))) {
                 const greetingResponse = "Xin chào, tôi là AI văn học VANW được tạo ra bởi Hoàng Minh Tuấn và Trương Viết Duy Chương đến từ trường THPT Thừa Lưu. Tôi có thể giúp gì cho bạn về văn học ngay bây giờ?";
@@ -973,78 +1581,75 @@
                 return;
             }
 
-            // Kiểm tra xem có phải là tin nhắn đầu tiên của cuộc trò chuyện không
             isFirstMessage = currentChat.messages.length === 0;
-            
-            // Lưu tin nhắn người dùng vào lịch sử chat
             const userMessageObj = { 
                 role: "user", 
                 content: userMessage,
                 timestamp: new Date().toISOString()
             };
-            
             currentChat.messages.push(userMessageObj);
             saveChats();
             updateChatTitle(currentChat);
-
             messageInput.value = "";
             autoResizeTextarea();
             isStopped = false;
 
             try {
-                // Nếu là tin nhắn đầu tiên, kiểm tra phản hồi nhanh từ Firestore
                 let quickReplyContent = null;
                 let hasQuickReply = false;
                 
                 if (isFirstMessage) {
                     quickReplyContent = await checkQuickReply(userMessage);
-                    
                     if (quickReplyContent) {
                         hasQuickReply = true;
-                        // Hiển thị phản hồi nhanh
                         showQuickReply(quickReplyContent);
                     }
                 }
+
+                let botReply;
                 
-                // Gửi yêu cầu đến Gemini API
-                const chatSession = model.startChat({
-                    history: currentChat.messages.map(msg => ({
-                        role: msg.role === "user" ? "user" : "model",
-                        parts: [{ text: msg.content }]
-                    })),
-                    generationConfig: {
-                        maxOutputTokens: 1500,
-                        temperature: 0.8,
-                        topP: 0.1,
-                        topK: 16,
+                // Sử dụng hệ thống API phòng thủ để gửi tin nhắn
+                if (apiDefenseSystem && apiDefenseSystem.isInitialized) {
+                    botReply = await sendMessageWithAPIDefense(userMessage, currentChat);
+                } else {
+                    // Fallback: dùng phương pháp cũ
+                    if (currentModel) {
+                        const chatSession = currentModel.startChat({
+                            history: currentChat.messages.map(msg => ({
+                                role: msg.role === "user" ? "user" : "model",
+                                parts: [{ text: msg.content }]
+                            })),
+                            generationConfig: {
+                                maxOutputTokens: 1500,
+                                temperature: 0.8,
+                                topP: 0.1,
+                                topK: 16,
+                            }
+                        });
+
+                        const result = await chatSession.sendMessage(userMessage);
+                        const response = await result.response;
+                        botReply = response.text();
+                    } else {
+                        throw new Error("Không có model nào được khởi tạo");
                     }
-                });
+                }
 
-                const result = await chatSession.sendMessage(userMessage);
-                const response = await result.response;
-                const botReply = response.text();
+                if (!botReply) {
+                    throw new Error("Không nhận được phản hồi từ AI");
+                }
 
-                // Giới hạn câu trả lời tối đa 250 từ
                 const limitedReply = limitWords(botReply, 250);
                 
-                // Xử lý dựa trên việc có phản hồi nhanh hay không
                 if (hasQuickReply) {
-                    // Xóa phản hồi nhanh
                     removeQuickReply();
-                    
-                    // Hiển thị câu trả lời thật từ Gemini
                     addMessageToUI("assistant", limitedReply);
-                    
-                    // Lưu vào lịch sử chat
                     currentChat.messages.push({ 
                         role: "assistant", 
                         content: limitedReply,
                         timestamp: new Date().toISOString()
                     });
-                    
-                    // Không lưu vào Firestore vì đã có bản ghi cũ
                 } else {
-                    // Hiển thị bình thường với typing indicator
                     displayTypingMessage(limitedReply, () => {
                         if (!isStopped) {
                             currentChat.messages.push({ 
@@ -1053,26 +1658,30 @@
                                 timestamp: new Date().toISOString()
                             });
                             saveChats();
-                            
-                            // Nếu là tin nhắn đầu tiên, lưu vào Firestore
                             if (isFirstMessage) {
                                 saveFirstMessageToFirestore(userMessage, limitedReply);
                             }
-                            
                             updateSuggestions(currentChat.messages);
                         }
                     });
                 }
-                
             } catch (error) {
                 console.error("Lỗi: ", error);
                 
-                // Nếu có lỗi và đang hiển thị phản hồi nhanh, giữ nguyên phản hồi nhanh
-                if (hasQuickReply) {
-                    // Không làm gì cả, giữ nguyên phản hồi nhanh
-                } else {
-                    addMessageToUI("assistant", "Xin lỗi, đã xảy ra lỗi khi kết nối với AI. Vui lòng thử lại sau!");
+                // Thông báo lỗi thân thiện
+                let errorMessage = "Xin lỗi, đã xảy ra lỗi khi kết nối với AI. ";
+                
+                if (error.message.includes("quota") || error.message.includes("limit")) {
+                    errorMessage += "Có thể đã hết lượt truy cập API. ";
                 }
+                
+                errorMessage += "Vui lòng thử lại sau hoặc đặt câu hỏi khác!";
+                
+                if (hasQuickReply) {
+                    removeQuickReply();
+                }
+                
+                addMessageToUI("assistant", errorMessage);
             } finally {
                 isSending = false;
                 resetSendButton();
@@ -1080,19 +1689,15 @@
             }
         }
 
-        // Hàm hiển thị phản hồi nhanh
         function showQuickReply(content) {
-            // Xóa welcome logo nếu có
             const welcomeContainer = document.querySelector('.welcome-container');
             if (welcomeContainer) {
                 welcomeContainer.remove();
             }
-            
             const messageDiv = document.createElement('div');
             messageDiv.className = 'quick-reply-message';
             messageDiv.id = 'quick-reply-' + Date.now();
             quickReplyMessageId = messageDiv.id;
-            
             const formattedContent = formatMessage(content);
             messageDiv.innerHTML = `
                 <div class="markdown">${formattedContent}</div>
@@ -1103,12 +1708,10 @@
                     </span>
                 </div>
             `;
-            
             chatMessages.appendChild(messageDiv);
             scrollToBottom();
         }
 
-        // Hàm xóa phản hồi nhanh
         function removeQuickReply() {
             if (quickReplyMessageId) {
                 const quickReplyElement = document.getElementById(quickReplyMessageId);
@@ -1119,13 +1722,11 @@
             }
         }
 
-        // Hàm giới hạn số từ trong câu trả lời
         function limitWords(text, maxWords) {
             const words = text.split(' ');
             if (words.length <= maxWords) {
                 return text;
             }
-            
             const limitedWords = words.slice(0, maxWords);
             return limitedWords.join(' ') + '...';
         }
@@ -1138,7 +1739,6 @@
         function updateSuggestions(messages) {
             const suggestions = generateSuggestions(messages);
             suggestionsContainer.innerHTML = '';
-            
             if (suggestions.length > 0) {
                 suggestions.forEach(suggestion => {
                     const chip = document.createElement('div');
@@ -1158,12 +1758,10 @@
         }
 
         function displayTypingMessage(content, callback) {
-            // Xóa welcome logo nếu có
             const welcomeContainer = document.querySelector('.welcome-container');
             if (welcomeContainer) {
                 welcomeContainer.remove();
             }
-            
             const messageDiv = document.createElement('div');
             messageDiv.className = 'typing-indicator';
             messageDiv.innerHTML = `
@@ -1176,7 +1774,6 @@
             `;
             chatMessages.appendChild(messageDiv);
             scrollToBottom();
-
             setTimeout(() => {
                 messageDiv.remove();
                 addMessageToUI("assistant", content);
@@ -1185,25 +1782,20 @@
         }
 
         function addMessageToUI(role, content) {
-            // Xóa welcome logo nếu có
             const welcomeContainer = document.querySelector('.welcome-container');
             if (welcomeContainer && role === "user") {
                 welcomeContainer.remove();
             }
-            
             const messageDiv = document.createElement('div');
             messageDiv.className = role === 'user' ? 'user-message' : 'bot-message';
-            
             const formattedContent = formatMessage(content);
             messageDiv.innerHTML = `<div class="markdown">${formattedContent}</div>`;
-            
             chatMessages.appendChild(messageDiv);
             scrollToBottom();
         }
 
         function formatMessage(content) {
             if (!content) return '';
-
             let formatted = content.replace(/```([\w]*)\n([\s\S]*?)```/g, (match, lang, code) => {
                 const langDisplay = lang ? lang : 'text';
                 return `<div class="code-block">
@@ -1216,20 +1808,16 @@
                     <pre><code class="language-${lang || 'text'}">${escapeHtml(code.trim())}</code></pre>
                 </div>`;
             });
-
             formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
             formatted = formatted.replace(/\*([^*]+)\*/g, '<em>$1</em>');
             formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
-
             formatted = formatted.split('\n\n').map(paragraph => {
                 if (paragraph.trim().startsWith('<') && paragraph.trim().endsWith('>')) {
                     return paragraph;
                 }
                 return `<p>${paragraph}</p>`;
             }).join('');
-
             formatted = formatted.replace(/\n(?![<])/g, '<br>');
-
             return formatted;
         }
 
@@ -1257,30 +1845,24 @@
                 messages: [],
                 createdAt: new Date().toISOString()
             };
-
             chats.unshift(newChat);
             saveChats();
             renderChatHistory();
             loadChat(newChat.id);
-            
             messageInput.focus();
             suggestionsBar.style.display = 'block';
-            
-            // Reset welcome logo nếu chưa có tin nhắn
             const welcomeContainer = document.querySelector('.welcome-container');
             if (!welcomeContainer) {
                 chatMessages.innerHTML = '';
-                
                 const welcomeDiv = document.createElement('div');
                 welcomeDiv.className = 'welcome-container';
-                welcomeDiv.innerHTML = '<img src="text.png" alt="VANW" class="welcome-logo">';
+                welcomeDiv.innerHTML = '<img src="assets/text.png" alt="VANW" class="welcome-logo">';
                 chatMessages.appendChild(welcomeDiv);
             }
         }
 
         function loadChat(chatId) {
             currentChatId = chatId;
-
             document.querySelectorAll('.chat-item').forEach(item => {
                 if (item.dataset.id === chatId) {
                     item.classList.add('active');
@@ -1288,26 +1870,21 @@
                     item.classList.remove('active');
                 }
             });
-
             chatMessages.innerHTML = '';
-
             const currentChat = chats.find(chat => chat.id === chatId);
             if (!currentChat) return;
-
             if (currentChat.messages.length > 0) {
                 currentChat.messages.forEach(message => {
                     addMessageToUI(message.role, message.content);
                 });
                 updateSuggestions(currentChat.messages);
             } else {
-                // Hiển thị welcome logo nếu chưa có tin nhắn
                 const welcomeDiv = document.createElement('div');
                 welcomeDiv.className = 'welcome-container';
-                welcomeDiv.innerHTML = '<img src="text.png" alt="VANW" class="welcome-logo">';
+                welcomeDiv.innerHTML = '<img src="assets/text.png" alt="VANW" class="welcome-logo">';
                 chatMessages.appendChild(welcomeDiv);
                 suggestionsBar.style.display = 'block';
             }
-            
             scrollToBottom();
         }
 
@@ -1316,7 +1893,6 @@
             chats = chats.filter(chat => chat.id !== chatId);
             saveChats();
             renderChatHistory();
-
             if (chatId === currentChatId) {
                 if (chats.length > 0) {
                     loadChat(chats[0].id);
@@ -1333,7 +1909,6 @@
                 renderChatHistory();
                 return;
             }
-
             const firstUserMessage = chat.messages.find(msg => msg.role === "user");
             if (firstUserMessage) {
                 let title = firstUserMessage.content.substring(0, 40);
@@ -1344,14 +1919,12 @@
             } else {
                 chat.title = "Đoạn nhắn mới";
             }
-
             saveChats();
             renderChatHistory();
         }
 
         function renderChatHistory() {
             chatHistory.innerHTML = '';
-
             if (chats.length === 0) {
                 chatHistory.innerHTML = `
                     <div class="text-center p-4" style="color: #666; opacity: 0.7;">
@@ -1360,19 +1933,16 @@
                 `;
                 return;
             }
-
             chats.forEach(chat => {
                 const chatItem = document.createElement('div');
                 chatItem.className = `chat-item ${chat.id === currentChatId ? 'active' : ''}`;
                 chatItem.dataset.id = chat.id;
-
                 const chatDate = new Date(chat.createdAt || chat.id);
                 const formattedDate = chatDate.toLocaleDateString('vi-VN', {
                     day: '2-digit',
                     month: '2-digit',
                     year: 'numeric'
                 });
-
                 chatItem.innerHTML = `
                     <div class="chat-title">${chat.title || 'Đoạn nhắn mới'}</div>
                     <div class="chat-date">${formattedDate}</div>
@@ -1380,18 +1950,15 @@
                         <i class="fas fa-trash"></i>
                     </button>
                 `;
-
                 chatItem.addEventListener('click', (e) => {
                     if (!e.target.closest('.delete-chat-btn')) {
                         loadChat(chat.id);
                     }
                 });
-
                 const deleteBtn = chatItem.querySelector('.delete-chat-btn');
                 deleteBtn.addEventListener('click', (e) => {
                     deleteChat(chat.id, e);
                 });
-
                 chatHistory.appendChild(chatItem);
             });
         }
@@ -1401,11 +1968,9 @@
             if (storedChats) {
                 const now = Date.now();
                 const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
-
                 chats = JSON.parse(storedChats)
                     .filter(chat => now - new Date(chat.createdAt || chat.id).getTime() < THIRTY_DAYS)
                     .sort((a, b) => new Date(b.createdAt || b.id) - new Date(a.createdAt || a.id));
-                
                 saveChats();
                 renderChatHistory();
             }
@@ -1414,12 +1979,10 @@
         function saveChats() {
             const now = Date.now();
             const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
-
             chats = chats.filter(chat => {
                 const chatTime = new Date(chat.createdAt || chat.id).getTime();
                 return now - chatTime < THIRTY_DAYS;
             });
-
             localStorage.setItem('vanw-chats', JSON.stringify(chats));
         }
 
@@ -1434,13 +1997,33 @@
             });
         }
 
+        // ============================
+        // XỬ LÝ SIDEBAR TOGGLE
+        // ============================
+        sidebarToggle.addEventListener('click', function() {
+            isSidebarVisible = !isSidebarVisible;
+            toggleSidebar();
+        });
+
+        function toggleSidebar() {
+            if (isSidebarVisible) {
+                sidebar.style.left = '0';
+                sidebarToggle.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            } else {
+                sidebar.style.left = '-250px';
+                sidebarToggle.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            }
+        }
+
+        // ============================
+        // KHỞI CHẠY ỨNG DỤNG
+        // ============================
         window.addEventListener("beforeunload", () => {
             chats = chats.filter(chat => chat.messages.length > 0);
             saveChats();
         });
 
         document.addEventListener('DOMContentLoaded', initApp);
-        
         window.copyToClipboard = copyToClipboard;
     </script>
 </body>

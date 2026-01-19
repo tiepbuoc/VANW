@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Khám phá văn học - VANW</title>
-    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="chatbot-popup.css">
-    <link rel="stylesheet" href="map-popup.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/chatbot-popup.css">
+    <link rel="stylesheet" href="css/map-popup.css">
     <style>
         .leaflet-tooltip {
             background: transparent !important;
@@ -114,6 +114,22 @@
             vertical-align: middle;
             animation: fadeIn 0.5s ease;
         }
+        
+        /* Thêm style cho API loading animation */
+        #apiLoadingAnimation .dot {
+            transition: cx 0.5s cubic-bezier(0.3, 1.4, 0.4, 1),
+                        cy 0.5s cubic-bezier(0.3, 1.4, 0.4, 1),
+                        r 0.5s cubic-bezier(0.3, 1.4, 0.4, 1);
+        }
+        
+        #apiLoadingAnimation .dot {
+            fill: #ff8441;
+        }
+        
+        #apiLoadingAnimation #gooey {
+            transform-origin: 100px 100px;
+            transition: transform 0.5s linear;
+        }
     </style>
 </head>
 <body>
@@ -135,7 +151,7 @@
             <section class="analysis-tool">
                 <div class="analysis-card" id="mainAnalysisCard">
                     <h2 class="logo-title">
-                        <img src="htext3.png" alt="KHÁM PHÁ VĂN HỌC" class="title-logo" style="max-width: 100%; height: auto;">
+                        <img src="assets/htext3.png" alt="KHÁM PHÁ VĂN HỌC" class="title-logo" style="max-width: 100%; height: auto;">
                     </h2>
                     
                     <div class="self-check-notice" id="selfCheckNotice" style="display: none;">
@@ -247,7 +263,7 @@
     </svg>
     
     <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
-        <img src="logo.png" alt="Website Icon" />
+        <img src="assets/logo.png" alt="Website Icon" />
     </a>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -259,9 +275,8 @@
     
     <script src="https://cdn.jsdelivr.net/npm/leaflet.geometryutil@1.3.0/leaflet.geometryutil.min.js"></script>
 
-    <script src="script.js"></script>
-    <script src="chatbot-popup.js"></script>
-    <script src="map-popup.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/chatbot-popup.js"></script>
+    <script src="js/map-popup.js"></script>
 </body>
 </html>
-

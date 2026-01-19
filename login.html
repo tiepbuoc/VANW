@@ -4,17 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập - VANW</title>
-    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="icon" href="assets/logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --font-size-min: 16;
-            --font-size-max: 20;
-            --font-ratio-min: 1.2;
-            --font-ratio-max: 1.33;
-            --font-width-min: 375;
-            --font-width-max: 1500;
-            
             --bg-color: #f5f5f5;
             --card-bg: #ffffff;
             --card-outline: #b0b0b0;
@@ -95,12 +88,14 @@
             z-index: -1;
             opacity: 0.8;
         }
+        
         .title-logo {
             display: block;
             margin: 0 auto;
-            max-height: 75px; /* Điều chỉnh theo kích thước hình */
+            max-height: 75px;
             width: auto;
         }
+        
         .web-icon {
             position: fixed;
             top: 1rem;
@@ -408,6 +403,34 @@
             to { transform: rotate(360deg); }
         }
 
+        .input-with-icon input.error {
+            border-color: var(--error-color);
+            box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.2);
+        }
+
+        .input-with-icon input.success {
+            border-color: var(--success-color);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .info-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            font-style: italic;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
@@ -442,46 +465,18 @@
                 max-width: none;
             }
         }
-
-        .input-with-icon input.error {
-            border-color: var(--error-color);
-            box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.2);
-        }
-
-        .input-with-icon input.success {
-            border-color: var(--success-color);
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
-        }
-
-        .error-message {
-            color: var(--error-color);
-            font-size: 0.85rem;
-            margin-top: 0.25rem;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .info-text {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-top: 0.25rem;
-            font-style: italic;
-        }
     </style>
 </head>
 <body>
     <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
-        <img src="logo.png" alt="Website Icon" />
+        <img src="assets/logo.png" alt="Website Icon" />
     </a>
     
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
                 <h2 class="logo-title">
-                    <img src="text.png" alt="VANW" class="title-logo" style="max-width: 100%; height: auto;">
+                    <img src="assets/text.png" alt="VANW" class="title-logo">
                 </h2>
             </div>
             
@@ -604,7 +599,6 @@
             firebaseApp = firebase.initializeApp(firebaseConfig);
             auth = firebase.auth();
             db = firebase.firestore();
-            console.log("Firebase initialized successfully");
         } catch (error) {
             console.warn("Firebase initialization error:", error);
         }
@@ -857,8 +851,6 @@
                     }, 2000);
 
                 } catch (error) {
-                    console.error('Lỗi đăng ký:', error);
-                    
                     let errorMessage = 'Đăng ký thất bại. ';
                     switch (error.code) {
                         case 'auth/email-already-in-use':
@@ -967,8 +959,6 @@
                     }, 1000);
 
                 } catch (error) {
-                    console.error('Lỗi đăng nhập:', error);
-                    
                     let errorMessage = 'Đăng nhập thất bại. ';
                     switch (error.code) {
                         case 'auth/user-not-found':
@@ -1016,5 +1006,3 @@
     </script>
 </body>
 </html>
-
-

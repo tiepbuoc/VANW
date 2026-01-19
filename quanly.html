@@ -133,43 +133,27 @@ body::before {
     position: relative;
 }
 
-/* CẢI THIỆN RESPONSIVE CHO LOGO/HTEXT */
 .page-title {
     text-align: center;
-    color: var(--primary-color);
     margin-bottom: 1.5rem;
     font-size: 0;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
+    padding: 20px 0;
 }
 
 .page-title img {
-    /* Kích thước tối đa cho logo/htext */
     max-height: 120px;
-    
-    /* Kích thước tối thiểu để đảm bảo vẫn nhìn thấy */
     min-height: 40px;
-    
-    /* Chiều cao tự động điều chỉnh theo màn hình */
     height: auto;
-    
-    /* Chiều rộng tự động giữ tỷ lệ */
     width: auto;
-    
-    /* Giới hạn chiều rộng tối đa */
     max-width: 100%;
-    
-    /* Đảm bảo hình ảnh hiển thị đầy đủ */
     object-fit: contain;
-    
-    /* Hiệu ứng mượt khi thay đổi kích thước */
     transition: all 0.3s ease;
 }
 
-/* Responsive theo kích thước màn hình */
 @media (min-width: 1920px) {
     .page-title img {
         max-height: 120px;
@@ -213,12 +197,10 @@ body::before {
     justify-content: center;
     gap: 0.75rem;
     margin-bottom: 2rem;
-    padding-bottom: 0.5rem;
     overflow-x: auto;
     flex-wrap: nowrap;
     white-space: nowrap;
     width: 100%;
-    border-bottom: 2px solid var(--primary-color);
 }
 
 .tab-btn {
@@ -227,7 +209,7 @@ body::before {
     background: var(--card-bg);
     border: 3px solid var(--primary-color);
     border-radius: 12px;
-    color: var(--text-primary);
+    color: var(--primary-color);
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -250,6 +232,15 @@ body::before {
     color: white;
     border-color: var(--primary-color);
     box-shadow: 0 4px 10px rgba(227, 124, 45, 0.4);
+}
+
+.tab-btn i {
+    color: var(--primary-color);
+    margin-right: 8px;
+}
+
+.tab-btn.active i {
+    color: white;
 }
 
 .tab-content {
@@ -1115,7 +1106,6 @@ body::before {
     }
 }
 
-/* Cải thiện hiển thị nội dung */
 .markdown-content {
     line-height: 1.6;
 }
@@ -1146,12 +1136,12 @@ body::before {
 </head>
 <body>
     <a aria-label="Website Icon" class="web-icon" href="index.html" rel="noreferrer noopener">
-        <img src="logo.png" alt="Website Icon" />
+        <img src="assets/logo.png" alt="Website Icon" />
     </a>
     
     <div class="app-container">
         <h1 class="page-title">
-            <img src="htext6.png" alt="QUẢN LÝ & CHẤM ĐIỂM BÀI THI" />
+            <img src="assets/htext6.png" alt="QUẢN LÝ & CHẤM ĐIỂM BÀI THI" />
         </h1>
         
         <div class="tab-navigation">
@@ -1364,9 +1354,7 @@ body::before {
             firebaseApp = firebase.initializeApp(firebaseConfig);
             auth = firebase.auth();
             db = firebase.firestore();
-            console.log("Firebase initialized successfully");
         } catch (error) {
-            console.warn("Firebase initialization error:", error);
         }
 
         let currentUser = null;
@@ -1471,7 +1459,6 @@ body::before {
                     currentUser = user;
                     
                     const userDoc = await db.collection('users').doc(user.uid).get();
-                    const userData = userDoc.data();
                     
                     loadMyExams();
                     loadMyAttempts();
@@ -1513,20 +1500,16 @@ body::before {
                     });
                 });
                 
-                console.log(`Đã tải ${myExams.length} đề thi của tôi`);
-                
                 updateExamsTable();
                 loadDashboardStats();
                 
             } catch (error) {
-                console.error('Lỗi tải đề thi của tôi:', error);
                 showNotification('Không thể tải danh sách đề thi', 'error');
             }
         }
 
         async function loadMyAttempts() {
             try {
-                // First get all attempts
                 const attemptsSnapshot = await db.collection('attempts').get();
                 
                 allAttempts = [];
@@ -1537,19 +1520,15 @@ body::before {
                     });
                 });
                 
-                // Filter attempts that belong to my exams
                 const myExamIds = myExams.map(exam => exam.id);
                 myAttempts = allAttempts.filter(attempt => 
                     myExamIds.includes(attempt.examId)
                 );
                 
-                console.log(`Đã tải ${myAttempts.length} bài làm từ đề thi của tôi`);
-                
                 updateGradingTable();
                 loadDashboardStats();
                 
             } catch (error) {
-                console.error('Lỗi tải bài làm của tôi:', error);
                 showNotification('Không thể tải danh sách bài làm', 'error');
             }
         }
@@ -1571,7 +1550,6 @@ body::before {
                 loadRecentActivity();
                 
             } catch (error) {
-                console.error('Lỗi tải thống kê:', error);
             }
         }
 
@@ -1630,7 +1608,6 @@ body::before {
                 recentActivity.innerHTML = activityHTML;
                 
             } catch (error) {
-                console.error('Lỗi tải hoạt động:', error);
             }
         }
 
@@ -1884,7 +1861,6 @@ body::before {
                 modal.classList.add('active');
                 
             } catch (error) {
-                console.error('Lỗi tải chi tiết đề thi:', error);
                 showNotification('Không thể tải chi tiết đề thi', 'error');
             }
         }
@@ -1908,7 +1884,6 @@ body::before {
                 loadDashboardStats();
                 
             } catch (error) {
-                console.error('Lỗi xóa đề thi:', error);
                 showNotification('Không thể xóa đề thi', 'error');
             }
         }
@@ -2084,7 +2059,6 @@ body::before {
                 document.getElementById('gradingInterface').style.display = 'block';
                 
             } catch (error) {
-                console.error('Lỗi xem bài đã chấm:', error);
                 showNotification('Không thể xem bài đã chấm', 'error');
             }
         }
@@ -2133,7 +2107,6 @@ body::before {
                 document.getElementById('gradingInterface').style.display = 'block';
                 
             } catch (error) {
-                console.error('Lỗi bắt đầu chấm điểm:', error);
                 showNotification('Không thể bắt đầu chấm điểm', 'error');
             }
         }
@@ -2309,7 +2282,6 @@ body::before {
                 updateGradingTable();
                 
             } catch (error) {
-                console.error('Lỗi lưu điểm:', error);
                 showNotification('Không thể lưu điểm', 'error');
                 
                 const saveBtn = document.getElementById('saveGradingBtn');
