@@ -1455,17 +1455,17 @@ body::before {
 
         function checkAuth() {
             auth.onAuthStateChanged(async (user) => {
-                if (user && user.emailVerified) {
-                    currentUser = user;
-                    
-                    const userDoc = await db.collection('users').doc(user.uid).get();
-                    
-                    loadMyExams();
-                    loadMyAttempts();
-                    
-                } else {
+                if (!user) {
                     window.location.href = 'login.html';
+                    return;
                 }
+                
+                currentUser = user;
+                
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                loadMyExams();
+                loadMyAttempts();
             });
         }
 
