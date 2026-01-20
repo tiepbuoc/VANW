@@ -1132,19 +1132,20 @@
 
         function checkAuth() {
             auth.onAuthStateChanged(async (user) => {
-                if (user && user.emailVerified) {
-                    currentUser = user;
-                    
-                    const userDoc = await db.collection('users').doc(user.uid).get();
-                    const userData = userDoc.data();
-                    
-                    document.getElementById('userInfo').style.display = 'flex';
-                    document.getElementById('userName').textContent = userData?.name || user.email;
-                    
-                    loadUserExams();
-                } else {
+                if (!user) {
                     window.location.href = 'login.html';
+                    return;
                 }
+                
+                currentUser = user;
+                
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                const userData = userDoc.data();
+                
+                document.getElementById('userInfo').style.display = 'flex';
+                document.getElementById('userName').textContent = userData?.name || user.email;
+                
+                loadUserExams();
             });
         }
 
