@@ -300,7 +300,7 @@ closePopup.addEventListener('click', function() {
 // ==============================================
 // API CONFIGURATION
 // ==============================================
- const REVERSED_API_KEY = "ADHvlJk9rfZ40q7ju_r-yVQl1ZqW4Z-MDySzAI";
+ const REVERSED_API_KEY = "AnUY_QYgjLMUu1bJjTFMvg11ROujf-QKDySazIA";
 const GEMINI_API_KEY = REVERSED_API_KEY.split('').reverse().join('');
 
 
@@ -1645,6 +1645,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100);
     };
 });
+
 
 
 
