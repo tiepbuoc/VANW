@@ -293,7 +293,7 @@ function setupChatbot() {
 
         const greetings = ["chào", "hello"];
         if (greetings.some(greet => userMessage.toLowerCase().includes(greet))) {
-            const greetingResponse = "Xin chào, tôi là AI văn học được tạo ra bởi Hoàng Minh Tuấn và Trương Viết Duy Chương đến từ trường THPT Thừa Lưu. Tôi có thể giúp gì cho bạn về văn học ngay bây giờ?";
+            const greetingResponse = "Xin chào, tôi là AI văn học. Tôi có thể giúp gì cho bạn về văn học ngay bây giờ?";
             displayTypingMessage(greetingResponse, () => {
                 if (!isStopped) {
                     currentChat.messages.push({ 
@@ -708,6 +708,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.initChatbot = initChatbot;
+
 
 
 
